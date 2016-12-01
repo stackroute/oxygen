@@ -17,21 +17,21 @@ function setupStaticRoutes(app) {
 }
 
 function setupRestRoutes(app) {
-  //	MOUNT YOUR REST ROUTE HERE 
-  //	Eg: app.use('/resource', require(path.join(__dirname, './module')));
+  //  MOUNT YOUR REST ROUTE HERE
+  //  Eg: app.use('/resource', require(path.join(__dirname, './module')));
 
-  app.use(function(req, res, next) {
-    var err = new Error('Resource not found');
+  app.use(function(req, res) {
+    let err = new Error('Resource not found');
     err.status = 404;
     return res.status(err.status).json({
-      "error": err.message
+      error: err.message
     });
   });
 
-  app.use(function(err, req, res, next) {
-    logger.error("Internal error in watch processor: ", err);
+  app.use(function(err, req, res) {
+    logger.error('Internal error in watch processor: ', err);
     return res.status(err.status || 500).json({
-      "error": err.message
+      error: err.message
     });
   });
 
@@ -39,7 +39,7 @@ function setupRestRoutes(app) {
 }
 
 function setupMiddlewares(app) {
-  //For logging each requests 
+  //  For logging each requests
   app.use(morgan('dev'));
 
   const bodyParser = require('body-parser');
@@ -55,7 +55,7 @@ function setupMiddlewares(app) {
 }
 
 function setupWebpack(app) {
-  if (process.env.NODE_ENV !== 'PROD' || process.env.NODE_ENV !== 'production') {
+  if (config.NODE_ENV !== 'PROD' || config.NODE_ENV !== 'production') {
     const webpack = require('webpack');
     const webpackDevMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -63,7 +63,7 @@ function setupWebpack(app) {
     const webpackConfig = require('../webpack.config.js');
     const webpackCompiler = webpack(webpackConfig);
 
-    app.use(webpackHotMiddleware(webpackCompiler))
+    app.use(webpackHotMiddleware(webpackCompiler));
     app.use(webpackDevMiddleware(webpackCompiler, {
       noInfo: true,
       publicPath: webpackConfig.output.publicPath

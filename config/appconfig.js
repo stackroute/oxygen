@@ -22,7 +22,8 @@ loadEnvVariables();
 const development = require('./env/DEV');
 
 const defaults = {
-  SERVER_ROOT: path.join(__dirname, '..'),
+  SERVER_ROOT: path.resolve(__dirname, '..'),
+  NODE_ENV: process.env.NODE_ENV
 };
 
 const appConfig = {

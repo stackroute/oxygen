@@ -1,27 +1,27 @@
-module.exports={
-  entry:'./webclient/views/App.jsx',
-  output:{
-    path:'webclient/assets/',
-    filename:'bundle.js',
-    publicPath:'/assets/'
+const path = require('path');
+
+module.exports = {
+  entry: path.resolve(__dirname, 'webclient', 'views', 'App.jsx'),
+  output: {
+    path: path.resolve(__dirname, 'webclient', 'assets'),
+    filename: 'bundle.js',
+    publicPath: path.resolve(__dirname, 'webclient', 'assets')
   },
-  module:
-  {
-    loaders:[{
-      loader:'babel',
-      test:/\.jsx$/,
-      query:{
-        presets:['es2015','react','stage-1']
+  module: {
+    loaders: [{
+      loader: 'babel',
+      test: /\.jsx$/,
+      query: {
+        presets: ['es2015', 'react', 'stage-1']
       }
     }]
   },
-  resolve:
-  {
-   extensions:['','.js','.jsx','/index.js','/index','/index.jsx']
- },
- node: {
-   console: true,
-   fs: 'empty',
-   net: 'empty'
- }
+  resolve: {
+    extensions: ['', '.js', '.jsx', '/index.js', '/index', '/index.jsx']
+  },
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty'
+  }
 };

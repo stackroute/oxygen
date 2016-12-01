@@ -1,12 +1,14 @@
 'use strict';
 
-let log4js = require('log4js');
-let path = require('path');
+const log4js = require('log4js');
+const path = require('path');
+
+const config = require('./config/');
 
 log4js.configure(path.join(__dirname, './log4js.conf.json'), {
-  cwd: path.join(__dirname, 'logs')
+  cwd: path.join(config.SERVER_ROOT, 'logs')
 });
 
-let logger = log4js.getLogger();
+const logger = log4js.getLogger();
 
 module.exports = logger;
