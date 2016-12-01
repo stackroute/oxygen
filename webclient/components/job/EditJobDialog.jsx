@@ -1,0 +1,201 @@
+import React from 'react';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import {Container, Row, Col} from 'react-grid-system';
+import FormsyText from 'formsy-material-ui/lib/FormsyText';
+import MenuItem from 'material-ui/MenuItem';
+import FormsySelect from 'formsy-material-ui/lib/FormsySelect';
+const tfont={
+  fontSize:"15px"
+}
+const Label={paddingLeft:"30px",paddingTop:"20px",fontWeight:"bold"};
+const errorMessages= {
+  wordsError: "Please only use letters",
+  numberError: "Please enter less than 100",
+  UrlError:"please enter a URL"
+} ;
+const customContentStyle = {
+  width: '100%',
+  height: '100%',
+  maxWidth: 'none'
+};
+
+
+export default class EditJobDialog extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.enableButton = this.enableButton.bind(this);
+    this.disableButton = this.disableButton.bind(this);
+    this.state = {
+      open: true,
+      canSubmit:false,
+      query:props.item.query,
+      engineID:props.item.engineID,
+      extraTerms:(props.item.extraTerms==="NONE"?"":props.item.extraTerms),
+      results:props.item.results,
+      siteSearch:(props.item.siteSearch==="NONE"?"":props.item.siteSearch)
+    };}
+
+
+    handleSave = () => {
+      this.setState({open: false});
+      let newJob = {
+        query: this.state.query,
+        engineID: this.state.engineID,
+        extraTerms:(this.state.extraTerms === "" ? "NONE":this.state.extraTerms),
+        results:this.state.results,
+        siteSearch:(this.state.siteSearch === "" ? "NONE":this.state.siteSearch)
+      };
+      this.props.save(newJob);
+    };
+    onChangeQuery(e)
+    {
+      this.setState({query:e.target.value})
+    }
+    onChangeEngineID = (event, index, value) => {
+      this.setState({engineID:index})
+    };
+
+    onChangeExtraTerms(e)
+    {
+      this.setState({extraTerms:e.target.value})
+    }
+    onChangeResults(e)
+    {
+      this.setState({results:e.target.value})
+    }
+    onChangeSite(e)
+    {
+      this.setState({siteSearch:e.target.value})
+    }
+    handleClose = () => {
+      this.setState({open: false});
+
+      this.props.cancel();
+    };
+    enableButton() {
+      this.setState({
+        canSubmit: true
+      });
+    }
+    disableButton() {
+      this.setState({
+        canSubmit: false
+      });
+    }
+    render() {
+      const actions = [
+      <FlatButton
+      label="Cancel"
+      primary={true}
+      onTouchTap={this.handleClose}
+      />,
+      <FlatButton
+      label="Save"
+      primary={true}
+      keyboardFocused={true} type="submit" disabled={!this.state.canSubmit}
+      onClick={this.handleSave}
+      />];
+      let { wordsError, numberError,UrlError} = errorMessages;
+      return (
+        <div>
+        <Dialog
+        title="Edit Jobs"
+        actions={actions}
+        modal={true}
+        open={this.state.open}
+        contentStyle={customContentStyle}
+        autoScrollBodyContent={true}
+        onRequestClose={this.handleClose}
+        >
+        <Container>
+        <Formsy.Form
+        ref="form"
+        style={{"padding": '50px 24px'}}
+        onValid={this.enableButton}
+        onInvalid={this.disableButton}
+        onValidSubmit={this.handleSave.bind(this)}
+        >
+
+        <Row>
+        <Col lg={3} style={Label}>QUERY</Col>
+        <Col lg={9}>
+        <FormsyText
+        type="text"
+        name="query"
+        validations="isWords"
+        defaultValue={this.state.query}
+        validationError={wordsError}
+        updateImmediately
+        required
+        hintText="value"
+        style={tfont}
+        fullWidth={true} onChange={this.onChangeQuery.bind(this)}/></Col>
+        </Row>
+
+        <Row>
+        <Col lg={3} style={Label}>ENGINE-ID</Col>
+        <Col lg={9}><FormsySelect
+        name="engines"
+        required
+        fullWidth={true}
+        value={this.state.engineID}
+        onChange={this.onChangeEngineID.bind(this)}
+        >
+        <MenuItem value={'eng1'} primaryText="engine1" />
+        <MenuItem value={'eng2'} primaryText="engine2" />
+        <MenuItem value={'eng3'} primaryText="engine3" />
+        </FormsySelect></Col>
+        </Row>
+
+        <Row>
+        <Col lg={3} style={Label}>EXTRA-TERMS</Col>
+        <Col lg={9}><FormsyText
+        type="text"
+        name="extraTerms"
+        validations="isWords"
+        validationError={wordsError}
+        defaultValue={this.state.extraTerms}
+        updateImmediately
+        hintText="value"
+        style={tfont}
+        fullWidth={true} onChange={this.onChangeExtraTerms.bind(this)}/></Col>
+        </Row>
+
+        <Row>
+        <Col lg={3} style={Label}>NO.OF.RESULTS <small> (1-100) </small> </Col>
+        <Col lg={9}><FormsyText
+        type="number"
+        validations="maxLength:2"
+        name="results"
+        validationError={numberError}
+        defaultValue={this.state.results}
+        updateImmediately
+        required
+        hintText="value"
+        style={tfont}
+        fullWidth={true} onChange={this.onChangeResults.bind(this)} /></Col>
+        </Row>
+
+        <Row>
+        <Col lg={3} style={Label}>SITE-SEARCH<small> (Specific-search) </small></Col>
+        <Col lg={9}><FormsyText
+        type="text"
+        name="siteSearch"
+        validations="isUrl"
+        validationError={UrlError}
+        defaultValue={this.state.siteSearch}
+        updateImmediately
+        hintText="value"
+        style={tfont}
+        fullWidth={true} onChange={this.onChangeSite.bind(this)}/> </Col>
+        </Row>
+
+        </Formsy.Form>
+        </Container>
+        </Dialog>
+        </div>
+        );
+    }
+  }
