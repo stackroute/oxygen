@@ -8,7 +8,9 @@
     "serve": "node bin/www",
     "www": "node bin/www",
     "search": "node bin/search",
-    "build": "gulp build"
+    "build": "gulp build",
+    "lint": "gulp eslint",
+    "clean": "gulp clean"
   },
   "repository": {
     "type": "git",
