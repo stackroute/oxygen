@@ -1,0 +1,30 @@
+{
+  "name": "oxygen",
+  "version": "1.0.0",
+  "description": "Breath intent intelligence to semantic search",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stackroute/oxygen.git"
+  },
+  "keywords": [
+    "oxygen",
+    "semantic",
+    "intent",
+    "intelligence",
+    "graph",
+    "nodejs"
+  ],
+  "author": "StackRoute",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/stackroute/oxygen/issues"
+  },
+  "homepage": "https://github.com/stackroute/oxygen#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
