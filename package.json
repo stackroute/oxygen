@@ -7,6 +7,7 @@
     "test": "mocha",
     "serve": "node bin/www",
     "www": "node bin/www",
+    "search": "node bin/search",
     "build": "gulp build"
   },
   "repository": {

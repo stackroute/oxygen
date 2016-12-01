@@ -99,18 +99,11 @@ function setupMongooseConnections() {
 }
 
 // App Constructor function is exported
-module.exports = function() {
-  let app = createApp();
-
-  app = setupStaticRoutes(app);
-
-  app = setupMiddlewares(app);
-
-  app = setupWebpack(app);
-
-  app = setupRestRoutes(app);
-
-  setupMongooseConnections();
-
-  return app;
+module.exports = {
+  createApp: createApp,
+  setupStaticRoutes: setupStaticRoutes,
+  setupRestRoutes: setupRestRoutes,
+  setupMiddlewares: setupMiddlewares,
+  setupMongooseConnections: setupMongooseConnections,
+  setupWebpack: setupWebpack
 };
