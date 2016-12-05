@@ -12,11 +12,11 @@ const service = require('./service');
 module.exports = function() {
   let app = service.createApp();
 
+  app = service.setupWebpack(app);
+
   app = service.setupStaticRoutes(app);
 
   app = service.setupMiddlewares(app);
-
-  app = service.setupWebpack(app);
 
   app = service.setupRestRoutes(app);
 

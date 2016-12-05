@@ -5,7 +5,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'webclient', 'assets'),
     filename: 'bundle.js',
-    publicPath: path.resolve(__dirname, 'webclient', 'assets')
+    publicPath: '/webclient/assets/'
+      // publicPath: path.resolve(__dirname, 'webclient', 'assets')
   },
   module: {
     loaders: [{
