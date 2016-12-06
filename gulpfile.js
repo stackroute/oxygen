@@ -1,3 +1,4 @@
+const path = require('path');
 const gulp = require('gulp');
 // const gutil = require('gulp-util');
 
@@ -17,10 +18,10 @@ const gulpWebpack = require('gulp-webpack');
 const mocha = require('gulp-mocha');
 
 gulp.task('webpack', ['clean'], function() {
-  const config = require('./webpack.config.js');
-  return gulp.src('./webclient/App.jsx')
-    .pipe(gulpWebpack(config))
-    .pipe(gulp.dest('./webclient/assets'));
+  const webPackConfig = require('./webpack.config.js');
+  return gulp.src(path.resolve(__dirname, 'webclient', 'App.jsx'))
+    .pipe(gulpWebpack(webPackConfig))
+    .pipe(gulp.dest(path.resolve(__dirname, 'webclient', 'assets')));
 });
 
 gulp.task('usemin', ['clean', 'webpack'], function() {

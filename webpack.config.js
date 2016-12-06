@@ -5,23 +5,24 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'webclient', 'assets'),
     filename: 'bundle.js',
-    publicPath: '/'
-  },
-  module: {
-    loaders: [{
-      loader: 'babel',
-      test: /\.jsx$/,
-      query: {
-        presets: ['es2015', 'react', 'stage-1']
-      }
-    }]
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx', '/index.js', '/index', '/index.jsx']
-  },
-  node: {
-    console: true,
-    fs: 'empty',
-    net: 'empty'
-  }
-};
+    publicPath: '/webclient/assets/'
+      // publicPath: path.resolve(__dirname, 'webclient', 'assets')
+    },
+    module: {
+      loaders: [{
+        loader: 'babel',
+        test: /\.jsx$/,
+        query: {
+          presets: ['es2015', 'react', 'stage-1']
+        }
+      }]
+    },
+    resolve: {
+      extensions: ['', '.js', '.jsx', '/index.js', '/index', '/index.jsx']
+    },
+    node: {
+      console: true,
+      fs: 'empty',
+      net: 'empty'
+    }
+  };

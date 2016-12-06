@@ -18,7 +18,9 @@ function setupWebAppRESTRoutes(app) {
 module.exports = function() {
 	let app = service.createApp();
 
-	app = service.setupStaticRoutes(app);	
+	app = service.setupWebpack(app);
+
+	app = service.setupStaticRoutes(app);
 
 	app = service.setupMiddlewares(app);
 
