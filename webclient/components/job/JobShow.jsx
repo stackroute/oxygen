@@ -132,3 +132,8 @@ export default class Show extends React.Component {
 			);
 	}
 }
+Show.propTypes = {  
+	item: React.PropTypes.object.isRequired,
+	update: React.PropTypes.func.isRequired,
+	deletejob: React.PropTypes.func.isRequired
+}

@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/";
+/******/ 	__webpack_require__.p = "/webclient/assets/";
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -30800,6 +30800,9 @@
 	  return Welcome;
 	}(_react2.default.Component);
 
+	Welcome.propTypes = {
+	  children: _react2.default.PropTypes.node.isRequired
+	};
 	exports.default = Welcome;
 
 /***/ },
@@ -56553,6 +56556,12 @@
 	}(_react2.default.Component);
 
 	exports.default = Show;
+
+	Show.propTypes = {
+		item: _react2.default.PropTypes.node.isRequired,
+		update: _react2.default.PropTypes.node.isRequired,
+		deletejob: _react2.default.PropTypes.node.isRequired
+	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ },

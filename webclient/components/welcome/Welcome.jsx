@@ -58,5 +58,7 @@ class Welcome extends React.Component {
       );
   }
 }
-
+Welcome.propTypes = {  
+  children: React.PropTypes.node.isRequired
+}
 export default Welcome;

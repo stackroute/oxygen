@@ -38,8 +38,8 @@ export default class Job extends React.Component {
 	deletejob(id)
 	{
 		console.log("in delete module");
-		var invert=this.state.jobList;
-		var deleteItem=invert.filter(function(ele) {
+		let invert=this.state.jobList;
+		let deleteItem=invert.filter(function(ele) {
 			return ele._id!==id;
 		});		
 		this.setState({jobList:deleteItem});
@@ -50,9 +50,9 @@ export default class Job extends React.Component {
 		.send({'_id':id})
 		.end(function(err, res){
 			if(err)
-				console.log("error deleting "+err)
+				{console.log("error deleting "+err)}
 			else
-				console.log("deleted")
+				{console.log("deleted "+res)}
 		});
 	}
 
@@ -82,19 +82,19 @@ export default class Job extends React.Component {
 	update(id,newJob)
 	{
 		console.log("in update module");
-		var invert=this.state.jobList;
+		let invert=this.state.jobList;
 		console.log(newJob)
-		if(newJob!=undefined)
+		if(typeof newJob!=="undefined")
 		{
-			newJob['_id']=id;
-			var updateItem=invert.filter(function(ele) {
-				if(ele._id==id)
+			newJob._id=id;
+			let updateItem=invert.filter(function(ele) {
+				if(ele._id===id)
 				{
-					ele.query=newJob.query,
-					ele.engineID=newJob.engineID,
-					ele.extraTerms=newJob.extraTerms,
-					ele.results=newJob.results,
-					ele.siteSearch=newJob.siteSearch
+					ele.query=newJob.query;
+					ele.engineID=newJob.engineID;
+					ele.extraTerms=newJob.extraTerms;
+					ele.results=newJob.results;
+					ele.siteSearch=newJob.siteSearch;
 					return ele;
 				}
 				return ele;
@@ -107,9 +107,9 @@ export default class Job extends React.Component {
 			.send(newJob)
 			.end(function(err, res){
 				if(err)
-					console.log("error updating "+err)
+					{console.log("error updating "+err)}
 				else
-					console.log("updated")
+					{console.log("updated "+res)}
 			});
 		}
 	}
@@ -119,19 +119,19 @@ export default class Job extends React.Component {
 			<div style={fonts}>
 			<h4>{this.state.errmsg}</h4>
 			<h1 >JOB MANAGER</h1>
-			{this.state.jobList.length!=0?<div>
+			{this.state.jobList.length!==0?<div>
 				<h1>JOB LIST</h1>
 
 				<Container>
 				{this.state.jobList.map((item,i) =>{
 					console.log("each job item")
 					console.log(item)
-					return <Show index={i} key={i} indexs={i} ref="show"
-					update={this.update.bind(this)}
-					deletejob={this.deletejob.bind(this)} item={item} />
+					return (<Show index={i} key={i} indexs={i} ref="show"
+						update={this.update.bind(this)}
+						deletejob={this.deletejob.bind(this)} item={item} />)
 				})}
 				</Container>
-				</div>:<h1>NO JOBS AVAILABLE</h1>}
+				</div>:<h1>NO JOBS AVAIsdfgLABLE</h1>}
 				<AddJobDialog addJob={this.addJob.bind(this)} style={{color: "#1976d2 "}}/>
 				</div>
 

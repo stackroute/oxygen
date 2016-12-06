@@ -1,5 +1,6 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
+import Formsy from 'formsy-react';
 import FlatButton from 'material-ui/FlatButton';
 import {Container, Row, Col} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
@@ -145,9 +146,12 @@ export default class EditJobDialog extends React.Component {
         value={this.state.engineID}
         onChange={this.onChangeEngineID.bind(this)}
         >
-        <MenuItem value="009216953448521283757:ibz3hdutpom AIzaSyAZlmGbpm66fk3sHXENieM61djlueEds9Y" primaryText="Engine - A" />
-        <MenuItem value="015901048907159908775:bu8jkb0g1c0 AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60" primaryText="Engine - B" />
-        <MenuItem value="017039332294312221469:tjlfw4hfuwc AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY" primaryText="Engine - C" />
+        <MenuItem value="009216953448521283757:ibz3hdutpom AIzaSyAZlmGbpm66fk3sHXENieM61djlueEds9Y" 
+        primaryText="Engine - A" />
+        <MenuItem value="015901048907159908775:bu8jkb0g1c0 AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60" 
+        primaryText="Engine - B" />
+        <MenuItem value="017039332294312221469:tjlfw4hfuwc AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY"
+        primaryText="Engine - C" />
         </FormsySelect></Col>
         </Row>
 
