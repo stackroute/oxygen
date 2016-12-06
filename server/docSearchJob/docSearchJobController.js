@@ -5,7 +5,7 @@ const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
 
 const addJob = function(jobData, callback) {
   console.log(jobData)
-  var job=new docSearchJobModel(jobData);
+  let job=new docSearchJobModel(jobData);
   job.save(function(err) {
     if (err) {
       logger.error(
@@ -39,20 +39,20 @@ const updateJob = function(job, callback) {
       return callback(err, {});
     }
     console.log(data);
-    data.query=job.query,
-    data.engineID=job.engineID,
-    data.extraTerms=job.extraTerms,
-    data.results=job.results,
+    data.query=job.query
+    data.engineID=job.engineID
+    data.extraTerms=job.extraTerms
+    data.results=job.results
     data.siteSearch=job.siteSearch
 
-    data.save(function (err){
-      if(err)
-        return callback(err, {});
-      else
+    let ack=data.save(function (save_err){
+      if(!save_err)
+      {
         return callback(null, {msg:'updated'});
+      }
+      return callback(null,{err:"unexpected"});
     })
-
-    
+    return ack;    
   });
 };
 

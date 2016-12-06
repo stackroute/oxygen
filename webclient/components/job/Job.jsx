@@ -131,7 +131,7 @@ export default class Job extends React.Component {
 						deletejob={this.deletejob.bind(this)} item={item} />)
 				})}
 				</Container>
-				</div>:<h1>NO JOBS AVAIsdfgLABLE</h1>}
+				</div>:<h1>NO JOBS AVAILABLE</h1>}
 				<AddJobDialog addJob={this.addJob.bind(this)} style={{color: "#1976d2 "}}/>
 				</div>
 

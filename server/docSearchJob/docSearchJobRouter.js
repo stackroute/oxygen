@@ -7,7 +7,7 @@ const controller = require('./docSearchJobController');
 //  Effective API URI will be /docsearchjob/job
 Router.post('/job', function(req, res) {
   try {
-    controller.addJob(req.body, (err, result) => {
+    let ack=controller.addJob(req.body, (err, result) => {
       if (err) {
         logger.error('Error in fetching entity ', err);
         return res.status(500).json({
@@ -20,6 +20,7 @@ Router.post('/job', function(req, res) {
       console.log(result)
       return res.json(result);
     });
+    return ack;
   } catch (err) {
     logger.error("Caught exception: ", err);
 
@@ -27,11 +28,11 @@ Router.post('/job', function(req, res) {
       error: 'Something went wrong in catch, please try later..!'
     });
   }
-
+  
 });
 Router.get('/show', function(req, res) {
  try {
-  controller.showJob((err,result) => {
+  let sendData=controller.showJob((err,result) => {
     if (err) {
       logger.error('Error in fetching entity ', err);
       return res.status(500).json({
@@ -40,10 +41,15 @@ Router.get('/show', function(req, res) {
     }
 
       //  SUCCESS
+      
+      
       console.log("from the showjob server side :")
       console.log(result)
       return res.json(result);
+      
     });
+  return sendData;
+
 } catch (err) {
   logger.error("Caught exception: ", err);
 
@@ -51,12 +57,11 @@ Router.get('/show', function(req, res) {
     error: 'Something went wrong in catch, please try later..!'
   });
 }
-
 });
 
 Router.delete('/delete', function(req, res) {
  try {
-  controller.deleteJob(req.body,(err,result) => {
+  let del=controller.deleteJob(req.body,(err,result) => {
     if (err) {
       logger.error('Error in fetching entity ', err);
       return res.status(500).json({
@@ -69,6 +74,7 @@ Router.delete('/delete', function(req, res) {
       console.log(result)
       return res.json(result);
     });
+  return del;
 } catch (err) {
   logger.error("Caught exception: ", err);
 
@@ -81,7 +87,7 @@ Router.delete('/delete', function(req, res) {
 
 Router.post('/update', function(req, res) {
  try {
-  controller.updateJob(req.body,(err,result) => {
+  let savedRecord=controller.updateJob(req.body,(err,result) => {
     if (err) {
       logger.error('Error in fetching entity ', err);
       return res.status(500).json({
@@ -94,6 +100,7 @@ Router.post('/update', function(req, res) {
       console.log(result)
       return res.json(result);
     });
+  return savedRecord;
 } catch (err) {
   logger.error("Caught exception: ", err);
 

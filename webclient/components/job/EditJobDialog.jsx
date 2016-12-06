@@ -56,7 +56,7 @@ export default class EditJobDialog extends React.Component {
     {
       this.setState({query:e.target.value})
     }
-    onChangeEngineID = (event, index, value) => {
+    onChangeEngineID = (event, index) => {
       this.setState({engineID:index})
     };
 
@@ -205,4 +205,9 @@ export default class EditJobDialog extends React.Component {
         </div>
         );
     }
+  }
+  EditJobDialog.propTypes = {  
+    cancel: React.PropTypes.func.isRequired,
+    save: React.PropTypes.func.isRequired,
+    item: React.PropTypes.object.isRequired
   }
