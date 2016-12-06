@@ -38,6 +38,7 @@ export default class CardResult extends React.Component {
   }
   render() {
     return (
+
       <Container>
       <Row>
       <Col lg={12}>
@@ -50,16 +51,16 @@ export default class CardResult extends React.Component {
       <p style={{color:"gray"}}><b>Link : </b><a href={this.state.cardDetails.url} target="_blank">{this.state.cardDetails.url}</a></p>
       </CardText>
       <div style={styles.wrapper}>
-      <Chip style={styles.chip}>Basic:{this.state.cardDetails.intent[0].basic}</Chip>
-      <Chip style={styles.chip}>Tutorial:{this.state.cardDetails.intent[0].tutorial}</Chip>
-      <Chip style={styles.chip}>Manual:{this.state.cardDetails.intent[0].manual}</Chip>
-      <Chip style={styles.chip}>Theory:{this.state.cardDetails.intent[0].theory}</Chip>
-      <Chip style={styles.chip}>CompleteReference:{this.state.cardDetails.intent[0].completeReference}</Chip>
+      <Chip style={styles.chip}>Basic:</Chip>
+      <Chip style={styles.chip}>Tutorial</Chip>
+      <Chip style={styles.chip}>Manual</Chip>
+      <Chip style={styles.chip}>Theory</Chip>
+      <Chip style={styles.chip}>CompleteReference:teReference</Chip>
       </div>
       </Card>
       </Col>
       </Row>
-    </Container>
+      </Container>
       );
   }
 }

@@ -47,6 +47,8 @@ export default class EditJobDialog extends React.Component {
         results:this.state.results,
         siteSearch:(this.state.siteSearch === "" ? "NONE":this.state.siteSearch)
       };
+      console.log("updated obj")
+      console.log(newJob)
       this.props.save(newJob);
     };
     onChangeQuery(e)
@@ -143,9 +145,9 @@ export default class EditJobDialog extends React.Component {
         value={this.state.engineID}
         onChange={this.onChangeEngineID.bind(this)}
         >
-        <MenuItem value={'eng1'} primaryText="engine1" />
-        <MenuItem value={'eng2'} primaryText="engine2" />
-        <MenuItem value={'eng3'} primaryText="engine3" />
+        <MenuItem value="009216953448521283757:ibz3hdutpom AIzaSyAZlmGbpm66fk3sHXENieM61djlueEds9Y" primaryText="Engine - A" />
+        <MenuItem value="015901048907159908775:bu8jkb0g1c0 AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60" primaryText="Engine - B" />
+        <MenuItem value="017039332294312221469:tjlfw4hfuwc AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY" primaryText="Engine - C" />
         </FormsySelect></Col>
         </Row>
 
@@ -171,6 +173,7 @@ export default class EditJobDialog extends React.Component {
         name="results"
         validationError={numberError}
         defaultValue={this.state.results}
+        value={this.state.results}
         updateImmediately
         required
         hintText="value"

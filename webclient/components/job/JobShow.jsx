@@ -24,6 +24,8 @@ export default class Show extends React.Component {
 		this.enableButton = this.enableButton.bind(this);
 		this.disableButton = this.disableButton.bind(this);
 		this.editFunction = this.editFunction.bind(this);
+		this.deleteFunction = this.deleteFunction.bind(this);
+
 	}
 	editFunction()
 	{
@@ -33,6 +35,7 @@ export default class Show extends React.Component {
 		this.setState({extraTerms:this.props.item.extraTerms})
 		this.setState({results:this.props.item.results})
 		this.setState({siteSearch:this.props.item.siteSearch})
+		this.props.update(this.props.item._id,);
 	}
 	enableButton() {
 		this.setState(()=>({
@@ -44,11 +47,16 @@ export default class Show extends React.Component {
 			canSubmit: false
 		}));
 	}
-	saveFunction(e)
+	saveFunction(newJob)
 	{
 		console.log("updatingggggg")
-		this.props.update(this.props.indexs,e);
+		this.props.update(this.props.item._id,newJob);
 		this.setState({editing:false});
+	}
+	deleteFunction()
+	{
+		console.log("deletinggggggg "+this.props.item._id)
+		this.props.deletejob(this.props.item._id);
 	}
 	componentWillMount()
 	{
@@ -82,12 +90,12 @@ export default class Show extends React.Component {
 			showExpandableButton={true}
 			/>
 			<CardActions>
-			<FlatButton label="EDIT" data-id={this.props.index}
+			<FlatButton label="EDIT" 
 			onClick={this.editFunction} primary={true} style={cusbut} />
-			<FlatButton label="DELETE" data-id={this.props.index}
-			onClick={this.props.delete} secondary={true} style={cusbut} />
+			<FlatButton label="DELETE" 
+			onClick={this.deleteFunction} secondary={true} style={cusbut} />
 			<Link to={'/jobResult/'+this.props.item._id}>
-			<FlatButton label="SEARCH" data-id={this.props.index} primary={true} style={cusbut} />
+			<FlatButton label="SEARCH" primary={true} style={cusbut} />
 			</Link>
 			</CardActions>
 			<CardText expandable={true} >

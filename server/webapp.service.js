@@ -8,19 +8,27 @@ const logger = require('../applogger');
 
 const service = require('./service');
 
+function setupWebAppRESTRoutes(app) {
+	app.use('/docsearchjob', require(path.join(__dirname, 'docSearchJob')));
+
+	return app;
+}
+
 // App Constructor function is exported
 module.exports = function() {
-  let app = service.createApp();
+	let app = service.createApp();
 
-  app = service.setupStaticRoutes(app);
+	app = service.setupStaticRoutes(app);	
 
-  app = service.setupMiddlewares(app);
+	app = service.setupMiddlewares(app);
 
-  app = service.setupWebpack(app);
+	app = service.setupWebpack(app);
 
-  app = service.setupRestRoutes(app);
+	app = setupWebAppRESTRoutes(app);
 
-  service.setupMongooseConnections();
+	app = service.setupRestRoutes(app);
 
-  return app;
+	service.setupMongooseConnections();
+
+	return app;
 };

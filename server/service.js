@@ -50,6 +50,13 @@ function setupMiddlewares(app) {
 
   const compression = require('compression');
   app.use(compression());
+  app.use(function(req,res,next)
+  {
+    res.header('Access-Control-Allow-Origin',"*");
+    res.header('Access-Control-Allow-Method','GET,POST,PUT,DELETE');
+    res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    next();
+  });
 
   return app;
 }
@@ -92,7 +99,7 @@ function setupMongooseConnections() {
     mongoose.connection.close(function() {
       logger.info(
         'Mongoose disconnected on process termination'
-      );
+        );
       process.exit(0);
     });
   });
