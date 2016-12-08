@@ -80,5 +80,5 @@ export default class JobResult extends React.Component {
   }
 }
 JobResult.propTypes = {  
-  params: React.PropTypes.object.isRequired
+  params: React.PropTypes.object
 }

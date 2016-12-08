@@ -92,7 +92,7 @@ export default class Job extends React.Component {
 				{
 					ele.query=newJob.query;
 					ele.engineID=newJob.engineID;
-					ele.extraTerms=newJob.extraTerms;
+					ele.exactTerms=newJob.exactTerms;
 					ele.results=newJob.results;
 					ele.siteSearch=newJob.siteSearch;
 					return ele;

@@ -33,7 +33,7 @@ export default class EditJobDialog extends React.Component {
       canSubmit:false,
       query:props.item.query,
       engineID:props.item.engineID,
-      extraTerms:(props.item.extraTerms==="NONE"?"":props.item.extraTerms),
+      exactTerms:(props.item.exactTerms==="NONE"?"":props.item.exactTerms),
       results:props.item.results,
       siteSearch:(props.item.siteSearch==="NONE"?"":props.item.siteSearch)
     };}
@@ -44,7 +44,7 @@ export default class EditJobDialog extends React.Component {
       let newJob = {
         query: this.state.query,
         engineID: this.state.engineID,
-        extraTerms:(this.state.extraTerms === "" ? "NONE":this.state.extraTerms),
+        exactTerms:(this.state.exactTerms === "" ? "NONE":this.state.exactTerms),
         results:this.state.results,
         siteSearch:(this.state.siteSearch === "" ? "NONE":this.state.siteSearch)
       };
@@ -60,9 +60,9 @@ export default class EditJobDialog extends React.Component {
       this.setState({engineID:index})
     };
 
-    onChangeExtraTerms(e)
+    onChangeExactTerms(e)
     {
-      this.setState({extraTerms:e.target.value})
+      this.setState({exactTerms:e.target.value})
     }
     onChangeResults(e)
     {
@@ -156,17 +156,17 @@ export default class EditJobDialog extends React.Component {
         </Row>
 
         <Row>
-        <Col lg={3} style={Label}>EXTRA-TERMS</Col>
+        <Col lg={3} style={Label}>EXACT-TERMS</Col>
         <Col lg={9}><FormsyText
         type="text"
-        name="extraTerms"
+        name="exactTerms"
         validations="isWords"
         validationError={wordsError}
-        defaultValue={this.state.extraTerms}
+        defaultValue={this.state.exactTerms}
         updateImmediately
         hintText="value"
         style={tfont}
-        fullWidth={true} onChange={this.onChangeExtraTerms.bind(this)}/></Col>
+        fullWidth={true} onChange={this.onChangeExactTerms.bind(this)}/></Col>
         </Row>
 
         <Row>
@@ -207,7 +207,7 @@ export default class EditJobDialog extends React.Component {
     }
   }
   EditJobDialog.propTypes = {  
-    cancel: React.PropTypes.func.isRequired,
-    save: React.PropTypes.func.isRequired,
-    item: React.PropTypes.object.isRequired
+    cancel: React.PropTypes.func,
+    save: React.PropTypes.func,
+    item: React.PropTypes.object
   }

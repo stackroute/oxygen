@@ -41,7 +41,7 @@ const updateJob = function(job, callback) {
     console.log(data);
     data.query=job.query
     data.engineID=job.engineID
-    data.extraTerms=job.extraTerms
+    data.exactTerms=job.exactTerms
     data.results=job.results
     data.siteSearch=job.siteSearch
 

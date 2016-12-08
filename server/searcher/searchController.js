@@ -11,8 +11,18 @@ const getURL= function(jobDetails,i,callback)
   let eng=jobDetails.engineID.split(' ');
   let url="https://www.googleapis.com/customsearch/v1?q="+
   jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i;
+  if(jobDetails.siteSearch!=='NONE'){
+    url="https://www.googleapis.com/customsearch/v1?q="+
+    jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i+"&siteSearch="+jobDetails.siteSearch;
+  }
+  if(jobDetails.exactTerms!=='NONE')
+  {
+    url="https://www.googleapis.com/customsearch/v1?q="+
+    jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i+"&siteSearch="+
+    jobDetails.siteSearch+"&exactTerms="+jobDetails.exactTerms;
+  }
   let searchResults=[];
-  console.log(url+" "+jobDetails.results);
+  console.log(url);
   Request
   .get(url)
   .end(function(err,body)
@@ -22,16 +32,23 @@ const getURL= function(jobDetails,i,callback)
       console.log(body.text);
     }
 
-    let data = JSON.parse(body.text);        
+    let data = JSON.parse(body.text);   
+    console.log(data)     
     for (let k = 0; k < data.items.length; k+=1) {
-      let searchResult={
-        "query":jobDetails.query,
-        "title":data.items[k].title,
-        "url":data.items[k].link,
-        "description":data.items[k].snippet
-      };
+
       if((i+k)<=jobDetails.results)
-        {searchResults.push(searchResult);}  
+      {
+        let searchResult={
+          "query":jobDetails.query,
+          "title":data.items[k].title,
+          "url":data.items[k].link,
+          "description":data.items[k].snippet,
+          "concept":[],
+          "newWords":[],
+          "intent":[]
+        };
+        searchResults.push(searchResult);
+      }  
       else     
         {break;}
     }
@@ -70,9 +87,9 @@ const storeURL = function(id, callback) {
 
     let sendData=async.parallel(stack,function(errs,res){
       let send=[];
-      res.map((ele,i)=>{
+      res.map((ele)=>{
         console.log(ele.length);
-        ele.map((data)=>{
+        ele.map((data,i)=>{
           send.push(data);
           let saveUrl=new searchModel(data);
           saveUrl.save(function (save_err) {
