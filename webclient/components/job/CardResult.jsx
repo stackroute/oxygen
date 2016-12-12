@@ -61,6 +61,6 @@ export default class CardResult extends React.Component {
   }
 }
 CardResult.propTypes = {  
-  searchItem: React.PropTypes.object.isRequired
+  searchItem: React.PropTypes.object
   
 }

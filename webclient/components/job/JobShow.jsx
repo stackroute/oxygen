@@ -32,7 +32,7 @@ export default class Show extends React.Component {
 		this.setState({editing:true});
 		this.setState({query:this.props.item.query})
 		this.setState({engineID:this.props.item.engineID})
-		this.setState({extraTerms:this.props.item.extraTerms})
+		this.setState({exactTerms:this.props.item.exactTerms})
 		this.setState({results:this.props.item.results})
 		this.setState({siteSearch:this.props.item.siteSearch})
 		this.props.update(this.props.item._id,);
@@ -110,7 +110,7 @@ export default class Show extends React.Component {
 			</Row>
 			<Row >
 			<Col lg={6}>
-			<h4>{"TERMS TO INCLUDE : "+this.props.item.extraTerms}</h4>
+			<h4>{"TERMS TO INCLUDE : "+this.props.item.exactTerms}</h4>
 			</Col>
 			<Col lg={6}>
 			<h4>{"RESULTS TO SHOW : "+this.props.item.results}</h4>
@@ -133,7 +133,7 @@ export default class Show extends React.Component {
 	}
 }
 Show.propTypes = {  
-	item: React.PropTypes.object.isRequired,
-	update: React.PropTypes.func.isRequired,
-	deletejob: React.PropTypes.func.isRequired
+	item: React.PropTypes.object,
+	update: React.PropTypes.func,
+	deletejob: React.PropTypes.func
 }

@@ -3,10 +3,26 @@ const mongoose = require('mongoose');
 /* beautify ignore:start */
 /* beautify preserve:start */
 const schema = new mongoose.Schema({
-	query:String,
-	url:String,
+	query: String,
+	url: String,
 	title: String,
-	description:String}, {collection: 'searcherResult', versionKey: false});
+	description: String,
+	concept : [{
+		word : String,
+		density : Number
+	}],
+	newWords : [{
+		word : String,
+		density : Number
+	}],
+	intent:[{
+		basic: Number,
+		tutorial: Number,
+		theory: Number,
+		manual:Number,
+		completeReference:Number
+	}]
+}, {collection: 'searcherResult', versionKey: false});
 
 //schema.index({url: 1}, {unique: true});
 

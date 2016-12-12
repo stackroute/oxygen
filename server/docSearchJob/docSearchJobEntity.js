@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const schema = new mongoose.Schema({ 
 	query: String,
 	engineID:String,
-	extraTerms:String,
+	exactTerms:String,
 	results:Number,
 	siteSearch:String
 

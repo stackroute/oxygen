@@ -43,7 +43,7 @@ export default class AddJobDialog extends React.Component {
     open: false,
     query:"",
     engineID:"009216953448521283757:ibz3hdutpom AIzaSyAZlmGbpm66fk3sHXENieM61djlueEds9Y",
-    extraTerms:"",
+    exactTerms:"",
     results:0,
     siteSearch:""}
   }
@@ -52,7 +52,7 @@ export default class AddJobDialog extends React.Component {
     let newJob = {
       query: this.state.query,
       engineID: this.state.engineID,
-      extraTerms:(this.state.extraTerms ===""?"NONE":this.state.extraTerms),
+      exactTerms:(this.state.exactTerms ===""?"NONE":this.state.exactTerms),
       results:this.state.results,
       siteSearch:(this.state.siteSearch ===""?"NONE":this.state.siteSearch)
     };
@@ -69,12 +69,12 @@ export default class AddJobDialog extends React.Component {
     this.setState({engineID:index})
   };
   
-  onChangeExtraTerms(e)
+  onChangeExactTerms(e)
   {
-    this.setState({extraTerms:e.target.value})
+    this.setState({exactTerms:e.target.value})
   }
   onChangeResults(e)
-  {
+  {  
     this.setState({results:e.target.value})
   }
   onChangeSite(e)
@@ -162,16 +162,16 @@ export default class AddJobDialog extends React.Component {
       </FormsySelect></Col>
       </Row>
       <Row>
-      <Col lg={3} style={Label}>EXTRA-TERMS</Col>
+      <Col lg={3} style={Label}>EXACT-TERMS</Col>
       <Col lg={9}><FormsyText
       type="text"
-      name="extraTerms"
+      name="exactTerms"
       validations="isWords"
       validationError={wordsError}
       updateImmediately
       hintText="value"
       style={tfont}
-      fullWidth={true} onChange={this.onChangeExtraTerms.bind(this)}/></Col>
+      fullWidth={true} onChange={this.onChangeExactTerms.bind(this)}/></Col>
       </Row>
 
       <Row>
@@ -209,5 +209,5 @@ export default class AddJobDialog extends React.Component {
   }
 }
 AddJobDialog.propTypes = {  
-  addJob: React.PropTypes.func.isRequired
+  addJob: React.PropTypes.func
 }

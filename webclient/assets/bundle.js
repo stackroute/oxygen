@@ -46449,7 +46449,7 @@
 	exports.default = JobResult;
 
 	JobResult.propTypes = {
-	  params: _react2.default.PropTypes.object.isRequired
+	  params: _react2.default.PropTypes.object
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
@@ -48193,7 +48193,7 @@
 	exports.default = CardResult;
 
 	CardResult.propTypes = {
-	  searchItem: _react2.default.PropTypes.object.isRequired
+	  searchItem: _react2.default.PropTypes.object
 
 	};
 
@@ -51695,7 +51695,7 @@
 						if (ele._id === id) {
 							ele.query = newJob.query;
 							ele.engineID = newJob.engineID;
-							ele.extraTerms = newJob.extraTerms;
+							ele.exactTerms = newJob.exactTerms;
 							ele.results = newJob.results;
 							ele.siteSearch = newJob.siteSearch;
 							return ele;
@@ -51861,7 +51861,7 @@
 				this.setState({ editing: true });
 				this.setState({ query: this.props.item.query });
 				this.setState({ engineID: this.props.item.engineID });
-				this.setState({ extraTerms: this.props.item.extraTerms });
+				this.setState({ exactTerms: this.props.item.exactTerms });
 				this.setState({ results: this.props.item.results });
 				this.setState({ siteSearch: this.props.item.siteSearch });
 				this.props.update(this.props.item._id);
@@ -51985,7 +51985,7 @@
 											_react2.default.createElement(
 												'h4',
 												null,
-												"TERMS TO INCLUDE : " + this.props.item.extraTerms
+												"TERMS TO INCLUDE : " + this.props.item.exactTerms
 											)
 										),
 										_react2.default.createElement(
@@ -52021,9 +52021,9 @@
 	exports.default = Show;
 
 	Show.propTypes = {
-		item: _react2.default.PropTypes.object.isRequired,
-		update: _react2.default.PropTypes.func.isRequired,
-		deletejob: _react2.default.PropTypes.func.isRequired
+		item: _react2.default.PropTypes.object,
+		update: _react2.default.PropTypes.func,
+		deletejob: _react2.default.PropTypes.func
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
@@ -52105,7 +52105,7 @@
 	      var newJob = {
 	        query: _this.state.query,
 	        engineID: _this.state.engineID,
-	        extraTerms: _this.state.extraTerms === "" ? "NONE" : _this.state.extraTerms,
+	        exactTerms: _this.state.exactTerms === "" ? "NONE" : _this.state.exactTerms,
 	        results: _this.state.results,
 	        siteSearch: _this.state.siteSearch === "" ? "NONE" : _this.state.siteSearch
 	      };
@@ -52131,7 +52131,7 @@
 	      canSubmit: false,
 	      query: props.item.query,
 	      engineID: props.item.engineID,
-	      extraTerms: props.item.extraTerms === "NONE" ? "" : props.item.extraTerms,
+	      exactTerms: props.item.exactTerms === "NONE" ? "" : props.item.exactTerms,
 	      results: props.item.results,
 	      siteSearch: props.item.siteSearch === "NONE" ? "" : props.item.siteSearch
 	    };return _this;
@@ -52143,9 +52143,9 @@
 	      this.setState({ query: e.target.value });
 	    }
 	  }, {
-	    key: 'onChangeExtraTerms',
-	    value: function onChangeExtraTerms(e) {
-	      this.setState({ extraTerms: e.target.value });
+	    key: 'onChangeExactTerms',
+	    value: function onChangeExactTerms(e) {
+	      this.setState({ exactTerms: e.target.value });
 	    }
 	  }, {
 	    key: 'onChangeResults',
@@ -52273,21 +52273,21 @@
 	                _react2.default.createElement(
 	                  _reactGridSystem.Col,
 	                  { lg: 3, style: Label },
-	                  'EXTRA-TERMS'
+	                  'EXACT-TERMS'
 	                ),
 	                _react2.default.createElement(
 	                  _reactGridSystem.Col,
 	                  { lg: 9 },
 	                  _react2.default.createElement(_FormsyText2.default, {
 	                    type: 'text',
-	                    name: 'extraTerms',
+	                    name: 'exactTerms',
 	                    validations: 'isWords',
 	                    validationError: wordsError,
-	                    defaultValue: this.state.extraTerms,
+	                    defaultValue: this.state.exactTerms,
 	                    updateImmediately: true,
 	                    hintText: 'value',
 	                    style: tfont,
-	                    fullWidth: true, onChange: this.onChangeExtraTerms.bind(this) })
+	                    fullWidth: true, onChange: this.onChangeExactTerms.bind(this) })
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -52363,9 +52363,9 @@
 	exports.default = EditJobDialog;
 
 	EditJobDialog.propTypes = {
-	  cancel: _react2.default.PropTypes.func.isRequired,
-	  save: _react2.default.PropTypes.func.isRequired,
-	  item: _react2.default.PropTypes.object.isRequired
+	  cancel: _react2.default.PropTypes.func,
+	  save: _react2.default.PropTypes.func,
+	  item: _react2.default.PropTypes.object
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
@@ -56607,7 +56607,7 @@
 	      open: false,
 	      query: "",
 	      engineID: "009216953448521283757:ibz3hdutpom AIzaSyAZlmGbpm66fk3sHXENieM61djlueEds9Y",
-	      extraTerms: "",
+	      exactTerms: "",
 	      results: 0,
 	      siteSearch: "" };
 	    return _this;
@@ -56620,7 +56620,7 @@
 	      var newJob = {
 	        query: this.state.query,
 	        engineID: this.state.engineID,
-	        extraTerms: this.state.extraTerms === "" ? "NONE" : this.state.extraTerms,
+	        exactTerms: this.state.exactTerms === "" ? "NONE" : this.state.exactTerms,
 	        results: this.state.results,
 	        siteSearch: this.state.siteSearch === "" ? "NONE" : this.state.siteSearch
 	      };
@@ -56635,9 +56635,9 @@
 	      this.setState({ query: e.target.value });
 	    }
 	  }, {
-	    key: 'onChangeExtraTerms',
-	    value: function onChangeExtraTerms(e) {
-	      this.setState({ extraTerms: e.target.value });
+	    key: 'onChangeExactTerms',
+	    value: function onChangeExactTerms(e) {
+	      this.setState({ exactTerms: e.target.value });
 	    }
 	  }, {
 	    key: 'onChangeResults',
@@ -56768,20 +56768,20 @@
 	                _react2.default.createElement(
 	                  _reactGridSystem.Col,
 	                  { lg: 3, style: Label },
-	                  'EXTRA-TERMS'
+	                  'EXACT-TERMS'
 	                ),
 	                _react2.default.createElement(
 	                  _reactGridSystem.Col,
 	                  { lg: 9 },
 	                  _react2.default.createElement(_FormsyText2.default, {
 	                    type: 'text',
-	                    name: 'extraTerms',
+	                    name: 'exactTerms',
 	                    validations: 'isWords',
 	                    validationError: wordsError,
 	                    updateImmediately: true,
 	                    hintText: 'value',
 	                    style: tfont,
-	                    fullWidth: true, onChange: this.onChangeExtraTerms.bind(this) })
+	                    fullWidth: true, onChange: this.onChangeExactTerms.bind(this) })
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -56854,7 +56854,7 @@
 	exports.default = AddJobDialog;
 
 	AddJobDialog.propTypes = {
-	  addJob: _react2.default.PropTypes.func.isRequired
+	  addJob: _react2.default.PropTypes.func
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
