@@ -5,7 +5,7 @@
  */
 
 //Create instance of express based web app
-var app = require('../server/docsearch.service')();
+var app = require('../server/doccrawl.service')();
 var config = require('../config');
 var debug = require('debug')('dataDisplayApp:server');
 var http = require('http');
@@ -15,7 +15,7 @@ var http = require('http');
  */
 
 // var port = normalizePort(process.env.PORT || '8080');
-var port = normalizePort(config.SEARCHER_PORT);
+var port = normalizePort(config.CRAWLER_PORT);
 
 /**
  * Create HTTP server.

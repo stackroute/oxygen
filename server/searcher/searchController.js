@@ -1,5 +1,15 @@
+#!/usr/bin/env node
 'use strict';
-
+const amqp = require('amqplib/callback_api');
+const open=function(objId){
+       amqp.connect('amqp://localhost', function(connErr, conn) {
+       conn.createChannel(function(channelErrs, ch) {
+       ch.assertQueue('hello', {durable: false});
+       ch.sendToQueue('hello', new Buffer(objId));
+      return ch;
+    });
+    //setTimeout(function() { conn.close(); process.exit(0) }, 500);
+  });};
 const logger = require('./../../applogger');
 const searchModel = require('./searchEntity').searchModel;
 const async = require('async');
@@ -12,7 +22,7 @@ const getURL= function(jobDetails,i,callback)
   let url="https://www.googleapis.com/customsearch/v1?q="+
   jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i;
   let searchResults=[];
-  console.log(url+" "+jobDetails.results);
+  console.log(i+" "+url+" "+jobDetails.results);
   Request
   .get(url)
   .end(function(err,body)
@@ -22,7 +32,7 @@ const getURL= function(jobDetails,i,callback)
       console.log(body.text);
     }
 
-    let data = JSON.parse(body.text);        
+    let data = JSON.parse(body.text);
     for (let k = 0; k < data.items.length; k+=1) {
       let searchResult={
         "query":jobDetails.query,
@@ -31,22 +41,22 @@ const getURL= function(jobDetails,i,callback)
         "description":data.items[k].snippet
       };
       if((i+k)<=jobDetails.results)
-        {searchResults.push(searchResult);}  
-      else     
+        {searchResults.push(searchResult);}
+      else
         {break;}
     }
     callback(null,searchResults);
    // console.log(searchResults);
 
- });  
+ });
 
 }
 
-const storeURL = function(id, callback) {  
+const storeURL = function(id, callback) {
   const query = {
     _id: id
   };
-  
+
   docSearchJobModel.findOne(query, function(err, jobDetails) {
     if (err) {
       logger.error(
@@ -60,7 +70,7 @@ const storeURL = function(id, callback) {
       return callback('job not available or not found..!', {});
     }
 
-    console.log('in search server');  
+    console.log('in search server');
     let stack=[];
 
     for(let k=1;k<jobDetails.results;k+=10){
@@ -70,36 +80,41 @@ const storeURL = function(id, callback) {
 
     let sendData=async.parallel(stack,function(errs,res){
       let send=[];
-      res.map((ele,i)=>{
+      res.map((ele)=>{
         console.log(ele.length);
-        ele.map((data)=>{
+        ele.map((data,i)=>{
           send.push(data);
           let saveUrl=new searchModel(data);
-          saveUrl.save(function (save_err) {
-            if (save_err) {
-              console.log(save_err);
+          saveUrl.save(function (saveErr,savedObj) {
+            if (saveErr) {
+              console.log(saveErr);
             }
             else {
-              console.log("saved "+i);
+              console.log("saved "+i+" "+savedObj._id);
+              let objId=savedObj._id;
+              open(objId.toString());
+              //ch.sendToQueue('hello', new Buffer(objId));
             }
           });
 
         })
-        
+
       })
       return callback(null, {'saved urls':send.length,'content':send});
     })
     return sendData;
   });
-  
+
 
 };
 
-
+  // else {
+  //   let objId=savedObj._id;
+  //   let ch=open();
+  //   ch.sendToQueue('hello', new Buffer(objId));
+  // }
 
 module.exports = {
   storeURL: storeURL,
   getURL:getURL
 };
-
-

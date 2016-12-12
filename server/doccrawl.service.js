@@ -1,10 +1,9 @@
 
 const path = require('path');
-
 const service = require('./service');
 
 function setupWebAppRESTRoutes(app) {
-	app.use('/searchJobResult', require(path.join(__dirname, 'searcher')));
+	app.use('/crawler', require(path.join(__dirname, 'crawler')));
 
 	return app;
 }
