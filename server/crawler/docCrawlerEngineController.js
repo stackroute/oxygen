@@ -60,7 +60,7 @@ searchModel.findOne(url, function(err, urlDetails) {
     text = text.replace(/\s+/g, " ")
     .replace(/[^a-zA-Z ]/g, "")
     .toLowerCase();
-    console.log("created texts")
+    console.log("created texts for "+urlDetails.url)
     let urlArray=[];
     urlArray.push(text);
     highland(urlArray)
