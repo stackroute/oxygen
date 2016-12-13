@@ -25,13 +25,7 @@ const getData= function(urlId)
 
   processors.push(highland.map(function(data){
     console.log(data);
-  let processedInfo=crawlerModules.getDocDataController(data, (err, result) => {
-    if (err) {
-    console.log('error: Something went wrong, please try later..!');
-    }
-    console.log(result)
-    return (result);
-  });
+  let processedInfo=crawlerModules.getDocDataController(data);
   console.log("after process "+processedInfo);
     return processedInfo;
   }));
