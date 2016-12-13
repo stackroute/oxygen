@@ -38,10 +38,10 @@ const open=function(objId){
   {
     if(err)
     {
-      console.log(body.text);
+      console.log(body);
     }
 
-
+    console.log(body);
     let data = JSON.parse(body.text);
     console.log(data)
     for (let k = 0; k < data.items.length; k+=1) {
