@@ -1,54 +1,72 @@
 #!/usr/bin/env node
 'use strict';
-const amqp = require('amqplib/callback_api');
-const open=function(objId){
-      amqp.connect('amqp://localhost', function(connErr, conn) {
-      conn.createChannel(function(channelErrs, ch) {
-      ch.assertQueue('hello', {durable: false});
-      ch.sendToQueue('hello', new Buffer(objId));
-     return ch;
-   });
-   //setTimeout(function() { conn.close(); process.exit(0) }, 500);
- });};
 const logger = require('./../../applogger');
 const searchModel = require('./searchEntity').searchModel;
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
 
-const getURL= function(jobDetails,i,callback)
-{
- let eng=jobDetails.engineID.split(' ');
- let url="https://www.googleapis.com/customsearch/v1?q="+
- jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i;
- let searchResults=[];
- console.log(i+" "+url+" "+jobDetails.results);
- Request
- .get(url)
- .end(function(err,body)
+const amqp = require('amqplib/callback_api');
+const open=function(objId){
+ amqp.connect('amqp://localhost', function(connErr, conn) {
+   conn.createChannel(function(channelErrs, ch) {
+     ch.assertQueue('hello', {durable: false});
+     ch.sendToQueue('hello', new Buffer(objId));
+     return ch;
+   });
+    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
+  });};
+ const getURL= function(jobDetails,i,callback)
  {
-   if(err)
-   {
-     console.log(body.text);
-   }
+  let eng=jobDetails.engineID.split(' ');
+  let url="https://www.googleapis.com/customsearch/v1?q="+
+  jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i;
+  if(jobDetails.siteSearch!=='NONE'){
+    url="https://www.googleapis.com/customsearch/v1?q="+
+    jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i+"&siteSearch="+jobDetails.siteSearch;
+  }
+  if(jobDetails.exactTerms!=='NONE')
+  {
+    url="https://www.googleapis.com/customsearch/v1?q="+
+    jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i+"&siteSearch="+
+    jobDetails.siteSearch+"&exactTerms="+jobDetails.exactTerms;
+  }
+  let searchResults=[];
+  console.log(i+" "+url+" "+jobDetails.results);
+  Request
+  .get(url)
+  .end(function(err,body)
+  {
+    if(err)
+    {
+      console.log(body);
+    }
 
-   let data = JSON.parse(body.text);
-   for (let k = 0; k < data.items.length; k+=1) {
-     let searchResult={
-       "query":jobDetails.query,
-       "title":data.items[k].title,
-       "url":data.items[k].link,
-       "description":data.items[k].snippet
-     };
-     if((i+k)<=jobDetails.results)
-       {searchResults.push(searchResult);}
-     else
-       {break;}
-   }
-   callback(null,searchResults);
-  // console.log(searchResults);
+    console.log(body);
+    let data = JSON.parse(body.text);
+    console.log(data)
+    for (let k = 0; k < data.items.length; k+=1) {
 
-});
+      if((i+k)<=jobDetails.results)
+      {
+        let searchResult={
+          "query":jobDetails.query,
+          "title":data.items[k].title,
+          "url":data.items[k].link,
+          "description":data.items[k].snippet,
+          "concept":[],
+          "newWords":[],
+          "intent":[]
+        };
+        searchResults.push(searchResult);
+      }
+      else
+        {break;}
+    }
+    callback(null,searchResults);
+   // console.log(searchResults);
+
+ });
 
 }
 
@@ -114,7 +132,8 @@ const storeURL = function(id, callback) {
  //   ch.sendToQueue('hello', new Buffer(objId));
  // }
 
-module.exports = {
- storeURL: storeURL,
- getURL:getURL
-};
+
+  module.exports = {
+    storeURL: storeURL,
+    getURL:getURL
+  };

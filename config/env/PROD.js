@@ -1,3 +1,4 @@
+
 const masterMongoDBName = process.env.APP_DB || 'oxygen';
 
 const mongo = {
@@ -24,3 +25,4 @@ module.exports = {
 	MONGO_MASTER_SERVER: mongo,
 	MONGO_URL: mongoURL
 };
+

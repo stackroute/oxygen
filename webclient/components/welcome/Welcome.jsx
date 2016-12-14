@@ -1,3 +1,4 @@
+
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -11,7 +12,7 @@ import {Link} from 'react-router';
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: true, open: false};
+    this.state = {data:true,open: false}
     this.updateState = this.updateState.bind(this);
   }
 
@@ -20,7 +21,7 @@ class Welcome extends React.Component {
   handleClose = () => this.setState({open: false});
 
   updateState() {
-    this.setState({data: false});
+    this.setState({data:false});
   }
   render() {
     return (
@@ -40,14 +41,14 @@ class Welcome extends React.Component {
       <MenuItem onTouchTap={this.handleToggle}>
       <Link to="/job">
       <IconButton><ActionSearch /></IconButton>
-      <FlatButton label="Job" style={{fontSize: '50px', marginTop: '4px'}}/>
+      <FlatButton label="Job" style={{fontSize:"50px",marginTop:"4px"}}/>
       </Link>
       </MenuItem>
 
       <MenuItem onTouchTap={this.handleToggle}>
       <Link to="/dashboard">
       <IconButton><ActionDashboard/></IconButton>
-      <FlatButton label="dashboard" style={{fontSize: '50px', marginTop: '4px'}}/>
+      <FlatButton label="dashboard" style={{fontSize:"50px",marginTop:"4px"}}/>
       </Link>
       </MenuItem>
       </Drawer>
@@ -58,7 +59,7 @@ class Welcome extends React.Component {
       );
   }
 }
-Welcome.propTypes = {
+Welcome.propTypes = {  
   children: React.PropTypes.node.isRequired
-};
+}
 export default Welcome;
