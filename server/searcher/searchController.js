@@ -1,23 +1,22 @@
 #!/usr/bin/env node
 'use strict';
-const amqp = require('amqplib/callback_api');
-const open=function(objId){
-       amqp.connect('amqp://localhost', function(connErr, conn) {
-       conn.createChannel(function(channelErrs, ch) {
-       ch.assertQueue('hello', {durable: false});
-       ch.sendToQueue('hello', new Buffer(objId));
-      return ch;
-    });
-    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
-  });};
 const logger = require('./../../applogger');
 const searchModel = require('./searchEntity').searchModel;
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
-
-const getURL= function(jobDetails,i,callback)
-{
+const amqp = require('amqplib/callback_api');
+const open=function(objId){
+ amqp.connect('amqp://localhost', function(connErr, conn) {
+   conn.createChannel(function(channelErrs, ch) {
+     ch.assertQueue('hello', {durable: false});
+     ch.sendToQueue('hello', new Buffer(objId));
+     return ch;
+   });
+    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
+  });};
+ const getURL= function(jobDetails,i,callback)
+ {
   let eng=jobDetails.engineID.split(' ');
   let url="https://www.googleapis.com/customsearch/v1?q="+
   jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i;
@@ -39,10 +38,10 @@ const getURL= function(jobDetails,i,callback)
   {
     if(err)
     {
-      console.log(body.text);
+      console.log(body);
     }
 
-
+    console.log(body);
     let data = JSON.parse(body.text);
     console.log(data)
     for (let k = 0; k < data.items.length; k+=1) {
@@ -132,7 +131,7 @@ const storeURL = function(id, callback) {
   //   ch.sendToQueue('hello', new Buffer(objId));
   // }
 
-module.exports = {
-  storeURL: storeURL,
-  getURL:getURL
-};
+  module.exports = {
+    storeURL: storeURL,
+    getURL:getURL
+  };
