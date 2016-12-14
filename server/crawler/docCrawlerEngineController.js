@@ -10,7 +10,7 @@ require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 amqp.connect('amqp://localhost', function(err, conn) {
   conn.createChannel(function(errs, ch) {
-    let q = 'hello';
+    let q = 'crawler';
     ch.assertQueue(q, {durable: false});
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
     ch.consume(q, function(msg) {
