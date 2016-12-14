@@ -95,7 +95,7 @@ export default class Show extends React.Component {
 			<FlatButton label="DELETE" 
 			onClick={this.deleteFunction} secondary={true} style={cusbut} />
 			<Link to={'/jobResult/'+this.props.item._id}>
-			<FlatButton label="SEARCH" primary={true} style={cusbut} />
+			<FlatButton label="SHOW" primary={true} style={cusbut} />
 			</Link>
 			</CardActions>
 			<CardText expandable={true} >
