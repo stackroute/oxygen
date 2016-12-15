@@ -1,14 +1,7 @@
-FROM mhart/alpine-node
+FROM oxygen-base
 
-# Create app directory
-RUN mkdir -p /usr/src/app && echo "Oxygen Crawl"
-COPY package.json /usr/src/app/
 WORKDIR /usr/src/app
-RUN npm install --production
-COPY . /usr/src/app/
 
 EXPOSE 8082
 
-WORKDIR /usr/src/app
-#CMD ["npm", "run", "crawl" "8082"]
-CMD ["node", "./bin/crawl", "8082"]
+CMD ["npm", "run", "crawl", "--production"]

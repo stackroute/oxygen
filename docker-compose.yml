@@ -17,6 +17,7 @@ services:
     - rabbitmq
     - neo4j
     environment:
+      RABBITMQ: amqp://localhost
       MONGO_HOST: localhost
       MONGO_PORT: 27017
       MONGO_DB_NAME: oxygen
@@ -34,9 +35,10 @@ services:
     - mongodb
     - rabbitmq
     environment:
+      RABBITMQ: amqp://localhost
       MONGO_HOST: localhost
       MONGO_PORT: 27017
-      MONGO_DB_NAME: oxygen    
+      MONGO_DB_NAME: oxygen
   crawl:
     image: oxygen/crawl:v0.1.0
     build: 
@@ -52,6 +54,7 @@ services:
     - rabbitmq
     - neo4j
     environment:
+      RABBITMQ: amqp://localhost
       MONGO_HOST: localhost
       MONGO_PORT: 27017
       MONGO_DB_NAME: oxygen

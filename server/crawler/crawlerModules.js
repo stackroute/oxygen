@@ -59,27 +59,7 @@ const interestedWords=function(corpus){
   }
   console.log("returning the final result")
   return { "concepts": intent, "otherterms": otherWords };
-  
-const interestedWords = function(output) {
- intent = [];
- otherWords = [];
- for (prop in corpus) {
-   //console.log(typeof prop);
-   if (interestwords.includes(prop)) {
-     intent.push({
-       word: prop,
-       density: corpus[prop]
-     });
-   } else {
-     otherWords.push({
-       word: prop,
-       density: corpus[prop]
-     });
-   }
- }
- //console.log(intent);
- return { "interest": intent, "others": otherWords };
-}
+  }
 
 module.exports = {
  interestedWords:interestedWords,

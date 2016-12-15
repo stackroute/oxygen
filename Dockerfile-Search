@@ -1,14 +1,7 @@
-FROM mhart/alpine-node
+FROM oxygen-base
 
-# Create app directory
-RUN mkdir -p /usr/src/app && echo "Oxygen Search"
-COPY package.json /usr/src/app/
 WORKDIR /usr/src/app
-RUN npm install --production
-COPY . /usr/src/app/
 
 EXPOSE 8081
 
-WORKDIR /usr/src/app
-# CMD ["npm", "run", "search" "8081"]
-CMD ["node", "./bin/search", "8081"]
+CMD ["npm", "run", "search", "--production"]

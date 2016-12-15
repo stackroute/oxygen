@@ -32,9 +32,11 @@
   },
   "homepage": "https://github.com/stackroute/oxygen#readme",
   "dependencies": {
+    "amqplib": "^0.5.1",
     "async": "^2.1.4",
     "body-parser": "^1.15.2",
     "cheerio": "^0.22.0",
+    "compression": "^1.6.2",
     "deasync": "^0.1.9",
     "express": "^4.14.0",
     "formsy-material-ui": "^0.5.2",
@@ -59,7 +61,6 @@
     "superagent": "^2.3.0"
   },
   "devDependencies": {
-    "amqplib": "^0.5.1",
     "babel": "^6.5.2",
     "babel-core": "^6.18.0",
     "babel-eslint": "^7.1.0",
