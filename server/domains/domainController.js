@@ -11,7 +11,7 @@ const open=function(objId){
    });
     //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
   });};
-const addJob = function(jobData, callback) {
+const addDomainJob = function(jobData, callback) {
   console.log(jobData)
   let job=new docSearchJobModel(jobData);
   job.save(function(err) {
@@ -25,42 +25,17 @@ const addJob = function(jobData, callback) {
   });
 };
 
-const deleteJob = function(jobID, callback) {
-  docSearchJobModel.remove( jobID, function(err) {
+const addDomain = function(jobData, callback) {
+  console.log(jobData)
+  let job=new docSearchJobModel(jobData);
+  job.save(function(err) {
     if (err) {
       logger.error(
-        "Encountered error at doSearchJobController::deleteJob, error: ",
+        "Encountered error at doSearchJobController::addJob, error: ",
         err);
       return callback(err, {});
     }
-    console.log(jobID);
-    return callback(null, {msg:'deleted'});
-  });
-};
-const updateJob = function(job, callback) {
-  console.log(job)
-  docSearchJobModel.findById( job._id, function(err,data) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::updateJob, error: ",
-        err);
-      return callback(err, {});
-    }
-    console.log(data);
-    data.query=job.query
-    data.engineID=job.engineID
-    data.exactTerms=job.exactTerms
-    data.results=job.results
-    data.siteSearch=job.siteSearch
-
-    let ack=data.save(function (save_err){
-      if(!save_err)
-      {
-        return callback(null, {msg:'updated'});
-      }
-      return callback(null,{err:"unexpected"});
-    })
-    return ack;
+    return callback(null, job);
   });
 };
 

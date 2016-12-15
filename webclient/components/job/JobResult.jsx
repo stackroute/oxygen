@@ -28,7 +28,13 @@ const fonts={
 export default class JobResult extends React.Component {
   constructor(props) {
     super(props)
-    this.state={searchResult:[],query:"",loading:"loading"}
+    this.state={searchResult:[],query:"",loading:"loading",intentRating:[{
+  		basic: 0,
+  		tutorial: 0,
+  		theory: 0,
+  		manual:0,
+  		completeReference:0
+  	}]}
     this.searchDetails=this.searchDetails.bind(this)
   }
   searchDetails() {
@@ -37,7 +43,7 @@ export default class JobResult extends React.Component {
     let that = this;
     Request
     .get(url)
-    .end(function(err, res){     
+    .end(function(err, res){
      let data=JSON.parse(res.text);
      console.log(data);
      let word="";
@@ -72,13 +78,13 @@ export default class JobResult extends React.Component {
      status={this.state.loading}
      style={style.refresh}
      />:<div>{this.state.searchResult.map((searchItem,i) =>
-       <CardResult key={i} searchItem={searchItem} />
+       <CardResult key={i} searchItem={searchItem} rating={this.state.intentRating}/>
        )}</div>}
      </Container>
      </div>
      );
   }
 }
-JobResult.propTypes = {  
+JobResult.propTypes = {
   params: React.PropTypes.object
 }

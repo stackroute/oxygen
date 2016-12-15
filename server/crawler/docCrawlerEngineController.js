@@ -73,6 +73,4 @@ searchModel.findOne(url, function(err, urlDetails) {
   })
 
 });
-
-
 }

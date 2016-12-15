@@ -11,21 +11,15 @@ function setupWebAppRESTRoutes(app) {
 
 // App Constructor function is exported
 module.exports = function() {
-	let app = service.createApp();
+  let app = service.createApp();
 
-	app = service.setupWebpack(app);
+  app = service.setupMiddlewares(app);
 
-	app = service.setupStaticRoutes(app);
+  app = setupWebAppRESTRoutes(app);
 
-	app = service.setupMiddlewares(app);
+  app = service.setupRestRoutes(app);
 
-	app = service.setupWebpack(app);
+  service.setupMongooseConnections();
 
-	app = setupWebAppRESTRoutes(app);
-
-	app = service.setupRestRoutes(app);
-
-	service.setupMongooseConnections();
-
-	return app;
+  return app;
 };

@@ -52,10 +52,7 @@ const open=function(objId){
           "query":jobDetails.query,
           "title":data.items[k].title,
           "url":data.items[k].link,
-          "description":data.items[k].snippet,
-          "concept":[],
-          "newWords":[],
-          "intent":[]
+          "description":data.items[k].snippet
         };
         searchResults.push(searchResult);
       }
