@@ -51,6 +51,7 @@
     "mongoose": "^4.7.0",
     "morgan": "^1.7.0",
     "muicss": "^0.9.4",
+    "neo4j-driver": "^1.0.5",
     "rc-pagination": "^1.6.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",

@@ -13,6 +13,6 @@ services:
       - "17687:7687"
       - "11337:1337"
     volumes:
-      - /Users/basavarajk/stackroute/code/neo4j_oxygen_java/neo4j/plugins:/plugins
-      - /Users/basavarajk/stackroute/code/neo4j_oxygen_java/neo4j/data:/data
-      - /Users/basavarajk/stackroute/code/neo4j_oxygen_java/neo4j/plugins:/import
+      - ./neo4j/plugins:/plugins
+      - ./neo4j/data:/data
+      - ./neo4j/import:/import
