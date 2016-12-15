@@ -13,6 +13,7 @@ amqp.connect('amqp://localhost', function(err, conn) {
     ch.assertQueue(q, {durable: false});
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
     ch.consume(q, function(msg) {
+      console.log("the message from job module "+msg)
       storeURL(msg.content.toString());
 
     }, {noAck: true});
