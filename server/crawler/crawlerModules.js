@@ -1,3 +1,4 @@
+
 const keyword_extractor = require("keyword-extractor");
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 const extractData=function(text){
@@ -58,8 +59,7 @@ const interestedWords=function(corpus){
   }
   console.log("returning the final result")
   return { "concepts": intent, "otherterms": otherWords };
-
-}
+  }
 
 module.exports = {
  interestedWords:interestedWords,
