@@ -3,25 +3,11 @@ const mongoose = require('mongoose');
 /* beautify ignore:start */
 /* beautify preserve:start */
 const schema = new mongoose.Schema({
+	jobID:String,
 	query: String,
 	url: String,
 	title: String,
-	description: String,
-	concept : [{
-		word : String,
-		density : Number
-	}],
-	newWords : [{
-		word : String,
-		density : Number
-	}],
-	intent:[{
-		basic: Number,
-		tutorial: Number,
-		theory: Number,
-		manual:Number,
-		completeReference:Number
-	}]
+	description: String
 }, {collection: 'searcherResult', versionKey: false});
 
 //schema.index({url: 1}, {unique: true});

@@ -18,7 +18,7 @@ module.exports = function() {
 	app = service.setupStaticRoutes(app);
 
 	app = service.setupMiddlewares(app);
-	
+
 	app = setupWebAppRESTRoutes(app);
 
 	app = service.setupRestRoutes(app);
