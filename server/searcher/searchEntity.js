@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 /* beautify ignore:start */
 /* beautify preserve:start */
 const schema = new mongoose.Schema({
+	jobID:String,
 	query: String,
 	url: String,
 	title: String,

@@ -5,6 +5,7 @@ import Request from 'superagent';
 import CardResult from './CardResult.jsx';
 import {Container} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+
 // require('rc-pagination/assets/index.css');
 // import  Pagination from 'rc-pagination';
 //  <Pagination  style={styles.chip} defaultCurrent={3} total={this.state.searchResult.length}>
@@ -38,8 +39,9 @@ export default class JobResult extends React.Component {
     this.searchDetails=this.searchDetails.bind(this)
   }
   searchDetails() {
-    console.log(this.props.params.jobID);
-    let url =`http://localhost:8081/searchJobResult/${this.props.params.jobID}`;
+    console.log("from the searcherresult module "+this.props.params.jobID);
+    
+    let url =`/docsearchjob/:`+this.props.params.jobID;
     let that = this;
     Request
     .get(url)

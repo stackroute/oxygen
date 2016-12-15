@@ -6,13 +6,26 @@ const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
 const amqp = require('amqplib/callback_api');
+
+amqp.connect('amqp://localhost', function(err, conn) {
+  conn.createChannel(function(errs, ch) {
+    let q = 'searcher';
+    ch.assertQueue(q, {durable: false});
+    console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
+    ch.consume(q, function(msg) {
+      storeURL(msg.content.toString());
+
+    }, {noAck: true});
+  });
+});
+
 const open=function(objId){
  amqp.connect('amqp://localhost', function(connErr, conn) {
    conn.createChannel(function(channelErrs, ch) {
-     ch.assertQueue('hello', {durable: false});
-     ch.sendToQueue('hello', new Buffer(objId));
-     return ch;
-   });
+    ch.assertQueue('crawler', {durable: false});
+    ch.sendToQueue('crawler', new Buffer(objId));
+    return ch;
+  });
     //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
   });};
  const getURL= function(jobDetails,i,callback)
@@ -41,14 +54,15 @@ const open=function(objId){
       console.log(body);
     }
 
-    console.log(body);
+    //console.log(body);
     let data = JSON.parse(body.text);
-    console.log(data)
+    //console.log(data)
     for (let k = 0; k < data.items.length; k+=1) {
 
       if((i+k)<=jobDetails.results)
       {
         let searchResult={
+          "jobID":jobDetails._id,
           "query":jobDetails.query,
           "title":data.items[k].title,
           "url":data.items[k].link,
@@ -97,6 +111,7 @@ const storeURL = function(id, callback) {
       res.map((ele)=>{
         console.log(ele.length);
         ele.map((data,i)=>{
+
           send.push(data);
           let saveUrl=new searchModel(data);
           saveUrl.save(function (saveErr,savedObj) {
@@ -114,7 +129,8 @@ const storeURL = function(id, callback) {
         })
 
       })
-      return callback(null, {'saved urls':send.length,'content':send});
+      console.log(send);
+      //return callback(null, {'saved urls':send.length,'content':send});
     })
     return sendData;
   });
