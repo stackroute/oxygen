@@ -55,7 +55,7 @@ let getDomainConcept = function(domainName) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query = 'MATCH (d:domain{name:{domainName}}) match(c:concept) match(d)<-[r:conceptOf]-(c) RETURN c';
+    let query = 'MATCH (d:Domain{name:{domainName}}) match(c:Concept) match(d)<-[r:ConceptOf]-(c) RETURN c';
     let params = {
       domainName: domainName
     };
@@ -91,9 +91,17 @@ let indexNewDomainCallBack = function(newDomainObj, callback) {
     callback(err, null);
   });
 }
+let getDomainConceptCallback = function(domainName, callback) {
+  getDomainConcept(domainName).then(function(retrievedDomainConcept) {
+    callback(null, retrievedDomainConcept);
+  }, function(err) {
+    callback(err, null);
+  });
+}
 
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept:getDomainConcept,
-  indexNewDomainCallBack: indexNewDomainCallBack
+  indexNewDomainCallBack: indexNewDomainCallBack,
+  getDomainConceptCallback: getDomainConceptCallback
 }

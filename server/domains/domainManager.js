@@ -75,22 +75,22 @@ let initialiseDomainOntology = function(domainName) {
 
 // Along with domain, specify exact concept(s) and intent(s)
 let buildDomainIndex = function(domainName) {
-  let promise = new Promise(function(resolve, reject) {
-    // Fetch all domain concepts and intents
-    domainNeo4jController.getDomainConcepts(domainName)
-      .then(function(conceptsColln) {
-        docSearchJobMgr.kickOffDomainIndexing(domainName, conceptsColln)
-          .then(function(result) {
-            resolve(result);
-          }, function(err) {
-            reject(err);
-          });
-      }, function(err) {
-        reject(err);
-      });
-  });
+  // let promise = new Promise(function(resolve, reject) {
+  //   Fetch all domain concepts and intents
+  //   domainNeo4jController.getDomainConcepts(domainName)
+  //   .then(function(conceptsColln) {
+  //     docSearchJobMgr.kickOffDomainIndexing(domainName, conceptsColln)
+  //     .then(function(result) {
+  //       resolve(result);
+  //     }, function(err) {
+  //       reject(err);
+  //     });
+  //   }, function(err) {
+  //     reject(err);
+  //   });
+  // });
 
-  return promise;
+  // return promise;
 }
 
 let buildDomainIndexCallBack = function(domainName, callback) {

@@ -125,7 +125,6 @@ let indexPublishedDomain = function(domainName) {
   return;
 }
 
-
 let getDomain = function(domainName) {
   logger.debug("Received request for retriving Concept(s) in domain: ", domainName);
   //Save to Mongo DB
@@ -140,42 +139,26 @@ let getDomain = function(domainName) {
       });
   }
 
-  domainMongoController.checkDomain(domainName)
-  .then(
-    function(checkedDomain) {
-      logger.debug("Successfully verified domain in Mongo of name",
-        checkedDomain);
-      domainNeo4jController.getDomainConcept(checkedDomain.name)
-      .then(
-        function(retrivedDomainConcepts) {
-          logger.debug("Successfully retrived concept(s) from  domain ",
-            retrivedDomainConcepts);
-
-                // Manually push this execution to background
-                process.nextTick(function() {
-                  logger.debug("retrivedDomainConcepts ",
-                    retrivedDomainConcepts);
-
-                }); //end of nextTick
-
-                resolve(retrivedDomainConcepts);
-              },
-              function(err) {
-                logger.error("Encountered error in retriving concept(s) in domain: ",
-                  err);
-                reject(err);
-              }
-              );
-    },
-    function(err) {
-      logger.error(
-        "Encountered error in checking the domain in mongo..!"
-        );
+  async.waterfall([function(callback) {
+    domainMongoController.checkDomainCallback(domainName,
+      callback);
+  },
+  function(checkedDomain, callback) {
+    domainNeo4jController.getDomainConceptCallback(checkedDomain.name,
+      callback)
+  }
+  ],
+  function(err, retrivedDomainConcepts) {
+    if (err) {
       reject(err);
-    })
+    }
+    resolve(retrivedDomainConcepts);
+      }); //end of async.waterfall
+});
+  return promise;
 }
-return Promise;
-}
+
+
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain

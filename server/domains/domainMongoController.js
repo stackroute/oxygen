@@ -60,6 +60,17 @@ let saveNewDomainCallBack = function(newDomainObj, callback) {
     });
 }
 
+let checkDomainCallback = function(domainName, callback) {
+  checkDomain(domainName)
+  .then(
+    function(foundDomain) {
+      callback(null, foundDomain);
+    },
+    function(err) {
+      callback(err, null);
+    });
+}
+
 let getDomainObj = function(domainName, callback) {
   let query = {
     name: domainName
@@ -84,7 +95,6 @@ let updateDomainStatus = function(domainName, status, statusText, callback) {
     domainObj.updatedOn = Date.now();
     domainObj.status = status;
     domainObj.statusText = statusText;
-
     domainObj.save(callback);
   });
 }
@@ -92,6 +102,7 @@ let updateDomainStatus = function(domainName, status, statusText, callback) {
 module.exports = {
   saveNewDomain: saveNewDomain,
   checkDomain:checkDomain,
+  checkDomainCallback:checkDomainCallback,
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,
   getDomainObj: getDomainObj

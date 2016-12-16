@@ -50,8 +50,7 @@ router.get('/:domainName', function(req, res) {
 
   let domainName = req.params.domainName;
 
-  domainCtrl.getDomain(domainName)
-  .then(function(domainConcept) {
+  domainCtrl.getDomain(domainName).then(function(domainConcept) {
     logger.debug("Successfully retrived concept(s) of domain: "+domainName,
       domainConcept);
     res.send(domainConcept);
@@ -62,7 +61,7 @@ router.get('/:domainName', function(req, res) {
       err);
     res.send(err);
     return;
-  });
+  })
 
 } catch (err) {
   logger.error("Caught a error in retrived concept(s) of domain ", err);
