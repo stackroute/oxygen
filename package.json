@@ -7,8 +7,8 @@
     "test": "mocha",
     "serve": "node bin/www",
     "www": "node bin/www",
-    "search": "node bin/search",
-    "crawl": "node bin/crawl",
+    "search": "node server/docsearch.service",
+    "crawl": "node server/doccrawl.service",
     "build": "gulp build",
     "lint": "gulp eslint",
     "clean": "gulp clean"
