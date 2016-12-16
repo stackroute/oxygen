@@ -8,10 +8,10 @@ let indexNewDomain = function(newDomainObj) {
   let promise = new Promise(function(resolve, reject) {
 
     logger.debug("Now proceeding to index new domain: ", newDomainObj);
-
-    let driver = neo4jDriver.driver(('bolt://localhost'),
-      neo4jDriver.auth.basic('neo4j', 'bala'),{encrypted:false}
+    let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
+      neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
       );
+    
     let session = driver.session();
 
     logger.debug("obtained connection with neo4j");

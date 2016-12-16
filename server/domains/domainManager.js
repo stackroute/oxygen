@@ -3,58 +3,78 @@ const domainNeo4jController = require('./domainNeo4jController');
 const neo4jDriver = require('neo4j-driver').v1;
 
 const logger = require('./../../applogger');
+const config = require('./../../config');
 
-let initialiseNewDomain = function(domainName) {
+let initialiseDomainOntology = function(domainName) {
   //Create Default Domain concepts and intents
   //call  buildDomainIndex
   let promise = new Promise(function(resolve, reject) {
 
     logger.debug('now initialising new domain: ', domainName);
 
-    let driver = neo4jDriver.driver(('bolt://localhost'),
-      neo4jDriver.auth.basic('neo4j', 'bala')
-      ,{encrypted:false});
+
+    let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
+      neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
+      );
+
     let session = driver.session();
 
-    logger.debug("[*] [domainManager] obtained neo4j connection ");
+    logger.debug('[*] [domainManager] obtained neo4j connection ');
 
     let query = '';
     query += 'MATCH (d:Domain {name:{domainName}}) ';
     query += 'WITH d ';
     query += 'MERGE (c:Concept {name:{conceptName}}) ';
     query += 'MERGE (i:Intent {name:{intentName}}) ';
+    query += 'MERGE (ti:Term {name:{indicatorTerm}}) ';
+    query += 'MERGE (cti:Term {name:{counterIndicatorTerm}}) ';
     query += 'MERGE (c)-[cr:ConceptOf]->(d) ';
     query += 'MERGE (i)-[ir:IntentOf]->(d) ';
-    query += 'return c,i,d,cr,ir';
+    query += 'MERGE (ti)-[tir:IndicatorOf]->(i) ';
+    query += 'MERGE (cti)-[ctir:CounterIndicatorOf]->(i) ';
+    query += 'return c,i,d,ti,cti,cr,ir,tir,ctir';
 
-    defaultIntentName = 'introduction';
+    const defaultConceptName = domainName;
+    const defaultIntentName = 'introduction';
+    const defaultIndicatorTerm = defaultIntentName;
+    const defaultCounterIndicatorTerm = 'advanced';
 
     let params = {
       domainName: domainName,
       conceptName: domainName,
-      intentName: defaultIntentName
+      intentName: defaultIntentName,
+      indicatorTerm: defaultIndicatorTerm,
+      counterIndicatorTerm: defaultCounterIndicatorTerm
     };
 
     session.run(query, params)
+    <<<<<<< HEAD
     .then(function(result) {
       result.records.forEach(function(record) {
         logger.debug("[*] [domainManager] Result from neo4j: ",
           record);
       });
+      =======
+      .then(function(result) {
+        result.records.forEach(function(record) {
+          logger.debug('[*] [domainManager] Result from neo4j: ',
+            record);
+        });
+        >>>>>>> 2a2cb899a392d0cac0117636dbbaeb3afb64992c
 
         // Completed! 
         session.close();
-        // buildDomainIndex(domainName, domainName, defaultIntentName);
         resolve(domainName);
       })
-    .catch(function(err) {
-      logger.error(
-        "Error in neo4j query for initialising domain with defaults: ",
-        err, ' query is: ',
-        query);
-      reject(err);
+      <<<<<<< HEAD
+      .catch(function(err) {
+        logger.error(
+          "Error in neo4j query for initialising domain with defaults: ",
+          err, ' query is: ',
+          query);
+        reject(err);
+      });
     });
-  });
 
   /*logger.debug('initialising the domain: ', domainName);
     setTimeout(function() {
@@ -63,21 +83,33 @@ let initialiseNewDomain = function(domainName) {
 
     return promise;
   }
+  =======
+  .catch(function(err) {
+    logger.error(
+      'Error in neo4j query for initialising domain with defaults: ',
+      err, ' query is: ',
+      query, ' params are: ', params);
+    reject(err);
+  });
+});
 
-// Only mention domain name
-let buildIndexForDomain = function(domainName) {
-  // Fetch all domain concepts and intents
-  // Kick off search jobs for each concept 
+  return promise;
 }
+>>>>>>> 2a2cb899a392d0cac0117636dbbaeb3afb64992c
 
 // Along with domain, specify exact concept(s) and intent(s)
-let buildDomainIndex = function(domainName, concepts, intents) {
+let buildDomainIndex = function(domainName) {
   // Fetch all domain concepts and intents
   // Kick off search jobs for each concept 
+
+  let promise = new Promise(function(resolve, reject) {
+    resolve({});
+  });
+
+  return promise;
 }
 
 module.exports = {
-  initialiseNewDomain: initialiseNewDomain,
-  buildIndexForDomain: buildIndexForDomain,
+  initialiseDomainOntology: initialiseDomainOntology,
   buildDomainIndex: buildDomainIndex
 }

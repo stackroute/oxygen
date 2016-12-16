@@ -3,7 +3,6 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 
 const domainCtrl = require('./domainController');
-const domainMgr = require('./domainManager');
 
 const DOMAIN_NAME_MIN_LENGTH = 3;
 
@@ -18,13 +17,8 @@ router.post('/:domainName', function(req, res) {
 
     domainCtrl.publishNewDomain(newDomainObj)
       .then(function(savedDomainObj) {
-          // Manually push this execution to background
-          process.nextTick(function() {
-            logger.debug("initialising New Domain ", savedDomainObj);
-            domainMgr.initialiseNewDomain(savedDomainObj.name);
-          });
-
-          logger.debug("Successfully created new domain: ", savedDomainObj);
+          logger.debug("Successfully published new domain: ",
+            savedDomainObj);
           res.send(savedDomainObj);
           return;
         },
