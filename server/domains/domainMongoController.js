@@ -25,6 +25,31 @@ let saveNewDomain = function(newDomainObj) {
   return promise;
 }
 
+let checkDomain = function(domainName) {
+  let promise = new Promise(function(resolve, reject) {
+
+    domainObj = {
+      name:domainName
+    };
+
+    DomainModel.findOne(domainObj,function(err, foundDomain) {
+      if (err) {
+        reject(err);
+      }
+
+      if (!foundDomain) {
+        reject({
+          error: "Null domain object while retriving the domain from mongo..!"
+        });
+      }
+      resolve(foundDomain);
+    });
+  })
+
+  return promise;
+}
+
 module.exports = {
-  saveNewDomain: saveNewDomain
+  saveNewDomain: saveNewDomain,
+  checkDomain:checkDomain
 }

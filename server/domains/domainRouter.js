@@ -16,18 +16,18 @@ router.post('/:domainName', function(req, res) {
     let newDomainObj = req.body;
 
     domainCtrl.publishNewDomain(newDomainObj)
-      .then(function(savedDomainObj) {
-          logger.debug("Successfully published new domain: ",
-            savedDomainObj);
-          res.send(savedDomainObj);
-          return;
-        },
-        function(err) {
-          logger.error("Encountered error in publishing a new domain: ",
-            err);
-          res.send(err);
-          return;
-        });
+    .then(function(savedDomainObj) {
+      logger.debug("Successfully published new domain: ",
+        savedDomainObj);
+      res.send(savedDomainObj);
+      return;
+    },
+    function(err) {
+      logger.error("Encountered error in publishing a new domain: ",
+        err);
+      res.send(err);
+      return;
+    });
 
   } catch (err) {
     logger.error("Caught a error in posting new domain ", err);
@@ -45,7 +45,33 @@ router.get('/', function(req, res) {
 
 // Get details of a specific domain by its name
 router.get('/:domainName', function(req, res) {
-  res.send({});
+
+ try {
+
+  let domainName = req.params.domainName;
+
+  domainCtrl.getDomain(domainName)
+  .then(function(domainConcept) {
+    logger.debug("Successfully retrived concept(s) of domain: "+domainName,
+      domainConcept);
+    res.send(domainConcept);
+    return;
+  },
+  function(err) {
+    logger.error("Encountered error in retrived concept(s) of domain: ",
+      err);
+    res.send(err);
+    return;
+  });
+
+} catch (err) {
+  logger.error("Caught a error in retrived concept(s) of domain ", err);
+  res.status(500).send({
+    error: "Something went wrong, please try later..!"
+  });
+  return;
+}
+
 });
 
 // Freshly index a domain
