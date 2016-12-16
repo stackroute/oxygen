@@ -48,54 +48,29 @@ let initialiseDomainOntology = function(domainName) {
     };
 
     session.run(query, params)
-    <<<<<<< HEAD
     .then(function(result) {
       result.records.forEach(function(record) {
-        logger.debug("[*] [domainManager] Result from neo4j: ",
+        logger.debug('[*] [domainManager] Result from neo4j: ',
           record);
       });
-      =======
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          logger.debug('[*] [domainManager] Result from neo4j: ',
-            record);
-        });
-        >>>>>>> 2a2cb899a392d0cac0117636dbbaeb3afb64992c
-
+      
         // Completed! 
         session.close();
         resolve(domainName);
       })
-      <<<<<<< HEAD
-      .catch(function(err) {
-        logger.error(
-          "Error in neo4j query for initialising domain with defaults: ",
-          err, ' query is: ',
-          query);
-        reject(err);
-      });
+    
+    .catch(function(err) {
+      logger.error(
+        'Error in neo4j query for initialising domain with defaults: ',
+        err, ' query is: ',
+        query, ' params are: ', params);
+      reject(err);
     });
-
-  /*logger.debug('initialising the domain: ', domainName);
-    setTimeout(function() {
-      logger.debug('Done initialising the domain: ', domainName);
-    }, 20000);*/
-
-    return promise;
-  }
-  =======
-  .catch(function(err) {
-    logger.error(
-      'Error in neo4j query for initialising domain with defaults: ',
-      err, ' query is: ',
-      query, ' params are: ', params);
-    reject(err);
   });
-});
 
   return promise;
 }
->>>>>>> 2a2cb899a392d0cac0117636dbbaeb3afb64992c
+
 
 // Along with domain, specify exact concept(s) and intent(s)
 let buildDomainIndex = function(domainName) {
