@@ -5,6 +5,7 @@ const searchModel = require('./searchEntity').searchModel;
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
+
 const amqp = require('amqplib/callback_api');
 
 amqp.connect('amqp://localhost', function(err, conn) {
@@ -66,10 +67,7 @@ const open=function(objId){
           "query":jobDetails.query,
           "title":data.items[k].title,
           "url":data.items[k].link,
-          "description":data.items[k].snippet,
-          "concept":[],
-          "newWords":[],
-          "intent":[]
+          "description":data.items[k].snippet
         };
         searchResults.push(searchResult);
       }
@@ -141,11 +139,12 @@ const storeURL = function(id, callback) {
 
 };
 
-  // else {
-  //   let objId=savedObj._id;
-  //   let ch=open();
-  //   ch.sendToQueue('hello', new Buffer(objId));
-  // }
+ // else {
+ //   let objId=savedObj._id;
+ //   let ch=open();
+ //   ch.sendToQueue('hello', new Buffer(objId));
+ // }
+
 
   module.exports = {
     storeURL: storeURL,

@@ -1,86 +1,55 @@
 'use strict';
+const domainNeo4jController = require('./domainNeo4jController');
+const domainMongoController = require('./domainMongoController');
 
 const logger = require('./../../applogger');
-const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
-const open=function(objId){
- amqp.connect('amqp://localhost', function(connErr, conn) {
-   conn.createChannel(function(channelErrs, ch) {
-     ch.assertQueue('hello', {durable: false});
-     ch.sendToQueue('hello', new Buffer(objId));
-     return ch;
-   });
-    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
-  });};
-const addJob = function(jobData, callback) {
-  console.log(jobData)
-  let job=new docSearchJobModel(jobData);
-  job.save(function(err) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::addJob, error: ",
-        err);
-      return callback(err, {});
-    }
-    return callback(null, job);
-  });
-};
 
-const deleteJob = function(jobID, callback) {
-  docSearchJobModel.remove( jobID, function(err) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::deleteJob, error: ",
-        err);
-      return callback(err, {});
-    }
-    console.log(jobID);
-    return callback(null, {msg:'deleted'});
-  });
-};
-const updateJob = function(job, callback) {
-  console.log(job)
-  docSearchJobModel.findById( job._id, function(err,data) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::updateJob, error: ",
-        err);
-      return callback(err, {});
-    }
-    console.log(data);
-    data.query=job.query
-    data.engineID=job.engineID
-    data.exactTerms=job.exactTerms
-    data.results=job.results
-    data.siteSearch=job.siteSearch
+const DOMAIN_NAME_MIN_LENGTH = 3;
 
-    let ack=data.save(function (save_err){
-      if(!save_err)
-      {
-        return callback(null, {msg:'updated'});
-      }
-      return callback(null,{err:"unexpected"});
-    })
-    return ack;
-  });
-};
+let publishNewDomain = function(newDomainObj) {
+  logger.debug("Received request for saving new domain: ", newDomainObj);
+  //Save to Mongo DB
+  //Save to Neo4j
 
-const showJob = function(callback) {
+  let promise = new Promise(function(resolve, reject) {
 
-  docSearchJobModel.find(function(err, jobs) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::showJob, error: ",
-        err);
-      return callback(err, {});
+    if (!newDomainObj.name ||
+      newDomainObj.name.length <= DOMAIN_NAME_MIN_LENGTH) {
+      reject({
+        error: "Invalid domain name..!"
+      });
     }
-    console.log(jobs);
-    return callback(null, jobs);
+
+    domainMongoController.saveNewDomain(newDomainObj)
+      .then(
+        function(savedDomainObj) {
+          logger.debug("Successfully saved domain in Mongo ",
+            savedDomainObj);
+          domainNeo4jController.indexNewDomain(savedDomainObj)
+            .then(
+              function(indexedDomainObj) {
+                logger.debug("Successfully indexed domain ",
+                  indexedDomainObj);
+                resolve(indexedDomainObj);
+              },
+              function(err) {
+                logger.error("Encountered error in indexing new domain: ",
+                  err);
+                reject(err);
+              }
+            );
+        },
+        function(err) {
+          logger.error(
+            "Encountered error in saving new Domain Object in mongo..!"
+          );
+          reject(err);
+        })
   });
-};
+
+  return promise;
+}
 
 module.exports = {
-  addJob: addJob,
-  showJob:showJob,
-  deleteJob:deleteJob,
-  updateJob:updateJob
-};
+  publishNewDomain: publishNewDomain
+}

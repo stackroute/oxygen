@@ -24,7 +24,7 @@ const styles = {
 export default class CardResult extends React.Component {
   constructor(props) {
     super(props);
-    this.state=({cardDetails:this.props.searchItem});
+    this.state=({cardDetails:this.props.searchItem,rating:this.props.rating});
   }
   render() {
     return (
@@ -33,8 +33,8 @@ export default class CardResult extends React.Component {
       <Row>
       <Col lg={12}>
       <Card style={card}>
-      <CardHeader style={jobcard} 
-      titleStyle={{"fontSize":"16pt"}} 
+      <CardHeader style={jobcard}
+      titleStyle={{"fontSize":"16pt"}}
       subtitleStyle={{"fontSize":"14pt","marginTop":30}}
       title={this.state.cardDetails.title}
       />
@@ -47,11 +47,11 @@ export default class CardResult extends React.Component {
       </a></p>
       </CardText>
       <div style={styles.wrapper}>
-      <Chip style={styles.chip}>Basic:</Chip>
-      <Chip style={styles.chip}>Tutorial</Chip>
-      <Chip style={styles.chip}>Manual</Chip>
-      <Chip style={styles.chip}>Theory</Chip>
-      <Chip style={styles.chip}>CompleteReference:teReference</Chip>
+      <Chip style={styles.chip}>Basic:{this.state.rating[0].basic}</Chip>
+      <Chip style={styles.chip}>Tutorial:{this.state.rating[0].tutorial}</Chip>
+      <Chip style={styles.chip}>Example:{this.state.rating[0].example}</Chip>
+      <Chip style={styles.chip}>Manual:{this.state.rating[0].manual}</Chip>
+      <Chip style={styles.chip}>CompleteReference:{this.state.rating[0].completeReference}</Chip>
       </div>
       </Card>
       </Col>
@@ -60,7 +60,7 @@ export default class CardResult extends React.Component {
       );
   }
 }
-CardResult.propTypes = {  
+CardResult.propTypes = {
   searchItem: React.PropTypes.object
-  
+
 }

@@ -1,0 +1,7 @@
+FROM oxygen-base
+
+WORKDIR /usr/src/app
+
+EXPOSE 8081
+
+CMD ["npm", "run", "search", "--production"]
