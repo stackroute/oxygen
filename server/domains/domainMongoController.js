@@ -47,9 +47,21 @@ let checkDomain = function(domainName) {
   })
 
   return promise;
+
+}
+let saveNewDomainCallBack = function(newDomainObj, callback) {
+  saveNewDomain(newDomainObj)
+  .then(
+    function(savedDomainObj) {
+      callback(null, savedDomainObj);
+    },
+    function(err) {
+      callback(err, null);
+    });
 }
 
 module.exports = {
   saveNewDomain: saveNewDomain,
-  checkDomain:checkDomain
+  checkDomain:checkDomain,
+  saveNewDomainCallBack: saveNewDomainCallBack
 }

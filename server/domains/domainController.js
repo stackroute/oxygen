@@ -5,82 +5,81 @@ const domainMgr = require('./domainManager');
 
 const logger = require('./../../applogger');
 
+const async = require('async');
+
 const DOMAIN_NAME_MIN_LENGTH = 3;
 
 let publishNewDomain = function(newDomainObj) {
-  logger.debug("Received request for saving new domain: ", newDomainObj);
+  logger.debug('Received request for saving new domain: ', newDomainObj);
   //Save to Mongo DB
   //Save to Neo4j
 
   let promise = new Promise(function(resolve, reject) {
-
     if (!newDomainObj.name ||
       newDomainObj.name.length <= DOMAIN_NAME_MIN_LENGTH) {
       reject({
-        error: "Invalid domain name..!"
+        error: 'Invalid domain name..!'
       });
   }
 
-  domainMongoController.saveNewDomain(newDomainObj)
-  .then(
-    function(savedDomainObj) {
-      logger.debug("Successfully saved domain in Mongo ",
-        savedDomainObj);
-      domainNeo4jController.indexNewDomain(savedDomainObj)
-      .then(
-        function(indexedDomainObj) {
-          logger.debug("Successfully indexed domain ",
-            indexedDomainObj);
-
-                // Manually push this execution to background
-                process.nextTick(function() {
-                  logger.debug("initialising New Domain ",
-                    savedDomainObj);
-
-                  // Initilise the ontology for the domain
-                  domainMgr.initialiseDomainOntology(savedDomainObj.name)
-                  .then(function(domainName) {
-                    logger.info(
-                      'Done initialising ontologies for new Domain ',
-                      domainName);
-
-                    domainMgr.buildDomainIndex(domainName)
-                    .then(function(result) {
-                      logger.info('Done indexing domain: ',
-                        domainName, ' result: ', result);
-                    },
-                    function(err) {
-                      logger.error(
-                        'Error in building domain index ',
-                        err);
-                            }); //end of buildDomainIndex
-                  },
-                  function(err) {
-                    logger.error(
-                      'Error in initializing domain ontology, error: ',
-                      err);
-                      }); //end of initialiseDomainOntology
-                }); //end of nextTick
-
-                resolve(indexedDomainObj);
-              },
-              function(err) {
-                logger.error("Encountered error in indexing new domain: ",
-                  err);
-                reject(err);
-              }
-              );
-    },
-    function(err) {
-      logger.error(
-        "Encountered error in saving new Domain Object in mongo..!"
-        );
+  async.waterfall([function(callback) {
+    domainMongoController.saveNewDomainCallBack(newDomainObj,
+      callback);
+  },
+  function(savedDomainObj, callback) {
+    domainNeo4jController.indexNewDomainCallBack(savedDomainObj,
+      callback)
+  }
+  ],
+  function(err, indexedDomainObj) {
+    if (err) {
       reject(err);
-    })
+    }
+    if (indexedDomainObj) {
+          //Kick off indexing in off-line, so the API request is not blocked till indexing is complete, as it may take long time to complete
+          indexPublishedDomain(indexedDomainObj.name);
+          resolve(indexedDomainObj);
+        } else {
+          reject({
+            error: 'Null indexed object was returned..!'
+          });
+        }
+      }); //end of async.waterfall
 });
 
   return promise;
 }
+
+// This should be private and not exposed 
+let indexPublishedDomain = function(domainName) {
+  process.nextTick(function() {
+    logger.debug('Off-line initialising New Domain ', domainName);
+
+    async.waterfall([
+      function(callback) {
+        domainMgr.initialiseDomainOntologyCallBack(domainName,
+          callback);
+      },
+      function(initialisedDomainName, callback) {
+        domainMgr.buildDomainIndexCallBack(initialisedDomainName,
+          callback);
+      }
+      ],
+      function(err, result) {
+        if (err) {
+          logger.error(
+            'Error in off-line indexing process of newly published Domain ',
+            domainName, ' err: ',
+            err);
+        }
+        logger.info('Done indexing newly published domain: ',
+          domainName, ' with result: ', result);
+      });
+  }); //end of process.nextTick
+
+  return;
+}
+
 
 let getDomain = function(domainName) {
   logger.debug("Received request for retriving Concept(s) in domain: ", domainName);
@@ -129,11 +128,9 @@ let getDomain = function(domainName) {
         );
       reject(err);
     })
-});
-
-  return promise;
 }
-
+return Promise;
+}
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain

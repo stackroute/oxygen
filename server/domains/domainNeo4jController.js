@@ -84,7 +84,16 @@ let getDomainConcept = function(domainName) {
   return promise;
 }
 
+let indexNewDomainCallBack = function(newDomainObj, callback) {
+  indexNewDomain(newDomainObj).then(function(indexedDomainObj) {
+    callback(null, indexedDomainObj);
+  }, function(err) {
+    callback(err, null);
+  });
+}
+
 module.exports = {
   indexNewDomain: indexNewDomain,
-  getDomainConcept:getDomainConcept
+  getDomainConcept:getDomainConcept,
+  indexNewDomainCallBack: indexNewDomainCallBack
 }

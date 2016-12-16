@@ -4,6 +4,8 @@ const logger = require('./../../applogger');
 const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
 const searchModel = require('./../searcher/searchEntity').searchModel;
 const amqp = require('amqplib/callback_api');
+const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
+
 
 const searcherMQ=function(objId){
  amqp.connect('amqp://localhost', function(connErr, conn) {
@@ -28,7 +30,7 @@ const searcherMQ=function(objId){
     }
     console.log("saved job id is "+data._id);
     let id=data._id;
-    searcherMQ(id.toString());
+    startSearcherMQ(id.toString());
     return callback(null, job);
   });
 };
@@ -68,7 +70,7 @@ const updateJob = function(job, callback) {
       }
       return callback(null,{err:"unexpected"});
     })
-    return ack;    
+    return ack;
   });
 };
 

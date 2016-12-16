@@ -6,32 +6,11 @@ const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
 
-const amqp = require('amqplib/callback_api');
+const amqp = require('amqplib');
+const startCrawlerMQ=require('./docOpenCrawlerEngine').startCrawler;
 
-amqp.connect('amqp://localhost', function(err, conn) {
-  conn.createChannel(function(errs, ch) {
-    let q = 'searcher';
-    ch.assertQueue(q, {durable: false});
-    console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
-    ch.consume(q, function(msg) {
-      console.log("the message from job module "+msg)
-      storeURL(msg.content.toString());
-
-    }, {noAck: true});
-  });
-});
-
-const open=function(objId){
- amqp.connect('amqp://localhost', function(connErr, conn) {
-   conn.createChannel(function(channelErrs, ch) {
-    ch.assertQueue('crawler', {durable: false});
-    ch.sendToQueue('crawler', new Buffer(objId));
-    return ch;
-  });
-    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
-  });};
- const getURL= function(jobDetails,i,callback)
- {
+const getURL= function(jobDetails,i,callback)
+{
   let eng=jobDetails.engineID.split(' ');
   let url="https://www.googleapis.com/customsearch/v1?q="+
   jobDetails.query+"&cx="+eng[0]+"&key="+eng[1]+"&start="+i;
@@ -82,72 +61,64 @@ const open=function(objId){
 
 }
 
-const storeURL = function(id, callback) {
-  const query = {
-    _id: id
-  };
-
+const storeURL = function(id) {
+  const query = { _id: id};
   docSearchJobModel.findOne(query, function(err, jobDetails) {
     if (err) {
       logger.error(
         "Encountered error at SearchController::docSearchJobModel, error: ",
         err);
-      return callback(err, {});
-    }
+    //  return callback(err, {});
+  }
 
-    if (!jobDetails) {
-      logger.error("No such job Found");
-      return callback('job not available or not found..!', {});
-    }
+  if (!jobDetails) {
+    logger.error("No such job Found");
+    //  return callback('job not available or not found..!', {});
+  }
 
-    console.log('in search server');
-    let stack=[];
+  console.log('in search server');
+  let stack=[];
 
-    for(let k=1;k<jobDetails.results;k+=10){
-      stack.push(async.apply(getURL,jobDetails,k));
-    }
+  console.log(jobDetails);
+
+  for(let k=1;k<jobDetails.results;k+=10){
+    stack.push(async.apply(getURL,jobDetails,k));
+  }
 
 
-    let sendData=async.parallel(stack,function(errs,res){
-      let send=[];
-      res.map((ele)=>{
-        console.log(ele.length);
-        ele.map((data,i)=>{
+  let sendData=async.parallel(stack,function(errs,res){
+    let send=[];
+    res.map((ele)=>{
+      console.log(ele.length);
+      ele.map((data,i)=>{
 
-          send.push(data);
-          let saveUrl=new searchModel(data);
-          saveUrl.save(function (saveErr,savedObj) {
-            if (saveErr) {
-              console.log(saveErr);
-            }
-            else {
-              console.log("saved "+i+" "+savedObj._id);
-              let objId=savedObj._id;
-              open(objId.toString());
+        send.push(data);
+        let saveUrl=new searchModel(data);
+        saveUrl.save(function (saveErr,savedObj) {
+          if (saveErr) {
+            console.log(saveErr);
+          }
+          else {
+            console.log("saved "+i+" "+savedObj._id);
+            let objId=savedObj._id;
+            startCrawlerMQ(objId.toString());
               //ch.sendToQueue('hello', new Buffer(objId));
             }
           });
 
-        })
-
       })
-      console.log(send);
+
+    })
+    console.log(send);
       //return callback(null, {'saved urls':send.length,'content':send});
     })
-    return sendData;
-  });
+  return sendData;
+});
 
 
 };
 
- // else {
- //   let objId=savedObj._id;
- //   let ch=open();
- //   ch.sendToQueue('hello', new Buffer(objId));
- // }
-
-
-  module.exports = {
-    storeURL: storeURL,
-    getURL:getURL
-  };
+module.exports = {
+  storeURL: storeURL,
+  getURL:getURL
+};
