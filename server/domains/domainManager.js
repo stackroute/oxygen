@@ -80,7 +80,17 @@ let buildDomainIndex = function(domainName) {
   return promise;
 }
 
+let initialiseDomainOntologyCallBack = function(domainName, callback) {
+  initialiseDomainOntology(domainName)
+    .then(function(domainName) {
+      callback(null, domainName);
+    }, function(err) {
+      callback(err, null);
+    });
+}
+
 module.exports = {
   initialiseDomainOntology: initialiseDomainOntology,
+  initialiseDomainOntologyCallBack: initialiseDomainOntologyCallBack,
   buildDomainIndex: buildDomainIndex
 }

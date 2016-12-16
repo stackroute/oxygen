@@ -25,6 +25,18 @@ let saveNewDomain = function(newDomainObj) {
   return promise;
 }
 
+let saveNewDomainCallBack = function(newDomainObj, callback) {
+  saveNewDomain(newDomainObj)
+    .then(
+      function(savedDomainObj) {
+        callback(null, savedDomainObj);
+      },
+      function(err) {
+        callback(err, null);
+      });
+}
+
 module.exports = {
-  saveNewDomain: saveNewDomain
+  saveNewDomain: saveNewDomain,
+  saveNewDomainCallBack: saveNewDomainCallBack
 }

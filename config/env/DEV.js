@@ -6,15 +6,15 @@ const mongo = {
 };
 
 // const rabbitmq = {
-// 	host: process.env.MONGO_HOST || '127.0.0.1',
-// 	port: process.env.MONGO_PORT || 5672
+//  host: process.env.MONGO_HOST || '127.0.0.1',
+//  port: process.env.MONGO_PORT || 5672
 // };
 
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
   masterMongoDBName);
 
 //const rabbitmqURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
-//	masterMongoDBName);
+//  masterMongoDBName);
 
 module.exports = {
   WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
@@ -25,7 +25,7 @@ module.exports = {
   MONGO_MASTER_SERVER: mongo,
   MONGO_URL: mongoURL,
   NEO4J_HOST: 'localhost',
-  NEO4J_BOLT_URL: ('bolt://192.168.99.100/'),
+  NEO4J_BOLT_URL: ('bolt://localhost/'),
   NEO4J_USR: 'neo4j',
-  NEO4J_PWD: 'password'
+  NEO4J_PWD: 'neo4j'
 };
