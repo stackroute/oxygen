@@ -74,16 +74,25 @@ let buildDomainIndex = function(domainName) {
   // Kick off search jobs for each concept 
 
   let promise = new Promise(function(resolve, reject) {
-    resolve({});
+    resolve(domainName);
   });
 
   return promise;
 }
 
+let buildDomainIndexCallBack = function(domainName, callback) {
+  buildDomainIndex(domainName)
+    .then(function(result) {
+      callback(null, result);
+    }, function(err) {
+      callback(err, null);
+    });
+}
+
 let initialiseDomainOntologyCallBack = function(domainName, callback) {
   initialiseDomainOntology(domainName)
-    .then(function(domainName) {
-      callback(null, domainName);
+    .then(function(result) {
+      callback(null, result);
     }, function(err) {
       callback(err, null);
     });
@@ -92,5 +101,6 @@ let initialiseDomainOntologyCallBack = function(domainName, callback) {
 module.exports = {
   initialiseDomainOntology: initialiseDomainOntology,
   initialiseDomainOntologyCallBack: initialiseDomainOntologyCallBack,
-  buildDomainIndex: buildDomainIndex
+  buildDomainIndex: buildDomainIndex,
+  buildDomainIndexCallBack: buildDomainIndexCallBack
 }

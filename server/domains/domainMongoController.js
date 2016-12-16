@@ -14,7 +14,7 @@ let saveNewDomain = function(newDomainObj) {
 
       if (!savedDomainObj) {
         reject({
-          error: "Null domain object created in mongo..!"
+          error: 'Null domain object created in mongo..!'
         });
       }
 
@@ -36,7 +36,38 @@ let saveNewDomainCallBack = function(newDomainObj, callback) {
       });
 }
 
+let getDomainObj = function(domainName, callback) {
+  let query = {
+    name: domainName
+  };
+
+  DomainModel.findOne(query, callback);
+
+  return;
+}
+
+let updateDomainStatus = function(domainName, status, statusText, callback) {
+  getDomainObj(domainName, function(err, domainObj) {
+    if (err) {
+      logger.error('Error in finding the domain object: ', domainName);
+      return;
+    }
+
+    if (!domainObj) {
+      logger.error('Found null domain object for updating status...!');
+    }
+
+    domainObj.updatedOn = Date.now();
+    domainObj.status = status;
+    domainObj.statusText = statusText;
+
+    domainObj.save(callback);
+  });
+}
+
 module.exports = {
   saveNewDomain: saveNewDomain,
-  saveNewDomainCallBack: saveNewDomainCallBack
+  saveNewDomainCallBack: saveNewDomainCallBack,
+  updateDomainStatus: updateDomainStatus,
+  getDomainObj: getDomainObj
 }
