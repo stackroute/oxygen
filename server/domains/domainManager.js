@@ -1,4 +1,5 @@
 const domainNeo4jController = require('./domainNeo4jController');
+const docSearchJobMgr = require('../docSearchJob/docSearchJobManager');
 
 const neo4jDriver = require('neo4j-driver').v1;
 
@@ -70,11 +71,19 @@ let initialiseDomainOntology = function(domainName) {
 
 // Along with domain, specify exact concept(s) and intent(s)
 let buildDomainIndex = function(domainName) {
-  // Fetch all domain concepts and intents
-  // Kick off search jobs for each concept 
-
   let promise = new Promise(function(resolve, reject) {
-    resolve(domainName);
+    // Fetch all domain concepts and intents
+    domainNeo4jController.getDomainConcepts(domainName)
+      .then(function(conceptsColln) {
+        docSearchJobMgr.kickOffDomainIndexing(domainName, conceptsColln)
+          .then(function(result) {
+            resolve(result);
+          }, function(err) {
+            reject(err);
+          });
+      }, function(err) {
+        reject(err);
+      });
   });
 
   return promise;
