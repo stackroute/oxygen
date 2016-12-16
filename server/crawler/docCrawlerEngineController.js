@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+
 const amqp = require('amqplib/callback_api');
 const highland = require('highland');
 const crawlerModules = require('./crawlerModules');
@@ -8,7 +8,7 @@ const request= require('request');
 const cheerio = require("cheerio");
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-amqp.connect('amqp://localhost', function(err, conn) {
+amqp.connect(process.env.RABBITMQ, function(err, conn) {
   conn.createChannel(function(errs, ch) {
     let q = 'crawler';
     ch.assertQueue(q, {durable: false});

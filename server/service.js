@@ -1,3 +1,4 @@
+
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
@@ -63,7 +64,7 @@ function setupMiddlewares(app) {
 }
 
 function setupWebpack(app) {
-  if (config.NODE_ENV !== 'PROD' || config.NODE_ENV !== 'production') {
+  if (config.NODE_ENV !== 'production') {
     const webpack = require('webpack');
     const webpackDevMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');

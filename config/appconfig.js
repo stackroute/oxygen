@@ -20,14 +20,20 @@ loadEnvVariables();
 
 //  Load environment specific config settings
 const development = require('./env/DEV');
+const production = require('./env/PROD');
 
 const defaults = {
-  SERVER_ROOT: path.resolve(__dirname, '..'),
+  SERVER_ROOT: path.resolve(__dirname, '../'),
   NODE_ENV: process.env.NODE_ENV
 };
 
 const appConfig = {
-  DEV: extend(development, defaults)
+  development: extend(development, defaults),
+  production: extend(production, defaults)
 };
 
-module.exports = appConfig[(process.env.NODE_ENV || 'DEV')];
+process.stdout.write('\nOxygen configuring for environment: ' + process.env.NODE_ENV);
+process.stdout.write('\nconfig settings: ' + JSON.stringify(appConfig[(process.env
+  .NODE_ENV || 'development')]), null, '\t');
+
+module.exports = appConfig[(process.env.NODE_ENV || 'development')];

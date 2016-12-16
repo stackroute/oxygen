@@ -5,6 +5,7 @@ const searchModel = require('./searchEntity').searchModel;
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
+
 const amqp = require('amqplib');
 const startCrawlerMQ=require('./docOpenCrawlerEngine').startCrawler;
 
@@ -116,12 +117,6 @@ const storeURL = function(id) {
 
 
 };
-
-  // else {
-  //   let objId=savedObj._id;
-  //   let ch=open();
-  //   ch.sendToQueue('hello', new Buffer(objId));
-  // }
 
   module.exports = {
     storeURL: storeURL,
