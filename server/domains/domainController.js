@@ -1,61 +1,55 @@
 'use strict';
+const domainNeo4jController = require('./domainNeo4jController');
+const domainMongoController = require('./domainMongoController');
 
 const logger = require('./../../applogger');
-const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
-const open=function(objId){
- amqp.connect('amqp://localhost', function(connErr, conn) {
-   conn.createChannel(function(channelErrs, ch) {
-     ch.assertQueue('hello', {durable: false});
-     ch.sendToQueue('hello', new Buffer(objId));
-     return ch;
-   });
-    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
-  });};
-const addDomainJob = function(jobData, callback) {
-  console.log(jobData)
-  let job=new docSearchJobModel(jobData);
-  job.save(function(err) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::addJob, error: ",
-        err);
-      return callback(err, {});
-    }
-    return callback(null, job);
-  });
-};
 
-const addDomain = function(jobData, callback) {
-  console.log(jobData)
-  let job=new docSearchJobModel(jobData);
-  job.save(function(err) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::addJob, error: ",
-        err);
-      return callback(err, {});
-    }
-    return callback(null, job);
-  });
-};
+const DOMAIN_NAME_MIN_LENGTH = 3;
 
-const showJob = function(callback) {
+let publishNewDomain = function(newDomainObj) {
+  logger.debug("Received request for saving new domain: ", newDomainObj);
+  //Save to Mongo DB
+  //Save to Neo4j
 
-  docSearchJobModel.find(function(err, jobs) {
-    if (err) {
-      logger.error(
-        "Encountered error at doSearchJobController::showJob, error: ",
-        err);
-      return callback(err, {});
+  let promise = new Promise(function(resolve, reject) {
+
+    if (!newDomainObj.name ||
+      newDomainObj.name.length <= DOMAIN_NAME_MIN_LENGTH) {
+      reject({
+        error: "Invalid domain name..!"
+      });
     }
-    console.log(jobs);
-    return callback(null, jobs);
+
+    domainMongoController.saveNewDomain(newDomainObj)
+      .then(
+        function(savedDomainObj) {
+          logger.debug("Successfully saved domain in Mongo ",
+            savedDomainObj);
+          domainNeo4jController.indexNewDomain(savedDomainObj)
+            .then(
+              function(indexedDomainObj) {
+                logger.debug("Successfully indexed domain ",
+                  indexedDomainObj);
+                resolve(indexedDomainObj);
+              },
+              function(err) {
+                logger.error("Encountered error in indexing new domain: ",
+                  err);
+                reject(err);
+              }
+            );
+        },
+        function(err) {
+          logger.error(
+            "Encountered error in saving new Domain Object in mongo..!"
+          );
+          reject(err);
+        })
   });
-};
+
+  return promise;
+}
 
 module.exports = {
-  addJob: addJob,
-  showJob:showJob,
-  deleteJob:deleteJob,
-  updateJob:updateJob
-};
+  publishNewDomain: publishNewDomain
+}
