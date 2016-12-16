@@ -66,14 +66,59 @@ let indexPublishedDomain = function(domainName) {
       }
       ],
       function(err, result) {
+        logger.debug(
+          'indexPublishedDomain process finished with error: ', err,
+          ' result: ', result);
+
+        let status = 'error';
+        let statusText = 'unknown error';
+
         if (err) {
-          logger.error(
-            'Error in off-line indexing process of newly published Domain ',
-            domainName, ' err: ',
-            err);
+          status = 'error';
+          statusText =
+          'Error in off-line indexing process of newly published Domain ' +
+          domainName + ' err: ' + JSON.stringify(err);
+
+          logger.error(statusText);
+        } else {
+          status = 'ready';
+          statusText = 'Done indexing newly published domain ' +
+          domainName + ' with result ' + JSON.stringify(result);
+
+          logger.debug(statusText);
         }
-        logger.info('Done indexing newly published domain: ',
-          domainName, ' with result: ', result);
+        logger.debug('Updating domain status ', status, ' | ',
+          statusText);
+
+        domainMongoController.updateDomainStatus(domainName, status,
+          statusText,
+          function(updErr, updatedDomainObj) {
+
+            if (updErr) {
+              logger.error('Error in updating domain status for ',
+                domainName,
+                ' trying to update status to ', status, ' with ',
+                statusText);
+              return;
+            }
+
+            if (!updatedDomainObj) {
+              logger.error(
+                'Found null domain object for updating status for ',
+                domainName,
+                ' trying to update status to ', status, ' with ',
+                statusText);
+              return;
+            }
+
+            logger.debug(
+              'Done updating domain with Indexing Status for domain ',
+              domainName, ' with status ',
+              status);
+
+          }); //end of updateDomainStatus
+
+        return;
       });
   }); //end of process.nextTick
 
