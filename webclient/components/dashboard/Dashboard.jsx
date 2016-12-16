@@ -39,22 +39,22 @@ export default class Dashboard extends React.Component {
 				color.push('lightGreen500');
 				this.setState({intentColor:color});
 			}
-			})}
-			if(domain.concepts<5)
-			{
-				this.setState({conceptColor:blue300});
-			}
-			else if(domains.concepts<15)
-			{
-				this.setState({conceptColor:lime800});
-			}
-			else {
-				this.setState({conceptColor:lightGreen500});
-			}
-    let dList=this.state.domainList;
-    dList.push(domain);
-    this.setState({domainList: dList});
-    console.log(this.state.domainList[0].intents[0].intent);
+		})}
+		if(domain.concepts<5)
+		{
+			this.setState({conceptColor:blue300});
+		}
+		else if(domains.concepts<15)
+		{
+			this.setState({conceptColor:lime800});
+		}
+		else {
+			this.setState({conceptColor:lightGreen500});
+		}
+		let dList=this.state.domainList;
+		dList.push(domain);
+		this.setState({domainList: dList});
+		console.log(this.state.domainList[0].intents[0].intent);
 		//let url =`/docsearchjob/job`;
 		// Request
 		// .post(url)
@@ -74,7 +74,7 @@ export default class Dashboard extends React.Component {
 
 	show()
 	{
-		let url =`/docsearchjob/show`;
+		//let url =`/docsearchjob/show`;
 
 		// Request
 		// .get(url)
@@ -107,10 +107,13 @@ export default class Dashboard extends React.Component {
 				{this.state.domainList.map((item,i) =>{
 					console.log("each Domain item")
 					console.log(item);
-					return (<Col lg={4} md={4} key={i}><DomainShow index={i} key={i} indexs={i} ref="show" item={item} conceptColor={this.state.conceptColor} intentColor={this.state.intentColor}/></Col>);
+					return (<Col lg={4} md={4} key={i}>
+						<DomainShow index={i} key={i} indexs={i} ref="show" item={item} 
+						conceptColor={this.state.conceptColor} intentColor={this.state.intentColor}/>
+						</Col>);
 				})}
 				</Container>
-      </div>:<h1>NO DOMAINS AVAILABLE</h1>}
+				</div>:<h1>NO DOMAINS AVAILABLE</h1>}
 				<AddDomain addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
 				</div>
 

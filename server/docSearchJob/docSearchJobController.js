@@ -2,7 +2,7 @@
 
 const logger = require('./../../applogger');
 const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
-const searchModel = require('./../searcher/SearchEntity').searchModel;
+const searchModel = require('./../searcher/searchEntity').searchModel;
 const amqp = require('amqplib/callback_api');
 
 const searcherMQ=function(objId){

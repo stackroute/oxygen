@@ -5,33 +5,33 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "serve": "node ./bin/www",
+    "www": "node ./bin/www",
     "start": "node ./bin/www",
     "search": "node ./bin/search",
     "crawl": "node ./bin/crawl",
     "build": "gulp build",
     "lint": "gulp eslint",
     "clean": "gulp clean"
-  },
-  "repository": {
+},
+"repository": {
     "type": "git",
     "url": "git+https://github.com/stackroute/oxygen.git"
-  },
-  "keywords": [
+},
+"keywords": [
     "oxygen",
     "semantic",
     "intent",
     "intelligence",
     "graph",
     "nodejs"
-  ],
-  "author": "StackRoute",
-  "license": "Apache-2.0",
-  "bugs": {
+],
+"author": "StackRoute",
+"license": "Apache-2.0",
+"bugs": {
     "url": "https://github.com/stackroute/oxygen/issues"
-  },
-  "homepage": "https://github.com/stackroute/oxygen#readme",
-  "dependencies": {
+},
+"homepage": "https://github.com/stackroute/oxygen#readme",
+"dependencies": {
     "amqplib": "^0.5.1",
     "async": "^2.1.4",
     "body-parser": "^1.15.2",
@@ -59,8 +59,8 @@
     "react-tap-event-plugin": "^2.0.1",
     "request": "^2.79.0",
     "superagent": "^2.3.0"
-  },
-  "devDependencies": {
+},
+"devDependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.18.0",
     "babel-eslint": "^7.1.0",
@@ -93,5 +93,5 @@
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2",
     "webpack-hot-middleware": "^2.13.2"
-  }
+}
 }
