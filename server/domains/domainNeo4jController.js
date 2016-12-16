@@ -9,9 +9,9 @@ let indexNewDomain = function(newDomainObj) {
 
     logger.debug("Now proceeding to index new domain: ", newDomainObj);
 
-    let driver = neo4jDriver.driver(('bolt://192.168.99.100'),
-      neo4jDriver.auth.basic('neo4j', 'password')
-    );
+    let driver = neo4jDriver.driver(('bolt://localhost'),
+      neo4jDriver.auth.basic('neo4j', 'bala'),{encrypted:false}
+      );
     let session = driver.session();
 
     logger.debug("obtained connection with neo4j");
@@ -22,20 +22,20 @@ let indexNewDomain = function(newDomainObj) {
     };
 
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          logger.debug("Result from neo4j: ", record);
-        });
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        logger.debug("Result from neo4j: ", record);
+      });
 
         // Completed! 
         session.close();
         resolve(newDomainObj);
       })
-      .catch(function(err) {
-        logger.error("Error in neo4j query: ", err, ' query is: ',
-          query);
-        reject(err);
-      });
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
   return promise;

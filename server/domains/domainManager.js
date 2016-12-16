@@ -11,9 +11,9 @@ let initialiseNewDomain = function(domainName) {
 
     logger.debug('now initialising new domain: ', domainName);
 
-    let driver = neo4jDriver.driver(('bolt://192.168.99.100'),
-      neo4jDriver.auth.basic('neo4j', 'password')
-    );
+    let driver = neo4jDriver.driver(('bolt://localhost'),
+      neo4jDriver.auth.basic('neo4j', 'bala')
+      ,{encrypted:false});
     let session = driver.session();
 
     logger.debug("[*] [domainManager] obtained neo4j connection ");
@@ -36,24 +36,24 @@ let initialiseNewDomain = function(domainName) {
     };
 
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          logger.debug("[*] [domainManager] Result from neo4j: ",
-            record);
-        });
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        logger.debug("[*] [domainManager] Result from neo4j: ",
+          record);
+      });
 
         // Completed! 
         session.close();
         // buildDomainIndex(domainName, domainName, defaultIntentName);
         resolve(domainName);
       })
-      .catch(function(err) {
-        logger.error(
-          "Error in neo4j query for initialising domain with defaults: ",
-          err, ' query is: ',
-          query);
-        reject(err);
-      });
+    .catch(function(err) {
+      logger.error(
+        "Error in neo4j query for initialising domain with defaults: ",
+        err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
   /*logger.debug('initialising the domain: ', domainName);
@@ -61,8 +61,8 @@ let initialiseNewDomain = function(domainName) {
       logger.debug('Done initialising the domain: ', domainName);
     }, 20000);*/
 
-  return promise;
-}
+    return promise;
+  }
 
 // Only mention domain name
 let buildIndexForDomain = function(domainName) {
