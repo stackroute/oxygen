@@ -32,7 +32,8 @@ const appConfig = {
   production: extend(production, defaults)
 };
 
-process.stdout.write('Oxygen configuring for environment: ' + process.env.NODE_ENV);
-process.stdout.write('config settings: ' + JSON.stringify(appConfig[(process.env.NODE_ENV || 'development')]));
+process.stdout.write('\nOxygen configuring for environment: ' + process.env.NODE_ENV);
+process.stdout.write('\nconfig settings: ' + JSON.stringify(appConfig[(process.env
+  .NODE_ENV || 'development')]), null, '\t');
 
 module.exports = appConfig[(process.env.NODE_ENV || 'development')];

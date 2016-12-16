@@ -1,6 +1,7 @@
 'use strict';
 const domainNeo4jController = require('./domainNeo4jController');
 const domainMongoController = require('./domainMongoController');
+const domainMgr = require('./domainManager');
 
 const logger = require('./../../applogger');
 
@@ -30,6 +31,37 @@ let publishNewDomain = function(newDomainObj) {
               function(indexedDomainObj) {
                 logger.debug("Successfully indexed domain ",
                   indexedDomainObj);
+
+                // Manually push this execution to background
+                process.nextTick(function() {
+                  logger.debug("initialising New Domain ",
+                    savedDomainObj);
+
+                  // Initilise the ontology for the domain
+                  domainMgr.initialiseDomainOntology(savedDomainObj.name)
+                    .then(function(domainName) {
+                        logger.info(
+                          'Done initialising ontologies for new Domain ',
+                          domainName);
+
+                        domainMgr.buildDomainIndex(domainName)
+                          .then(function(result) {
+                              logger.info('Done indexing domain: ',
+                                domainName, ' result: ', result);
+                            },
+                            function(err) {
+                              logger.error(
+                                'Error in building domain index ',
+                                err);
+                            }); //end of buildDomainIndex
+                      },
+                      function(err) {
+                        logger.error(
+                          'Error in initializing domain ontology, error: ',
+                          err);
+                      }); //end of initialiseDomainOntology
+                }); //end of nextTick
+
                 resolve(indexedDomainObj);
               },
               function(err) {
