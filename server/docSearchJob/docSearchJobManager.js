@@ -1,20 +1,51 @@
-// let jobCtrl = require('./jobController');
+let jobCtrl = require('./docSearchJobController');
 
-// let kickOffDomainIndexing = function(domainName, conceptsColln) {
-//   // Kick off search jobs for each concept
-//   let promise = new Promise(function(resolve, reject) {
+const engineModel = require('./docSearchJobEntity').engineModel;
 
-//     //Looping through for each given concept, as each concept should be one job
-//     conceptsColln.forEach(function(concept) {
-//       process.nextTick(jobCtrl.addSearchJob(domainName, concept));
-//     });
+let kickOffDomainIndexing = function(conceptsColln) {
+  // Kick off search jobs for each concept
+  // const engines=[
+  // '009216953448521283757:ibz3hdutpom',
+  // '015901048907159908775:bu8jkb0g1c0',
+  // '017039332294312221469:tjlfw4hfuwc',
+  // '007705081896440677668:8luezkczozo',
+  // '004518674028755323320:ld85zhatuxc'
+  // ];
+  // const keys=[
+  // 'AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U',
+  // 'AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60',
+  // 'AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY',
+  // 'AIzaSyC7XMsUPGIaHo1rT0nIAYWuQZGNEZdRabs',
+  // 'AIzaSyA1hzOwDP99Vse-JuHrX7erfgUi3RT8f10',
+  // ];
+  // new engineModel({"engine":engines,"key":keys}).save(
+  //   function(err,data) {
+  //     if (err) {   
+  //       console.log("err "+err);
 
-//     resolve(domainName);
-//   });
+  //     }
+  //     console.log("saved engine "+data);
 
-//   return promise;
-// }
+  //   })
+  let promise = new Promise(function(resolve, reject) {
+    console.log(conceptsColln)
+    //Looping through for each given concept, as each concept should be one job
+    process.nextTick(
+      function(){
+        conceptsColln.Concepts.forEach(function(concept) {
+          console.log("inside the domain indexing "+concept)
+          jobCtrl.addSearchJob(conceptsColln.Domain, concept);
+        })
+        resolve({test:'test'});
+      }
+      );
 
-// module.exports = {
-//   kickOffDomainIndexing: kickOffDomainIndexing
-// }
+    
+  });
+
+  return promise;
+}
+
+module.exports = {
+  kickOffDomainIndexing: kickOffDomainIndexing
+}
