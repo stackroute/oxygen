@@ -2,6 +2,7 @@
 
 const logger = require('./../../applogger');
 const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
+const engineModel = require('./docSearchJobEntity').engineModel;
 const searchModel = require('./../searcher/searchEntity').searchModel;
 const amqp = require('amqplib/callback_api');
 const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
@@ -22,6 +23,52 @@ const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
     startSearcherMQ(id.toString());
     return callback(null, job);
   });
+};
+const addSearchJob = function(domainName,concept) {
+  console.log(domainName+" "+concept)
+  engineModel.find(function(err,engineColl)
+  {
+    engineColl.forEach(function(engineData){
+      let JobData={
+        query:concept,
+        engineID:engineData.engine[3]+" "+engineData.key[3],
+        exactTerms:domainName,
+        results:10,
+        siteSearch:'NONE'
+      }
+      let job=new docSearchJobModel(JobData);
+      job.save(function(err,data) {
+        if (err) {
+          logger.error(
+            "Encountered error at doSearchJobController::addJob, error: ",
+            err);
+
+
+        }
+        console.log("saved job "+data);
+        let id=data._id;
+        startSearcherMQ(id.toString());
+
+      });
+
+    })
+  })
+  
+
+  // let job=new docSearchJobModel(jobData);
+  // job.save(function(err,data) {
+  //   if (err) {
+  //     logger.error(
+  //       "Encountered error at doSearchJobController::addJob, error: ",
+  //       err);
+
+  //     return callback(err, {});
+  //   }
+  //   console.log("saved job id is "+data._id);
+  //   let id=data._id;
+  //   startSearcherMQ(id.toString());
+  //   return callback(null, job);
+  // });
 };
 
 const deleteJob = function(jobID, callback) {
@@ -95,5 +142,6 @@ module.exports = {
   showJob:showJob,
   deleteJob:deleteJob,
   updateJob:updateJob,
+  addSearchJob:addSearchJob,
   showResults:showResults
 };
