@@ -1,26 +1,13 @@
-
-const amqp = require('amqplib/callback_api');
 const highland = require('highland');
 const crawlerModules = require('./crawlerModules');
 const searchModel = require('../searcher/searchEntity').searchModel;
 const logger = require('./../../applogger');
 const request= require('request');
 const cheerio = require("cheerio");
+const startIntentParser = require('./docOpenIntentParserEngine').startIntentParser;
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-amqp.connect(process.env.RABBITMQ, function(err, conn) {
-  conn.createChannel(function(errs, ch) {
-    let q = 'crawler';
-    ch.assertQueue(q, {durable: false});
-    console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
-    ch.consume(q, function(msg) {
-      getData(msg.content.toString());
-
-    }, {noAck: true});
-  });
-});
-
-const getData= function(urlId)
+const urlIndexing= function(urlId)
 {
   let processors = [];
 
@@ -65,12 +52,16 @@ searchModel.findOne(url, function(err, urlDetails) {
     urlArray.push(text);
     highland(urlArray)
     .pipe( highland.pipeline.apply(null, processors))
-    .each(function(obj){
-      console.log("result : ", obj);
-  // console.log("Data: ", JSON.stringify(data));
-});
+    .each(function(data){
+      console.log("result : ", data);
+    startIntentParser(data);
+     });
 
   })
 
 });
 }
+
+module.exports = {
+ urlIndexing: urlIndexing
+};

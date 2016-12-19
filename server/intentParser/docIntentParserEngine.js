@@ -1,11 +1,12 @@
 const logger = require('./../../applogger');
-const storeURL=require('./searchController').storeURL;
+const crawlerEngine=require('./docOpenCrawlerEngine');
+const intentParser=require('./docIntentParserController').intentParser;
 // const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
 const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
-const startSearcher = function() {
+const startIntentParser = function() {
  let amqpConn = amqp.connect('amqp://localhost');
 
  amqpConn
@@ -17,7 +18,7 @@ const startSearcher = function() {
      logger.info('[*] Established AMQP Channel connection successfully..!');
 
      //@TODO take the crawler MQ name from Config
-     let crawlerMQName = 'searcher';
+     let crawlerMQName = 'intentParser';
 
      //making durable as false, so that .....
      chConn.assertQueue(crawlerMQName, { durable: false })
@@ -45,12 +46,12 @@ const startSearcher = function() {
            })
            .each(function(dataObj) {
              logger.debug("Consuming the data: ", dataObj);
-             storeURL(dataObj.data);
+             intentParser(dataObj.data);
            });
        }); //end of assertQueue
    }); //end of channelConnection
 }
 
 module.exports = {
- startSearcher: startSearcher
+ startIntentParser: startIntentParser
 };

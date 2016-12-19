@@ -13,6 +13,7 @@ const mongo = {
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
   masterMongoDBName);
 
+const neo4jURL=('bolt://localhost');
 //const rabbitmqURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
 //  masterMongoDBName);
 
@@ -22,8 +23,8 @@ module.exports = {
   MONGO_MASTER_SERVER: mongo,
   MONGO_URL: mongoURL,
   NEO4J_HOST: 'localhost',
-  NEO4J_BOLT_URL: ('bolt://localhost'),
+  NEO4J_BOLT_URL: neo4jURL,
   NEO4J_USR: 'neo4j',
-  NEO4J_PWD: 'bala'
+  NEO4J_PWD: 'password'
 
 };

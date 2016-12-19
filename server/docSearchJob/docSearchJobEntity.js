@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 /* beautify ignore:start */
 /* beautify preserve:start */
-const schema = new mongoose.Schema({ 
+const schema = new mongoose.Schema({
 	query: String,
 	engineID:String,
 	exactTerms:String,

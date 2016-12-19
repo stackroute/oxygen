@@ -1,5 +1,5 @@
 const logger = require('../applogger');
-const crawlerEngine = require('./searcher/docSearcherEngine');
+const searcherEngine = require('./searcher/docSearcherEngine');
 const config = require('../config');
 
 const mongoose = require('mongoose');
@@ -31,17 +31,17 @@ function setupMongooseConnections() {
  });
 }
 
-let startDocCrawlerEngine = function() {
+let startDocSarcherEngine = function() {
  try {
    //Any pre-requisites for running the engine
    setupMongooseConnections();
 
    logger.info("Starting doc search engine..!");
 
-   crawlerEngine.startSearcher();
+   searcherEngine.startSearcher();
  } catch (err) {
    logger.error("Caught error in running doc searcher engine: ", err);
  }
 }
 
-startDocCrawlerEngine();
+startDocSearcherEngine();
