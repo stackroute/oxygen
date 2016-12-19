@@ -2,7 +2,15 @@
 
 const logger = require('./../../applogger');
 const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
-
+const open=function(objId){
+ amqp.connect('amqp://localhost', function(connErr, conn) {
+   conn.createChannel(function(channelErrs, ch) {
+     ch.assertQueue('hello', {durable: false});
+     ch.sendToQueue('hello', new Buffer(objId));
+     return ch;
+   });
+    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
+  });};
 const addJob = function(jobData, callback) {
   console.log(jobData)
   let job=new docSearchJobModel(jobData);
@@ -52,7 +60,7 @@ const updateJob = function(job, callback) {
       }
       return callback(null,{err:"unexpected"});
     })
-    return ack;    
+    return ack;
   });
 };
 
