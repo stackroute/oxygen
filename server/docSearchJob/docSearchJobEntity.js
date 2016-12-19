@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
 
-
-/* beautify ignore:start */
-/* beautify preserve:start */
-
 const jobSchema = new mongoose.Schema({ 
 	query: String,
 	engineID:String,
@@ -14,11 +10,11 @@ const jobSchema = new mongoose.Schema({
 }, {collection: 'Job', versionKey: false});
 
 
-const engineSchema = new mongoose.Schema({ 
-	
+const engineSchema = new mongoose.Schema({
+
 	engine:[{"type":String,"unique":true}],
 	key:[{"type":String,"unique":true}]
-	
+
 
 }, {collection: 'Engines', versionKey: false});
 

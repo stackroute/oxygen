@@ -5,7 +5,7 @@ const amqp = require('amqplib');
 const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
-const startSearcher = function(urlDataObjId) {
+const startIntentParser = function(urlDataObjId) {
  let amqpConn = amqp.connect('amqp://localhost');
 
  amqpConn
@@ -17,7 +17,7 @@ const startSearcher = function(urlDataObjId) {
      logger.info('[*] Established AMQP Channel connection successfully..!');
 
      //@TODO take the crawler MQ name from Config
-     let crawlerMQName = 'searcher';
+     let crawlerMQName = 'intentParser';
 
      //making durable as false, so that .....
      chConn.assertQueue(crawlerMQName, { durable: false })
@@ -31,5 +31,5 @@ const startSearcher = function(urlDataObjId) {
 }
 
 module.exports = {
- startSearcher: startSearcher
+ startIntentParser: startIntentParser
 };

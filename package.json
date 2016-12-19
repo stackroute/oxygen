@@ -9,6 +9,7 @@
     "www": "node bin/www",
     "search": "node server/docsearch.service",
     "crawl": "node server/doccrawl.service",
+    "parser": "node server/docintentparser.service",
     "build": "gulp build",
     "lint": "gulp eslint",
     "clean": "gulp clean"

@@ -7,17 +7,6 @@ const searchModel = require('./../searcher/searchEntity').searchModel;
 const amqp = require('amqplib/callback_api');
 const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
 
-
-const searcherMQ=function(objId){
- amqp.connect('amqp://localhost', function(connErr, conn) {
-   conn.createChannel(function(channelErrs, ch) {
-     ch.assertQueue('searcher', {durable: false});
-     ch.sendToQueue('searcher', new Buffer(objId));
-     return ch;
-   });
-    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
-  });};
-
  const addJob = function(jobData, callback) {
   console.log(jobData)
   let job=new docSearchJobModel(jobData);
