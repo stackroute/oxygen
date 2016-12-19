@@ -1,23 +1,42 @@
 
 const keyword_extractor = require("keyword-extractor");
+const crawlerNeo4jController = require('./crawlerNeo4jController');
+const crawlerMongoController = require('./crawlerMongoController');
 require('events').EventEmitter.defaultMaxListeners = Infinity;
-const extractData=function(text){
-  //filtering out the unwanted data from fetched data like stop words using library
 
-  let txt = keyword_extractor.extract(text,
+const extractData=function(data){
+  //filtering out the unwanted data from fetched data like stop words using library
+  let txt = keyword_extractor.extract(data.text,
   {
     language:"english",
     remove_digits: true,
     return_changed_case:true,
     remove_duplicates: false
   })
+  data.text = txt;
   console.log("in extract data")
-  return txt;
+  return data;
 }
 
-const termDensity=function(text){
+let termsFinder =function(data){
+  let promise = new promise(
+    function(resolve, reject){
+    crawlerNeo4jController.getTerms(data)
+    .then(function(data){
+      logger.debug("sucessfully got the intent of all domain");
+      resolve(data);
+    })
+    function(err){
+    logger.error("Encountered error in publishing a new " , err)
+     reject(err);
+    }
+    }
+    )
+}
+
+const termDensity=function(data){
   let corpus = [];
-  text.forEach(function (word) {
+  data.text.forEach(function (word) {
   // We don't want to include very short or long words because they're probably bad data.
   if (word.length > 20) {
    return;
@@ -33,18 +52,18 @@ const termDensity=function(text){
  }
 })
   console.log("in term density")
-  return corpus;
+  data.allTerms = corpus;
+  return data
 }
 
-const interestedWords=function(corpus){
-  let intent = [];
-  let otherWords = [];
-  let interestwords=['react','tutorial','waste'];
-  for (let prop in corpus) {
+const interestedWords=function(data){
+ let concept = [];
+ let otherWords =[];
+  for (let prop in data.allTerms) {
 
-    if(interestwords.includes(prop))
+    if(data.intrestedTerms.includes(prop))
     {
-      intent.push({
+      concept.push({
         word:prop,
         density:corpus[prop]
       });
@@ -58,11 +77,46 @@ const interestedWords=function(corpus){
     }
   }
   console.log("returning the final result")
-  return { "concepts": intent, "otherterms": otherWords };
+  let data.concept = concept;
+  let data.otherWords = otherWords;
+  return data;
   }
+
+let indexUrl =function(data){
+  let promise = new promise(
+    function(resolve, reject){
+    crawlerNeo4jController.getUrlIndexed(data)
+    .then(function(data){
+      logger.debug("successfully indexed the url")
+      resolve(data);
+    })
+    function(err){
+    logger.error("Encountered error in publishing a new " , err)
+     reject(err);
+    }
+    }
+    )
+
+let saveWebDocument = function(data){
+  let promise = new promise(
+    function(resolve, reject){
+    crawlerMongoController.mapWebDocument(data)
+    .then(function(data){
+      logger.debug("sucessfully saved the document")
+      resolve(data);
+    })
+    function(err){
+      logger.error("Encountered error in saving " , err)
+       reject(err);
+    }
+    }
+    )
 
 module.exports = {
  interestedWords:interestedWords,
  termDensity:termDensity,
+ termsFinder: termsFinder,
+ indexUrl: indexUrl,
+ saveWebDocument:saveWebDocument,
  extractData:extractData
 };
