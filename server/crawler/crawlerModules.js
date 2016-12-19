@@ -25,13 +25,14 @@ let termsFinder =function(data){
     .then(function(data){
       logger.debug("sucessfully got the intent of all domain");
       resolve(data);
-    })
+    },
     function(err){
     logger.error("Encountered error in publishing a new " , err)
      reject(err);
-    }
+    })
     }
     )
+    return promise;
 }
 
 const termDensity=function(data){
@@ -77,8 +78,8 @@ const interestedWords=function(data){
     }
   }
   console.log("returning the final result")
-  let data.concept = concept;
-  let data.otherWords = otherWords;
+  data.concept = concept;
+  data.otherWords = otherWords;
   return data;
   }
 
@@ -89,13 +90,15 @@ let indexUrl =function(data){
     .then(function(data){
       logger.debug("successfully indexed the url")
       resolve(data);
-    })
+    },
     function(err){
     logger.error("Encountered error in publishing a new " , err)
      reject(err);
-    }
+    })
     }
     )
+    return promise;
+   }
 
 let saveWebDocument = function(data){
   let promise = new promise(
@@ -104,13 +107,15 @@ let saveWebDocument = function(data){
     .then(function(data){
       logger.debug("sucessfully saved the document")
       resolve(data);
-    })
+    },
     function(err){
       logger.error("Encountered error in saving " , err)
        reject(err);
-    }
+    })
     }
     )
+   return promise;
+  }
 
 module.exports = {
  interestedWords:interestedWords,
@@ -119,4 +124,4 @@ module.exports = {
  indexUrl: indexUrl,
  saveWebDocument:saveWebDocument,
  extractData:extractData
-};
+}

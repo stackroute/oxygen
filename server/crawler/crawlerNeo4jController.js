@@ -1,4 +1,4 @@
-const DomainModel = require('./domainEntity').DomainModel;
+const DomainModel = require('./../domains/domainEntity').DomainModel;
 
 const neo4jDriver = require('neo4j-driver').v1;
 
@@ -9,12 +9,12 @@ const config = require('./../../config');
  let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
       neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
       );
-    
+
 let getTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
 
     logger.debug("Now proceeding to get all terms of domain: ", data.domain);
-   
+
     let intrestedTermsArr = [];
     let session = driver.session();
 
@@ -31,7 +31,7 @@ let getTerms = function(data) {
         intrestedTermsArr.push(record._fields[0].properties.name)
       });
       data.intrestedTerms = intrestedTermsArr;
-        // Completed! 
+        // Completed!
         session.close();
         resolve(data);
       })
@@ -48,9 +48,9 @@ let getUrlIndexed = function(data) {
   let promise = new Promise(function(resolve, reject) {
 
     logger.debug("Now proceeding to index url to domain: ", newDomainObj);
-    
-    
-    
+
+
+
     let session = driver.session();
 
     logger.debug("obtained connection with neo4j");
@@ -64,10 +64,10 @@ let getUrlIndexed = function(data) {
     .then(function(result) {
       result.records.forEach(function(record) {
         logger.debug("Result from neo4j: ", record);
-        
+
       });
-     
-        // Completed! 
+
+        // Completed!
         session.close();
         resolve(data);
       })

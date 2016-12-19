@@ -86,9 +86,8 @@ let conceptDocumentRelationship=function(data){
     logger.error("Encountered error in adding concept Document Relationship ",
       err);
     reject("error occured");
-  });
-
-});//end of promise
+  
+}});//end of promise
 
 return promise;
 

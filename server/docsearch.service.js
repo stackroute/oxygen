@@ -31,7 +31,7 @@ function setupMongooseConnections() {
  });
 }
 
-let startDocSarcherEngine = function() {
+let startDocSearcherEngine = function() {
  try {
    //Any pre-requisites for running the engine
    setupMongooseConnections();

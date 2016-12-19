@@ -91,7 +91,7 @@ indexUrl
     }));
 //creating the pipeline for crawler
 const url = {
-  _id: data.url;
+  _id: data.url
 };
 
   let text;
@@ -107,7 +107,7 @@ const url = {
     highland(data)
     .pipe( highland.pipeline.apply(null, processors))
     .each(function(res){
-      console.log("result : ", res);
+    console.log("result : ", res);
     startIntentParser(res);
      });
 

@@ -60,11 +60,8 @@ const intentParser= function(data)
     .pipe( highland.pipeline.apply(null, processors))
     .each(function(data){
       console.log("result : ", data);
-     });
+    });
 
-  })
-
-});
 }
 
 module.exports = {

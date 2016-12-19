@@ -1,4 +1,4 @@
-const webDocumentsModel = require('./domainEntity').webDocumentsModel;
+const webDocumentsModel = require('./../domains/domainEntity').webDocumentsModel;
 
 const logger = require('./../../applogger');
 
