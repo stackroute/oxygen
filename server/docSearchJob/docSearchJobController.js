@@ -7,7 +7,7 @@ const searchModel = require('./../searcher/searchEntity').searchModel;
 const amqp = require('amqplib/callback_api');
 const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
 
- const addJob = function(jobData, callback) {
+const addJob = function(jobData, callback) {
   console.log(jobData)
   let job=new docSearchJobModel(jobData);
   job.save(function(err,data) {
@@ -33,7 +33,7 @@ const addSearchJob = function(domainName,concept) {
         query:concept,
         engineID:engineData.engine[3]+" "+engineData.key[3],
         exactTerms:domainName,
-        results:10,
+        results:2,
         siteSearch:'NONE'
       }
       let job=new docSearchJobModel(JobData);
@@ -42,8 +42,6 @@ const addSearchJob = function(domainName,concept) {
           logger.error(
             "Encountered error at doSearchJobController::addJob, error: ",
             err);
-
-
         }
         console.log("saved job "+data);
         let id=data._id;
@@ -53,22 +51,7 @@ const addSearchJob = function(domainName,concept) {
 
     })
   })
-  
 
-  // let job=new docSearchJobModel(jobData);
-  // job.save(function(err,data) {
-  //   if (err) {
-  //     logger.error(
-  //       "Encountered error at doSearchJobController::addJob, error: ",
-  //       err);
-
-  //     return callback(err, {});
-  //   }
-  //   console.log("saved job id is "+data._id);
-  //   let id=data._id;
-  //   startSearcherMQ(id.toString());
-  //   return callback(null, job);
-  // });
 };
 
 const deleteJob = function(jobID, callback) {

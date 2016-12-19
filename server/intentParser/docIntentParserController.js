@@ -22,12 +22,12 @@ const intentParser= function(data)
       {
         callback(err,null)
       }
-    );
+      );
     send(data)
     {
       return data;
     }
-}));
+  }));
 
   processors.push(highland.map(function(data){
     let processedInfo=parserModules.findIntentIntensity(data)
@@ -48,19 +48,19 @@ const intentParser= function(data)
       {
         callback(err,null)
       }
-    );
+      );
     send(data)
     {
       return data;
     }
-}));
+  }));
 //creating the pipeline for intent parser
 
-    highland(data)
-    .pipe( highland.pipeline.apply(null, processors))
-    .each(function(data){
-      console.log("result : ", data);
-    });
+highland(data)
+.pipe( highland.pipeline.apply(null, processors))
+.each(function(data){
+  console.log("result : ", data);
+});
 
 }
 

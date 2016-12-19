@@ -25,7 +25,7 @@ function setupMongooseConnections() {
    mongoose.connection.close(function() {
      logger.info(
        'Mongoose disconnected on process termination'
-     );
+       );
      process.exit(0);
    });
  });
