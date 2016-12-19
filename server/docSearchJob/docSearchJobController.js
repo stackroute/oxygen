@@ -7,7 +7,7 @@ const searchModel = require('./../searcher/searchEntity').searchModel;
 const amqp = require('amqplib/callback_api');
 const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
 
- const addJob = function(jobData, callback) {
+const addJob = function(jobData, callback) {
   console.log(jobData)
   let job=new docSearchJobModel(jobData);
   job.save(function(err,data) {
@@ -33,7 +33,7 @@ const addSearchJob = function(domainName,concept) {
         query:concept,
         engineID:engineData.engine[3]+" "+engineData.key[3],
         exactTerms:domainName,
-        results:50,
+        results:2,
         siteSearch:'NONE'
       }
       let job=new docSearchJobModel(JobData);

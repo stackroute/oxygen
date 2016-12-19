@@ -25,13 +25,13 @@ function setupMongooseConnections() {
    mongoose.connection.close(function() {
      logger.info(
        'Mongoose disconnected on process termination'
-     );
+       );
      process.exit(0);
    });
  });
 }
 
-let startDocSarcherEngine = function() {
+let startDocSearcherEngine = function() {
  try {
    //Any pre-requisites for running the engine
    setupMongooseConnections();

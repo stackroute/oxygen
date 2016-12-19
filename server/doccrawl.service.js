@@ -25,7 +25,7 @@ function setupMongooseConnections() {
    mongoose.connection.close(function() {
      logger.info(
        'Mongoose disconnected on process termination'
-     );
+       );
      process.exit(0);
    });
  });
@@ -38,7 +38,7 @@ let startDocCrawlerEngine = function() {
 
    logger.info("Starting doc crawler engine..!");
 
-   crawlerEngine.start();
+   crawlerEngine.startCrawler();
  } catch (err) {
    logger.error("Caught error in running doc crawler engine: ", err);
  }
