@@ -54,7 +54,7 @@ let fetchIndicatorTerms = function(data) {
 let fetchCounterIndicatorTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
 
-    logger.debug("Now proceeding to fetch Counter Indicator Terms: ", newDomainObj);
+    logger.debug("Now proceeding to fetch Counter Indicator Terms: ",  data.intent);
 
     let session = driver.session();
 
@@ -98,7 +98,7 @@ let addIntentRelationship = function(data) {
   let promise = new Promise(function(resolve, reject) {
 
 
-    if(data.intentDensity<=0)
+    if(data.intensity<=0)
     {
       resolve(data);
     }
@@ -106,16 +106,19 @@ let addIntentRelationship = function(data) {
     else {
 
 
-      logger.debug("Now proceeding to add intent as relationship b/w concept and doc ", newDomainObj);
+      logger.debug("Now proceeding to add intent as relationship b/w concept and doc ", data.intensity);
 
       let session = driver.session();
 
-    logger.debug("obtained connection with neo4j");
+    logger.debug("domain "+data.domain);
+      logger.debug("intent "+data.intent);
+        logger.debug("concept"+data.concept);
+          logger.debug("url"+data.url);
 
       let query='MATCH (w:WebDocument{name:{documentUrl}}) ';
       query+='MATCH (c:Concept{name:{conceptName}}) ';
       query += 'MATCH (d:Domain{name:{domainName}})';
-      query += 'MERGE (c)<-[r:{intentName}]-(w) SET r.intensity={intensity}';
+      query += 'MERGE (c)<-[r:'+data.intent+']-(w) SET r.intensity={intensity}';
 
       let params = {
         domainName: data.domain,

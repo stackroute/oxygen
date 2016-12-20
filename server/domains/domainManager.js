@@ -54,12 +54,12 @@ let initialiseDomainOntology = function(domainName) {
         logger.debug('[*] [domainManager] Result from neo4j: ',
           record);
       });
-      
-        // Completed! 
+
+        // Completed!
         session.close();
         resolve(domainName);
       })
-    
+
     .catch(function(err) {
       logger.error(
         'Error in neo4j query for initialising domain with defaults: ',
@@ -81,7 +81,7 @@ let buildDomainIndex = function(domainName) {
    .then(function(conceptsColln) {
     docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
     .then(function(result) {
-      resolve(result);
+      resolve(conceptsColln);
     }, function(err) {
       reject(err);
     });

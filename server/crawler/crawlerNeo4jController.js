@@ -49,9 +49,11 @@ let getUrlIndexed = function(data) {
 
     let session = driver.session();
 
+    let intents=[];
+
     logger.debug("obtained connection with neo4j");
 
-    let query = 'Match (d:Domain{name:{domainName}}) Match (c:Concept{name:{conceptName}}) MERGE(c)<-[r:HasExplanationOf]-(u:WebDocument{name:{urlName}}) return d';
+    let query = 'Match (d:Domain{name:{domainName}})  Match (c:Concept{name:{conceptName}}) Match (i:Intent) MERGE(c)<-[r:HasExplanationOf]-(u:WebDocument{name:{urlName}}) return i';
     let params = {
       domainName: data.domain,
       conceptName: data.concept,
@@ -60,15 +62,15 @@ let getUrlIndexed = function(data) {
     session.run(query , params)
     .then(function(result) {
       result.records.forEach(function(record) {
-
         logger.debug("Result for terms from neo4j: ", record);
+        intents.push(record._fields[0].properties.name);
 
       });
 
         // Completed!
 
         session.close();
-        resolve(data);
+        resolve({data:data,intents:intents});
       })
     .catch(function(err) {
       logger.error("Error in neo4j query: ", err, ' query is: ',

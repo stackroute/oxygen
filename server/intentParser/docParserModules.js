@@ -35,40 +35,44 @@ let fetchIntentSpecificTerms=function(data){
 
 let findIntentIntensity=function(data){
 
-  let  termkeys=Object.keys(data.allTerms);
+  logger.debug("All the Terms "+  data.terms);
+
   let indicator=0;
   let counter=0;
 
 //check for alll trems indicator and counterIndicator
-termkeys.forEach(function (term) {
-  let word=termkeys[0];
-  data.counterIndicatorTerms.forEach(function(cit)
-  {
-    if(word==cit)
-    {
-      counter++;
-    }
-  })
+ data.terms.forEach(function(term) {
+logger.debug("The prop "+ term.word);
+ for (let counterItr in data.counterIndicatorTerms) {
 
-  data.indicatorTerms.forEach(function(it)
-  {
-    if(word==it)
+    if(term.word==data.counterIndicatorTerms[counterItr])
     {
-      indicator++;
+      counter+=term.intensity;
     }
-  })
+  }
+
+ for (let indicatorItr in data.counterIndicatorTerms)
+  {
+    if(term.word==data.indicatorTerms[indicatorItr])
+    {
+      indicator+=term.intensity;
+    }
+  }
 })
 
+logger.debug("after calculation of counter "+ counter);
+logger.debug("after calculation of indicator "+ indicator);
 let intensity=0;
 if(indicator>0)
 {
   let density=(indicator/(indicator+counter))*100;
   density=(density-50)*2;
-  intensity=x;
+  intensity=density;
 }
 else {
   intensity=0;
 }
+logger.debug("after calculation of rating "+ intensity);
 data.intensity=intensity;
 
 return data;
@@ -78,7 +82,7 @@ let conceptDocumentRelationship=function(data){
 
   let promise=new Promise(
    function(resolve,reject){
-     parserNeo4jCtrl.addIntentRelationship(dataObj).then(function(dataObj1) {
+     parserNeo4jCtrl.addIntentRelationship(data).then(function(dataObj1) {
        logger.debug("Successfully added concept Document Relationship ",
          dataObj1);
        resolve(dataObj1);

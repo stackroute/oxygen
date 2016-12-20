@@ -19,13 +19,14 @@ const startIntentParser = function(urlDataObjId) {
      //@TODO take the crawler MQ name from Config
      let crawlerMQName = 'intentParser';
 
+    logger.debug("inside parser MQ sender "+ urlDataObjId.intent);
      //making durable as false, so that .....
      chConn.assertQueue(crawlerMQName, { durable: false })
        .then(function(ok) {
          logger.debug("What is ok: ", ok);
          logger.debug('[*] Waiting for messages on [' + crawlerMQName + '], to exit press CTRL+C ');
-         chConn.sendToQueue(crawlerMQName,new Buffer(urlDataObjId) );
-         logger.debug("msg sent to crawler .. ..  ..");
+         chConn.sendToQueue(crawlerMQName,new Buffer(JSON.stringify(urlDataObjId)) );
+         logger.debug("msg sent to intentParser .. ..  ..");
        }); //end of assertQueue
    }); //end of channelConnection
 }

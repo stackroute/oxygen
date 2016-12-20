@@ -103,9 +103,10 @@ let indexUrl =function(data){
 let saveWebDocument = function(data){
   let promise = new Promise(
     function(resolve, reject){
-      crawlerMongoController.saveNewWebDocument(data)
-      .then(function(data){
+      crawlerMongoController.saveNewWebDocument(data.data)
+      .then(function(mongoData){
         logger.debug("sucessfully saved the document")
+        logger.debug("after mongo saving "+data.intents)
         resolve(data);
       },
       function(err){
@@ -117,11 +118,24 @@ let saveWebDocument = function(data){
   return promise
 }
 
+let parseEachIntent = function(dataWithIntentColln){
+  let data=dataWithIntentColln.data;
+   let intents=dataWithIntentColln.intents;
+  logger.debug("parseEachIntent "+data.domain)
+   logger.debug("parseEachIntent "+intents)
+   intents.forEach(function(intent){
+     data['intent']=intent;
+
+     return data;
+   })
+}
+
 module.exports = {
  interestedWords:interestedWords,
  termDensity:termDensity,
  termsFinder: termsFinder,
  indexUrl: indexUrl,
  saveWebDocument:saveWebDocument,
- extractData:extractData
+ extractData:extractData,
+ parseEachIntent:parseEachIntent
 }
