@@ -110,8 +110,6 @@ let addIntentRelationship = function(data) {
 
     let session = driver.session();
 
-    let counterIndicatorTerm=[];
-
     logger.debug("obtained connection with neo4j");
 
     let query='MATCH (w:webDocument{name:{documentUrl}}) ';
@@ -129,11 +127,6 @@ let addIntentRelationship = function(data) {
 
     session.run(query, params)
     .then(function(result) {
-      result.records.forEach(function(record) {
-        logger.debug("Result from neo4j: ", record);
-        counterIndicatorTerm.push(record._fields[0].properties.name);
-      });
-
         // Completed!
         session.close();
         resolve(data);

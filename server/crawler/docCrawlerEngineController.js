@@ -42,7 +42,7 @@ const urlIndexing= function(data)
     let processedInfo=crawlerModules.termDensity(data)
     return processedInfo;
   }));
-  indexUrl
+  
   processors.push(highland.map(function(data){
     let processedInfo=crawlerModules.interestedWords(data)
     return processedInfo;
@@ -94,21 +94,7 @@ const url = {
   _id: data.url
 };
 
-<<<<<<< HEAD
-  let text;
-  request.get(data.url, function (error, response, body) {
-    let page = cheerio.load(body);
 
-    text = page("body").text();
-    text = text.replace(/\s+/g, " ")
-    .replace(/[^a-zA-Z ]/g, "")
-    .toLowerCase();
-    console.log("created texts for "+data.url)
-    data.text=text;
-    highland(data)
-    .pipe( highland.pipeline.apply(null, processors))
-    .each(function(res){
-=======
 let text;
 request.get(data.url, function (error, response, body) {
   let page = cheerio.load(body);
@@ -122,7 +108,6 @@ request.get(data.url, function (error, response, body) {
   highland(data)
   .pipe( highland.pipeline.apply(null, processors))
   .each(function(res){
->>>>>>> 087d304c5d72b6dc72423e5028d8e0e014acdb50
     console.log("result : ", res);
     startIntentParser(res);
   });

@@ -78,16 +78,16 @@ let conceptDocumentRelationship=function(data){
 
   let promise=new Promise(
    function(resolve,reject){
-     
-     if(data) {
-      logger.debug("Successfully added concept Document Relationship ",   data);
-      resolve(data)
-    }
-    else {
-      logger.error("Encountered error in adding concept Document Relationship ",
-        err);
-      reject("error occured");
-    }
+     parserNeo4jCtrl.addIntentRelationship(dataObj).then(function(dataObj1) {
+       logger.debug("Successfully added concept Document Relationship ",
+         dataObj1);
+       resolve(dataObj1);
+     },
+     function(err) {
+       logger.error("Encountered error in adding concept Document Relationship",
+         err);
+       reject(err);
+     });
 });//end of promise
   return promise;
 
