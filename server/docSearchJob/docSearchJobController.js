@@ -2,20 +2,12 @@
 
 const logger = require('./../../applogger');
 const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
-const searchModel = require('./../searcher/SearchEntity').searchModel;
+const engineModel = require('./docSearchJobEntity').engineModel;
+const searchModel = require('./../searcher/searchEntity').searchModel;
 const amqp = require('amqplib/callback_api');
+const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
 
-const searcherMQ=function(objId){
- amqp.connect('amqp://localhost', function(connErr, conn) {
-   conn.createChannel(function(channelErrs, ch) {
-     ch.assertQueue('searcher', {durable: false});
-     ch.sendToQueue('searcher', new Buffer(objId));
-     return ch;
-   });
-    //setTimeout(function() w{ conn.close(); process.exit(0) }, 500);
-  });};
-
- const addJob = function(jobData, callback) {
+const addJob = function(jobData, callback) {
   console.log(jobData)
   let job=new docSearchJobModel(jobData);
   job.save(function(err,data) {
@@ -28,9 +20,38 @@ const searcherMQ=function(objId){
     }
     console.log("saved job id is "+data._id);
     let id=data._id;
-    searcherMQ(id.toString());
+    startSearcherMQ(id.toString());
     return callback(null, job);
   });
+};
+const addSearchJob = function(domainName,concept) {
+  console.log(domainName+" "+concept)
+  engineModel.find(function(err,engineColl)
+  {
+    engineColl.forEach(function(engineData){
+      let JobData={
+        query:concept,
+        engineID:engineData.engine[3]+" "+engineData.key[3],
+        exactTerms:domainName,
+        results:2,
+        siteSearch:'NONE'
+      }
+      let job=new docSearchJobModel(JobData);
+      job.save(function(err,data) {
+        if (err) {
+          logger.error(
+            "Encountered error at doSearchJobController::addJob, error: ",
+            err);
+        }
+        console.log("saved job "+data);
+        let id=data._id;
+        startSearcherMQ(id.toString());
+
+      });
+
+    })
+  })
+
 };
 
 const deleteJob = function(jobID, callback) {
@@ -68,7 +89,7 @@ const updateJob = function(job, callback) {
       }
       return callback(null,{err:"unexpected"});
     })
-    return ack;    
+    return ack;
   });
 };
 
@@ -104,5 +125,6 @@ module.exports = {
   showJob:showJob,
   deleteJob:deleteJob,
   updateJob:updateJob,
+  addSearchJob:addSearchJob,
   showResults:showResults
 };

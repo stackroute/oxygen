@@ -1,33 +1,27 @@
-
-const amqp = require('amqplib/callback_api');
 const highland = require('highland');
 const crawlerModules = require('./crawlerModules');
 const searchModel = require('../searcher/searchEntity').searchModel;
 const logger = require('./../../applogger');
 const request= require('request');
 const cheerio = require("cheerio");
+const startIntentParser = require('./docOpenIntentParserEngine').startIntentParser;
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-amqp.connect(process.env.RABBITMQ, function(err, conn) {
-  conn.createChannel(function(errs, ch) {
-    let q = 'crawler';
-    ch.assertQueue(q, {durable: false});
-    console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
-    ch.consume(q, function(msg) {
-      getData(msg.content.toString());
-
-    }, {noAck: true});
-  });
-});
-
-const getData= function(urlId)
+const urlIndexing= function(data)
 {
   let processors = [];
-
+  data=JSON.parse(data);
   processors.push(highland.map(function(data){
     let processedInfo=crawlerModules.extractData(data)
     return processedInfo;
   }));
+
+  processors.push(highland.map(function(data){
+    let promise = crawlerModules.termsFinder(data);
+    return promise;
+  }));
+
+  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
 
   processors.push(highland.map(function(data){
     let processedInfo=crawlerModules.termDensity(data)
@@ -38,39 +32,49 @@ const getData= function(urlId)
     let processedInfo=crawlerModules.interestedWords(data)
     return processedInfo;
   }));
-//creating the pipeline for crawler
-const url = {
-  _id: urlId
-};
-searchModel.findOne(url, function(err, urlDetails) {
-  console.log("starting in findone "+urlDetails.url)
-  if (err) {
-    logger.error('Encountered error at crawlerController::searchModel, error: ', err);
-    return err;
-  }
-  if (!urlDetails) {
-    logger.error('No search results Found');
-    return err;
-  }
+
+  processors.push(highland.map(function(data){
+    let promise=crawlerModules.indexUrl(data)
+    return promise
+    
+  }));
+  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
+
+  processors.push(highland.map(function(data){
+    let promise=crawlerModules.saveWebDocument(data)
+    return promise
+  }));
+  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
+
+  const url = {
+    _id: data.url
+  };
+
   let text;
-  request.get(urlDetails.url, function (error, response, body) {
+  request.get(data.url, function (error, response, body) {
     let page = cheerio.load(body);
 
     text = page("body").text();
     text = text.replace(/\s+/g, " ")
     .replace(/[^a-zA-Z ]/g, "")
     .toLowerCase();
-    console.log("created texts for "+urlDetails.url)
-    let urlArray=[];
-    urlArray.push(text);
-    highland(urlArray)
+    logger.debug("created texts for "+data.url)
+    data.text=text;
+    let dataArr=[];
+    dataArr.push(data);
+    highland(dataArr)
     .pipe( highland.pipeline.apply(null, processors))
-    .each(function(obj){
-      console.log("result : ", obj);
-  // console.log("Data: ", JSON.stringify(data));
+    .each(function(res){
+      logger.debug("WebDocument : ");
+      logger.debug(res);
+  // startIntentParser(res);
 });
 
-  })
+  });
 
-});
+
 }
+
+module.exports = {
+ urlIndexing: urlIndexing
+};

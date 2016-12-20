@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "serve": "node ./bin/www",
-    "start": "node ./bin/www",
-    "search": "node ./bin/search",
-    "crawl": "node ./bin/crawl",
+    "serve": "node bin/www",
+    "www": "node bin/www",
+    "search": "node server/docsearch.service",
+    "crawl": "node server/doccrawl.service",
+    "parser": "node server/docintentparser.service",
     "build": "gulp build",
     "lint": "gulp eslint",
     "clean": "gulp clean"
@@ -70,6 +71,7 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
     "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
     "cookie-parser": "^1.4.3",
     "css-loader": "^0.25.0",
     "eslint": "^3.9.1",
