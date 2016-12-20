@@ -1,0 +1,93 @@
+version: '2'
+services:
+  webapp:
+    image: oxygen/oxygen-webapp:v0.1.0
+    build:
+      context: ./
+      dockerfile: Dockerfile-Webapp
+   # container_name: oxygen-webapp
+    network_mode: host
+    restart: always
+    expose:
+      - 8080
+    ports:
+    - "8080:8080"
+    depends_on:
+    - mongodb
+    - rabbitmq
+    - neo4j
+    environment:
+      RABBITMQ: amqp://localhost
+      MONGO_HOST: localhost
+      MONGO_PORT: 27017
+      MONGO_DB_NAME: oxygen
+  search:
+    image: oxygen/oxygen-search:v0.1.0
+    build: 
+      context: ./
+      dockerfile: Dockerfile-Search
+    # container_name: oxygen-search
+    network_mode: host
+    restart: always
+    expose:
+      - 8081
+    depends_on:
+    - mongodb
+    - rabbitmq
+    environment:
+      RABBITMQ: amqp://localhost
+      MONGO_HOST: localhost
+      MONGO_PORT: 27017
+      MONGO_DB_NAME: oxygen
+  crawl:
+    image: oxygen/crawl:v0.1.0
+    build: 
+      context: ./
+      dockerfile: Dockerfile-Crawl
+    # container_name: oxygen-crawl
+    network_mode: host
+    restart: always
+    expose:
+      - 8082
+    depends_on:
+    - mongodb
+    - rabbitmq
+    - neo4j
+    environment:
+      RABBITMQ: amqp://localhost
+      MONGO_HOST: localhost
+      MONGO_PORT: 27017
+      MONGO_DB_NAME: oxygen
+  mongodb:
+    # container_name: mongodb
+    image: mvertes/alpine-mongo
+    network_mode: host
+    restart: always
+    volumes:
+      - /data:/data/db
+    expose:
+      - 27017
+    ports:
+      - "27017:27017"
+  rabbitmq:
+    # container_name: rabbitmq
+    image: smebberson/alpine-rabbitmq
+    network_mode: host
+    restart: always
+    volumes:
+      - /data:/data/db
+    expose:
+      - 15672
+    ports:
+      - "15672:15672"
+  neo4j:
+    # container_name: neo4j
+    image: neo4j
+    network_mode: host
+    restart: always
+    volumes:
+      - /data:/data/db
+    expose:
+      - 7474
+    ports:
+      - "7474:7474"

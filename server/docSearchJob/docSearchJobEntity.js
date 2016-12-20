@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
-/* beautify ignore:start */
-/* beautify preserve:start */
-const schema = new mongoose.Schema({ 
+const jobSchema = new mongoose.Schema({ 
 	query: String,
 	engineID:String,
 	exactTerms:String,
@@ -11,12 +9,24 @@ const schema = new mongoose.Schema({
 
 }, {collection: 'Job', versionKey: false});
 
+
+const engineSchema = new mongoose.Schema({
+
+	engine:[{"type":String,"unique":true}],
+	key:[{"type":String,"unique":true}]
+
+
+}, {collection: 'Engines', versionKey: false});
+
 //schema.index({name: 1}, {unique: true});
 
-const model = mongoose.model('Job', schema);
+const docSearchJobModel = mongoose.model('Job', jobSchema);
+const engineModel = mongoose.model('Engines', engineSchema);
 
 module.exports = {
-	docSearchJobModel: model
+	docSearchJobModel: docSearchJobModel,
+	engineModel:engineModel
+
 };
 
 /* beautify preserve:end */

@@ -6,7 +6,7 @@ import IconButton from 'material-ui/IconButton';
 import {Card, CardTitle,CardActions, CardMedia, CardText} from 'material-ui/Card';
 import {Row, Col} from 'react-grid-system';
 import {Link} from 'react-router';
-import {green300,blue300,grey300,lime800,green700} from 'material-ui/styles/colors';
+import {grey300} from 'material-ui/styles/colors';
 import ActionBook from 'material-ui/svg-icons/action/book';
 const domaincard={
 	fontSize: "20px",
@@ -14,12 +14,23 @@ const domaincard={
 	textAlign:"left"
 
 };
+const roundImg={
+	borderRadius: '50%',
+	minWidth:'0%',
+	width:'47%',
+	marginTop:'35px',
+	height:'145px'
+}
 const styles = {
   chip: {
     marginLeft: '5px',
     padding:0,
     marginBottom:'7px',
+		marginRight:'2px',
   },
+	cardRound:{
+		borderRadius: '2%',
+	},
   wrapper: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -28,7 +39,7 @@ const styles = {
     color:'gray'
   },
   padd:{
-    paddingTop:'8px',
+    paddingTop:'2px',
     paddingBottom:'8px'
   },
   paddHeader:{
@@ -39,6 +50,8 @@ const styles = {
   },
   paddIcon:{
     paddingTop:'5px',
+		width:'48',
+		height:'48',
     marginBottom:0
   }
 };
@@ -49,66 +62,38 @@ const cusbut={
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {canSubmit:false};
-	}
-
+		this.state = {canSubmit:false}
+}
 	render()
 	{
-    {this.props.item.intents.map((ele,i) =>{
-      if(ele.docs===0)
-      {
-        ele.color=blue300;
-      }
-      else if(ele.docs<11)
-      {
-        ele.color=lime800;
-      }
-      else {
-        ele.color=green700;
-      }
-      })}
-      if(this.props.item.concepts<5)
-      {
-        this.props.item.conceptColor=blue300;
-      }
-      else if(this.props.item.concepts<15)
-      {
-        this.props.item.conceptColor=lime800;
-      }
-      else {
-        this.props.item.conceptColor=green700;
-      }
+
 		return(
 			<div>
         <Row style={{marginBottom: '20px',marginLeft:'10px'}}>
-  			<Card >
-        <CardMedia style={{height:'280px',width :'355px',backgroundColor:this.props.item.conceptColor}} overlay={<CardTitle title={this.props.item.subject} subtitle="Domain" style={styles.padd}/>} />
+				<Link to='/graph' style={{textDecoration:'none'}}>
+  			<Card style={styles.cardRound}>
+        <CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.props.conceptColor}} overlay={<CardTitle title={this.props.item.subject} subtitle="Domain" style={styles.padd}/>}>
+				<img src={this.props.item.image} style={roundImg}/>
+			  </CardMedia>
         <CardText style={styles.colorCode}>
         {this.props.item.description}
         </CardText>
         <Row>
-        <Col sm={1}><IconButton><ActionBook style={styles.paddIcon} /></IconButton></Col>
-        <Col sm={7}><h4 style={styles.paddHeader}>Concepts Available:{this.props.item.concepts}</h4></Col>
-        <Col sm={3}>
-        <CardActions>
-  			<Link to='/graph'>
-  			<FlatButton label="SEARCH" primary={true} style={cusbut} />
-        </Link>
-  			</CardActions>
-        </Col>
+        <Col sm={3}><IconButton><ActionBook style={styles.paddIcon} /></IconButton></Col>
+        <Col sm={9}><h3 style={styles.paddHeader}>Concepts Available:{this.props.item.concepts}</h3></Col>
         </Row>
 
         <div>
           <Row>
           <Col sm={6}>
           <Chip backgroundColor={grey300} style={styles.chip}>
-          <Avatar size={32} color={grey300} backgroundColor={this.props.item.intents[0].color}>I</Avatar>
+          <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[0]}>I</Avatar>
           {this.props.item.intents[0].intent} {this.props.item.intents[0].docs}
           </Chip>
           </Col>
           <Col sm={6}>
           <Chip backgroundColor={grey300} style={styles.chip}>
-          <Avatar size={32} color={grey300} backgroundColor={this.props.item.intents[1].color}>I</Avatar>
+          <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[1]}>I</Avatar>
           {this.props.item.intents[1].intent} {this.props.item.intents[1].docs}
           </Chip>
           </Col>
@@ -116,13 +101,13 @@ export default class DomainShow extends React.Component {
           <Row>
             <Col sm={6}>
             <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.item.intents[2].color}>I</Avatar>
+            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[2]}>I</Avatar>
             {this.props.item.intents[2].intent} {this.props.item.intents[2].docs}
             </Chip>
             </Col>
             <Col sm={6}>
             <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.item.intents[3].color}>I</Avatar>
+            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[3]}>I</Avatar>
             {this.props.item.intents[3].intent} {this.props.item.intents[3].docs}
             </Chip>
             </Col>
@@ -130,13 +115,14 @@ export default class DomainShow extends React.Component {
           <Row>
             <Col sm={6}>
             <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.item.intents[4].color}>I</Avatar>
+            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[4]}>I</Avatar>
             {this.props.item.intents[4].intent} {this.props.item.intents[4].docs}
             </Chip>
             </Col>
           </Row>
          </div>
   			</Card>
+				</Link>
   			</Row>
 			</div>
 			);

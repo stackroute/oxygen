@@ -58,6 +58,34 @@ Router.get('/show', function(req, res) {
   });
 }
 });
+Router.get('/:resultJobId', function(req, res) {
+ try {
+  let sendData=controller.showResults(req.params.resultJobId,(err,result) => {
+    if (err) {
+      logger.error('Error in fetching entity ', err);
+      return res.status(500).json({
+        error: 'Something went wrong, please try later..!'
+      });
+    }
+
+      //  SUCCESS
+      
+      
+      console.log("from the showResults server side :")
+      console.log(result)
+      return res.json(result);
+      
+    });
+  return sendData;
+
+} catch (err) {
+  logger.error("Caught exception: ", err);
+
+  return res.status(500).json({
+    error: 'Something went wrong in catch, please try later..!'
+  });
+}
+});
 
 Router.delete('/delete', function(req, res) {
  try {
