@@ -10,8 +10,22 @@ function setupWebAppRESTRoutes(app) {
   return app;
 }
 
+function welcome() {
+  let motdFile = path.resolve(__dirname, '.webapp.motd');
+  const fs = require('fs');
+  if (fs.existsSync(motdFile)) {
+    let msg = fs.readFileSync(motdFile, 'utf-8');
+    process.stdout.write('\n' + msg + '\n');
+  } else {
+    process.stdout.write('\n=========== Oxygen WWW ===========\n');
+  }
+}
+
 // App Constructor function is exported
 module.exports = function() {
+
+  welcome();
+
   let app = service.createApp();
 
   app = service.setupWebpack(app);

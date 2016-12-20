@@ -1,11 +1,16 @@
-const webDocumentsModel = require('./../domains/domainEntity').webDocumentsModel;
+const webDocumentsModel = require('./webDocumentsEntity').webDocumentsModel;
 
 const logger = require('./../../applogger');
 
 let saveNewWebDocument = function(webDocument) {
+  delete webDocument.text;
+  delete webDocument.allTerms;
+  logger.debug("Saving the webDocument : ")
+  logger.debug(webDocument)
+
   let promise = new Promise(function(resolve, reject) {
 
-    webDocument = new DomainModel(webDocument);
+    webDocument = new webDocumentsModel(webDocument);
 
     webDocument.save(function(err, data) {
       if (err) {
