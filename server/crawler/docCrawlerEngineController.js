@@ -10,108 +10,67 @@ require('events').EventEmitter.defaultMaxListeners = Infinity;
 const urlIndexing= function(data)
 {
   let processors = [];
-
+  data=JSON.parse(data);
   processors.push(highland.map(function(data){
     let processedInfo=crawlerModules.extractData(data)
     return processedInfo;
   }));
 
   processors.push(highland.map(function(data){
-
-    logger.debug("");
-
-    let send=callback=>parserModules.termsFinder(data)
-    .then(
-      function(data)
-      {
-        callback(null,data)
-      },
-      function(err)
-      {
-        callback(err,null)
-      }
-      );
-    send(data)
-    {
-      return data;
-    }
+    let promise = crawlerModules.termsFinder(data);
+    return promise;
   }));
 
+  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
 
   processors.push(highland.map(function(data){
     let processedInfo=crawlerModules.termDensity(data)
     return processedInfo;
   }));
-  indexUrl
+
   processors.push(highland.map(function(data){
     let processedInfo=crawlerModules.interestedWords(data)
     return processedInfo;
   }));
 
   processors.push(highland.map(function(data){
-
-    logger.debug("");
-
-    let send=callback=>parserModules.indexUrl(data)
-    .then(
-      function(data)
-      {
-        callback(null,data)
-      },
-      function(err)
-      {
-        callback(err,null)
-      }
-      );
-    send(data)
-    {
-      return data;
-    }
+    let promise=crawlerModules.indexUrl(data)
+    return promise
+    
   }));
+  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
 
   processors.push(highland.map(function(data){
-
-    logger.debug("");
-
-    let send=callback=>parserModules.saveWebDocument(data)
-    .then(
-      function(data)
-      {
-        callback(null,data)
-      },
-      function(err)
-      {
-        callback(err,null)
-      }
-      );
-    send(data)
-    {
-      return data;
-    }
+    let promise=crawlerModules.saveWebDocument(data)
+    return promise
   }));
-//creating the pipeline for crawler
-const url = {
-  _id: data.url
-};
+  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
 
-let text;
-request.get(data.url, function (error, response, body) {
-  let page = cheerio.load(body);
+  const url = {
+    _id: data.url
+  };
 
-  text = page("body").text();
-  text = text.replace(/\s+/g, " ")
-  .replace(/[^a-zA-Z ]/g, "")
-  .toLowerCase();
-  console.log("created texts for "+data.url)
-  data.text=text;
-  highland(data)
-  .pipe( highland.pipeline.apply(null, processors))
-  .each(function(res){
-    console.log("result : ", res);
-    startIntentParser(res);
-  });
+  let text;
+  request.get(data.url, function (error, response, body) {
+    let page = cheerio.load(body);
 
+    text = page("body").text();
+    text = text.replace(/\s+/g, " ")
+    .replace(/[^a-zA-Z ]/g, "")
+    .toLowerCase();
+    logger.debug("created texts for "+data.url)
+    data.text=text;
+    let dataArr=[];
+    dataArr.push(data);
+    highland(dataArr)
+    .pipe( highland.pipeline.apply(null, processors))
+    .each(function(res){
+      logger.debug("WebDocument : ");
+      logger.debug(res);
+  // startIntentParser(res);
 });
+
+  });
 
 
 }
