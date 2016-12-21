@@ -25,6 +25,6 @@ module.exports = {
   NEO4J_HOST: 'localhost',
   NEO4J_BOLT_URL: neo4jURL,
   NEO4J_USR: 'neo4j',
-  NEO4J_PWD: 'password'
+  NEO4J_PWD: 'bala'
 
 };
