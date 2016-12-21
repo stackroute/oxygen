@@ -22,7 +22,7 @@ const extractData=function(data){
 let termsFinder = function(data){
   let promise = new Promise(function(resolve,reject){
     logger.debug('Trying to get the terms...!');
-    crawlerNeo4jController.getTerms(data)    
+    crawlerNeo4jController.getTerms(data)
     .then(function(data){
       logger.debug("sucessfully got ALL TERMS OF THE domain");
       resolve(data);
@@ -39,13 +39,13 @@ let termsFinder = function(data){
 
 const termDensity=function(data){
   let conceptInDoc = [];
-  data.text.forEach(function (word) {  
+  data.text.forEach(function (word) {
     if (word.length > 20) {
      return;
    }
    if (conceptInDoc[word]) {
     conceptInDoc[word]+=1;
-  } 
+  }
   else {
    conceptInDoc[word] = 1;
  }
@@ -103,9 +103,10 @@ let indexUrl =function(data){
 let saveWebDocument = function(data){
   let promise = new Promise(
     function(resolve, reject){
-      crawlerMongoController.saveNewWebDocument(data)
-      .then(function(data){
+      crawlerMongoController.saveNewWebDocument(data.data)
+      .then(function(mongoData){
         logger.debug("sucessfully saved the document")
+        logger.debug("after mongo saving "+data.intents)
         resolve(data);
       },
       function(err){
@@ -117,11 +118,24 @@ let saveWebDocument = function(data){
   return promise
 }
 
+let parseEachIntent = function(dataWithIntentColln){
+  let data=dataWithIntentColln.data;
+   let intents=dataWithIntentColln.intents;
+  logger.debug("parseEachIntent "+data.domain)
+   logger.debug("parseEachIntent "+intents)
+   intents.forEach(function(intent){
+     data['intent']=intent;
+
+     return data;
+   })
+}
+
 module.exports = {
  interestedWords:interestedWords,
  termDensity:termDensity,
  termsFinder: termsFinder,
  indexUrl: indexUrl,
  saveWebDocument:saveWebDocument,
- extractData:extractData
+ extractData:extractData,
+ parseEachIntent:parseEachIntent
 }

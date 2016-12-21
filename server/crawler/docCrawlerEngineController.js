@@ -36,7 +36,7 @@ const urlIndexing= function(data)
   processors.push(highland.map(function(data){
     let promise=crawlerModules.indexUrl(data)
     return promise
-    
+
   }));
   processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
 
@@ -45,6 +45,11 @@ const urlIndexing= function(data)
     return promise
   }));
   processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
+
+  processors.push(highland.map(function(data){
+    let processedInfo=crawlerModules.parseEachIntent(data)
+    return processedInfo;
+  }));
 
   const url = {
     _id: data.url
@@ -65,9 +70,9 @@ const urlIndexing= function(data)
     highland(dataArr)
     .pipe( highland.pipeline.apply(null, processors))
     .each(function(res){
-      logger.debug("WebDocument : ");
+      logger.debug("At consupmtion Intent : "+data.intent);
       logger.debug(res);
-  // startIntentParser(res);
+      startIntentParser(data);
 });
 
   });
