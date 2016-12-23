@@ -142,6 +142,45 @@ let getDomainConcept = function(domainName) {
   return promise;
 }
 
+let getDomainIntent = function(domain) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to retrive the intent for domain name: ", domain.Domain);
+    let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
+      neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
+      );
+
+    let session = driver.session();
+
+    logger.debug("obtained connection with neo4j");
+
+    let query = 'MATCH (d:Domain{name:{domainName}}) match(i:Intent) match(d)<-[r:IntentOf]-(i) RETURN i';
+    let params = {
+      domainName: domain.Domain
+    };
+    let intents=[];
+    session.run(query, params)
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        record._fields.forEach(function(fields){
+          intents.push(fields.properties.name);
+        });
+
+      });
+      session.close();
+      domain["Intents"]=intents;
+      resolve(domain);
+    })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+  });
+
+  return promise;
+}
+
 let getDomainCardDetails = function(domainObj) {
   let promise = new Promise(function(resolve, reject) {
     logger.debug(" in domain card going for getting concepts for : ", domainObj);
@@ -256,6 +295,13 @@ let getDomainConceptCallback = function(domainName, callback) {
     callback(err, null);
   });
 }
+let getDomainIntentCallback = function(domainName, callback) {
+  getDomainIntent(domainName).then(function(retrievedDomainConceptsAndIntents) {
+    callback(null, retrievedDomainConceptsAndIntents);
+  }, function(err) {
+    callback(err, null);
+  });
+}
 let getAllDomainConceptCallback = function(domainNameColln, callback) {
   getAllDomainConcept(domainNameColln).then(function(retrievedAllDomainConcept) {
     callback(null, retrievedAllDomainConcept);
@@ -276,9 +322,11 @@ let getDomainCardDetailsCallback = function(domainName, callback) {
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept:getDomainConcept,
+  getDomainIntent:getDomainIntent,
   getAllDomainConcept:getAllDomainConcept,
   indexNewDomainCallBack: indexNewDomainCallBack,
   getDomainConceptCallback: getDomainConceptCallback,
+  getDomainIntentCallback: getDomainIntentCallback,
   getAllDomainConceptCallback: getAllDomainConceptCallback,
   getDomainCardDetailsCallback: getDomainCardDetailsCallback,
   getDomainCardDetails:getDomainCardDetails

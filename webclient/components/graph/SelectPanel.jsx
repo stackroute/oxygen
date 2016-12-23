@@ -21,8 +21,11 @@ export default class SelectPanel extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      intents:["sample1","sample2","3","4","5","6","sample1","sample2","3","4","5","6","sample2","3","4","5","6","sample1","sample2","3","4","5","6","sample2","3","4","5","6","sample1","sample2","3","4","5","6"]
+      //intents:["sample1","sample2","3","4","5","6","sample1","sample2","3","4","5","6","sample2","3","4","5","6","sample1","sample2","3","4","5","6","sample2","3","4","5","6","sample1","sample2","3","4","5","6"]
+      intents:this.props.intents
     }
+    console.log("from intent select panel");
+    console.log(props)
   }
   render()
   {
@@ -32,7 +35,7 @@ export default class SelectPanel extends React.Component {
       <h2 style={{color:"grey"}}>INTENTS</h2>      
       <div style={{overflowY:"scroll",height:"630px"}}>
       {
-        this.state.intents.map((intent,i)=>{
+        this.props.intents.map((intent,i)=>{
           return <Checkbox
           key={i}
           label={intent}

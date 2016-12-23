@@ -30,12 +30,12 @@ export default class JobResult extends React.Component {
   constructor(props) {
     super(props)
     this.state={searchResult:[],query:"",loading:"loading",intentRating:[{
-  		basic: 0,
-  		tutorial: 0,
-  		theory: 0,
-  		manual:0,
-  		completeReference:0
-  	}]}
+      basic: 0,
+      tutorial: 0,
+      theory: 0,
+      manual:0,
+      completeReference:0
+    }]}
     this.searchDetails=this.searchDetails.bind(this)
   }
   searchDetails() {

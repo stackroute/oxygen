@@ -182,13 +182,18 @@ let indexPublishedDomain = function(domainName) {
 
     domainNeo4jController.getDomainConceptCallback(checkedDomain.name,
       callback)
+  },
+  function(checkedDomainWithConcepts, callback) {
+
+    domainNeo4jController.getDomainIntentCallback(checkedDomainWithConcepts,
+      callback)
   }
   ],
-  function(err, retrivedDomainConcepts) {
+  function(err, retrivedDomainConceptsAndIntents) {
     if (err) {
       reject(err);
     }
-    resolve(retrivedDomainConcepts);
+    resolve(retrivedDomainConceptsAndIntents);
       }); //end of async.waterfall
 });
   return promise;
