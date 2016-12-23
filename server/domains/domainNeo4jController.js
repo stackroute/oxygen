@@ -43,6 +43,66 @@ let indexNewDomain = function(newDomainObj) {
   return promise;
 }
 
+let getAllDomainConcept = function(domainNameColln) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to retrive the concepts for all domains: ");
+    let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
+      neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
+      );
+
+    let session = driver.session();
+
+    logger.debug("obtained connection with neo4j");
+    let data=[];
+    
+    domainNameColln.forEach(function(domainName){
+
+      let query = 'MATCH (d:Domain{name:{domainName}}) match(c:Concept) match(d)<-[r:ConceptOf]-(c)  RETURN d,count(c)';
+
+      let params = {
+        domainName: domainName
+      };
+
+
+      session.run(query,params)
+      .then(function(result) {
+        result.records.forEach(function(record) {
+
+          let obj={
+            Domain:"",
+            noOfConcepts:0
+          }
+          record._fields.forEach(function(field){
+            if(field.low===undefined)
+            {
+              obj.Domain=field.properties.name;
+            }
+            else
+            {
+              obj.noOfConcepts=field.low
+            }
+          });   
+          data.push(obj);
+        }); 
+        if(data.length===domainNameColln.length)
+          resolve(data);    
+      }).catch(function(err) {
+        logger.error("Error in neo4j query: ", err, ' query is: ',
+          query);
+        reject(err);
+      });
+
+    })
+
+   // resolve(data);
+   
+ });
+
+  return promise;
+}
+
+
 let getDomainConcept = function(domainName) {
   let promise = new Promise(function(resolve, reject) {
 
@@ -63,13 +123,12 @@ let getDomainConcept = function(domainName) {
     session.run(query, params)
     .then(function(result) {
       result.records.forEach(function(record) {
-        logger.debug("Result from neo4j: ", record);
         record._fields.forEach(function(fields){
           concepts.push(fields.properties.name);
         });        
 
       });
-
+      
         // Completed! 
         session.close();
         resolve({Domain:domainName,Concepts:concepts});
@@ -98,10 +157,19 @@ let getDomainConceptCallback = function(domainName, callback) {
     callback(err, null);
   });
 }
+let getAllDomainConceptCallback = function(domainNameColln, callback) {
+  getAllDomainConcept(domainNameColln).then(function(retrievedAllDomainConcept) {
+    callback(null, retrievedAllDomainConcept);
+  }, function(err) {
+    callback(err, null);
+  });
+}
 
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept:getDomainConcept,
+  getAllDomainConcept:getAllDomainConcept,
   indexNewDomainCallBack: indexNewDomainCallBack,
-  getDomainConceptCallback: getDomainConceptCallback
+  getDomainConceptCallback: getDomainConceptCallback,
+  getAllDomainConceptCallback: getAllDomainConceptCallback
 }

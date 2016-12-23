@@ -40,7 +40,27 @@ router.post('/:domainName', function(req, res) {
 
 // Get details of all domain in the system
 router.get('/', function(req, res) {
-  res.send({});
+  try {
+    domainCtrl.getAllDomain().then(function(domainConcept) {
+      logger.debug("Successfully retrived concept(s) of domain: "+domainConcept);
+      res.send(domainConcept);
+      return;
+    },
+    function(err) {
+      logger.error("Encountered error in retrived concept(s) of domain: ",
+        err);
+      res.send(err);
+      return;
+    })
+
+  } catch (err) {
+    logger.error("Caught a error in retrived concept(s) of domain ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
+
 });
 
 // Get details of a specific domain by its name

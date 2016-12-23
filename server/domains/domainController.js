@@ -144,6 +144,7 @@ let getDomain = function(domainName) {
       callback);
   },
   function(checkedDomain, callback) {
+
     domainNeo4jController.getDomainConceptCallback(checkedDomain.name,
       callback)
   }
@@ -159,7 +160,36 @@ let getDomain = function(domainName) {
 }
 
 
+let getAllDomain = function() {
+  logger.debug("Received request for retriving Concept(s) of all domain: ");
+  //Save to Mongo DB
+  //Save to Neo4j
+
+  let promise = new Promise(function(resolve, reject) {
+
+    async.waterfall([function(callback) {
+      domainMongoController.getAllDomainsCallback(callback);
+    },
+    function(domainNameColln,callback)
+    {
+      logger.debug(domainNameColln)
+      domainNeo4jController.getAllDomainConceptCallback(domainNameColln,
+        callback)
+    }
+    ],
+    function(err, domainDetailedColln) {
+      logger.debug("getting it")
+      if(!err)
+        resolve(domainDetailedColln)
+      reject(err)
+      }); //end of async.waterfall
+  });
+  return promise;
+}
+
+
 module.exports = {
   publishNewDomain: publishNewDomain,
-  getDomain:getDomain
+  getDomain:getDomain,
+  getAllDomain:getAllDomain
 }

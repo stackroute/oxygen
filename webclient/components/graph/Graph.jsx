@@ -2,6 +2,9 @@
 import React from 'react';
 import {Link} from 'react-router';
 import FlatButton from 'material-ui/FlatButton';
+import AutoCompleteSearchBox from './AutoCompleteSearchBox';
+import SelectPanel from './SelectPanel';
+import {Container, Row, Col} from 'react-grid-system';
 const fonts={
   margin: "0px auto",
   textAlign: "center",
@@ -16,10 +19,24 @@ export default class Graph extends React.Component {
   {
     return(
       <div style={fonts}>
+
+      <Row>
+      <Col sm={2}>
+      <SelectPanel/>
+      </Col>
+      <Col sm={10}>
+      <AutoCompleteSearchBox />
+      <Row>
+      <Col lg={12}>      
       <Link to="/dashboard">
       <FlatButton label="Go Back to dashboard" style={{fontSize:"50px",marginTop:"4px"}}/>
       </Link>
-      <h1>Here will be displayed the graph for the seleted domain</h1>
+      </Col>
+      </Row>
+      </Col>
+      </Row>
+
+      
       </div>
       );
   }

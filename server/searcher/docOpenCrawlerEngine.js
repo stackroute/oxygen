@@ -6,14 +6,15 @@ const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function(urlDataObj) {
- let amqpConn = amqp.connect('amqp://localhost');
+  logger.debug("creating a connection with external source : ");
+  let amqpConn = amqp.connect('amqp://localhost');
 
- amqpConn
- .then(function(conn) {
+  amqpConn
+  .then(function(conn) {
    logger.info('[*] Connected to AMQP successfully..!');
    return conn.createChannel();
  })
- .then(function(chConn) {
+  .then(function(chConn) {
    logger.info('[*] Established AMQP Channel connection successfully..!');
 
      //@TODO take the crawler MQ name from Config

@@ -33,7 +33,7 @@ const addSearchJob = function(domainName,concept) {
 				query:concept,
 				engineID:engineData.engine[1]+" "+engineData.key[1],
 				exactTerms:domainName,
-				results:2,
+				results:10,
 				siteSearch:'NONE'
 			}
 			let job=new docSearchJobModel(JobData);
