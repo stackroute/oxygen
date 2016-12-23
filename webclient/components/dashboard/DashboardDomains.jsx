@@ -23,6 +23,7 @@ const roundImg={
 }
 const styles = {
   chip: {
+		marginTop: '10px',
     marginLeft: '5px',
     padding:0,
     marginBottom:'7px',
@@ -66,61 +67,57 @@ export default class DomainShow extends React.Component {
 }
 	render()
 	{
-
+		 console.log(this.props.conceptColor);
+     console.log(this.props.intentColor);
+		 console.log(this.props.docsColor);
 		return(
 			<div>
         <Row style={{marginBottom: '20px',marginLeft:'10px'}}>
 				<Link to='/graph' style={{textDecoration:'none'}}>
   			<Card style={styles.cardRound}>
-        <CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.props.conceptColor}} overlay={<CardTitle title={this.props.item.subject} subtitle="Domain" style={styles.padd}/>}>
-				<img src={this.props.item.image} style={roundImg}/>
+        <CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.props.conceptColor}} overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
+				<img src={this.props.item.domainImgURL} style={roundImg}/>
 			  </CardMedia>
         <CardText style={styles.colorCode}>
         {this.props.item.description}
         </CardText>
-        <Row>
-        <Col sm={3}><IconButton><ActionBook style={styles.paddIcon} /></IconButton></Col>
-        <Col sm={9}><h3 style={styles.paddHeader}>Concepts Available:{this.props.item.concepts}</h3></Col>
-        </Row>
 
-        <div>
-          <Row>
-          <Col sm={6}>
-          <Chip backgroundColor={grey300} style={styles.chip}>
-          <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[0]}>I</Avatar>
-          {this.props.item.intents[0].intent} {this.props.item.intents[0].docs}
-          </Chip>
-          </Col>
-          <Col sm={6}>
-          <Chip backgroundColor={grey300} style={styles.chip}>
-          <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[1]}>I</Avatar>
-          {this.props.item.intents[1].intent} {this.props.item.intents[1].docs}
-          </Chip>
-          </Col>
-          </Row>
-          <Row>
-            <Col sm={6}>
+        <Row>
+					 <Col sm={8}>
+           <h3 style={styles.paddHeader}>Concepts Available:</h3>
+				    </Col>
+            <Col sm={3}>
             <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[2]}>I</Avatar>
-            {this.props.item.intents[2].intent} {this.props.item.intents[2].docs}
-            </Chip>
-            </Col>
-            <Col sm={6}>
-            <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[3]}>I</Avatar>
-            {this.props.item.intents[3].intent} {this.props.item.intents[3].docs}
+            <Avatar size={32} color={grey300} backgroundColor={this.props.conceptColor}>C</Avatar>
+            {this.props.item.concepts.length}
             </Chip>
             </Col>
           </Row>
-          <Row>
-            <Col sm={6}>
-            <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[4]}>I</Avatar>
-            {this.props.item.intents[4].intent} {this.props.item.intents[4].docs}
-            </Chip>
-            </Col>
-          </Row>
-         </div>
+
+					<Row>
+						 <Col sm={8}>
+						 <h3 style={styles.paddHeader}>Intents Available:</h3>
+							</Col>
+							<Col sm={3}>
+							<Chip backgroundColor={grey300} style={styles.chip}>
+							<Avatar size={32} color={grey300} backgroundColor={this.props.intentColor}>I</Avatar>
+							{this.props.item.intents.length}
+							</Chip>
+							</Col>
+						</Row>
+
+						<Row>
+							 <Col sm={8}>
+							 <h3 style={styles.paddHeader}>Documents Available:</h3>
+								</Col>
+								<Col sm={3}>
+								<Chip backgroundColor={grey300} style={styles.chip}>
+								<Avatar size={32} color={grey300} backgroundColor={this.props.docsColor}>D</Avatar>
+								{this.props.item.docs}
+								</Chip>
+								</Col>
+							</Row>
+
   			</Card>
 				</Link>
   			</Row>
