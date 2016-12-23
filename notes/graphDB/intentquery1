@@ -1,0 +1,50 @@
+CREATE CONSTRAINT ON (c:intent) ASSERT c.name IS UNIQUE;
+
+# create nodes by determining the node label dynamically
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+call apoc.create.node([Line.`node type`],{name:Line.name, nodeid: Line.`node id`}) YIELD  node as n
+return n
+
+## Create relationship dynamically if you allready know the relationships
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line, Line.`parent relation` as rl
+WHERE Line.name IS NOT NULL
+MATCH (c:intent {name:Line.name})
+MATCH (pc:intent {intentid:Line.`parent node id`})
+FOREACH(ignoreme in CASE WHEN rl = "intentOf" THEN [1] ELSE [] END | MERGE (c)-[:`intentOf`]->(pc))
+FOREACH(ignoreme in CASE WHEN rl = "indicatorOf" THEN [1] ELSE [] END | MERGE (c)-[:`indicatorOf`]->(pc))
+FOREACH(ignoreme in CASE WHEN rl = "counterIndicatorOf" THEN [1] ELSE [] END | MERGE (c)-[:`counterIndicatorOf`]->(pc))
+
+
+## Create relationship dynamically even if you don't know relationships
+
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+MATCH (i:intent {name:Line.name})
+MATCH (pi:intent {nodeid:Line.`parent node id`})
+call apoc.create.relationship(i, Line.`parent relation`, {}, pi) YIELD rel as r
+return i,pi,r
+
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+MATCH (n:term {name:Line.name})
+MATCH (pn:intent {nodeid:Line.`parent node id`})
+call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+return n, pn, r
+
+
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+MATCH (n:term {name:Line.name})
+MATCH (pn:term {nodeid:Line.`parent node id`})
+call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+return n, pn, r
+
+
