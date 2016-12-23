@@ -9,8 +9,9 @@ let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
 let getTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
     logger.debug("Now proceeding to get all terms of domain: ", data.domain);
-    
+
     let query = 'MATCH(d:Domain)<-[]-(i:Intent)<-[]-(t:Term) where d.name={name} return t';
+
     let params = {
       name: data.domain
     };
@@ -21,9 +22,10 @@ let getTerms = function(data) {
       result.records.forEach(function(record) {
         record._fields.forEach(function(fields){
           terms.push(fields.properties.name);
-        }); 
+        });
       });
-        // Completed! 
+        // Completed!
+
         session.close();
         logger.debug("Result from neo4j: ", terms);
         data["interestedTerms"]=terms
@@ -44,12 +46,14 @@ let getUrlIndexed = function(data) {
   let promise = new Promise(function(resolve, reject) {
 
     logger.debug("Now proceeding to index url to domain: ", data.concept);
-    
+
     let session = driver.session();
+
+    let intents=[];
 
     logger.debug("obtained connection with neo4j");
 
-    let query = 'Match (d:Domain{name:{domainName}}) Match (c:Concept{name:{conceptName}}) MERGE(c)<-[r:HasExplanationOf]-(u:WebDocument{name:{urlName}}) return d';
+    let query = 'Match (d:Domain{name:{domainName}})  Match (c:Concept{name:{conceptName}}) Match (i:Intent) MERGE(c)<-[r:HasExplanationOf]-(u:WebDocument{name:{urlName}}) return i';
     let params = {
       domainName: data.domain,
       conceptName: data.concept,
@@ -58,12 +62,15 @@ let getUrlIndexed = function(data) {
     session.run(query , params)
     .then(function(result) {
       result.records.forEach(function(record) {
-        logger.debug("Result for terms from neo4j: ", record);      
+        logger.debug("Result for terms from neo4j: ", record);
+        intents.push(record._fields[0].properties.name);
+
       });
-      
-        // Completed! 
+
+        // Completed!
+
         session.close();
-        resolve(data);
+        resolve({data:data,intents:intents});
       })
     .catch(function(err) {
       logger.error("Error in neo4j query: ", err, ' query is: ',

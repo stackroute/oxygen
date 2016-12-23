@@ -14,63 +14,78 @@ export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		// this.enableButton = this.enableButton.bind(this);
-		// this.disableButton = this.disableButton.bind(this);
-		this.state = {domainList: [],canSubmit:false,conceptColor:'',intentColor:[]};
+		this.state = {domainList: [],canSubmit:false,conceptColor:'',intentColor:'',docsColor:'',errmsg:''};
+				 //this.addDomain = this.addDomain.bind(this);
+			   //this.colour = this.colour.bind(this);
 	}
 
 	addDomain(domain)
 	{
-		console.log("in adding module "+domain.subject);
-		{domain.intents.map((ele,i) =>{
-			if(ele.docs===0)
-			{
-				let color=this.state.intentColor;
-				color.push('blue300');
-				this.setState({intentColor:color});
+	 console.log("in adding module "+domain.name);
+	 console.log('length before call '+this.state.domainList.length);
+    let response={};
+		let url =`/domain/`+domain.name;
+		Request
+		.post(url)
+		.send(domain)
+		.end((err, res) => {
+			if(err) {
+			//	this.setState({errmsg: res.body, domainList: []});
+				console.log(err)
 			}
-			else if(ele.docs<11)
+			console.log("got response "+JSON.parse(res.text).name);
+			console.log('length after call '+this.state.domainList.length);
+	  	let domainList1=this.state.domainList;
+			response=JSON.parse(res.text);
+			console.log("Response for posting new job : ", response);
+			domainList1.push(response);
+			this.setState({domainList:domainList1});
+			console.log("Response for posting new job : ", response);
+				this.colour(response).bind(this);
+		});
+
+	}
+
+	colour(domain)
+	{
+
+			if(domain.docs===0)
 			{
-				let color=this.state.intentColor;
-				color.push('lime800');
-				this.setState({intentColor:color});
+				this.setState({docsColor:blue300});
+			}
+			else if(domain.docs<11)
+			{
+				this.setState({docsColor:lime800});
 			}
 			else {
-				let color=this.state.intentColor;
-				color.push('lightGreen500');
-				this.setState({intentColor:color});
+				this.setState({docsColor:lightGreen500});
 			}
-		})}
-		if(domain.concepts<5)
+
+			if(domain.intents.length==0)
+			{
+				this.setState({intentColor:blue300});
+			}
+			else if(domain.intents.length<11)
+			{
+				this.setState({intentColor:lime800});
+			}
+			else {
+				this.setState({intentColor:lightGreen500});
+			}
+
+
+		if(domain.concepts.length<5)
 		{
 			this.setState({conceptColor:blue300});
 		}
-		else if(domains.concepts<15)
+		else if(domains.NoOfConcepts<15)
 		{
 			this.setState({conceptColor:lime800});
 		}
 		else {
 			this.setState({conceptColor:lightGreen500});
 		}
-		let dList=this.state.domainList;
-		dList.push(domain);
-		this.setState({domainList: dList});
-		console.log(this.state.domainList[0].intents[0].intent);
-		//let url =`/docsearchjob/job`;
-		// Request
-		// .post(url)
-		// .send(job)
-		// .end((err, res) => {
-		// 	if(err) {
-		// 		this.setState({errmsg: res.body, domainList: []});
-		// 		console.log(err)
-		// 	}
-		// 	let domainList1=this.state.domainList;
-		// 	domainList1.push(JSON.parse(res.text));
-		// 	this.setState({domainList:domainList1});
-		// 	//console.log("Response for posting new job : ", this.state.domainList);
-		// });
 	}
-
 
 	show()
 	{
@@ -97,7 +112,7 @@ export default class Dashboard extends React.Component {
 
 
 	render() {
-		console.log("from main job component")
+
 		return (
 			<div style={fonts}>
 			<h1 >Our Domains</h1>
@@ -105,11 +120,9 @@ export default class Dashboard extends React.Component {
 
 				<Container>
 				{this.state.domainList.map((item,i) =>{
-					console.log("each Domain item")
-					console.log(item);
 					return (<Col lg={4} md={4} key={i}>
-						<DomainShow index={i} key={i} indexs={i} ref="show" item={item} 
-						conceptColor={this.state.conceptColor} intentColor={this.state.intentColor}/>
+						<DomainShow index={i} key={i} indexs={i} ref="show" item={item}
+						conceptColor={this.state.conceptColor} intentColor={this.state.intentColor} docsColor={this.state.docsColor}/>
 						</Col>);
 				})}
 				</Container>

@@ -45,22 +45,10 @@ export default class AddDomain extends React.Component {
   }
   handleSubmit() {
     console.log('on calling handle sumbit while adding job');
-    var d=new Date();
-    var dte=""+d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();
     let domain = {
-      subject: this.state.subject,
+      name: this.state.subject,
       description:this.state.description,
-      user:'Admin',
-      creationDate:dte,
-      concepts:0,
-      image:'./../../assets/images/soon.png',
-      intents:[
-    		{intent:'basic',docs: 0},
-    		{intent:'tutorial',docs: 0},
-    		{intent:'example',docs: 0},
-    		{intent:'manual',docs: 0},
-    		{intent:'completeReference',docs: 0},
-    	 ]
+      domainImgURL:'./../../assets/images/soon.png',
     };
     this.refs.form.reset();
     this.setState({domain:domain})

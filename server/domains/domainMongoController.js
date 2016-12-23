@@ -17,7 +17,7 @@ let saveNewDomain = function(newDomainObj) {
           error: 'Null domain object created in mongo..!'
         });
       }
-
+    logger.debug("saved man")
       resolve(savedDomainObj);
     });
   })
