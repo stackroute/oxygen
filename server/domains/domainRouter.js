@@ -14,11 +14,13 @@ router.post('/:domainName', function(req, res) {
   try {
 
     let newDomainObj = req.body;
+    logger.debug("in 8080 ",
+      req.params.domainName);
 
     domainCtrl.publishNewDomain(newDomainObj)
     .then(function(savedDomainObj) {
-      logger.debug("Successfully published new domain: ",
-        savedDomainObj);
+      logger.debug("!!!!!!!!!!!!@@@@@@@@@@ $$$$$$$$$Successfully published new domain: ",
+        savedDomainObj.name);
       res.send(savedDomainObj);
       return;
     },

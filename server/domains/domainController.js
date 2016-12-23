@@ -37,8 +37,39 @@ let publishNewDomain = function(newDomainObj) {
     }
     if (indexedDomainObj) {
           //Kick off indexing in off-line, so the API request is not blocked till indexing is complete, as it may take long time to complete
-          indexPublishedDomain(indexedDomainObj.name);
-          resolve(indexedDomainObj);
+
+
+          indexPublishedDomain(indexedDomainObj.name).then(
+            function(domainObj) {
+             logger.debug("going to fetch domain card details: ",
+               domainObj);
+             fetchDomainCardDetails(domainObj)
+             .then(function(domainObj) {
+               logger.debug("Successfully fetched domain card details: ",
+                 domainObj);
+               domainObj['name']= indexedDomainObj.name;
+               domainObj['description']= indexedDomainObj.description;
+               domainObj['domainImgURL']= indexedDomainObj.domainImgURL;
+               logger.debug("!!!!!!!!!!!!^^^^^^^^^^^going to UI ",domainObj);
+               resolve(domainObj);
+               return;
+             },
+             function(err) {
+               logger.error("Encountered error in fetching domain card details: ",
+                 err);
+               reject(err);
+               return;
+             });
+
+           })
+          .catch(
+            function(reason) {
+              console.log('Handle rejected promise ('+reason+') here.');
+              reject(indexedDomainObj)
+            });
+
+
+
         } else {
           reject({
             error: 'Null indexed object was returned..!'
@@ -50,83 +81,87 @@ let publishNewDomain = function(newDomainObj) {
   return promise;
 }
 
-// This should be private and not exposed 
+// This should be private and not exposed
 let indexPublishedDomain = function(domainName) {
-  process.nextTick(function() {
-    logger.debug('Off-line initialising New Domain ', domainName);
+  //process.nextTick(function() {
+    var promise = new Promise(
+      function(resolve, reject) {
+        logger.debug('Off-line initialising New Domain ', domainName);
 
-    async.waterfall([
-      function(callback) {
-        domainMgr.initialiseDomainOntologyCallBack(domainName,
-          callback);
-      },
-      function(initialisedDomainName, callback) {
-        domainMgr.buildDomainIndexCallBack(initialisedDomainName,
-          callback);
-      }
-      ],
-      function(err, result) {
-        logger.debug(
-          'indexPublishedDomain process finished with error: ', err,
-          ' result: ', result);
-
-        let status = 'error';
-        let statusText = 'unknown error';
-
-        if (err) {
-          status = 'error';
-          statusText =
-          'Error in off-line indexing process of newly published Domain ' +
-          domainName + ' err: ' + JSON.stringify(err);
-
-          logger.error(statusText);
-        } else {
-          status = 'ready';
-          statusText = 'Done indexing newly published domain ' +
-          domainName + ' with result ' + JSON.stringify(result);
-
-          logger.debug(statusText);
-        }
-        logger.debug('Updating domain status ', status, ' | ',
-          statusText);
-
-        domainMongoController.updateDomainStatus(domainName, status,
-          statusText,
-          function(updErr, updatedDomainObj) {
-
-            if (updErr) {
-              logger.error('Error in updating domain status for ',
-                domainName,
-                ' trying to update status to ', status, ' with ',
-                statusText);
-              return;
-            }
-
-            if (!updatedDomainObj) {
-              logger.error(
-                'Found null domain object for updating status for ',
-                domainName,
-                ' trying to update status to ', status, ' with ',
-                statusText);
-              return;
-            }
-
+        async.waterfall([
+          function(callback) {
+            domainMgr.initialiseDomainOntologyCallBack(domainName,
+              callback);
+          },
+          function(initialisedDomainName, callback) {
+            resolve(initialisedDomainName);
+            domainMgr.buildDomainIndexCallBack(initialisedDomainName,
+              callback);
+          }
+          ],
+          function(err, result) {
             logger.debug(
-              'Done updating domain with Indexing Status for domain ',
-              domainName, ' with status ',
-              status);
+              'indexPublishedDomain process finished with error: ', err,
+              ' result: ', result);
+
+            let status = 'error';
+            let statusText = 'unknown error';
+
+            if (err) {
+              status = 'error';
+              statusText =
+              'Error in off-line indexing process of newly published Domain ' +
+              domainName + ' err: ' + JSON.stringify(err);
+
+              logger.error(statusText);
+            } else {
+              status = 'ready';
+              statusText = 'Done indexing newly published domain ' +
+              domainName + ' with result ' + JSON.stringify(result);
+
+              logger.debug(statusText);
+            }
+            logger.debug('Updating domain status ', status, ' | ',
+              statusText);
+
+            domainMongoController.updateDomainStatus(domainName, status,
+              statusText,
+              function(updErr, updatedDomainObj) {
+
+                if (updErr) {
+                  logger.error('Error in updating domain status for ',
+                    domainName,
+                    ' trying to update status to ', status, ' with ',
+                    statusText);
+                  return;
+                }
+
+                if (!updatedDomainObj) {
+                  logger.error(
+                    'Found null domain object for updating status for ',
+                    domainName,
+                    ' trying to update status to ', status, ' with ',
+                    statusText);
+                  return;
+                }
+
+                logger.debug(
+                  'Done updating domain with Indexing Status for domain ',
+                  domainName, ' with status ',
+                  status);
 
           }); //end of updateDomainStatus
 
-        return;
+
+          });
+
+
       });
-  }); //end of process.nextTick
+    return promise;
+  }
 
-  return;
-}
-
-let getDomain = function(domainName) {
-  logger.debug("Received request for retriving Concept(s) in domain: ", domainName);
+  let getDomain = function(domainName) {
+    logger.debug("Received request for retriving Concept(s) in domain: ", domainName);
   //Save to Mongo DB
   //Save to Neo4j
 
@@ -160,30 +195,37 @@ let getDomain = function(domainName) {
 }
 
 
-let getAllDomain = function() {
-  logger.debug("Received request for retriving Concept(s) of all domain: ");
+
+let fetchDomainCardDetails = function(domain) {
+  logger.debug("Received request for retriving domain details ", domain);
   //Save to Mongo DB
   //Save to Neo4j
 
   let promise = new Promise(function(resolve, reject) {
 
-    async.waterfall([function(callback) {
-      domainMongoController.getAllDomainsCallback(callback);
-    },
-    function(domainNameColln,callback)
-    {
-      logger.debug(domainNameColln)
-      domainNeo4jController.getAllDomainConceptCallback(domainNameColln,
-        callback)
+
+    if (!domain ||
+      domain.length <= DOMAIN_NAME_MIN_LENGTH) {
+      reject({
+        error: "Invalid domain name..!"
+      });
+  }
+
+  async.waterfall([
+    function(callback) {
+      logger.debug("inside the waterfall "+domain)
+      domainNeo4jController.getDomainCardDetailsCallback(domain,
+        callback);
     }
     ],
-    function(err, domainDetailedColln) {
-      logger.debug("getting it")
-      if(!err)
-        resolve(domainDetailedColln)
-      reject(err)
+    function(err, domainObjDetails) {
+      if (err) {
+        reject(err);
+      }
+      resolve(domainObjDetails);
       }); //end of async.waterfall
-  });
+});
+
   return promise;
 }
 
@@ -191,5 +233,5 @@ let getAllDomain = function() {
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain,
-  getAllDomain:getAllDomain
+  fetchDomainCardDetails:fetchDomainCardDetails
 }

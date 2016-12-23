@@ -79,9 +79,11 @@ let buildDomainIndex = function(domainName) {
    // Fetch all domain concepts and intents
    domainNeo4jController.getDomainConcept(domainName)
    .then(function(conceptsColln) {
+    logger.debug('@@ OVER++++++++++++++++++++++');
+     resolve(conceptsColln);
     docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
     .then(function(result) {
-      resolve(conceptsColln);
+        resolve(conceptsColln);
     }, function(err) {
       reject(err);
     });
