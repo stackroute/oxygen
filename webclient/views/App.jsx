@@ -31,7 +31,7 @@ ReactDOM.render(
   <Route path = "/job" component = {Job}/>
   <Route path = "/jobResult/:jobID" component = {JobResult}/>
   <Route path = "/dashboard" component = {Dashboard}/>
-  <Route path = "/graph" component = {Graph}/>
+  <Route path = "/graph/:domainName" component = {Graph}/>
   </Route>
   </Router>
   </MuiThemeProvider>,
