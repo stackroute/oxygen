@@ -6,8 +6,10 @@ const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function(urlDataObj) {
+
   logger.debug("creating a connection with external source : ");
   let amqpConn = amqp.connect('amqp://localhost');
+
 
   amqpConn
   .then(function(conn) {
