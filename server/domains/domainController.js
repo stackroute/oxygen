@@ -219,15 +219,75 @@ let fetchDomainCardDetails = function(domain) {
     if (err) {
       reject(err);
     }
+
     resolve(domainObjDetails);
       }); //end of async.waterfall
 });
   return promise;
 }
 
+let getAllDomainDetails = function() {
+ logger.debug("Received request for retriving Concept(s) of all domain: ");
+ //Save to Mongo DB
+ //Save to Neo4j
+
+ let promise = new Promise(function(resolve, reject) {
+  let cardDetailsObj=[];
+   async.waterfall([function(callback) {
+     domainMongoController.getAllDomainsCallback(callback);
+   },
+   function(domainDetailedColln,callback) {
+     for(let item in domainDetailedColln)
+     {
+       let domain=domainDetailedColln[item];
+       fetchDomainCardDetails(domain.name)
+       .then(function(domainObj) {
+         logger.debug("Successfully fetched domain card details: ",
+           domainObj);
+         domainObj['name']= domain.name;
+         domainObj['description']= domain.description;
+         domainObj['domainImgURL']= domain.domainImgURL;
+        cardDetailsObj.push(domainObj)
+        logger.debug("after each pushing ---",cardDetailsObj);
+        if(cardDetailsObj.length==domainDetailedColln.length)
+        {
+        callback(null,cardDetailsObj);
+      }
+       },
+       function(err) {
+         logger.error("Encountered error in fetching domain card details: ",
+           err);
+         reject(err);
+         return;
+       });
+       }
+       logger.debug("pushing ended*&*&&&&&&&&&***** ---",cardDetailsObj);
+     }
+   ],
+   function(err, cardDetailsObj) {
+      logger.debug("inside callback ^^^^^^^^^^^^^",cardDetailsObj.length);
+       if (err) {
+         reject(err);
+       }
+       if (cardDetailsObj) {
+         logger.debug(" now sending back---",cardDetailsObj);
+        resolve(cardDetailsObj);
+       }
+       else {
+         reject({
+           error: 'all domains not fetched!'
+         });
+       }
+     }
+); //end of async.waterfall
+ });
+ return promise;
+}
+
 
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain,
-  fetchDomainCardDetails:fetchDomainCardDetails
+  fetchDomainCardDetails:fetchDomainCardDetails,
+  getAllDomainDetails:getAllDomainDetails
 }

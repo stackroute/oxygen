@@ -42,7 +42,26 @@ router.post('/:domainName', function(req, res) {
 
 // Get details of all domain in the system
 router.get('/', function(req, res) {
-  res.send({});
+  try {
+    domainCtrl.getAllDomainDetails().then(function(cardDetailsObj) {
+      logger.debug("Successfully retrived all details to show length----->",cardDetailsObj.length);
+      res.send(cardDetailsObj);
+      return;
+    },
+    function(err) {
+      logger.error("Encountered error in retrived concept(s) of domain: ",
+        err);
+      res.send(err);
+      return;
+    })
+
+  } catch (err) {
+    logger.error("Caught a error in retrived concept(s) of domain ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
 });
 
 // Get details of a specific domain by its name
@@ -52,10 +71,9 @@ router.get('/:domainName', function(req, res) {
 
   let domainName = req.params.domainName;
 
-  domainCtrl.getDomain(domainName).then(function(domainConcept) {
-    logger.debug("Successfully retrived concept(s) of domain: "+domainName,
-      domainConcept);
-    res.send(domainConcept);
+  domainCtrl.getAllDomainDetails().then(function(cardDetailsObj) {
+    logger.debug("Successfully retrived all details to show");
+    res.send(cardDetailsObj);
     return;
   },
   function(err) {

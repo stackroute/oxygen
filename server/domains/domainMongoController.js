@@ -49,6 +49,30 @@ let checkDomain = function(domainName) {
   return promise;
 
 }
+
+let getAllDomain = function() {
+ let promise = new Promise(function(resolve, reject) {
+
+   DomainModel.find({},function(err, domainColln) {
+     if (err) {
+       reject(err);
+     }
+
+     if (domainColln.length===0) {
+       reject({
+         error: "NO domain object while retriving all the domains from mongo..!"
+       });
+     }
+
+  logger.debug('**************',domainColln);
+     resolve(domainColln);
+   });
+ })
+
+ return promise;
+
+}
+
 let saveNewDomainCallBack = function(newDomainObj, callback) {
   saveNewDomain(newDomainObj)
   .then(
@@ -69,6 +93,17 @@ let checkDomainCallback = function(domainName, callback) {
     function(err) {
       callback(err, null);
     });
+}
+
+let getAllDomainsCallback = function(callback) {
+ getAllDomain()
+ .then(
+   function(domainColln) {
+     callback(null, domainColln);
+   },
+   function(err) {
+     callback(err, null);
+   });
 }
 
 let getDomainObj = function(domainName, callback) {
@@ -105,5 +140,8 @@ module.exports = {
   checkDomainCallback:checkDomainCallback,
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,
-  getDomainObj: getDomainObj
+  getDomainObj: getDomainObj,
+  getAllDomain: getAllDomain,
+  getAllDomainsCallback: getAllDomainsCallback
+
 }
