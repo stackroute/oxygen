@@ -1,0 +1,22 @@
+--------------------------------------------
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///oxygenJavaConcepts.csv" AS Line
+WITH Line
+WHERE Line.`node type` AND Line.name IS NOT NULL
+MATCH (i:intent {name:Line.name})
+MATCH (t:term {name:Line.name})
+MATCH (pi:intent {intentid:Line.`parent node id`})
+call apoc.create.relationship(i, Line.`parent relation`, {}, pi) YIELD rel as r1
+call apoc.create.relationship(t, Line.`parent relation`, {}, pi) YIELD rel as r2
+return c, pc,r1,r2
+----------------------------------------------
+new try:
+
+
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+MATCH (`n:Line.node type` {name:Line.name})
+MATCH (`pn:Line.parent node type` {nodeid:Line.`parent node id`})
+call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+return n, pn, r

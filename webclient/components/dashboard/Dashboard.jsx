@@ -69,12 +69,12 @@ export default class Dashboard extends React.Component {
 	}
 
 
-	render() {
+	 render() {
 
-		return (
-			<div style={fonts}>
-			<h1 >Our Domains</h1>
-			{this.state.domainList.length!==0?<div>
+	 	return (
+	 		<div style={fonts}>
+	 		<h1 >Our Domains</h1>
+	 		{this.state.domainList.length!==0?<div>
 
 				<Container>
 				{this.state.domainList.map((item,i) =>{
@@ -87,7 +87,7 @@ export default class Dashboard extends React.Component {
 				<AddDomain addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
 				</div>
 
-				);
-	}
+	 			);
+	 }
 
-}
+	}

@@ -35,11 +35,11 @@ const roundImg={
 	height:'145px'
 }
 const styles = {
-  chip: {
+	chip: {
 		marginTop: '10px',
-    marginLeft: '5px',
-    padding:0,
-    marginBottom:'7px',
+		marginLeft: '5px',
+		padding:0,
+		marginBottom:'7px',
 		marginRight:'2px',
   },
 	chip2: {
@@ -77,12 +77,12 @@ const styles = {
     paddingTop:'5px',
 		width:'48',
 		height:'48',
-    marginBottom:0
-  }
+		marginBottom:0
+	}
 };
 const cusbut={
 	paddingRight:0,
-  color:'green'
+	color:'green'
 };
 export default class DomainShow extends React.Component {
 	constructor(props) {
@@ -136,7 +136,7 @@ componentWillMount()
 		return(
 			<div>
         <Row style={{marginBottom: '20px',marginLeft:'10px'}}>
-				<Link to='/graph' style={{textDecoration:'none'}}>
+				<Link to={'/graph'+this.props.item.name} style={{textDecoration:'none'}}>
   			<Card style={styles.cardRound}>
         <CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.state.conceptColor}} overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
 				<img src={this.props.item.domainImgURL} style={roundImg}/>
@@ -200,9 +200,9 @@ componentWillMount()
 								</Col>
 							</Row>
 
-  			</Card>
-				</Link>
-  			</Row>
+			</Card>
+			</Link>
+			</Row>
 			</div>
 			);
 	}

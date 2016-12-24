@@ -32,6 +32,7 @@ let checkDomain = function(domainName) {
       name:domainName
     };
 
+
     DomainModel.findOne(domainObj,function(err, foundDomain) {
       if (err) {
         reject(err);
@@ -137,6 +138,8 @@ let updateDomainStatus = function(domainName, status, statusText, callback) {
 module.exports = {
   saveNewDomain: saveNewDomain,
   checkDomain:checkDomain,
+  getAllDomain:getAllDomain,
+  getAllDomainsCallback:getAllDomainsCallback,
   checkDomainCallback:checkDomainCallback,
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,

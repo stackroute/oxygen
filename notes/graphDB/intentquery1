@@ -1,0 +1,69 @@
+CREATE CONSTRAINT ON (c:intent) ASSERT c.name IS UNIQUE;
+CREATE CONSTRAINT ON (c:term) ASSERT c.name IS UNIQUE;
+
+# create constraint by loading CSV
+# @TODO
+
+# Create nodes from the CSV uniquely
+
+### Creates all nodes from the CSV, for the mentioned node type
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` = 'term'
+MERGE (n:term {name:Line.name})
+SET n.nodeid = Line.`node id`
+return n
+
+### Creates all nodes from the CSV, for the mentioned node type
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` = 'intent'
+MERGE (n:term {name:Line.name})
+SET n.nodeid = Line.`node id`
+return n
+
+### Creates all nodes from the CSV, you need add one FOREACH clause for each node type, which is possible in the CSV
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line 
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'term' THEN [1] ELSE [] END | MERGE (n:term {name:Line.name}) SET n.nodeid = Line.`node id`)
+FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'intent' THEN [1] ELSE [] END | MERGE (n:intent {name:Line.name}) SET n.nodeid = Line.`node id`)
+
+# -- END of Creating Nodes ---
+
+# Create relationship among intent-intent, term-term and term-intent
+
+### Create intent-intent relations
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+MATCH (i:intent {name:Line.name})
+MATCH (pi:intent {nodeid:Line.`parent node id`})
+call apoc.create.relationship(i, Line.`parent relation`, {}, pi) YIELD rel as r
+return i,pi,r
+
+
+### Create term-intent relations
+
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+MATCH (n:term {name:Line.name})
+MATCH (pn:intent {nodeid:Line.`parent node id`})
+call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+return n, pn, r
+
+### Create term-term relations
+
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` IS NOT NULL
+MATCH (n:term {name:Line.name})
+MATCH (pn:term {nodeid:Line.`parent node id`})
+call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+return n, pn, r
+
+
