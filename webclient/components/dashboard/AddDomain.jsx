@@ -44,7 +44,7 @@ export default class AddDomain extends React.Component {
     description:""}
   }
   handleSubmit() {
-    console.log('on calling handle sumbit while adding job');
+    console.log('on calling handle sumbit while adding domain');
     let domain = {
       name: this.state.subject,
       description:this.state.description,
@@ -91,7 +91,7 @@ export default class AddDomain extends React.Component {
     onTouchTap={this.handleClose} />,
     <FlatButton
     label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
-    onTouchTap={this.handleClose} onClick={this.handleSubmit.bind(this)}/>
+    onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
     let { wordsError, numberError,UrlError} = errorMessages;
     return (
@@ -103,7 +103,7 @@ export default class AddDomain extends React.Component {
       title="Add Domain"
       actions={actions}
       modal={true}
-    autoScrollBodyContent={true}
+      autoScrollBodyContent={true}
       open={this.state.open}
       >
       <Container>
@@ -112,7 +112,7 @@ export default class AddDomain extends React.Component {
       style={{"padding": "50px 24px"}}
       onValid={this.enableButton}
       onInvalid={this.disableButton}
-      onValidSubmit={this.handleSubmit.bind(this)}
+      onValidSubmit={this.handleSubmit}
       >
       <Row>
       <Col lg={3} style={Label}>DOMAIN</Col>
