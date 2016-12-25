@@ -93,7 +93,27 @@ router.get('/:domainName', function(req, res) {
 
 // Freshly index a domain
 router.post('/:domainName/index', function(req, res) {
-  res.send({});
+    logger.debug("going to freshly index domain ", req.params.domainName);
+    try {
+      domainCtrl.freshlyIndexDomain(req.params.domainName).then(function(obj) {
+        logger.debug("Successfully indexing for all concepts  ----->",obj);
+        res.send("Successfully done");
+        return;
+      },
+      function(err) {
+        logger.error("Encountered error in retrived concept(s) of domain: ",
+          err);
+        res.send(err);
+        return;
+      })
+
+    } catch (err) {
+      logger.error("Caught a error in retrived concept(s) of domain ", err);
+      res.status(500).send({
+        error: "Something went wrong, please try later..!"
+      });
+      return;
+    }
 });
 
 module.exports = router;
