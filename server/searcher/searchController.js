@@ -29,10 +29,11 @@ const getURL= function(jobDetails,i,callback)
   {
     if(err)
     {
-      console.log(body);
+      logger.error("encountered error while communicating with the google api :")
+      logger.error(err);
     }
 
-    //console.log(body);
+    console.log(body);
     let data = JSON.parse(body.text);
     //console.log(data)
     for (let k = 0; k < data.items.length; k+=1) {

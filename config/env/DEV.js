@@ -26,7 +26,30 @@ module.exports = {
 	NEO4J_HOST: 'localhost',
 	NEO4J_BOLT_URL: neo4jURL,
 	NEO4J_USR: 'neo4j',
-	NEO4J_PWD: 'bala'
-
+	NEO4J_PWD: 'password',
+	NEO4J_DOMAIN:'Domain',
+	NEO4J_TERM:'Term',
+	NEO4J_INTENT:'Intent',
+	NEO4J_WEBDOCUMENT:'WebDocument',
+	NEO4J_CONCEPT:'Concept',
+	NEO4J_DOC_REL:'HasExplanationOf',
+	NEO4J_INT_REL:'IntentOf',
+	NEO4J_CON_REL:'ConceptOf',
+	NEO4J_IND_REL:'IndicatorOf',
+	NEO4J_CIND_REL:'CounterIndicatorOf',
+	ENGINES:[
+	'009216953448521283757:ibz3hdutpom',
+	'015901048907159908775:bu8jkb0g1c0',
+	'017039332294312221469:tjlfw4hfuwc',
+	'007705081896440677668:8luezkczozo',
+	'004518674028755323320:ld85zhatuxc'],
+	KEYS:[
+	'AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U',
+	'AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60',
+	'AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY',
+	'AIzaSyC7XMsUPGIaHo1rT0nIAYWuQZGNEZdRabs',
+	'AIzaSyA1hzOwDP99Vse-JuHrX7erfgUi3RT8f10'],
+	NO_OF_RESULTS:5
+	
 
 };

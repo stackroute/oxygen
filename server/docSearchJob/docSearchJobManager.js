@@ -1,5 +1,5 @@
 let jobCtrl = require('./docSearchJobController');
-
+const config = require('./../../config');
 const engineModel = require('./docSearchJobEntity').engineModel;
 
 let kickOffDomainIndexing = function(conceptsColln) {
@@ -16,21 +16,7 @@ let kickOffDomainIndexing = function(conceptsColln) {
           engineModel.find(function(err,data){
             if(data.length===0)
             {
-              const engines=[
-              '009216953448521283757:ibz3hdutpom',
-              '015901048907159908775:bu8jkb0g1c0',
-              '017039332294312221469:tjlfw4hfuwc',
-              '007705081896440677668:8luezkczozo',
-              '004518674028755323320:ld85zhatuxc'
-              ];
-              const keys=[
-              'AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U',
-              'AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60',
-              'AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY',
-              'AIzaSyC7XMsUPGIaHo1rT0nIAYWuQZGNEZdRabs',
-              'AIzaSyA1hzOwDP99Vse-JuHrX7erfgUi3RT8f10',
-              ];
-              new engineModel({"engine":engines,"key":keys}).save(
+              new engineModel({"engine":config.ENGINES,"key":congig.KEYS}).save(
                 function(err,data) {
                   if (err) {   
                     console.log("err "+err);

@@ -19,7 +19,7 @@ router.post('/:domainName', function(req, res) {
 
     domainCtrl.publishNewDomain(newDomainObj)
     .then(function(savedDomainObj) {
-      logger.debug("!!!!!!!!!!!!@@@@@@@@@@ $$$$$$$$$Successfully published new domain: ",
+      logger.debug("Successfully published new domain: ",
         savedDomainObj.name);
       res.send(savedDomainObj);
       return;
@@ -69,11 +69,12 @@ router.get('/:domainName', function(req, res) {
 
  try {
 
-  let domainName = req.params.domainName;
+  let domainName = req.params.domainName;  
 
-  domainCtrl.getAllDomainDetails().then(function(cardDetailsObj) {
-    logger.debug("Successfully retrived all details to show");
-    res.send(cardDetailsObj);
+  domainCtrl.getDomain(domainName).then(function(domainDetails) {
+    logger.info("Successfully retrived all concepts and intents of a domain : ");
+    logger.info(domainDetails)
+    res.send(domainDetails);
     return;
   },
   function(err) {

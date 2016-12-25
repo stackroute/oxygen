@@ -122,6 +122,7 @@ export default class AddDomain extends React.Component {
       name="domain"
       validations="isWords"
       validationError={wordsError}
+      fullWidth={true}
       updateImmediately
       required
       hintText="value"
@@ -133,7 +134,6 @@ export default class AddDomain extends React.Component {
       <Col lg={9}><FormsyText
       type="textarea"
       name="description"
-      validations="isWords"
       validationError={wordsError}
       updateImmediately
       required
