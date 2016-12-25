@@ -10,7 +10,8 @@ let getTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
     logger.debug("Now proceeding to get all terms of domain: ", data.domain);
 
-    let query = 'MATCH(d:Domain)<-[]-(i:Intent)<-[]-(t:Term) where d.name={name} return t';
+    let query = 'MATCH(d:'+config.NEO4J_DOMAIN+')<-[]-(i:'+config.NEO4J_INTENT+')<-[]-(t:'
+    +config.NEO4J_TERM+') where d.name={name} return t';
 
     let params = {
       name: data.domain
@@ -53,7 +54,9 @@ let getUrlIndexed = function(data) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query = 'Match (d:Domain{name:{domainName}})  Match (c:Concept{name:{conceptName}}) Match (i:Intent) MERGE(c)<-[r:HasExplanationOf]-(u:WebDocument{name:{urlName}}) return i';
+    let query = 'Match (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})  Match (c:'+config.NEO4J_CONCEPT
+    +'{name:{conceptName}}) Match (i:'+config.NEO4J_INTENT+') MERGE(c)<-[r:'+config.NEO4J_DOC_REL
+    +']-(u:'+config.NEO4J_WEBDOCUMENT+'{name:{urlName}}) return i';
     let params = {
       domainName: data.domain,
       conceptName: data.concept,

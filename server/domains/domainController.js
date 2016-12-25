@@ -245,6 +245,11 @@ let getAllDomainDetails = function() {
      domainMongoController.getAllDomainsCallback(callback);
    },
    function(domainDetailedColln,callback) {
+     if(!domainDetailedColln)
+     {
+      callback(null,cardDetailsObj);
+     }
+     else{
      for(let item in domainDetailedColln)
      {
        logger.debug("returned from mongo ",domainDetailedColln.length);
@@ -271,6 +276,7 @@ let getAllDomainDetails = function() {
        });
        }
        logger.debug("pushing ended*&*&&&&&&&&&***** ---",cardDetailsObj);
+     }
      }
    ],
    function(err, cardDetailsObj) {
