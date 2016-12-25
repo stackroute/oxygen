@@ -5,9 +5,9 @@ const logger = require('./../../applogger');
 let saveNewDomain = function(newDomainObj) {
   let promise = new Promise(function(resolve, reject) {
 
-    newDomainObj = new DomainModel(newDomainObj);
+    let saveDomainObj = new DomainModel(newDomainObj);
 
-    newDomainObj.save(function(err, savedDomainObj) {
+    saveDomainObj.save(function(err, savedDomainObj) {
       if (err) {
         reject(err);
       }
@@ -17,7 +17,7 @@ let saveNewDomain = function(newDomainObj) {
           error: 'Null domain object created in mongo..!'
         });
       }
-    logger.debug("saved man")
+      logger.debug("saved man")
       resolve(savedDomainObj);
     });
   })
@@ -28,7 +28,7 @@ let saveNewDomain = function(newDomainObj) {
 let checkDomain = function(domainName) {
   let promise = new Promise(function(resolve, reject) {
 
-    domainObj = {
+    let domainObj = {
       name:domainName
     };
 
@@ -65,7 +65,7 @@ let getAllDomain = function() {
        });
      }
 
-  logger.debug('**************',domainColln);
+     logger.debug('**************',domainColln);
      resolve(domainColln);
    });
  })
@@ -143,8 +143,6 @@ module.exports = {
   checkDomainCallback:checkDomainCallback,
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,
-  getDomainObj: getDomainObj,
-  getAllDomain: getAllDomain,
-  getAllDomainsCallback: getAllDomainsCallback
+  getDomainObj: getDomainObj
 
 }

@@ -1,13 +1,11 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import IconButton from 'material-ui/IconButton';
-import {Card, CardTitle,CardActions, CardMedia, CardText} from 'material-ui/Card';
+import {Card, CardTitle, CardMedia, CardText} from 'material-ui/Card';
 import {Row, Col} from 'react-grid-system';
 import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
-import {green300,blue300,lime800,lightGreen500,grey900} from 'material-ui/styles/colors';
+import {blue300,lime800,lightGreen500} from 'material-ui/styles/colors';
 const tooltipStyle={
 	//width:'100px',
 	padding:'10px',
@@ -37,7 +35,7 @@ const styles = {
 		marginLeft: '5px',
 		padding:0,
 		marginBottom:'7px',
-		marginRight:'2px',
+		marginRight:'2px'
 	},
 	cardRound:{
 		borderRadius: '2%',
@@ -52,10 +50,7 @@ const styles = {
 		paddingBottom:'8px'
 	}
 };
-const cusbut={
-	paddingRight:0,
-	color:'green'
-};
+
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
@@ -76,7 +71,7 @@ export default class DomainShow extends React.Component {
 			this.setState({docsColor:lightGreen500});
 		}
 
-		if(this.props.item.intents.length==0)
+		if(this.props.item.intents.length===0)
 		{
 			this.setState({intentColor:blue300});
 		}
@@ -110,15 +105,16 @@ export default class DomainShow extends React.Component {
 			<Row style={{marginBottom: '20px',marginLeft:'10px'}}>
 			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
 			<Card style={styles.cardRound}>
-			<CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.state.conceptColor}} overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
+			<CardMedia style={{height:'280px',borderRadius: '2%',
+			width :'100%',backgroundColor:this.state.conceptColor}}
+			overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
 			<img src={this.props.item.domainImgURL} style={roundImg}/>
 			</CardMedia>
 			<CardText style={styles.colorCode}>
 			<Row>
-			<Col sm={1}>
-			</Col>
 			<Col sm={2}>
-			<IconButton iconStyle={iconStyles} tooltip={this.props.item.description} tooltipStyles={tooltipStyle} tooltipPosition="top-left">
+			<IconButton iconStyle={iconStyles} tooltip={this.props.item.description} 
+			tooltipStyles={tooltipStyle} tooltipPosition="top-left">
 			<ActionInfo />
 			</IconButton></Col>
 			<Col sm={8}>
@@ -127,46 +123,41 @@ export default class DomainShow extends React.Component {
 			</Row>
 			</CardText>
 
-			<Row>
-			<Col sm={1}>
-			</Col>
+			<Row style={{paddingLeft:45}}>
 			<Col sm={6}>
-			<Chip backgroundColor={"grey"} labelStyle={styles.cardLabel} style={styles.chip}>Concepts Available:</Chip>
-			</Col>
-			<Col sm={1}>
-			</Col>
-			<Col sm={3}>
-			<Chip backgroundColor={this.state.conceptColor} labelStyle={styles.cardLabel} style={styles.chip}>
+			<Chip backgroundColor={"grey"} labelStyle={styles.cardLabel} 
+			style={styles.chip}>Concepts Available:</Chip>
+			</Col>			
+			<Col sm={3} style={{paddingLeft:58}}>
+			<Chip backgroundColor={this.state.conceptColor} 
+			labelStyle={styles.cardLabel} style={styles.chip}>
 			{this.props.item.concepts.length}
 			</Chip>
 			</Col>
 			</Row>
-
-			<Row>
-			<Col sm={1}>
-			</Col>
+			<Row style={{paddingLeft:45}}>
 			<Col sm={6}>
-			<Chip backgroundColor={"grey"} labelStyle={styles.cardLabel} style={styles.chip}>Intents Available:</Chip>
+			<Chip backgroundColor={"grey"} 
+			labelStyle={styles.cardLabel} 
+			style={styles.chip}>Intents Available:</Chip>
 			</Col>
-			<Col sm={1}>
-			</Col>
-			<Col sm={3}>
-			<Chip backgroundColor={this.state.intentColor} labelStyle={styles.cardLabel} style={styles.chip}>
+			<Col sm={3} style={{paddingLeft:58}}>
+			<Chip backgroundColor={this.state.intentColor} 
+			labelStyle={styles.cardLabel} style={styles.chip}>
 			{this.props.item.intents.length}
 			</Chip>
 			</Col>
 			</Row>
-
-			<Row>
-			<Col sm={1}>
-			</Col>
+			<Row style={{paddingLeft:45,paddingBottom:10}}>			
 			<Col sm={6}>
-			<Chip backgroundColor={"grey"} labelStyle={styles.cardLabel} style={styles.chip}>Documents Available:</Chip>
-			</Col>
-			<Col sm={1}>
-			</Col>
-			<Col sm={3}>
-			<Chip backgroundColor={this.state.docsColor} labelStyle={styles.cardLabel} style={styles.chip}>
+			<Chip backgroundColor={"grey"} 
+			labelStyle={styles.cardLabel} 
+			style={styles.chip}>Documents Available:</Chip>
+			</Col>			
+			<Col sm={3}style={{paddingLeft:58}}>
+			<Chip backgroundColor={this.state.docsColor} 
+			labelStyle={styles.cardLabel} 
+			style={styles.chip}>
 			{this.props.item.docs}
 			</Chip>
 			</Col>
@@ -178,4 +169,7 @@ export default class DomainShow extends React.Component {
 			</div>
 			);
 	}
+}
+DomainShow.propTypes = {
+	item: React.PropTypes.object
 }

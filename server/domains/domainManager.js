@@ -42,7 +42,7 @@ let initialiseDomainOntology = function(domainName) {
 
     let params = {
       domainName: domainName,
-      conceptName: domainName,
+      conceptName: defaultConceptName,
       intentName: defaultIntentName,
       indicatorTerm: defaultIndicatorTerm,
       counterIndicatorTerm: defaultCounterIndicatorTerm
@@ -82,6 +82,7 @@ let buildDomainIndex = function(domainName) {
     resolve(conceptsColln);
     docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
     .then(function(result) {
+      logger.debug(result)
       resolve(conceptsColln);
     }, function(err) {
       reject(err);

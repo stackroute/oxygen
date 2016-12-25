@@ -5,8 +5,6 @@ const searchModel = require('./searchEntity').searchModel;
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
-
-const amqp = require('amqplib');
 const startCrawlerMQ=require('./docOpenCrawlerEngine').startCrawler;
 
 const getURL= function(jobDetails,i,callback)

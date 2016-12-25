@@ -12,7 +12,7 @@ const style = {
   marginRight:"auto",
   marginTop: 5,
   align:"center",
-  textAlign: 'center',
+  textAlign: 'center'
 };
 
 
@@ -43,4 +43,9 @@ export default class AutoCompleteSearchBox extends React.Component {
       </div>
       )
   }
+}
+AutoCompleteSearchBox.propTypes = {
+  searchDocument: React.PropTypes.func,
+  getConcept: React.PropTypes.func,
+  concepts: React.PropTypes.arrayOf(React.PropTypes.string)
 }
