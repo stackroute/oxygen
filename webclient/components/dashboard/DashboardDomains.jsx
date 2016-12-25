@@ -25,7 +25,7 @@ const iconStyles={
 	height:'28px',
 	marginLeft:'10px',
 	marginTop: '5px',
-	Color:grey900
+	backgroundColor:'grey'
 }
 const roundImg={
 	borderRadius: '50%',
@@ -136,7 +136,7 @@ componentWillMount()
 		return(
 			<div>
         <Row style={{marginBottom: '20px',marginLeft:'10px'}}>
-				<Link to={'/graph'+this.props.item.name} style={{textDecoration:'none'}}>
+				<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
   			<Card style={styles.cardRound}>
         <CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.state.conceptColor}} overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
 				<img src={this.props.item.domainImgURL} style={roundImg}/>

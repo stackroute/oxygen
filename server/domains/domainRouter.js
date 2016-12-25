@@ -71,7 +71,7 @@ router.get('/:domainName', function(req, res) {
 
   let domainName = req.params.domainName;
 
-  domainCtrl.getAllDomainDetails().then(function(cardDetailsObj) {
+  domainCtrl.getDomain(domainName).then(function(cardDetailsObj) {
     logger.debug("Successfully retrived all details to show");
     res.send(cardDetailsObj);
     return;

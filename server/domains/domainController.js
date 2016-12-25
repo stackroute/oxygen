@@ -247,10 +247,11 @@ let getAllDomainDetails = function() {
    function(domainDetailedColln,callback) {
      for(let item in domainDetailedColln)
      {
+       logger.debug("returned from mongo ",domainDetailedColln.length);
        let domain=domainDetailedColln[item];
        fetchDomainCardDetails(domain.name)
        .then(function(domainObj) {
-         logger.debug("Successfully fetched domain card details: ",
+         logger.debug("Successfully fetched domain card details from mongo: ",
            domainObj);
          domainObj['name']= domain.name;
          domainObj['description']= domain.description;
@@ -260,7 +261,7 @@ let getAllDomainDetails = function() {
         if(cardDetailsObj.length==domainDetailedColln.length)
         {
         callback(null,cardDetailsObj);
-      }
+       }
        },
        function(err) {
          logger.error("Encountered error in fetching domain card details: ",

@@ -6,7 +6,7 @@ const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startSearcher = function() {
- let amqpConn = amqp.connect('amqp://172.23.238.173:5672');
+ let amqpConn = amqp.connect('amqp://localhost');
 
  amqpConn
  .then(function(conn) {
