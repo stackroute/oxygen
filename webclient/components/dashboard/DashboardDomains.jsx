@@ -18,8 +18,7 @@ const iconStyles={
 	width:'28px',
 	height:'28px',
 	marginLeft:'10px',
-	marginTop: '5px',
-	Color:grey900
+	marginTop: '5px'
 }
 const roundImg={
 	borderRadius: '50%',
