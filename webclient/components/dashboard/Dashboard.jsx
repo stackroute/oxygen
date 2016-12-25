@@ -82,13 +82,29 @@ export default class Dashboard extends React.Component {
 				let response=JSON.parse(res.text);
 				this.setState({domainList:response,loading:"hide"});
 			}
-		});
+	  	});
 			}
 
 			componentDidMount()
 			{
 				this.show();
 			}
+
+      freshlyIndex(domain)
+      {
+        console.log('inside Index refresh '+domain);
+        let url =`/domain/`+domain+`/index`;
+
+        Request
+        .post(url)
+        .send(domain)
+        .end((err, res) => {
+          if(err) {
+        this.setState({errmsg: res.body});
+      }
+      });
+      }
+
       onPageClick(e)
       {
         var page=this.state.pageNum;
@@ -150,7 +166,7 @@ export default class Dashboard extends React.Component {
 						<Container>
 						{list.map((item,i) =>{
 							return (<Col lg={4} md={4} key={i}>
-								<DomainShow index={i} key={i} indexs={i} ref="show" item={item}/>
+								<DomainShow  freshlyIndex={this.freshlyIndex.bind(this)} index={i} key={i} indexs={i} ref="show" item={item}/>
 								</Col>);
 						})}
 							</Container>

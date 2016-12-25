@@ -7,6 +7,7 @@ import {Card, CardTitle,CardActions, CardMedia, CardText} from 'material-ui/Card
 import {Row, Col} from 'react-grid-system';
 import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 import {green300,blue300,lime800,lightGreen500,grey900} from 'material-ui/styles/colors';
 const tooltipStyle={
 	//width:'100px',
@@ -14,11 +15,23 @@ const tooltipStyle={
 	zDepth:9999,
 	fontSize:'15px'
 }
+const info=
+{
+	paddingLeft:25,
+	paddingTop:3
+}
 const iconStyles={
 	width:'28px',
 	height:'28px',
 	marginLeft:'10px',
 	marginTop: '5px'
+}
+const iconStyles1={
+	width:'28px',
+	height:'28px',
+	marginTop: '5px',
+	paddingLeft:0,
+	float:'left'
 }
 const roundImg={
 	borderRadius: '50%',
@@ -59,8 +72,14 @@ const cusbut={
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {canSubmit:false,conceptColor:'',intentColor:'',docsColor:''}
+		this.state = {canSubmit:false,conceptColor:'',intentColor:'',docsColor:''};
 	}
+
+	handleRefresh() {
+		console.log('inside handle refresh');
+    this.props.freshlyIndex(this.props.item.name);
+  }
+
 	componentWillMount()
 	{
 
@@ -108,25 +127,29 @@ export default class DomainShow extends React.Component {
 		return(
 			<div>
 			<Row style={{marginBottom: '20px',marginLeft:'10px'}}>
-			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
 			<Card style={styles.cardRound}>
+			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
 			<CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.state.conceptColor}} overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
 			<img src={this.props.item.domainImgURL} style={roundImg}/>
 			</CardMedia>
+			</Link>
 			<CardText style={styles.colorCode}>
 			<Row>
 			<Col sm={1}>
-			</Col>
-			<Col sm={2}>
-			<IconButton iconStyle={iconStyles} tooltip={this.props.item.description} tooltipStyles={tooltipStyle} tooltipPosition="top-left">
+			<IconButton iconStyle={iconStyles} tooltip={this.props.item.description} tooltipStyles={tooltipStyle} tooltipPosition="top-left" >
 			<ActionInfo />
 			</IconButton></Col>
 			<Col sm={8}>
-			<h2>Domain Information</h2>
-			</Col>
+			<h2 style={info}>Domain Information</h2>
+		  </Col>
+			<Col sm={1} style={{padding:"auto 0px"}}>
+				<IconButton iconStyle={iconStyles1} onClick={this.handleRefresh.bind(this)}>
+				<NavigationRefresh/>
+				</IconButton>
+				</Col>
 			</Row>
 			</CardText>
-
+			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
 			<Row>
 			<Col sm={1}>
 			</Col>
@@ -171,9 +194,8 @@ export default class DomainShow extends React.Component {
 			</Chip>
 			</Col>
 			</Row>
-
+      </Link>
 			</Card>
-			</Link>
 			</Row>
 			</div>
 			);

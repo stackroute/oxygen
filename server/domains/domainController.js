@@ -299,10 +299,41 @@ let getAllDomainDetails = function() {
  return promise;
 }
 
+let freshlyIndexDomain = function(domain) {
+  logger.debug("Received request for freshly indexing a domain ", domain);
+
+  let promise = new Promise(function(resolve, reject) {
+
+    if (!domain ||
+      domain.length <= DOMAIN_NAME_MIN_LENGTH) {
+      reject({
+        error: "Invalid domain name..!"
+      });
+  }
+
+  async.waterfall([
+    function(callback) {
+      logger.debug("inside the waterfall for freshly indexing"+domain)
+      domainMgr.buildDomainIndexCallBack(domain,
+        callback);
+    }
+    ],
+    function(err, domainObjDetails) {
+      if (err) {
+        reject(err);
+      }
+      resolve(domainObjDetails);
+      }); //end of async.waterfall
+});
+
+  return promise;
+}
+
 
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain,
   fetchDomainCardDetails:fetchDomainCardDetails,
-  getAllDomainDetails:getAllDomainDetails
+  getAllDomainDetails:getAllDomainDetails,
+  freshlyIndexDomain:freshlyIndexDomain
 }
