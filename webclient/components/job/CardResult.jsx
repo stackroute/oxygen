@@ -61,6 +61,7 @@ export default class CardResult extends React.Component {
   }
 }
 CardResult.propTypes = {
-  searchItem: React.PropTypes.object
+  searchItem: React.PropTypes.object,
+  rating:React.PropTypes.Array
 
 }

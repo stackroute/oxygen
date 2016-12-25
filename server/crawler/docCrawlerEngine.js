@@ -23,7 +23,8 @@ const startCrawler = function() {
      chConn.assertQueue(crawlerMQName, { durable: false })
      .then(function(ok) {
        logger.debug("What is ok: ", ok);
-       logger.debug('[*] Waiting for messages on [' + crawlerMQName + '], Reciever to exit press CTRL+C ');
+       logger.debug('[*] Waiting for messages on [' 
+        + crawlerMQName + '], Reciever to exit press CTRL+C ');
 
        highland(function(push, next) {
          chConn.consume(crawlerMQName, function(msg) {
