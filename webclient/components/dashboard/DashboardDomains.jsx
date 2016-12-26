@@ -74,7 +74,8 @@ export default class DomainShow extends React.Component {
 		this.props.freshlyIndex(this.props.item.name);
 	}
 
-	componentDidMount()
+
+	componentWillMount() 
 	{
 
 		if(this.props.item.docs===0)
@@ -115,6 +116,7 @@ export default class DomainShow extends React.Component {
 		}
 
 	}
+
 	render()
 	{
 

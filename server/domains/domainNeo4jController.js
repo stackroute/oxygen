@@ -235,38 +235,38 @@ let getDomainCardDetails = function(domainObj) {
 
           // fetching intents Completed!
 
-            logger.debug("proceeding to fetch no of documents");
-            let query2 = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) MATCH (c:'
-            +config.NEO4J_CONCEPT+') MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(d)<-[r:'
-            +config.NEO4J_CON_REL+']-(c) match(c)<-[r1:'+config.NEO4J_DOC_REL+']-(w) RETURN w';
-            let params2 = {
-              domainName: domainObj
-            };
-            let session2 = driver.session();
-            session2.run(query2, params2)
-            .then(function(results) {
-              if(results.records.length==0)
-              {
+          logger.debug("proceeding to fetch no of documents");
+          let query2 = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) MATCH (c:'
+          +config.NEO4J_CONCEPT+') MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(d)<-[r:'
+          +config.NEO4J_CON_REL+']-(c) match(c)<-[r1:'+config.NEO4J_DOC_REL+']-(w) RETURN w';
+          let params2 = {
+            domainName: domainObj
+          };
+          let session2 = driver.session();
+          session2.run(query2, params2)
+          .then(function(results) {
+            if(results.records.length===0)
+            {
               resolve({concepts:concepts,intents:intents,docs:documents});
-              }
-              else
-              {
+            }
+            else
+            {
               results.records.forEach(function(records) {
-            records._fields.forEach(function(field){
-              logger.debug('document is'+ field.properties.name);
-              documents++;
-              logger.debug('Number is ++++++++++++++++^^^^^##### '+documents);
-            });
-          logger.debug('Number is  '+documents);
-          });
-            resolve({concepts:concepts,intents:intents,docs:documents});
-        }
-              session2.close();
+                records._fields.forEach(function(field){
+                  logger.debug('document is'+ field.properties.name);
+                  documents+=1;
+                  logger.debug('Number is ++++++++++++++++^^^^^##### '+documents);
+                });
+                logger.debug('Number is  '+documents);
+              });
+              resolve({concepts:concepts,intents:intents,docs:documents});
+            }
+            session2.close();
 
-            })
-            .catch(function(err) {
-              logger.error("Error in neo4j query: ", err, ' query is: ',
-                query2);
+          })
+          .catch(function(err) {
+            logger.error("Error in neo4j query: ", err, ' query is: ',
+              query2);
 
             //  reject(err);
           });
