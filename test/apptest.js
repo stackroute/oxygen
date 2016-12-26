@@ -66,9 +66,9 @@ describe("Make POST request to add jobs ", function() {
     request.post('/docsearchjob/job')
     .send({
       query: "react",
-      engineID: "Engine-A",
+      engineID: "009216953448521283757:ibz3hdutpom AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U",
       exactTerms: "jsx",
-      results: "4",
+      results: "2",
       siteSearch: "NONE"
     })
     .end(function(err, res) {
@@ -135,7 +135,7 @@ describe("Make DELETE request to delete the results ", function() {
 //     moduleToTest(domainObj)
 //     .then(
 //       function(dataToTest){
-  
+
 //         expect(dataToTest).to.be.not.equal(undefined);
 //         expect(dataToTest.terms.length).to.be.at.least(1);
 //         done()
