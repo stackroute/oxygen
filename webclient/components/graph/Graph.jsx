@@ -40,6 +40,7 @@ export default class Graph extends React.Component {
     super(props)
     console.log(this.props)
     this.state={
+      msgCaption:"CLICK SEARCH TO SHOW THE DOCUMENTS",
       domainName:"",
       concepts:[],
       intents:[],
@@ -51,8 +52,11 @@ export default class Graph extends React.Component {
   getConcepts(concept)
   {
     let newConcepts=this.state.selectedConcept;
-    if(!newConcepts.includes(concept)){
-      newConcepts.push(concept)
+    if(this.state.concepts.includes(concept))
+    {
+      if(!newConcepts.includes(concept)){
+        newConcepts.push(concept)
+      }
     }
 
     this.setState({
@@ -112,30 +116,48 @@ export default class Graph extends React.Component {
   }
   searchDocuments()
   {
-    
-    let reqObj={
-      domainName:this.state.domainName,
-      reqIntents:this.state.checkedIntent,
-      reqConcepts:this.state.selectedConcept
+    if(this.state.checkedIntent.length===0||this.state.selectedConcept.length===0)
+    {
+      this.setState({
+        msgCaption:"SORRY NO DOCUMENTS TO SHOW",
+        docs:[]
+      })
     }
 
-    let url =`/domain/documents/`+reqObj.domainName;
-    Request
-    .post(url)
-    .send(reqObj)
-    .end((err, res) => {
-      if(err) {
+    else{
+      let reqObj={
+        domainName:this.state.domainName,
+        reqIntents:this.state.checkedIntent,
+        reqConcepts:this.state.selectedConcept
+      }
+      this.setState({
+        docs:[]
+      })
+
+      let url =`/domain/documents/`+reqObj.domainName;
+      Request
+      .post(url)
+      .send(reqObj)
+      .end((err, res) => {
+        if(err) {
     //res.send(err);
     this.setState({errmsg: res.body});
   }
   else {
     console.log("Response on documents show: ", JSON.parse(res.text));
     let response=JSON.parse(res.text);
+    if(typeof response.docs==="undefined" || response.docs.length===0 )
+    {
+      this.setState({
+        msgCaption:"SORRY NO DOCUMENTS TO SHOW"
+      })
+    }
     this.setState({
       docs:response.docs
     })
   }
 });
+    }
 
   }
   componentDidMount()
@@ -181,14 +203,14 @@ export default class Graph extends React.Component {
       <br/><br/>
       <Row>
       <Col sm={12}>
-      {this.state.docs.length===0?<h1>CLICK SEARCH TO SHOW THE DOCUMENTS</h1>:
-        <DocResultCard webDocs={this.state.docs}/>}
-        </Col>
-        </Row>
-        </Col>
-        </Row>
-        </div>
-        );
+      {this.state.docs.length===0?<h1>{this.state.msgCaption}</h1>:
+      <DocResultCard webDocs={this.state.docs}/>}
+      </Col>
+      </Row>
+      </Col>
+      </Row>
+      </div>
+      );
 }
 }
 

@@ -81,5 +81,5 @@ export default class DocResultCard extends React.Component {
   }
 }
 DocResultCard.propTypes = {
-  webDocs: React.PropTypes.arrayOf(React.PropTypes.object)
+  webDocs: React.PropTypes.arrayOf(React.PropTypes.string)
 }
