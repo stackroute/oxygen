@@ -21,24 +21,14 @@ const mongo = {
 // };
 
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
-  masterMongoDBName);
+	masterMongoDBName);
 
 const neo4jURL = ('bolt://localhost');
 
 //const rabbitmqURL = ('rabbitmq://' + rabbitmq.host + ':' + rabbitmq.port);
 
 module.exports = {
-<<<<<<< HEAD
 
-  WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
-  MONGO_MASTER_DB_NAME: masterMongoDBName,
-  MONGO_MASTER_SERVER: mongo,
-  MONGO_URL: mongoURL,
-  NEO4J_HOST: 'localhost',
-  NEO4J_BOLT_URL: neo4jURL,
-  NEO4J_USR: 'neo4j',
-  NEO4J_PWD: 'bala'
-=======
 	WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
 	MONGO_MASTER_DB_NAME: masterMongoDBName,
 	MONGO_MASTER_SERVER: mongo,
@@ -70,7 +60,5 @@ module.exports = {
 	'AIzaSyC7XMsUPGIaHo1rT0nIAYWuQZGNEZdRabs',
 	'AIzaSyA1hzOwDP99Vse-JuHrX7erfgUi3RT8f10'],
 	NO_OF_RESULTS:2
->>>>>>> a5c36b62299b4ea3062df0c2d1fdef5f8ef200f9
-
 
 };
