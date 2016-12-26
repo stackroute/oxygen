@@ -1,12 +1,11 @@
 
 import React from 'react';
 import {Link} from 'react-router';
-import FlatButton from 'material-ui/FlatButton';
 import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
-import {Container, Row, Col} from 'react-grid-system';
+import {Row, Col} from 'react-grid-system';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
@@ -28,12 +27,12 @@ const styles={
 large: {
   width: 120,
   height: 120,
-  padding: 30,
+  padding: 30
 },
 place:{
   position:"fixed",
   top: "10%",
-  right:"5%",
+  right:"5%"
 }
 }
 export default class Graph extends React.Component {
@@ -71,8 +70,8 @@ export default class Graph extends React.Component {
     }
     else{
       prevIntents=prevIntents.filter(function(data) {
-        if(data!==event.target.value)
-          return data
+        return data!==event.target.value;
+
       });
     }
     this.setState({
@@ -84,9 +83,8 @@ export default class Graph extends React.Component {
   deleteConcepts(data){
     let delConcepts=this.state.selectedConcept;
     delConcepts=delConcepts.filter(function(concept){
-      if(concept!==data)
-        return concept
-    })
+     return concept!==data;
+   })
     this.setState(
     {
       selectedConcept:delConcepts
@@ -157,7 +155,8 @@ export default class Graph extends React.Component {
     <Col sm={10}>
     <Row>
     <Col sm={12}>
-    <h1 style={{textAlign:"left",color:"#8aa6bd",fontSize:"35pt"}}>{this.state.domainName.toUpperCase()} </h1>
+    <h1 style={{textAlign:"left",color:"#8aa6bd",fontSize:"35pt"}}>
+    {this.state.domainName.toUpperCase()} </h1>
     <Link to="/dashboard">
     <IconButton style={styles.place} iconStyle={styles.largeIcon}>
     <NavigationArrowBack style={styles.large} color={"white"} />
@@ -173,7 +172,8 @@ export default class Graph extends React.Component {
     <Row>
     <Col sm={12}>
     {this.state.selectedConcept.length===0?<h4>SELECT THE CONCEPTS</h4>:
-      <SelectedConcepts conceptChips={this.state.selectedConcept} deleteConcept={this.deleteConcepts.bind(this)} />}
+      <SelectedConcepts conceptChips={this.state.selectedConcept}
+      deleteConcept={this.deleteConcepts.bind(this)} />}
       </Col>
       </Row>
       </Col>
@@ -190,4 +190,8 @@ export default class Graph extends React.Component {
         </div>
         );
 }
+}
+
+Graph.propTypes = {
+  params: React.PropTypes.object
 }

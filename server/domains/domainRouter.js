@@ -4,8 +4,6 @@ const router = require('express').Router();
 
 const domainCtrl = require('./domainController');
 
-const DOMAIN_NAME_MIN_LENGTH = 3;
-
 // Mounted at mount point /domain/
 
 // Create new domain

@@ -26,7 +26,7 @@ let fetchIndicatorTerms = function(data) {
 
     let params = {
       domainName: data.domain,
-      intentName: data.intent,
+      intentName: data.intent
     };
 
     session.run(query, params)
@@ -54,7 +54,7 @@ let fetchIndicatorTerms = function(data) {
 let fetchCounterIndicatorTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
 
-    logger.debug("Now proceeding to fetch Counter Indicator Terms: ",  data.intent);
+    logger.debug("Now proceeding to fetch Counter Indicator Terms: ",data.intent);
 
     let session = driver.session();
 
@@ -69,7 +69,7 @@ let fetchCounterIndicatorTerms = function(data) {
 
     let params = {
       domainName: data.domain,
-      intentName: data.intent,
+      intentName: data.intent
     };
 
     session.run(query, params)
@@ -106,7 +106,8 @@ let addIntentRelationship = function(data) {
     else {
 
 
-      logger.debug("Now proceeding to add intent as relationship b/w concept and doc ", data.intensity);
+      logger.debug("Now proceeding to add intent as relationship"
+        +" b/w concept and doc ", data.intensity);
 
       let session = driver.session();
 
@@ -130,7 +131,7 @@ let addIntentRelationship = function(data) {
 
       session.run(query, params)
       .then(function(result) {
-
+        logger.debug(result);
         // Completed!
         session.close();
         resolve(data);

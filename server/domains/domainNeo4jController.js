@@ -1,5 +1,3 @@
-const DomainModel = require('./domainEntity').DomainModel;
-
 const neo4jDriver = require('neo4j-driver').v1;
 
 const logger = require('./../../applogger');
@@ -58,8 +56,9 @@ let getAllDomainConcept = function(domainNameColln) {
     
     domainNameColln.forEach(function(domainName){
 
-      let query = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'+config.NEO4J_CONCEPT
-      +') match(d)<-[r:'+config.NEO4J_CON_REL+']-(c)  RETURN d,count(c)';
+      let query = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'
+      +config.NEO4J_CONCEPT+') match(d)<-[r:'+config.NEO4J_CON_REL
+      +']-(c)  RETURN d,count(c)';
 
       let params = {
         domainName: domainName
@@ -75,7 +74,7 @@ let getAllDomainConcept = function(domainNameColln) {
             noOfConcepts:0
           }
           record._fields.forEach(function(field){
-            if(field.low===undefined)
+            if(typeof field.low==='undefined')
             {
               obj.Domain=field.properties.name;
             }
@@ -86,8 +85,9 @@ let getAllDomainConcept = function(domainNameColln) {
           });   
           data.push(obj);
         }); 
-        if(data.length===domainNameColln.length)
+        if(data.length===domainNameColln.length){
           resolve(data);    
+        }
       }).catch(function(err) {
         logger.error("Error in neo4j query: ", err, ' query is: ',
           query);
@@ -170,7 +170,7 @@ let getDomainIntent = function(domain) {
 
       });
       session.close();
-      domain["Intents"]=intents;
+      domain.Intents=intents;
       resolve(domain);
     })
     .catch(function(err) {
@@ -222,28 +222,28 @@ let getDomainCardDetails = function(domainObj) {
   let documents=0;
   let session1 = driver.session();
   session1.run(query1, params1)
-  .then(function(result) {
-    result.records.forEach(function(record) {
+  .then(function(outerResults) {
+    outerResults.records.forEach(function(record) {
           //logger.debug("Result from neo4j: ", record);
           record._fields.forEach(function(fields){
             intent=fields.properties.name;
             logger.debug(" domain intent ", fields.properties.name);
             logger.debug("proceeding to fetch no of documents for each intent");
-            let query2 = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) MATCH (c:'+config.NEO4J_CONCEPT
-            +') MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(d)<-[r:'+config.NEO4J_CON_REL
-            +']-(c) match(c)<-[r:'+config.NEO4J_DOC_REL+']-(w) RETURN w';
+            let query2 = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) MATCH (c:'
+            +config.NEO4J_CONCEPT+') MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(d)<-[r:'
+            +config.NEO4J_CON_REL+']-(c) match(c)<-[r:'+config.NEO4J_DOC_REL+']-(w) RETURN w';
             let params2 = {
               domainName: domainObj
             };
             let session2 = driver.session();
             session2.run(query2, params2)
-            .then(function(result) {
-              result.records.forEach(function(record) {
+            .then(function(results) {
+              results.records.forEach(function(records) {
             //  logger.debug("Result from neo4j: ", record);
             documents=0;
-            record._fields.forEach(function(fields){
-              logger.debug("document for "+intent+' is '+ fields.properties.name);
-              documents++;
+            records._fields.forEach(function(field){
+              logger.debug("document for "+intent+' is '+ field.properties.name);
+              documents+=1;
             });
 
           });

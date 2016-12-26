@@ -6,8 +6,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Container, Row, Col} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
-import MenuItem from 'material-ui/MenuItem';
-import FormsySelect from 'formsy-material-ui/lib/FormsySelect';
 
 const style = {
   position:"fixed",
@@ -21,14 +19,8 @@ const tfont={
 const Label={paddingLeft:"30px",paddingTop:"20px",fontWeight:"bold"};
 
 const errorMessages= {
-  wordsError: "Please only use letters",
-  numberError: "Please enter less than 100"
+  wordsError: "Please only use letters"
 } ;
-const customContentStyle = {
-  width: '100%',
-  height: '100%',
-  maxWidth: 'none'
-};
 
 export default class AddDomain extends React.Component {
 
@@ -110,7 +102,7 @@ export default class AddDomain extends React.Component {
     label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
-    let { wordsError, numberError,UrlError} = errorMessages;
+    let {wordsError} = errorMessages;
     return (
       <div>
       <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
@@ -171,12 +163,13 @@ export default class AddDomain extends React.Component {
       fullWidth={true} onChange={this.onChangeImageUrl.bind(this)}/></Col>
       </Row>
 
-
-
       </Formsy.Form>
       </Container>
       </Dialog>
       </div>
       );
   }
+}
+AddDomain.propTypes = {
+  addDomain: React.PropTypes.func
 }
