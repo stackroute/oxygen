@@ -290,7 +290,8 @@ let getDomainCardDetails = function(domainObj) {
 let getWebDocuments = function(domainObj) {
   let promise = new Promise(function(resolve, reject) {
 
-    logger.debug("Now proceeding to retrive the web Documents for domain name: ", domainObj.domainName);
+    logger.debug("Now proceeding to retrive "+
+      "the web Documents for domain name: ", domainObj.domainName);
     let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
       neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
       );
@@ -300,7 +301,9 @@ let getWebDocuments = function(domainObj) {
     logger.debug("obtained connection with neo4j");
 
     let query = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'+config.NEO4J_CONCEPT
-    +'{name:{conceptName}}) match(d)<-[r:'+config.NEO4J_CON_REL+']-(c) MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(c)<-[r1:'+domainObj.reqIntents[0]+']-(w) RETURN w';
+    +'{name:{conceptName}}) match(d)<-[r:'+config.NEO4J_CON_REL+
+    ']-(c) MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(c)<-[r1:'+
+    domainObj.reqIntents[0]+']-(w) RETURN w';
     let params = {
       domainName: domainObj.domainName,
       conceptName: domainObj.reqConcepts[0]
