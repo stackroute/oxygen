@@ -6,9 +6,10 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Container, Row, Col} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
-const defaultImgURL='http://corevitality.com/'+
-'wp-content/uploads/2015/08/27114989-Coming-soon-blue'+
-'-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
+// const defaultImgURL='http://corevitality.com/'+
+// 'wp-content/uploads/2015/08/27114989-Coming-soon-blue'+
+// '-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
+const defaultImgURL='./../../assets/images/bulb.png';
 const style = {
   position:"fixed",
   bottom: "5%",
@@ -110,6 +111,9 @@ handleSubmit() {
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
     let {wordsError} = errorMessages;
+    // Formsy.addValidationRule('isIn', function (values, value, array) {
+    // return array.indexOf(value) >= 0;
+    // });
     return (
       <div>
       <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
