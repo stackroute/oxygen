@@ -54,9 +54,4 @@ module.exports = {
 	'AIzaSyC7XMsUPGIaHo1rT0nIAYWuQZGNEZdRabs',
 	'AIzaSyA1hzOwDP99Vse-JuHrX7erfgUi3RT8f10'],
 	NO_OF_RESULTS:2
-
-<<<<<<< HEAD
-=======
-
->>>>>>> c694b2db62db5852b8599052a81565e5582fcbd8
 };
