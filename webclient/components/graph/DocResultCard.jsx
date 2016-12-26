@@ -44,24 +44,24 @@ export default class DocResultCard extends React.Component {
           title="THIS IS A SAMPLE CARD FOR WEBDOCUMENT RESULTS"
           />
           <CardText style={{textAlign: "left",padding:"0px 16px"}}>
-          <p style={{color:"gray"}}><b>Description : 
+          <p style={{color:"gray"}}><b>Description :
           </b>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
           Aenean commodo ligula eget dolor. Aenean massa.
           Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
           Lorem ipsum dolor sit amet, consectetu
           er adipiscing elit. Aenean commodo ligula eget dolor.
-          Aenean massa. Cum sociis natoque penatibus 
+          Aenean massa. Cum sociis natoque penatibus
           et magnis dis parturient montes, nascetur ridiculus mus.
           Donec quam felis, ultricies nec, pellente
-          sque eu, pretium quis, sem. Nulla consequat massa quis enim. 
+          sque eu, pretium quis, sem. Nulla consequat massa quis enim.
           Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
           arcu. In enim justo, rhoncus ut, imperdiet a,
           venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.
           </p>
           <p style={{color:"gray"}}>
           <b>Link : </b>
-          <a href={"#"} target="_blank">
-          www.wwww.wwww.www.wwww.www.ww
+          <a href={doc} target="_blank">
+          {doc}
           </a></p>
           </CardText>
           <div style={styles.wrapper}>

@@ -147,7 +147,7 @@ let indexPublishedDomain = function(domainName) {
       reject(err);
     }
     if (indexedDomainObj) {
-          //Kick off indexing in off-line, 
+          //Kick off indexing in off-line,
           //so the API request is not blocked till indexing is complete,
           // as it may take long time to complete
 
@@ -279,7 +279,7 @@ let getAllDomainDetails = function() {
      reject(err);
      return;
    });
-    }    
+    }
   }
   logger.debug("pushing ended",cardDetailsObj);
 }
@@ -349,8 +349,8 @@ let fetchWebDocuments = function(domainObj) {
 
   async.waterfall([
     function(callback) {
-      logger.debug("inside the waterfall for freshly indexing"+domainObj)
-      domainMgr.buildDomainIndexCallBack(domainObj,
+      logger.debug("inside the waterfall for fetching web docs"+domainObj)
+      domainNeo4jController.getWebDocumentsCallback(domainObj,
         callback);
     }
     ],

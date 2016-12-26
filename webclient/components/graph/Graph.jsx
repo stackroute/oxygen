@@ -132,7 +132,7 @@ export default class Graph extends React.Component {
     console.log("Response on documents show: ", JSON.parse(res.text));
     let response=JSON.parse(res.text);
     this.setState({
-      docs:response
+      docs:response.docs
     })
   }
   });
