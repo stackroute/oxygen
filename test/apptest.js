@@ -34,24 +34,24 @@ describe("Make GET requests to domain along with domain name ", function() {
 });
 
 
-describe("Make post requests to domain along with domain name ", function() {
-  it("Testing for publishing a new domain it should return status", function(done) {
-    request
-    .post('/domain/java')
-    .send({
-      "name": "Java",
-      "description": "No description",
-      "domainImgURL": "no url"
-    })
-    .end(function(err, res) {
-      expect(Object.keys(res.body)).to.have.lengthOf(4);
-      done();
-      this.timeout(10000);
+// describe("Make post requests to domain along with domain name ", function() {
+//   it("Testing for publishing a new domain it should return status", function(done) {
+//     request
+//     .post('/domain/java')
+//     .send({
+//       "name": "Java",
+//       "description": "No description",
+//       "domainImgURL": "no url"
+//     })
+//     .end(function(err, res) {
+//       expect(Object.keys(res.body)).to.have.lengthOf(4);
+//       done();
+//       this.timeout(10000);
 
-    });
-  });
+//     });
+//   });
 
-});
+// });
 
 
 describe("Make GET requests to docSearchJob ", function() {
