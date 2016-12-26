@@ -55,5 +55,5 @@ const startCrawler = function() {
 }
 
 module.exports = {
- startCrawler: startCrawler
+  startCrawler: startCrawler
 };

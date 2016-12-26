@@ -50,8 +50,9 @@ const startSearcher = function() {
        });
        }); //end of assertQueue
    }); //end of channelConnection
+
 }
 
 module.exports = {
- startSearcher: startSearcher
+  startSearcher: startSearcher
 };

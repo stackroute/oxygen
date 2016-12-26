@@ -80,13 +80,13 @@ export default class Dashboard extends React.Component {
 				console.log("Response on show: ", JSON.parse(res.text).length);
 				//let domainList1=this.state.domainList;
 				let response=JSON.parse(res.text);
-        if(response.length==0)
-        {
-        this.setState({domainList:[],loading:'hide'});
-        }
-        else {
-        this.setState({domainList:response,loading:'hide'});
-        }
+				if(response.length===0)
+				{
+					this.setState({domainList:[],loading:'hide'});
+				}
+				else {
+					this.setState({domainList:response,loading:'hide'});
+				}
 			}
 		});
 			}
@@ -132,36 +132,36 @@ export default class Dashboard extends React.Component {
 				let list=[];
 				let prevFlag=false;
 				let nextFlag=false;
-        let dList=this.state.domainList;
-        if(dList.length>0)
-        {
-				let pages=Math.ceil(dList.length/6);
-				let pageNow=this.state.pageNum;
-				if(pages===pageNow)
+				let dList=this.state.domainList;
+				if(dList.length>0)
 				{
-					nextFlag=true;
-				}
-				if(this.state.pageNum===1)
-				{
-					prevFlag=true;
-				}
-				if(pages===1 || pages===pageNow)
-				{
-					list=[];
-					for(let i=6*(pageNow-1);i<this.state.domainList.length;i+=1)
+					let pages=Math.ceil(dList.length/6);
+					let pageNow=this.state.pageNum;
+					if(pages===pageNow)
 					{
-						list.push(this.state.domainList[i]);
+						nextFlag=true;
+					}
+					if(this.state.pageNum===1)
+					{
+						prevFlag=true;
+					}
+					if(pages===1 || pages===pageNow)
+					{
+						list=[];
+						for(let i=6*(pageNow-1);i<this.state.domainList.length;i+=1)
+						{
+							list.push(this.state.domainList[i]);
+						}
+					}
+					else {
+						list=[];
+						let foo=6*(pageNow-1);
+						for(let i=foo;i<(foo+6);i+=1)
+						{
+							list.push(this.state.domainList[i]);
+						}
 					}
 				}
-				else {
-					list=[];
-					let foo=6*(pageNow-1);
-					for(let i=foo;i<(foo+6);i+=1)
-					{
-						list.push(this.state.domainList[i]);
-					}
-				}
-      }
 				return (
 					<div style={fonts}>
 					<h1 >Our Domains</h1>

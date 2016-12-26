@@ -1,9 +1,18 @@
 const masterMongoDBName = process.env.APP_DB || 'oxygen';
 
 const mongo = {
+  // <<<<<<< HEAD
+  //   host: process.env.MONGO_HOST || '127.0.0.1',
+  //   port: process.env.MONGO_PORT || 27017
+  // };
 
-	host: process.env.MONGO_HOST || '127.0.0.1',
-	port: process.env.MONGO_PORT || 27017
+  // const rabbitmq = {
+  //   host: process.env.RABBITMQ_HOST || '127.0.0.1',
+  //   port: process.env.RABBITMQ_PORT || 5672
+  // =======
+
+  host: process.env.MONGO_HOST || '127.0.0.1',
+  port: process.env.MONGO_PORT || 27017
 };
 
 const rabbitmq = {
@@ -14,11 +23,12 @@ const rabbitmq = {
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
 	masterMongoDBName);
 
-const neo4jURL=('bolt://localhost');
+const neo4jURL = ('bolt://localhost');
 
 const rabbitmqURL = ('amqp://' + rabbitmq.host + ':' + rabbitmq.port);
 
 module.exports = {
+
 	WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
 	MONGO_MASTER_DB_NAME: masterMongoDBName,
 	MONGO_MASTER_SERVER: mongo,
@@ -51,6 +61,5 @@ module.exports = {
 	'AIzaSyC7XMsUPGIaHo1rT0nIAYWuQZGNEZdRabs',
 	'AIzaSyA1hzOwDP99Vse-JuHrX7erfgUi3RT8f10'],
 	NO_OF_RESULTS:2
-
 
 };
