@@ -190,7 +190,7 @@ export default class Dashboard extends React.Component {
 						style={paginationStyle2} onClick={this.onPageClick.bind(this)}/>
 						</Container>
 						</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
-						<AddDomain addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
+						<AddDomain domainList={this.state.domainList} addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
 						</div>
 
 						);

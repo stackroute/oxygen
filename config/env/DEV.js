@@ -5,17 +5,17 @@ const mongo = {
 	port: process.env.MONGO_PORT || 27017
 };
 
-// const rabbitmq = {
-//  host: process.env.RABBITMQ_HOST || '127.0.0.1',
-//  port: process.env.RABBITMQ_PORT || 5672
-// };
+const rabbitmq = {
+	host: process.env.RABBITMQ_HOST || '127.0.0.1',
+	port: process.env.RABBITMQ_PORT || 5672
+};
 
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
 	masterMongoDBName);
 
 const neo4jURL = ('bolt://localhost');
 
-//const rabbitmqURL = ('rabbitmq://' + rabbitmq.host + ':' + rabbitmq.port);
+const rabbitmqURL = ('amqp://' + rabbitmq.host + ':' + rabbitmq.port);
 
 module.exports = {
 
@@ -37,6 +37,7 @@ module.exports = {
 	NEO4J_CON_REL:'ConceptOf',
 	NEO4J_IND_REL:'IndicatorOf',
 	NEO4J_CIND_REL:'CounterIndicatorOf',
+	RABBITMQ_URL: rabbitmqURL,
 	ENGINES:[
 	'009216953448521283757:ibz3hdutpom',
 	'015901048907159908775:bu8jkb0g1c0',

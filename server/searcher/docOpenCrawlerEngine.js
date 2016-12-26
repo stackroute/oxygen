@@ -1,10 +1,11 @@
 const logger = require('./../../applogger');
 const amqp = require('amqplib');
+const config = require('./../../config');
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function(urlDataObj) {
 
   logger.debug("creating a connection with external source : ");
-  let amqpConn = amqp.connect('amqp://localhost');
+  let amqpConn = amqp.connect(config.RABBITMQ_URL);
 
 
   amqpConn

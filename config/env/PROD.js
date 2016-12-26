@@ -7,10 +7,10 @@ const mongo = {
 };
 
 
-// const rabbitmq = {
-//  host: process.env.RABBITMQ_HOST || '127.0.0.1',
-//  port: process.env.RABBITMQ_PORT || 5672
-// };
+const rabbitmq = {
+	host: process.env.RABBITMQ_HOST || '127.0.0.1',
+	port: process.env.RABBITMQ_PORT || 5672
+};
 
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
 	masterMongoDBName);
@@ -18,8 +18,7 @@ const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
 
 const neo4jURL = ('bolt://localhost');
 
-
-// const rabbitmqURL = ('rabbitmq://' + rabbitmq.host + ':' + rabbitmq.port);
+const rabbitmqURL = ('amqp://' + rabbitmq.host + ':' + rabbitmq.port);
 
 module.exports = {
 
@@ -31,16 +30,17 @@ module.exports = {
 	NEO4J_BOLT_URL: neo4jURL,
 	NEO4J_USR: 'neo4j',
 	NEO4J_PWD: 'password',
-	NEO4J_DOMAIN:'Domain',
-	NEO4J_TERM:'Term',
-	NEO4J_INTENT:'Intent',
-	NEO4J_WEBDOCUMENT:'WebDocument',
-	NEO4J_CONCEPT:'Concept',
-	NEO4J_DOC_REL:'HasExplanationOf',
-	NEO4J_INT_REL:'IntentOf',
-	NEO4J_CON_REL:'ConceptOf',
-	NEO4J_IND_REL:'IndicatorOf',
-	NEO4J_CIND_REL:'CounterIndicatorOf',
+	NEO4J_DOMAIN: 'Domain',
+	NEO4J_TERM: 'Term',
+	NEO4J_INTENT: 'Intent',
+	NEO4J_WEBDOCUMENT: 'WebDocument',
+	NEO4J_CONCEPT: 'Concept',
+	NEO4J_DOC_REL: 'HasExplanationOf',
+	NEO4J_INT_REL: 'IntentOf',
+	NEO4J_CON_REL: 'ConceptOf',
+	NEO4J_IND_REL: 'IndicatorOf',
+	NEO4J_CIND_REL: 'CounterIndicatorOf',
+	RABBITMQ_URL: rabbitmqURL,
 	ENGINES:[
 	'009216953448521283757:ibz3hdutpom',
 	'015901048907159908775:bu8jkb0g1c0',
@@ -55,5 +55,8 @@ module.exports = {
 	'AIzaSyA1hzOwDP99Vse-JuHrX7erfgUi3RT8f10'],
 	NO_OF_RESULTS:2
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> c694b2db62db5852b8599052a81565e5582fcbd8
 };
