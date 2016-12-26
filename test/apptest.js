@@ -17,10 +17,9 @@ describe("Make GET requests to domain ", function() {
   });
 });
 
-describe("Make GET requests to domain ", function() {
+describe("Make GET requests to domain :", function() {
   it('Testing for all domains', function(done) {
-    request.get('/domain').
-    expect('[{"concepts":["Java"],"intents":["introduction"],"docs":0,"name":"Java","description":"No description","domainImgURL":"no url"},{"concepts":["full stack development"],"intents":["introduction"],"docs":0,"name":"full stack development","description":"description","domainImgURL":"http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg"}]', done);
+    request.get('/domain').expect(200, done);
     this.timeout(10000);
   });
 });
@@ -28,7 +27,7 @@ describe("Make GET requests to domain ", function() {
 
 describe("Make GET requests to domain along with domain name ", function() {
   it('Testing for a domain which is not present', function(done) {
-    request.get('/domain/java').
+    request.get('/domain/nullDomain').
     expect({ error: 'Null domain object while retriving the domain from mongo..!' }, done);
     this.timeout(10000);
   });
@@ -56,7 +55,6 @@ describe("Make post requests to domain along with domain name ", function() {
 
 
 describe("Make GET requests to docSearchJob ", function() {
-  console.log("inside docSearchJob");
   it('Simple GET Request to root url', function(done) {
     request.get('/').expect(200, done);
   });
@@ -117,7 +115,6 @@ describe("Make GET request to show the results ", function() {
 
 describe("Make DELETE request to delete the results ", function() {
   it('Simple DELETE request TO delete the results for a particular job id', function(done) {
-    console.log("test run");
     request.get('/docsearchjob/585cb4cf0384402018145166')
     .end(function(err, res) {
       expect('Content-Type', 'application/json; charset=utf-8', done);
@@ -127,25 +124,26 @@ describe("Make DELETE request to delete the results ", function() {
     });
   });
 });
-describe("fetching terms from the domain", function() {
-  let domainObj = {
-    domain: "devOps",
-    concept:"devOps"
-  };
+// describe("fetching terms from the domain", function() {
+//   let domainObj = {
+//     domain: "devOps",
+//     concept:"devOps"
+//   };
 
-  it('get the Terms', function(done) {
+//   it('get the Terms', function(done) {
 
-    moduleToTest(domainObj)
-    .then(
-      function(dataToTest){
-        console.log(dataToTest)
-        expect(dataToTest).to.be.not.equal(undefined);
-        expect(dataToTest.terms.length).to.be.at.least(1);
-        done()
-      },
-      function(err){
-        done(err)
-      })
-  });
+//     moduleToTest(domainObj)
+//     .then(
+//       function(dataToTest){
+  
+//         expect(dataToTest).to.be.not.equal(undefined);
+//         expect(dataToTest.terms.length).to.be.at.least(1);
+//         done()
 
-}); //end of describe
+//       },
+//       function(err){
+//         done(err)
+//       })
+//   });
+
+// }); //end of describe
