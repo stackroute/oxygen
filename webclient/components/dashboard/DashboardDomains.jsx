@@ -124,8 +124,8 @@ export default class DomainShow extends React.Component {
 			<Row style={{marginBottom: '20px',marginLeft:'10px'}}>
 			<Card style={styles.cardRound}>
 			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
-			<CardMedia style={{height:'280px',borderRadius: '2%',
-			width :'100%',backgroundColor:this.state.conceptColor}} 
+			<CardMedia style={{height:'280px',borderRadius: '2%',width :'100%'}} 
+			mediaStyle={backgroundColor:this.state.conceptColor}
 			overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
 			<img src={this.props.item.domainImgURL} style={roundImg}/>
 			</CardMedia>
