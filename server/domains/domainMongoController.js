@@ -59,12 +59,6 @@ let getAllDomain = function() {
        reject(err);
      }
 
-     if (domainColln.length===0) {
-       reject({
-         error: "NO domain object while retriving all the domains from mongo..!"
-       });
-     }
-
      logger.debug('**************',domainColln);
      resolve(domainColln);
    });

@@ -35,7 +35,7 @@ export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		// this.enableButton = this.enableButton.bind(this);
-		this.state = {domainList: [],canSubmit:false,errmsg:'',loading:"loading",pageNum:1};
+		this.state = {domainList: [],canSubmit:false,errmsg:'',loading:'loading',pageNum:1};
 				 //this.addDomain = this.addDomain.bind(this);
 			   //this.colour = this.colour.bind(this);
 			}
@@ -73,13 +73,20 @@ export default class Dashboard extends React.Component {
 				.end((err, res) => {
 					if(err) {
 				//res.send(err);
-				this.setState({errmsg: res.body});
+				this.setState({errmsg: res.body,loading:"hide"});
 			}
+
 			else {
-				console.log("Response on show: ", JSON.parse(res.text));
+				console.log("Response on show: ", JSON.parse(res.text).length);
 				//let domainList1=this.state.domainList;
 				let response=JSON.parse(res.text);
-				this.setState({domainList:response,loading:"hide"});
+        if(response.length==0)
+        {
+        this.setState({domainList:[],loading:'hide'});
+        }
+        else {
+        this.setState({domainList:response,loading:'hide'});
+        }
 			}
 		});
 			}
@@ -125,7 +132,10 @@ export default class Dashboard extends React.Component {
 				let list=[];
 				let prevFlag=false;
 				let nextFlag=false;
-				let pages=Math.ceil(this.state.domainList.length/6);
+        let dList=this.state.domainList;
+        if(dList.length>0)
+        {
+				let pages=Math.ceil(dList.length/6);
 				let pageNow=this.state.pageNum;
 				if(pages===pageNow)
 				{
@@ -151,6 +161,7 @@ export default class Dashboard extends React.Component {
 						list.push(this.state.domainList[i]);
 					}
 				}
+      }
 				return (
 					<div style={fonts}>
 					<h1 >Our Domains</h1>
@@ -167,7 +178,7 @@ export default class Dashboard extends React.Component {
 						<Container>
 						{list.map((item,i) =>{
 							return (<Col lg={4} md={4} key={i}>
-								<DomainShow freshlyIndex={this.freshlyIndex.bind(this)} 
+								<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
 								index={i} key={i} indexs={i} ref="show" item={item}/>
 								</Col>);
 						})}
@@ -175,7 +186,7 @@ export default class Dashboard extends React.Component {
 						<Container>
 						<RaisedButton label="prev" disabled={prevFlag} data-id="prev"
 						style={paginationStyle1} onClick={this.onPageClick.bind(this)}/>
-						<RaisedButton label="next" disabled={nextFlag} data-id="next" 
+						<RaisedButton label="next" disabled={nextFlag} data-id="next"
 						style={paginationStyle2} onClick={this.onPageClick.bind(this)}/>
 						</Container>
 						</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
