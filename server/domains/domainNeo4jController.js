@@ -227,27 +227,40 @@ let getDomainCardDetails = function(domainObj) {
           //logger.debug("Result from neo4j: ", record);
           record._fields.forEach(function(fields){
             intent=fields.properties.name;
+            intents.push(intent);
             logger.debug(" domain intent ", fields.properties.name);
-            logger.debug("proceeding to fetch no of documents for each intent");
+
+          });
+        });
+
+          // fetching intents Completed!
+
+            logger.debug("proceeding to fetch no of documents");
             let query2 = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) MATCH (c:'
             +config.NEO4J_CONCEPT+') MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(d)<-[r:'
-            +config.NEO4J_CON_REL+']-(c) match(c)<-[r:'+config.NEO4J_DOC_REL+']-(w) RETURN w';
+            +config.NEO4J_CON_REL+']-(c) match(c)<-[r1:'+config.NEO4J_DOC_REL+']-(w) RETURN w';
             let params2 = {
               domainName: domainObj
             };
             let session2 = driver.session();
             session2.run(query2, params2)
             .then(function(results) {
+              if(results.records.length==0)
+              {
+              resolve({concepts:concepts,intents:intents,docs:documents});
+              }
+              else
+              {
               results.records.forEach(function(records) {
-            //  logger.debug("Result from neo4j: ", record);
-            documents=0;
             records._fields.forEach(function(field){
-              logger.debug("document for "+intent+' is '+ field.properties.name);
-              documents+=1;
+              logger.debug('document is'+ field.properties.name);
+              documents++;
+              logger.debug('Number is ++++++++++++++++^^^^^##### '+documents);
             });
-
+          logger.debug('Number is  '+documents);
           });
-
+            resolve({concepts:concepts,intents:intents,docs:documents});
+        }
               session2.close();
 
             })
@@ -257,13 +270,7 @@ let getDomainCardDetails = function(domainObj) {
 
             //  reject(err);
           });
-            intents.push(intent);
 
-          });
-          resolve({concepts:concepts,intents:intents,docs:documents});
-        });
-
-          // fetching intents Completed!
           session1.close();
 
         })

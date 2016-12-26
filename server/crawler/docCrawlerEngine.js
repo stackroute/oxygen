@@ -1,12 +1,13 @@
 const logger = require('./../../applogger');
 const urlIndexing=require('./docCrawlerEngineController').urlIndexing;
+const config = require('./../../config');
 // const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
 const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function() {
- let amqpConn = amqp.connect('amqp://localhost');
+ let amqpConn = amqp.connect(config.RABBITMQ_URL);
 
  amqpConn
  .then(function(conn) {
@@ -23,7 +24,7 @@ const startCrawler = function() {
      chConn.assertQueue(crawlerMQName, { durable: false })
      .then(function(ok) {
        logger.debug("What is ok: ", ok);
-       logger.debug('[*] Waiting for messages on [' 
+       logger.debug('[*] Waiting for messages on ['
         + crawlerMQName + '], Reciever to exit press CTRL+C ');
 
        highland(function(push, next) {
