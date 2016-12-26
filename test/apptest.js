@@ -16,13 +16,13 @@ describe("Make GET requests to domain ", function() {
   console.log("hi");
   //it -> testcase
   it('Simple GET Request to root url', function(done) {
-    console.log("test run");
+    // console.log("test run");
     request.get('/').expect(200, done);
 
   });
 
   it('Testing for not defined route', function(done) {
-    console.log("test run 2");
+    // console.log("test run 2");
     request.get('/_undefined_route').expect(404, done);
     this.timeout(10000)
 
@@ -31,7 +31,7 @@ describe("Make GET requests to domain ", function() {
 
 describe("Make GET requests to domain ", function() {
   it('Testing for all domains', function(done) {
-    console.log("test run 3");
+    // console.log("test run 3");
     request.get('/domain').
     expect('Content-Type', 'application/json; charset=utf-8', done);
   });
@@ -40,7 +40,7 @@ describe("Make GET requests to domain ", function() {
 
 describe("Make GET requests to domain along with domain name ", function() {
   it('Testing for a domain which is not present', function(done) {
-    console.log("test run 4");
+    // console.log("test run 4");
     request.get('/domain/java').
     expect({ error: 'Null domain object while retriving the domain from mongo..!' }, done);
     this.timeout(10000);
@@ -74,7 +74,7 @@ describe("Make GET requests to docSearchJob ", function() {
   console.log("inside docSearchJob");
   //it -> testcase
   it('Simple GET Request to root url', function(done) {
-    console.log("test run");
+    // console.log("test run");
     request.get('/').expect(200, done);
   });
 });
@@ -82,7 +82,7 @@ describe("Make GET requests to docSearchJob ", function() {
 
 describe("Make POST request to add jobs ", function() {
   it('Simple POST request test for adding job', function(done) {
-    console.log("test run");
+    // console.log("test run");
     request.post('/docsearchjob/job')
       .send({
         query: "react",
@@ -100,19 +100,19 @@ describe("Make POST request to add jobs ", function() {
 
 describe("Make GET request to show the results ", function() {
   it('Simple GET request test for viewing all the results', function(done) {
-    console.log("test run");
+    // console.log("test run");
     request.get('/docsearchjob/show')
       .end(function(err, res) {
         expect('Content-Type', 'application/json; charset=utf-8', done);
         done();
+        this.timeout(10000);
       });
   });
-
 });
 
 describe("Make GET request to show the results ", function() {
   it('Simple GET request test for viewing the results for a particular job id', function(done) {
-    console.log("test run");
+    // console.log("test run");
     request.get('/docsearchjob/585cb4cf0384402018145166')
       .end(function(err, res) {
         expect('Content-Type', 'application/json; charset=utf-8', done);
@@ -122,7 +122,7 @@ describe("Make GET request to show the results ", function() {
       });
   });
   it('Simple GET request test for viewing the results for a wrong job id', function(done) {
-    console.log("test run");
+    // console.log("test run");
     request.get('/docsearchjob/rr585cb4cf0384402018145166')
       .end(function(err, res) {
         expect({
@@ -134,6 +134,19 @@ describe("Make GET request to show the results ", function() {
       });
   });
 
+});
+
+describe("Make DELETE request to delete the results ", function() {
+  it('Simple DELETE request TO delete the results for a particular job id', function(done) {
+    console.log("test run");
+    request.get('/docsearchjob/585cb4cf0384402018145166')
+      .end(function(err, res) {
+        expect('Content-Type', 'application/json; charset=utf-8', done);
+        done();
+        this.timeout(10000);
+
+      });
+  });
 });
 
 
