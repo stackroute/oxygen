@@ -1,12 +1,13 @@
 const logger = require('./../../applogger');
 const intentParser=require('./docIntentParserController').intentParser;
+const config = require('./../../config');
 // const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
 const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startIntentParser = function() {
- let amqpConn = amqp.connect('amqp://localhost');
+ let amqpConn = amqp.connect(config.RABBITMQ_URL);
 
  amqpConn
  .then(function(conn) {

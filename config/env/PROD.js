@@ -1,6 +1,7 @@
 const masterMongoDBName = process.env.APP_DB || 'oxygen';
 
 const mongo = {
+
 	host: process.env.MONGO_HOST || '127.0.0.1',
 	port: process.env.MONGO_PORT || 27017
 };
@@ -10,20 +11,21 @@ const redis = {
 	port : process.env.REDIS_PORT || 6379
 }
 
-// const rabbitmq = {
-// 	host: process.env.RABBITMQ_HOST || '127.0.0.1',
-// 	port: process.env.RABBITMQ_PORT || 5672
-// };
+const rabbitmq = {
+	host: process.env.RABBITMQ_HOST || '127.0.0.1',
+	port: process.env.RABBITMQ_PORT || 5672
+};
 
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
 	masterMongoDBName);
 
-const neo4jURL=('bolt://localhost');
 
+const neo4jURL = ('bolt://localhost');
 
-// const rabbitmqURL = ('rabbitmq://' + rabbitmq.host + ':' + rabbitmq.port);
+const rabbitmqURL = ('amqp://' + rabbitmq.host + ':' + rabbitmq.port);
 
 module.exports = {
+
 	WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
 	MONGO_MASTER_DB_NAME: masterMongoDBName,
 	MONGO_MASTER_SERVER: mongo,
@@ -32,16 +34,17 @@ module.exports = {
 	NEO4J_BOLT_URL: neo4jURL,
 	NEO4J_USR: 'neo4j',
 	NEO4J_PWD: 'password',
-	NEO4J_DOMAIN:'Domain',
-	NEO4J_TERM:'Term',
-	NEO4J_INTENT:'Intent',
-	NEO4J_WEBDOCUMENT:'WebDocument',
-	NEO4J_CONCEPT:'Concept',
-	NEO4J_DOC_REL:'HasExplanationOf',
-	NEO4J_INT_REL:'IntentOf',
-	NEO4J_CON_REL:'ConceptOf',
-	NEO4J_IND_REL:'IndicatorOf',
-	NEO4J_CIND_REL:'CounterIndicatorOf',
+	NEO4J_DOMAIN: 'Domain',
+	NEO4J_TERM: 'Term',
+	NEO4J_INTENT: 'Intent',
+	NEO4J_WEBDOCUMENT: 'WebDocument',
+	NEO4J_CONCEPT: 'Concept',
+	NEO4J_DOC_REL: 'HasExplanationOf',
+	NEO4J_INT_REL: 'IntentOf',
+	NEO4J_CON_REL: 'ConceptOf',
+	NEO4J_IND_REL: 'IndicatorOf',
+	NEO4J_CIND_REL: 'CounterIndicatorOf',
+	RABBITMQ_URL: rabbitmqURL,
 	ENGINES:[
 	'009216953448521283757:ibz3hdutpom',
 	'015901048907159908775:bu8jkb0g1c0',

@@ -97,6 +97,7 @@
     "mocha": "^3.1.2",
     "request": "^2.79.0",
     "style-loader": "^0.13.1",
+    "supertest": "^2.0.1",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2",
     "webpack-hot-middleware": "^2.13.2"

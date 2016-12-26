@@ -1,11 +1,11 @@
 const logger = require('./../../applogger');
-
+const config = require('./../../config');
 //const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startSearcher = function(urlDataObjId) {
- let amqpConn = amqp.connect('amqp://localhost');
+ let amqpConn = amqp.connect(config.RABBITMQ_URL);
 
  amqpConn
  .then(function(conn) {

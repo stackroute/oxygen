@@ -1,12 +1,13 @@
 const logger = require('./../../applogger');
 const storeURL=require('./searchController').storeURL;
+const config = require('./../../config');
 // const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
 const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startSearcher = function() {
- let amqpConn = amqp.connect('amqp://localhost');
+ let amqpConn = amqp.connect(config.RABBITMQ_URL);
 
  amqpConn
  .then(function(conn) {
@@ -49,8 +50,9 @@ const startSearcher = function() {
        });
        }); //end of assertQueue
    }); //end of channelConnection
+
 }
 
 module.exports = {
- startSearcher: startSearcher
+  startSearcher: startSearcher
 };
