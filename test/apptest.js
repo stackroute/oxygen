@@ -33,7 +33,8 @@ describe("Make GET requests to domain ", function() {
   it('Testing for all domains', function(done) {
     // console.log("test run 3");
     request.get('/domain').
-    expect('Content-Type', 'application/json; charset=utf-8', done);
+    expect('[{"concepts":["Java"],"intents":["introduction"],"docs":0,"name":"Java","description":"No description","domainImgURL":"no url"},{"concepts":["full stack development"],"intents":["introduction"],"docs":0,"name":"full stack development","description":"description","domainImgURL":"http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg"}]', done);
+    this.timeout(10000);
   });
 });
 
@@ -60,7 +61,7 @@ describe("Make post requests to domain along with domain name ", function() {
       //   .expect(200, done)
       // this.timeout(10000)
       .end(function(err, res) {
-        expect(Object.keys(res.body)).to.have.lengthOf(5);
+        expect(Object.keys(res.body)).to.have.lengthOf(4);
         done();
         this.timeout(10000);
 
