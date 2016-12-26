@@ -1,6 +1,5 @@
 const highland = require('highland');
 const crawlerModules = require('./crawlerModules');
-const searchModel = require('../searcher/searchEntity').searchModel;
 const logger = require('./../../applogger');
 const request= require('request');
 const cheerio = require("cheerio");
@@ -10,70 +9,80 @@ require('events').EventEmitter.defaultMaxListeners = Infinity;
 const urlIndexing= function(data)
 {
   let processors = [];
-  data=JSON.parse(data);
-  processors.push(highland.map(function(data){
-    let processedInfo=crawlerModules.extractData(data)
+  processors.push(highland.map(function(dataToProcess){
+    let processedInfo=crawlerModules.extractData(dataToProcess)
     return processedInfo;
   }));
 
-  processors.push(highland.map(function(data){
-    let promise = crawlerModules.termsFinder(data);
+  processors.push(highland.map(function(dataToFindTerms){
+    let promise = crawlerModules.termsFinder(dataToFindTerms);
     return promise;
   }));
 
-  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
+  processors.push(highland.flatMap(
+    promise => highland(
+      promise.then(
+        function(result){ return result; },
+        function(err){ return err; }
+        ))));
 
-  processors.push(highland.map(function(data){
-    let processedInfo=crawlerModules.termDensity(data)
+  processors.push(highland.map(function(dataToGetTermDensity){
+    let processedInfo=crawlerModules.termDensity(dataToGetTermDensity)
     return processedInfo;
   }));
 
-  processors.push(highland.map(function(data){
-    let processedInfo=crawlerModules.interestedWords(data)
+  processors.push(highland.map(function(dataforIntrestedTerms){
+    let processedInfo=crawlerModules.interestedWords(dataforIntrestedTerms)
     return processedInfo;
   }));
 
-  processors.push(highland.map(function(data){
-    let promise=crawlerModules.indexUrl(data)
+  processors.push(highland.map(function(dataToIndexURL){
+    let promise=crawlerModules.indexUrl(dataToIndexURL)
     return promise
 
   }));
-  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
+  processors.push(highland.flatMap(
+    promise => highland(
+      promise.then(
+        function(result){ return result; }, 
+        function(err){ return err; }
+        ))));
 
-  processors.push(highland.map(function(data){
-    let promise=crawlerModules.saveWebDocument(data)
+  processors.push(highland.map(function(webDocument){
+    let promise=crawlerModules.saveWebDocument(webDocument)
     return promise
   }));
-  processors.push(highland.flatMap(promise => highland(promise.then(function(result){ return result; }, function(err){ return err; }))));
+  processors.push(highland.flatMap(
+    promise => highland(
+      promise.then(
+        function(result){ return result; },
+        function(err){ return err; }
+        ))));
 
-  processors.push(highland.map(function(data){
-    let processedInfo=crawlerModules.parseEachIntent(data)
+  processors.push(highland.map(function(dataForParseIntents){
+    let processedInfo=crawlerModules.parseEachIntent(dataForParseIntents)
     return processedInfo;
   }));
-
-  const url = {
-    _id: data.url
-  };
-
+  let dataObj=JSON.parse(data);
   let text;
-  request.get(data.url, function (error, response, body) {
+  request.get(dataObj.url, function (error, response, body) {
     let page = cheerio.load(body);
 
     text = page("body").text();
     text = text.replace(/\s+/g, " ")
     .replace(/[^a-zA-Z ]/g, "")
     .toLowerCase();
-    logger.debug("created texts for "+data.url)
-    data.text=text;
+    logger.debug("created texts for "+dataObj.url)
+    dataObj.text=text;
     let dataArr=[];
-    dataArr.push(data);
+    dataArr.push(dataObj);
     highland(dataArr)
     .pipe( highland.pipeline.apply(null, processors))
     .each(function(res){
-      logger.debug("At consupmtion Intent : "+data.intent);
+      logger.debug("At consupmtion Intent : "+dataObj.intent);
       logger.debug(res);
-      startIntentParser(data);
-});
+      startIntentParser(dataObj);
+    });
 
   });
 

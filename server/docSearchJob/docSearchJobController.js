@@ -1,12 +1,10 @@
 'use strict';
-
 const logger = require('./../../applogger');
 const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
 const engineModel = require('./docSearchJobEntity').engineModel;
 const searchModel = require('./../searcher/searchEntity').searchModel;
-const amqp = require('amqplib/callback_api');
 const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
-
+const config = require('./../../config');
 const addJob = function(jobData, callback) {
 	console.log(jobData)
 	let job=new docSearchJobModel(jobData);
@@ -31,17 +29,17 @@ const addSearchJob = function(domainName,concept) {
 		engineColl.forEach(function(engineData){
 			let JobData={
 				query:concept,
-				engineID:engineData.engine[1]+" "+engineData.key[1],
+				engineID:engineData.engine[1]+" "+engineData.key[2],
 				exactTerms:domainName,
-				results:10,
+				results:config.NO_OF_RESULTS,
 				siteSearch:'NONE'
 			}
 			let job=new docSearchJobModel(JobData);
-			job.save(function(err,data) {
-				if (err) {
+			job.save(function(errorOnSave,data) {
+				if (errorOnSave) {
 					logger.error(
 						"Encountered error at doSearchJobController::addJob, error: ",
-						err);
+						errorOnSave);
 				}
 				console.log("saved job "+data);
 				let id=data._id;

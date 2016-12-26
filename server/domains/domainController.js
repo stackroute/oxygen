@@ -9,82 +9,45 @@ const async = require('async');
 
 const DOMAIN_NAME_MIN_LENGTH = 3;
 
-let publishNewDomain = function(newDomainObj) {
-  logger.debug('Received request for saving new domain: ', newDomainObj);
+
+let fetchDomainCardDetails = function(domain) {
+  logger.debug("Received request for retriving domain details ", domain);
   //Save to Mongo DB
   //Save to Neo4j
 
   let promise = new Promise(function(resolve, reject) {
-    if (!newDomainObj.name ||
-      newDomainObj.name.length <= DOMAIN_NAME_MIN_LENGTH) {
+
+
+    if (!domain ||
+      domain.length <= DOMAIN_NAME_MIN_LENGTH) {
       reject({
-        error: 'Invalid domain name..!'
+        error: "Invalid domain name..!"
       });
   }
 
-  async.waterfall([function(callback) {
-    domainMongoController.saveNewDomainCallBack(newDomainObj,
-      callback);
-  },
-  function(savedDomainObj, callback) {
-    domainNeo4jController.indexNewDomainCallBack(savedDomainObj,
-      callback)
-  }
-  ],
-  function(err, indexedDomainObj) {
-    if (err) {
-      reject(err);
+  async.waterfall([
+    function(callback) {
+      logger.debug("inside the waterfall "+domain)
+      domainNeo4jController.getDomainCardDetailsCallback(domain,
+        callback);
     }
-    if (indexedDomainObj) {
-          //Kick off indexing in off-line, so the API request is not blocked till indexing is complete, as it may take long time to complete
-
-
-          indexPublishedDomain(indexedDomainObj.name).then(
-            function(domainObj) {
-             logger.debug("going to fetch domain card details: ",
-               domainObj);
-             fetchDomainCardDetails(domainObj)
-             .then(function(domainObj) {
-               logger.debug("Successfully fetched domain card details: ",
-                 domainObj);
-               domainObj['name']= indexedDomainObj.name;
-               domainObj['description']= indexedDomainObj.description;
-               domainObj['domainImgURL']= indexedDomainObj.domainImgURL;
-               logger.debug("!!!!!!!!!!!!^^^^^^^^^^^going to UI ",domainObj);
-               resolve(domainObj);
-               return;
-             },
-             function(err) {
-               logger.error("Encountered error in fetching domain card details: ",
-                 err);
-               reject(err);
-               return;
-             });
-
-           })
-          .catch(
-            function(reason) {
-              console.log('Handle rejected promise ('+reason+') here.');
-              reject(indexedDomainObj)
-            });
-
-
-
-        } else {
-          reject({
-            error: 'Null indexed object was returned..!'
-          });
-        }
+    ],
+    function(err, domainObjDetails) {
+      if (err) {
+        reject(err);
+      }
+      resolve(domainObjDetails);
       }); //end of async.waterfall
 });
 
   return promise;
 }
 
+
 // This should be private and not exposed
 let indexPublishedDomain = function(domainName) {
   //process.nextTick(function() {
-    var promise = new Promise(
+    let promise = new Promise(
       function(resolve, reject) {
         logger.debug('Off-line initialising New Domain ', domainName);
 
@@ -112,8 +75,8 @@ let indexPublishedDomain = function(domainName) {
               statusText =
               'Error in off-line indexing process of newly published Domain ' +
               domainName + ' err: ' + JSON.stringify(err);
-
               logger.error(statusText);
+              reject(err);
             } else {
               status = 'ready';
               statusText = 'Done indexing newly published domain ' +
@@ -144,24 +107,97 @@ let indexPublishedDomain = function(domainName) {
                     statusText);
                   return;
                 }
-
+                if(updErr){
+                  reject(updErr);
+                }
                 logger.debug(
                   'Done updating domain with Indexing Status for domain ',
                   domainName, ' with status ',
                   status);
-
           }); //end of updateDomainStatus
-
-
           });
-
-
       });
     return promise;
   }
 
-  let getDomain = function(domainName) {
-    logger.debug("Received request for retriving Concept(s) in domain: ", domainName);
+  let publishNewDomain = function(newDomainObj) {
+    logger.debug('Received request for saving new domain: ', newDomainObj);
+  //Save to Mongo DB
+  //Save to Neo4j
+
+  let promise = new Promise(function(resolve, reject) {
+    if (!newDomainObj.name ||
+      newDomainObj.name.length <= DOMAIN_NAME_MIN_LENGTH) {
+      reject({
+        error: 'Invalid domain name..!'
+      });
+  }
+
+  async.waterfall([function(callback) {
+    domainMongoController.saveNewDomainCallBack(newDomainObj,
+      callback);
+  },
+  function(savedDomainObj, callback) {
+    domainNeo4jController.indexNewDomainCallBack(savedDomainObj,
+      callback)
+  }
+  ],
+  function(err, indexedDomainObj) {
+    if (err) {
+      reject(err);
+    }
+    if (indexedDomainObj) {
+          //Kick off indexing in off-line, 
+          //so the API request is not blocked till indexing is complete,
+          // as it may take long time to complete
+
+
+          indexPublishedDomain(indexedDomainObj.name).then(
+            function(domainObj) {
+             logger.debug("going to fetch domain card details: ",
+               domainObj);
+             fetchDomainCardDetails(domainObj)
+             .then(function(domainObjRes) {
+               logger.debug("Successfully fetched domain card details: ",
+                 domainObjRes);
+               domainObjRes.name= indexedDomainObj.name;
+               domainObjRes.description= indexedDomainObj.description;
+               domainObjRes.domainImgURL= indexedDomainObj.domainImgURL;
+               logger.debug("going to UI ",domainObjRes);
+               resolve(domainObjRes);
+               return;
+             },
+             function(fetchErr) {
+               logger.error("Encountered error in fetching domain card details: ",
+                 fetchErr);
+               reject(fetchErr);
+               return;
+             });
+
+           })
+          .catch(
+            function(reason) {
+              console.log('Handle rejected promise ('+reason+') here.');
+              reject(indexedDomainObj)
+            });
+
+
+
+        } else {
+          reject({
+            error: 'Null indexed object was returned..!'
+          });
+        }
+      }); //end of async.waterfall
+});
+
+  return promise;
+}
+
+
+
+let getDomain = function(domainName) {
+  logger.debug("Received request for retriving Concept(s) in domain: ", domainName);
   //Save to Mongo DB
   //Save to Neo4j
 
@@ -201,13 +237,78 @@ let indexPublishedDomain = function(domainName) {
 
 
 
-let fetchDomainCardDetails = function(domain) {
-  logger.debug("Received request for retriving domain details ", domain);
-  //Save to Mongo DB
-  //Save to Neo4j
+
+let getAllDomainDetails = function() {
+ logger.debug("Received request for retriving Concept(s) of all domain: ");
+ //Save to Mongo DB
+ //Save to Neo4j
+
+ let promise = new Promise(function(resolve, reject) {
+  let cardDetailsObj=[];
+  async.waterfall([function(callback) {
+   domainMongoController.getAllDomainsCallback(callback);
+ },
+ function(domainDetailedColln,callback) {
+   if(!domainDetailedColln)
+   {
+    callback(null,cardDetailsObj);
+  }
+  else{
+   for(let item in domainDetailedColln)
+   {
+    if (Object.prototype.hasOwnProperty.call(domainDetailedColln, item)) {
+      logger.debug("returned from mongo ",domainDetailedColln.length);
+      let domain=domainDetailedColln[item];
+      fetchDomainCardDetails(domain.name)
+      .then(function(domainObj) {
+       logger.debug("Successfully fetched domain card details from mongo: ",
+         domainObj);
+       domainObj.name= domain.name;
+       domainObj.description= domain.description;
+       domainObj.domainImgURL= domain.domainImgURL;
+       cardDetailsObj.push(domainObj)
+       logger.debug("after each pushing",cardDetailsObj);
+       if(cardDetailsObj.length===domainDetailedColln.length)
+       {
+        callback(null,cardDetailsObj);
+      }
+    },
+    function(err) {
+     logger.error("Encountered error in fetching domain card details: ",
+       err);
+     reject(err);
+     return;
+   });
+    }    
+  }
+  logger.debug("pushing ended",cardDetailsObj);
+}
+}
+],
+function(err, finalCardDetailsObj) {
+  logger.debug("inside callback",finalCardDetailsObj.length);
+  if (err) {
+   reject(err);
+ }
+ if (finalCardDetailsObj) {
+   logger.debug(" now sending back",finalCardDetailsObj);
+   resolve(finalCardDetailsObj);
+ }
+ else {
+   reject({
+     error: 'all domains not fetched!'
+   });
+ }
+}
+); //end of async.waterfall
+});
+ return promise;
+}
+
+let freshlyIndexDomain = function(domain) {
+  logger.debug("Received request for freshly indexing a domain ", domain);
 
   let promise = new Promise(function(resolve, reject) {
-
 
     if (!domain ||
       domain.length <= DOMAIN_NAME_MIN_LENGTH) {
@@ -218,8 +319,8 @@ let fetchDomainCardDetails = function(domain) {
 
   async.waterfall([
     function(callback) {
-      logger.debug("inside the waterfall "+domain)
-      domainNeo4jController.getDomainCardDetailsCallback(domain,
+      logger.debug("inside the waterfall for freshly indexing"+domain)
+      domainMgr.buildDomainIndexCallBack(domain,
         callback);
     }
     ],
@@ -238,5 +339,7 @@ let fetchDomainCardDetails = function(domain) {
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain,
-  fetchDomainCardDetails:fetchDomainCardDetails
+  fetchDomainCardDetails:fetchDomainCardDetails,
+  getAllDomainDetails:getAllDomainDetails,
+  freshlyIndexDomain:freshlyIndexDomain
 }

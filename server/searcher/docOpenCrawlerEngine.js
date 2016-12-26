@@ -1,9 +1,5 @@
 const logger = require('./../../applogger');
-
-//const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
-const highland = require('highland');
-
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function(urlDataObj) {
 
@@ -21,7 +17,6 @@ const startCrawler = function(urlDataObj) {
 
      //@TODO take the crawler MQ name from Config
      let crawlerMQName = 'crawler';
-     let arr=[]
      //making durable as false, so that .....
      chConn.assertQueue(crawlerMQName, { durable: false })
      .then(function(ok) {

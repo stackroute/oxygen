@@ -1,4 +1,4 @@
-var parserNeo4jCtrl=require('./docIntentParserNeo4jController');
+const parserNeo4jCtrl=require('./docIntentParserNeo4jController');
 
 const logger = require('./../../applogger');
 
@@ -35,25 +35,25 @@ let fetchIntentSpecificTerms=function(data){
 
 let findIntentIntensity=function(data){
 
-  logger.debug("All the Terms "+  data.terms);
+  logger.debug("All the Terms "+data.terms);
 
   let indicator=0;
   let counter=0;
 
 //check for alll trems indicator and counterIndicator
- data.terms.forEach(function(term) {
-logger.debug("The prop "+ term.word);
- for (let counterItr in data.counterIndicatorTerms) {
+data.terms.forEach(function(term) {
+  logger.debug("The prop "+ term.word);
+  for (let counterItr in data.counterIndicatorTerms) {
 
-    if(term.word==data.counterIndicatorTerms[counterItr])
+    if(term.word===data.counterIndicatorTerms[counterItr])
     {
       counter+=term.intensity;
     }
   }
 
- for (let indicatorItr in data.counterIndicatorTerms)
+  for (let indicatorItr in data.counterIndicatorTerms)
   {
-    if(term.word==data.indicatorTerms[indicatorItr])
+    if(term.word===data.indicatorTerms[indicatorItr])
     {
       indicator+=term.intensity;
     }

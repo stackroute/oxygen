@@ -6,8 +6,6 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Container, Row, Col} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
-import MenuItem from 'material-ui/MenuItem';
-import FormsySelect from 'formsy-material-ui/lib/FormsySelect';
 
 const style = {
   position:"fixed",
@@ -21,14 +19,8 @@ const tfont={
 const Label={paddingLeft:"30px",paddingTop:"20px",fontWeight:"bold"};
 
 const errorMessages= {
-  wordsError: "Please only use letters",
-  numberError: "Please enter less than 100"
+  wordsError: "Please only use letters"
 } ;
-const customContentStyle = {
-  width: '100%',
-  height: '100%',
-  maxWidth: 'none'
-};
 
 export default class AddDomain extends React.Component {
 
@@ -48,7 +40,7 @@ export default class AddDomain extends React.Component {
     let domain = {
       name: this.state.subject,
       description:this.state.description,
-      domainImgURL:'./../../assets/images/soon.png',
+      domainImgURL:'./../../assets/images/soon.png'
     };
     this.refs.form.reset();
     this.setState({domain:domain})
@@ -93,7 +85,7 @@ export default class AddDomain extends React.Component {
     label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
-    let { wordsError, numberError,UrlError} = errorMessages;
+    let {wordsError} = errorMessages;
     return (
       <div>
       <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
@@ -122,6 +114,7 @@ export default class AddDomain extends React.Component {
       name="domain"
       validations="isWords"
       validationError={wordsError}
+      fullWidth={true}
       updateImmediately
       required
       hintText="value"
@@ -133,7 +126,6 @@ export default class AddDomain extends React.Component {
       <Col lg={9}><FormsyText
       type="textarea"
       name="description"
-      validations="isWords"
       validationError={wordsError}
       updateImmediately
       required
@@ -149,4 +141,7 @@ export default class AddDomain extends React.Component {
       </div>
       );
   }
+}
+AddDomain.propTypes = {
+  addDomain: React.PropTypes.func
 }

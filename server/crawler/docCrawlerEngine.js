@@ -6,6 +6,7 @@ const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function() {
+
   let amqpConn = amqp.connect('amqp://localhost');
 
   amqpConn

@@ -23,16 +23,16 @@ let initialiseDomainOntology = function(domainName) {
     logger.debug('[*] [domainManager] obtained neo4j connection ');
 
     let query = '';
-    query += 'MATCH (d:Domain {name:{domainName}}) ';
+    query += 'MATCH (d:'+config.NEO4J_DOMAIN+' {name:{domainName}}) ';
     query += 'WITH d ';
-    query += 'MERGE (c:Concept {name:{conceptName}}) ';
-    query += 'MERGE (i:Intent {name:{intentName}}) ';
-    query += 'MERGE (ti:Term {name:{indicatorTerm}}) ';
-    query += 'MERGE (cti:Term {name:{counterIndicatorTerm}}) ';
-    query += 'MERGE (c)-[cr:ConceptOf]->(d) ';
-    query += 'MERGE (i)-[ir:IntentOf]->(d) ';
-    query += 'MERGE (ti)-[tir:IndicatorOf]->(i) ';
-    query += 'MERGE (cti)-[ctir:CounterIndicatorOf]->(i) ';
+    query += 'MERGE (c:'+config.NEO4J_CONCEPT+' {name:{conceptName}}) ';
+    query += 'MERGE (i:'+config.NEO4J_INTENT+' {name:{intentName}}) ';
+    query += 'MERGE (ti:'+config.NEO4J_TERM+' {name:{indicatorTerm}}) ';
+    query += 'MERGE (cti:'+config.NEO4J_TERM+'{name:{counterIndicatorTerm}}) ';
+    query += 'MERGE (c)-[cr:'+config.NEO4J_CON_REL+']->(d) ';
+    query += 'MERGE (i)-[ir:'+config.NEO4J_INT_REL+']->(d) ';
+    query += 'MERGE (ti)-[tir:'+config.NEO4J_IND_REL+']->(i) ';
+    query += 'MERGE (cti)-[ctir:'+config.NEO4J_CIND_REL+']->(i) ';
     query += 'return c,i,d,ti,cti,cr,ir,tir,ctir';
 
     const defaultConceptName = domainName;
@@ -42,7 +42,7 @@ let initialiseDomainOntology = function(domainName) {
 
     let params = {
       domainName: domainName,
-      conceptName: domainName,
+      conceptName: defaultConceptName,
       intentName: defaultIntentName,
       indicatorTerm: defaultIndicatorTerm,
       counterIndicatorTerm: defaultCounterIndicatorTerm
@@ -79,11 +79,11 @@ let buildDomainIndex = function(domainName) {
    // Fetch all domain concepts and intents
    domainNeo4jController.getDomainConcept(domainName)
    .then(function(conceptsColln) {
-    logger.debug('@@ OVER++++++++++++++++++++++');
-     resolve(conceptsColln);
+    resolve(conceptsColln);
     docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
     .then(function(result) {
-        resolve(conceptsColln);
+      logger.debug(result)
+      resolve(conceptsColln);
     }, function(err) {
       reject(err);
     });

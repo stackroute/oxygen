@@ -6,49 +6,23 @@ import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
 
 const style = {
-  height: 80,
-  width: 750,
+  maxHeight: 80,
+  maxWidth: 750,
   marginLeft:"auto",
   marginRight:"auto",
   marginTop: 5,
   align:"center",
- // marginRight:20,
- textAlign: 'center',
-  //display: 'inline-block',
+  textAlign: 'center'
 };
 
-const fruit = [
-'Apple', 'Apricot', 'Avocado',
-'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry',
-'Boysenberry', 'Blood Orange',
-'Cantaloupe', 'Currant', 'Cherry', 'Cherimoya', 'Cloudberry',
-'Coconut', 'Cranberry', 'Clementine',
-'Damson', 'Date', 'Dragonfruit', 'Durian',
-'Elderberry',
-'Feijoa', 'Fig',
-'Goji berry', 'Gooseberry', 'Grape', 'Grapefruit', 'Guava',
-'Honeydew', 'Huckleberry',
-'Jabouticaba', 'Jackfruit', 'Jambul', 'Jujube', 'Juniper berry',
-'Kiwi fruit', 'Kumquat',
-'Lemon', 'Lime', 'Loquat', 'Lychee',
-'Nectarine',
-'Mango', 'Marion berry', 'Melon', 'Miracle fruit', 'Mulberry', 'Mandarine',
-'Olive', 'Orange',
-'Papaya', 'Passionfruit', 'Peach', 'Pear', 'Persimmon', 'Physalis', 'Plum', 'Pineapple',
-'Pumpkin', 'Pomegranate', 'Pomelo', 'Purple Mangosteen',
-'Quince',
-'Raspberry', 'Raisin', 'Rambutan', 'Redcurrant',
-'Salal berry', 'Satsuma', 'Star fruit', 'Strawberry', 'Squash', 'Salmonberry',
-'Tamarillo', 'Tamarind', 'Tomato', 'Tangerine',
-'Ugli fruit',
-'Watermelon',
-];
+
 
 export default class AutoCompleteSearchBox extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
+
   }
+  
   render()
   {
     return(
@@ -59,13 +33,19 @@ export default class AutoCompleteSearchBox extends React.Component {
       filter={AutoComplete.fuzzyFilter}
       dataSource={this.props.concepts}
       style={{width:"-10px"}}
+      onNewRequest={this.props.getConcept}
       textFieldStyle={{width:"680px"}}
       listStyle={{width:"680px"}}
       maxSearchResults={5}
       />
-      <IconButton><ActionSearch /></IconButton>
+      <IconButton onClick={this.props.searchDocument}><ActionSearch /></IconButton>
       </Paper>
       </div>
       )
   }
+}
+AutoCompleteSearchBox.propTypes = {
+  searchDocument: React.PropTypes.func,
+  getConcept: React.PropTypes.func,
+  concepts: React.PropTypes.arrayOf(React.PropTypes.string)
 }

@@ -8,9 +8,9 @@ export default class Oxygen extends React.Component {
   render()
   {
     return(
-      <div>
-      <Link to="/welcome" style={{outline:0,marginLeft: 390,border:"none",borderColor:"white"}}>
-      <img src='./../assets/images/oxygen.jpg' style={{width: 800, height: 680,margin:0}} />
+      <div style={{width:"650px",margin:"auto"}}>
+      <Link to="/welcome" style={{outline:0,border:"none"}}>
+      <img src='./../assets/images/oxy.png' style={{width: 650, height:"auto"}} />
       </Link>
       </div>
       );
