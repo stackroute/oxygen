@@ -6,7 +6,9 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Container, Row, Col} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
-
+const defaultImgURL='http://corevitality.com/'+
+'wp-content/uploads/2015/08/27114989-Coming-soon-blue'+
+'-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
 const style = {
   position:"fixed",
   bottom: "5%",
@@ -32,18 +34,29 @@ export default class AddDomain extends React.Component {
     this.state={domain:{},
     canSubmit:false,
     open: false,
-    subject:"",
-    description:""}
+    subject:'',
+    description:'',
+    imageUrl:defaultImgURL
   }
-  handleSubmit() {
-    console.log('on calling handle sumbit while adding domain');
-    let domain = {
-      name: this.state.subject,
-      description:this.state.description,
-      domainImgURL:'./../../assets/images/soon.png'
+}
+handleSubmit() {
+  console.log('on calling handle sumbit while adding domain');
+  console.log(this.state.imageUrl)
+  console.log('going to ADD '+this.state.imageUrl);
+  let domain = {
+    name: this.state.subject,
+    description:this.state.description,
+    domainImgURL:this.state.imageUrl
+      //domainImgURL:'./../../assets/images/soon.png',
     };
+    if(domain.domainImgURL===""|| domain.domainImgURL.length<=5)
+    {
+      domain.domainImgURL=defaultImgURL;
+    }
     this.refs.form.reset();
     this.setState({domain:domain})
+    this.setState(
+      {imageUrl:defaultImgURL})
     console.log(domain);
     this.props.addDomain(domain);
   }
@@ -57,7 +70,18 @@ export default class AddDomain extends React.Component {
     this.setState({description:e.target.value})
     console.log(this.state.description);
   }
-
+  onChangeImageUrl(e)
+  {
+    this.setState({imageUrl:e.target.value})
+    if(this.state.imageUrl==='')
+    {
+      this.setState(
+        {imageUrl:'http://corevitality.com/'+
+        'wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-'+
+        'isolated-seal-Stock-Photo.jpg'})
+    }
+    console.log(this.state.imageUrl);
+  }
 
   handleOpen = () => {
     this.setState({open: true});
@@ -134,6 +158,17 @@ export default class AddDomain extends React.Component {
       fullWidth={true} onChange={this.onChangeDescription.bind(this)}/></Col>
       </Row>
 
+      <Row>
+      <Col lg={3} style={Label}>IMAGE URL</Col>
+      <Col lg={9}><FormsyText
+      type="textarea"
+      name="imageUrl"
+      validationError={wordsError}
+      updateImmediately
+      hintText="value"
+      style={tfont}
+      fullWidth={true} onChange={this.onChangeImageUrl.bind(this)}/></Col>
+      </Row>
 
       </Formsy.Form>
       </Container>

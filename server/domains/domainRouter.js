@@ -116,4 +116,35 @@ router.post('/:domainName/index', function(req, res) {
     }
 });
 
+//get web Documents
+router.post('/documents/:domainName', function(req, res) {
+  logger.debug("got request for retriving web documents ",req.body);
+  logger.debug("Domin name ",req.body.domainName);
+  //res.send('success');
+ try {
+
+  let domainObj = req.body;
+  domainCtrl.fetchWebDocuments(domainObj).then(function(webDocuments) {
+    logger.info("Successfully retrived all concepts and intents of a domain : ");
+    logger.debug(webDocuments)
+    res.send(webDocuments);
+    return;
+  },
+  function(err) {
+    logger.error("Encountered error in retrived concept(s) of domain: ",
+      err);
+    res.send(err);
+    return;
+  })
+
+} catch (err) {
+  logger.error("Caught a error in retrived concept(s) of domain ", err);
+  res.status(500).send({
+    error: "Something went wrong, please try later..!"
+  });
+  return;
+}
+
+});
+
 module.exports = router;

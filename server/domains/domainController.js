@@ -147,7 +147,7 @@ let indexPublishedDomain = function(domainName) {
       reject(err);
     }
     if (indexedDomainObj) {
-          //Kick off indexing in off-line, 
+          //Kick off indexing in off-line,
           //so the API request is not blocked till indexing is complete,
           // as it may take long time to complete
 
@@ -279,7 +279,7 @@ let getAllDomainDetails = function() {
      reject(err);
      return;
    });
-    }    
+    }
   }
   logger.debug("pushing ended",cardDetailsObj);
 }
@@ -335,11 +335,42 @@ let freshlyIndexDomain = function(domain) {
   return promise;
 }
 
+let fetchWebDocuments = function(domainObj) {
+  logger.debug("Received request for fetching Webdocuments ", domainObj);
+
+  let promise = new Promise(function(resolve, reject) {
+
+    if (!domainObj ||
+      domainObj.length <= DOMAIN_NAME_MIN_LENGTH) {
+      reject({
+        error: "Invalid domain name..!"
+      });
+  }
+
+  async.waterfall([
+    function(callback) {
+      logger.debug("inside the waterfall for fetching web docs"+domainObj)
+      domainNeo4jController.getWebDocumentsCallback(domainObj,
+        callback);
+    }
+    ],
+    function(err, domainObjDetails) {
+      if (err) {
+        reject(err);
+      }
+      resolve(domainObjDetails);
+      }); //end of async.waterfall
+});
+
+  return promise;
+}
+
 
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain,
   fetchDomainCardDetails:fetchDomainCardDetails,
   getAllDomainDetails:getAllDomainDetails,
-  freshlyIndexDomain:freshlyIndexDomain
+  freshlyIndexDomain:freshlyIndexDomain,
+  fetchWebDocuments:fetchWebDocuments
 }

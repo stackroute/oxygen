@@ -53,7 +53,7 @@ let getAllDomainConcept = function(domainNameColln) {
 
     logger.debug("obtained connection with neo4j");
     let data=[];
-    
+
     domainNameColln.forEach(function(domainName){
 
       let query = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'
@@ -82,11 +82,11 @@ let getAllDomainConcept = function(domainNameColln) {
             {
               obj.noOfConcepts=field.low
             }
-          });   
+          });
           data.push(obj);
-        }); 
+        });
         if(data.length===domainNameColln.length){
-          resolve(data);    
+          resolve(data);
         }
       }).catch(function(err) {
         logger.error("Error in neo4j query: ", err, ' query is: ',
@@ -97,7 +97,7 @@ let getAllDomainConcept = function(domainNameColln) {
     })
 
    // resolve(data);
-   
+
  });
 
   return promise;
@@ -287,6 +287,49 @@ let getDomainCardDetails = function(domainObj) {
   return promise;
 }
 
+let getWebDocuments = function(domainObj) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to retrive "+
+      "the web Documents for domain name: ", domainObj.domainName);
+    let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
+      neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
+      );
+
+    let session = driver.session();
+
+    logger.debug("obtained connection with neo4j");
+
+    let query = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'+config.NEO4J_CONCEPT
+    +'{name:{conceptName}}) match(d)<-[r:'+config.NEO4J_CON_REL+
+    ']-(c) MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(c)<-[r1:'+
+    domainObj.reqIntents[0]+']-(w) RETURN w';
+    let params = {
+      domainName: domainObj.domainName,
+      conceptName: domainObj.reqConcepts[0]
+    };
+    let docs=[];
+    session.run(query, params)
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        record._fields.forEach(function(fields){
+          docs.push(fields.properties.name);
+        });
+
+      });
+      session.close();
+      resolve({docs:docs});
+    })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+  });
+
+  return promise;
+}
+
 let indexNewDomainCallBack = function(newDomainObj, callback) {
   indexNewDomain(newDomainObj).then(function(indexedDomainObj) {
     callback(null, indexedDomainObj);
@@ -325,6 +368,15 @@ let getDomainCardDetailsCallback = function(domainName, callback) {
   });
 }
 
+let getWebDocumentsCallback = function(domainObj, callback) {
+  logger.debug("from the callback : "+domainObj)
+  getWebDocuments(domainObj).then(function(retrievedDocs) {
+    callback(null, retrievedDocs);
+  }, function(err) {
+    callback(err, null);
+  });
+}
+
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept:getDomainConcept,
@@ -335,5 +387,7 @@ module.exports = {
   getDomainIntentCallback: getDomainIntentCallback,
   getAllDomainConceptCallback: getAllDomainConceptCallback,
   getDomainCardDetailsCallback: getDomainCardDetailsCallback,
-  getDomainCardDetails:getDomainCardDetails
+  getDomainCardDetails:getDomainCardDetails,
+  getWebDocumentsCallback:getWebDocumentsCallback,
+  getWebDocuments:getWebDocuments
 }

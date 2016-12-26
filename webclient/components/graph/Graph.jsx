@@ -40,6 +40,7 @@ export default class Graph extends React.Component {
     super(props)
     console.log(this.props)
     this.state={
+      msgCaption:"CLICK SEARCH TO SHOW THE DOCUMENTS",
       domainName:"",
       concepts:[],
       intents:[],
@@ -51,10 +52,13 @@ export default class Graph extends React.Component {
   getConcepts(concept)
   {
     let newConcepts=this.state.selectedConcept;
-    if(!newConcepts.includes(concept)){
-      newConcepts.push(concept)
+    if(this.state.concepts.includes(concept))
+    {
+      if(!newConcepts.includes(concept)){
+        newConcepts.push(concept)
+      }
     }
-    
+
     this.setState({
       selectedConcept:newConcepts
     })
@@ -71,7 +75,7 @@ export default class Graph extends React.Component {
     else{
       prevIntents=prevIntents.filter(function(data) {
         return data!==event.target.value;
-        
+
       });
     }
     this.setState({
@@ -97,7 +101,7 @@ export default class Graph extends React.Component {
     Request
     .get(url)
     .end((err, res) => {
-     if(!err){       
+     if(!err){
        let domainDetails=JSON.parse(res.text);
        console.log("from the grph whole data")
        console.log(domainDetails)
@@ -112,16 +116,49 @@ export default class Graph extends React.Component {
   }
   searchDocuments()
   {
-    let prevDoc=this.state.docs;
-    let reqObj={
-      domainName:this.state.domainName,
-      reqIntents:this.state.checkedIntent,
-      reqConcepts:this.state.selectedConcept
+    if(this.state.checkedIntent.length===0||this.state.selectedConcept.length===0)
+    {
+      this.setState({
+        msgCaption:"SORRY NO DOCUMENTS TO SHOW",
+        docs:[]
+      })
     }
-    prevDoc.push(reqObj)
+
+    else{
+      let reqObj={
+        domainName:this.state.domainName,
+        reqIntents:this.state.checkedIntent,
+        reqConcepts:this.state.selectedConcept
+      }
+      this.setState({
+        docs:[]
+      })
+
+      let url =`/domain/documents/`+reqObj.domainName;
+      Request
+      .post(url)
+      .send(reqObj)
+      .end((err, res) => {
+        if(err) {
+    //res.send(err);
+    this.setState({errmsg: res.body});
+  }
+  else {
+    console.log("Response on documents show: ", JSON.parse(res.text));
+    let response=JSON.parse(res.text);
+    if(typeof response.docs==="undefined" || response.docs.length===0 )
+    {
+      this.setState({
+        msgCaption:"SORRY NO DOCUMENTS TO SHOW"
+      })
+    }
     this.setState({
-      docs:prevDoc
+      docs:response.docs
     })
+  }
+});
+    }
+
   }
   componentDidMount()
   {
@@ -133,47 +170,47 @@ export default class Graph extends React.Component {
   return(
     <div style={fonts}>
 
-    <Row>   
+    <Row>
     <Col sm={2}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
-    <Col sm={10}>  
+    <Col sm={10}>
     <Row>
-    <Col sm={12}>    
+    <Col sm={12}>
     <h1 style={{textAlign:"left",color:"#8aa6bd",fontSize:"35pt"}}>
     {this.state.domainName.toUpperCase()} </h1>
-    <Link to="/dashboard">  
+    <Link to="/dashboard">
     <IconButton style={styles.place} iconStyle={styles.largeIcon}>
     <NavigationArrowBack style={styles.large} color={"white"} />
-    </IconButton>  
-    </Link>  
+    </IconButton>
+    </Link>
     </Col>
-    </Row> 
+    </Row>
     <Row>
-    <Col sm={12}> 
-    <AutoCompleteSearchBox concepts={this.state.concepts} 
+    <Col sm={12}>
+    <AutoCompleteSearchBox concepts={this.state.concepts}
     searchDocument={this.searchDocuments.bind(this)}
     getConcept={this.getConcepts.bind(this)}/>
     <Row>
-    <Col sm={12}> 
+    <Col sm={12}>
     {this.state.selectedConcept.length===0?<h4>SELECT THE CONCEPTS</h4>:
       <SelectedConcepts conceptChips={this.state.selectedConcept}
-      deleteConcept={this.deleteConcepts.bind(this)} />}    
+      deleteConcept={this.deleteConcepts.bind(this)} />}
       </Col>
       </Row>
       </Col>
       </Row>
       <br/><br/>
       <Row>
-      <Col sm={12}> 
-      {this.state.docs.length===0?<h1>CLICK SEARCH TO SHOW THE DOCUMENTS</h1>:
-        <DocResultCard webDocs={this.state.docs}/>}    
-        </Col>
-        </Row>
-        </Col>
-        </Row>
-        </div>
-        );
+      <Col sm={12}>
+      {this.state.docs.length===0?<h1>{this.state.msgCaption}</h1>:
+      <DocResultCard webDocs={this.state.docs}/>}
+      </Col>
+      </Row>
+      </Col>
+      </Row>
+      </div>
+      );
 }
 }
 
