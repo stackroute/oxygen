@@ -112,7 +112,7 @@ export default class Graph extends React.Component {
   }
   searchDocuments()
   {
-    let prevDoc=this.state.docs;
+    
     let reqObj={
       domainName:this.state.domainName,
       reqIntents:this.state.checkedIntent,
@@ -135,7 +135,7 @@ export default class Graph extends React.Component {
       docs:response
     })
   }
-  });
+});
 
   }
   componentDidMount()

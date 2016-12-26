@@ -6,7 +6,9 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Container, Row, Col} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
-
+const defaultImgURL='http://corevitality.com/'+
+'wp-content/uploads/2015/08/27114989-Coming-soon-blue'+
+'-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
 const style = {
   position:"fixed",
   bottom: "5%",
@@ -32,27 +34,29 @@ export default class AddDomain extends React.Component {
     this.state={domain:{},
     canSubmit:false,
     open: false,
-    subject:"",
+    subject:'',
     description:'',
-    imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
+    imageUrl:defaultImgURL
   }
-  }
-  handleSubmit() {
-    console.log('on calling handle sumbit while adding domain');
-    if(this.state.imageUrl=='')
-    {
-      this.setState({imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'})
-    }
-    console.log('going to ADD '+this.state.imageUrl);
-    let domain = {
-      name: this.state.subject,
-      description:this.state.description,
-      domainImgURL:this.state.imageUrl
+}
+handleSubmit() {
+  console.log('on calling handle sumbit while adding domain');
+  console.log(this.state.imageUrl)
+  console.log('going to ADD '+this.state.imageUrl);
+  let domain = {
+    name: this.state.subject,
+    description:this.state.description,
+    domainImgURL:this.state.imageUrl
       //domainImgURL:'./../../assets/images/soon.png',
     };
+    if(domain.domainImgURL===""|| domain.domainImgURL.length<=5)
+    {
+      domain.domainImgURL=defaultImgURL;
+    }
     this.refs.form.reset();
     this.setState({domain:domain})
-    this.setState({imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'})
+    this.setState(
+      {imageUrl:defaultImgURL})
     console.log(domain);
     this.props.addDomain(domain);
   }
@@ -69,9 +73,12 @@ export default class AddDomain extends React.Component {
   onChangeImageUrl(e)
   {
     this.setState({imageUrl:e.target.value})
-    if(this.state.imageUrl=='')
+    if(this.state.imageUrl==='')
     {
-      this.setState({imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'})
+      this.setState(
+        {imageUrl:'http://corevitality.com/'+
+        'wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-'+
+        'isolated-seal-Stock-Photo.jpg'})
     }
     console.log(this.state.imageUrl);
   }
