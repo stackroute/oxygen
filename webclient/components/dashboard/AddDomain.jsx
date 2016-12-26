@@ -41,17 +41,26 @@ export default class AddDomain extends React.Component {
     canSubmit:false,
     open: false,
     subject:"",
-    description:""}
+    description:'',
+    imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
+  }
   }
   handleSubmit() {
     console.log('on calling handle sumbit while adding domain');
+    if(this.state.imageUrl=='')
+    {
+      this.setState({imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'})
+    }
+    console.log('going to ADD '+this.state.imageUrl);
     let domain = {
       name: this.state.subject,
       description:this.state.description,
-      domainImgURL:'./../../assets/images/soon.png',
+      domainImgURL:this.state.imageUrl
+      //domainImgURL:'./../../assets/images/soon.png',
     };
     this.refs.form.reset();
     this.setState({domain:domain})
+    this.setState({imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'})
     console.log(domain);
     this.props.addDomain(domain);
   }
@@ -65,7 +74,15 @@ export default class AddDomain extends React.Component {
     this.setState({description:e.target.value})
     console.log(this.state.description);
   }
-
+  onChangeImageUrl(e)
+  {
+    this.setState({imageUrl:e.target.value})
+    if(this.state.imageUrl=='')
+    {
+      this.setState({imageUrl:'http://corevitality.com/wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-isolated-seal-Stock-Photo.jpg'})
+    }
+    console.log(this.state.imageUrl);
+  }
 
   handleOpen = () => {
     this.setState({open: true});
@@ -141,6 +158,19 @@ export default class AddDomain extends React.Component {
       style={tfont}
       fullWidth={true} onChange={this.onChangeDescription.bind(this)}/></Col>
       </Row>
+
+      <Row>
+      <Col lg={3} style={Label}>IMAGE URL</Col>
+      <Col lg={9}><FormsyText
+      type="textarea"
+      name="imageUrl"
+      validationError={wordsError}
+      updateImmediately
+      hintText="value"
+      style={tfont}
+      fullWidth={true} onChange={this.onChangeImageUrl.bind(this)}/></Col>
+      </Row>
+
 
 
       </Formsy.Form>
