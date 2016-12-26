@@ -1,18 +1,8 @@
 const masterMongoDBName = process.env.APP_DB || 'oxygen';
 
 const mongo = {
-  // <<<<<<< HEAD
-  //   host: process.env.MONGO_HOST || '127.0.0.1',
-  //   port: process.env.MONGO_PORT || 27017
-  // };
-
-  // const rabbitmq = {
-  //   host: process.env.RABBITMQ_HOST || '127.0.0.1',
-  //   port: process.env.RABBITMQ_PORT || 5672
-  // =======
-
-  host: process.env.MONGO_HOST || '127.0.0.1',
-  port: process.env.MONGO_PORT || 27017
+	host: process.env.MONGO_HOST || '127.0.0.1',
+	port: process.env.MONGO_PORT || 27017
 };
 
 // const rabbitmq = {
