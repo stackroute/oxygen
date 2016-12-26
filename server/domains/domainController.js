@@ -240,8 +240,6 @@ let getDomain = function(domainName) {
 
 let getAllDomainDetails = function() {
  logger.debug("Received request for retriving Concept(s) of all domain: ");
- //Save to Mongo DB
- //Save to Neo4j
 
  let promise = new Promise(function(resolve, reject) {
   let cardDetailsObj=[];
@@ -249,7 +247,7 @@ let getAllDomainDetails = function() {
    domainMongoController.getAllDomainsCallback(callback);
  },
  function(domainDetailedColln,callback) {
-   if(!domainDetailedColln)
+   if(domainDetailedColln.length===0)
    {
     callback(null,cardDetailsObj);
   }
@@ -286,10 +284,11 @@ let getAllDomainDetails = function() {
 }
 ],
 function(err, finalCardDetailsObj) {
-  logger.debug("inside callback",finalCardDetailsObj.length);
+  logger.debug("inside callback",finalCardDetailsObj);
   if (err) {
    reject(err);
  }
+
  if (finalCardDetailsObj) {
    logger.debug(" now sending back",finalCardDetailsObj);
    resolve(finalCardDetailsObj);
