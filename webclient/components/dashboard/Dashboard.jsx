@@ -2,6 +2,7 @@ import React from 'react';
 import DomainShow from './DashboardDomains.jsx';
 import Request from 'superagent';
 import AddDomain from './AddDomain.jsx';
+import Notification from './Notification.jsx'
 import {Container,Col} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -191,6 +192,7 @@ export default class Dashboard extends React.Component {
 						</Container>
 						</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
 						<AddDomain addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
+						<Notification />
 						</div>
 
 						);

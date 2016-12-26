@@ -5,6 +5,10 @@ const mongo = {
 	port: process.env.MONGO_PORT || 27017
 };
 
+const redis = {
+	host : process.env.REDIS_HOST || '127.0.0.1',
+	port : process.env.REDIS_PORT || 6379
+}
 
 // const rabbitmq = {
 // 	host: process.env.RABBITMQ_HOST || '127.0.0.1',

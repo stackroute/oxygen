@@ -6,6 +6,10 @@ const mongo = {
 	port: process.env.MONGO_PORT || 27017
 };
 
+const redis = {
+	host : process.env.REDIS_HOST || '127.0.0.1',
+	port : process.env.REDIS_PORT || 6379
+}
 // const rabbitmq = {
 // 	host: process.env.RABBITMQ_HOST || '127.0.0.1',
 // 	port: process.env.RABBITMQ_PORT || 5672
@@ -22,6 +26,7 @@ module.exports = {
 	WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
 	MONGO_MASTER_DB_NAME: masterMongoDBName,
 	MONGO_MASTER_SERVER: mongo,
+	REDIS_SERVER : redis,
 	MONGO_URL: mongoURL,
 	NEO4J_HOST: 'localhost',
 	NEO4J_BOLT_URL: neo4jURL,
