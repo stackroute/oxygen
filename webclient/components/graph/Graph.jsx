@@ -15,6 +15,10 @@ const fonts={
   fontFamily: "sans-serif",
   color: "#1976d2"
 }
+const suggest={
+  float:'left',
+  color:"grey"
+}
 const styles={
  largeIcon: {
 
@@ -47,7 +51,7 @@ export default class Graph extends React.Component {
     super(props)
     console.log(this.props)
     this.state={
-      msgCaption:"CLICK SEARCH TO SHOW THE DOCUMENTS",
+      msgCaption:"FIND YOUR SUGGESTED DOCUMENTS HERE",
       domainName:"",
       concepts:[],
       intents:[],
@@ -126,7 +130,7 @@ export default class Graph extends React.Component {
     if(this.state.selectedConcept.length===0)
     {
       this.setState({
-        msgCaption:"SORRY NO DOCUMENTS TO SHOW",
+        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN",
         docs:[]
       })
     }
@@ -156,7 +160,7 @@ export default class Graph extends React.Component {
     if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
-        msgCaption:"SORRY NO DOCUMENTS TO SHOW"
+        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN"
       })
     }
     this.setState({
@@ -202,7 +206,7 @@ export default class Graph extends React.Component {
     getConcept={this.getConcepts.bind(this)}/>
     <Row>
     <Col sm={12}>
-    {this.state.selectedConcept.length===0?<h4>SELECT THE CONCEPTS</h4>:
+    {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
       <SelectedConcepts conceptChips={this.state.selectedConcept}
       deleteConcept={this.deleteConcepts.bind(this)} />}
       </Col>
@@ -212,7 +216,7 @@ export default class Graph extends React.Component {
       <br/><br/>
       <Row>
       <Col sm={12}>
-      {this.state.docs.length===0?<h1>{this.state.msgCaption}</h1>:
+      {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
       <DocResultCard webDocs={this.state.docs}/>}
       </Col>
       </Row>
