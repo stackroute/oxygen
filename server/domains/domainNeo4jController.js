@@ -306,11 +306,20 @@ let getWebDocuments = function(domainObj) {
     let session = driver.session();
 
     logger.debug("obtained connection with neo4j");
+    let query='';
+    if(domainObj.reqIntents.length===0)
+    {
+      query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'+config.NEO4J_CONCEPT
+      +'{name:{conceptName}}) match(d)<-[r:'+config.NEO4J_CON_REL+
+      ']-(c) MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(c)<-[r1:'+config.NEO4J_DOC_REL+']-(w) RETURN w';
+    }
+    else {
+      query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'+config.NEO4J_CONCEPT
+      +'{name:{conceptName}}) match(d)<-[r:'+config.NEO4J_CON_REL+
+      ']-(c) MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(c)<-[r1:'+
+      domainObj.reqIntents[0]+']-(w) RETURN w';
+    }
 
-    let query = 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}}) match(c:'+config.NEO4J_CONCEPT
-    +'{name:{conceptName}}) match(d)<-[r:'+config.NEO4J_CON_REL+
-    ']-(c) MATCH (w:'+config.NEO4J_WEBDOCUMENT+') match(c)<-[r1:'+
-    domainObj.reqIntents[0]+']-(w) RETURN w';
     let params = {
       domainName: domainObj.domainName,
       conceptName: domainObj.reqConcepts[0]

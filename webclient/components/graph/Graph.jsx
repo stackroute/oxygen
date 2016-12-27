@@ -116,7 +116,7 @@ export default class Graph extends React.Component {
   }
   searchDocuments()
   {
-    if(this.state.checkedIntent.length===0||this.state.selectedConcept.length===0)
+    if(this.state.selectedConcept.length===0)
     {
       this.setState({
         msgCaption:"SORRY NO DOCUMENTS TO SHOW",
