@@ -5,8 +5,8 @@ import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
-import {Row, Col} from 'react-grid-system';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import {Row, Col,ScreenClassRender} from 'react-grid-system';
+import ActionHome from 'material-ui/svg-icons/action/home';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 const fonts={
@@ -14,6 +14,9 @@ const fonts={
   textAlign: "center",
   fontFamily: "sans-serif",
   color: "#1976d2"
+}
+const suggest={
+  color:"grey"
 }
 const styles={
  largeIcon: {
@@ -30,17 +33,24 @@ large: {
   padding: 30
 },
 place:{
-  position:"fixed",
-  top: "10%",
-  right:"5%"
+  position:"relative",
+  marginTop: "10%",
+  marginRight:"5%"
 }
 }
+const styleFunction = (screenClass) => {
+  if (screenClass === 'xl') return { fontSize: '35px' };
+  if (screenClass === 'lg') return { fontSize: '35px' };
+  if (screenClass === 'md') return { fontSize: '25px' };
+  if (screenClass === 'sm') return { fontSize: '18px' };
+  return { fontSize: '15px' };
+};
 export default class Graph extends React.Component {
   constructor(props) {
     super(props)
     console.log(this.props)
     this.state={
-      msgCaption:"CLICK SEARCH TO SHOW THE DOCUMENTS",
+      msgCaption:"FIND YOUR SUGGESTED DOCUMENTS HERE",
       domainName:"",
       concepts:[],
       intents:[],
@@ -116,10 +126,10 @@ export default class Graph extends React.Component {
   }
   searchDocuments()
   {
-    if(this.state.checkedIntent.length===0||this.state.selectedConcept.length===0)
+    if(this.state.selectedConcept.length===0)
     {
       this.setState({
-        msgCaption:"SORRY NO DOCUMENTS TO SHOW",
+        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN",
         docs:[]
       })
     }
@@ -146,14 +156,14 @@ export default class Graph extends React.Component {
   else {
     console.log("Response on documents show: ", JSON.parse(res.text));
     let response=JSON.parse(res.text);
-    if(typeof response.docs==="undefined" || response.docs.length===0 )
+    if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
-        msgCaption:"SORRY NO DOCUMENTS TO SHOW"
+        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN"
       })
     }
     this.setState({
-      docs:response.docs
+      docs:response
     })
   }
 });
@@ -171,17 +181,19 @@ export default class Graph extends React.Component {
     <div style={fonts}>
 
     <Row>
-    <Col sm={2}>
+    <Col sm={12} xs={12} md={2} lg={2} xl={2}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
-    <Col sm={10}>
+    <Col sm={12} xs={12} md={10} lg={10} xl={10}>
     <Row>
-    <Col sm={12}>
-    <h1 style={{textAlign:"left",color:"#8aa6bd",fontSize:"35pt"}}>
+    <Col>
+    <ScreenClassRender style={styleFunction}>
+    <h1 style={{textAlign:"left",color:"#8aa6bd"}}>
     {this.state.domainName.toUpperCase()} </h1>
+    </ScreenClassRender>
     <Link to="/dashboard">
     <IconButton style={styles.place} iconStyle={styles.largeIcon}>
-    <NavigationArrowBack style={styles.large} color={"white"} />
+    <ActionHome style={styles.large} color={"white"} />
     </IconButton>
     </Link>
     </Col>
@@ -193,24 +205,24 @@ export default class Graph extends React.Component {
     getConcept={this.getConcepts.bind(this)}/>
     <Row>
     <Col sm={12}>
-    {this.state.selectedConcept.length===0?<h4>SELECT THE CONCEPTS</h4>:
-      <SelectedConcepts conceptChips={this.state.selectedConcept}
-      deleteConcept={this.deleteConcepts.bind(this)} />}
-      </Col>
-      </Row>
-      </Col>
-      </Row>
-      <br/><br/>
-      <Row>
-      <Col sm={12}>
-      {this.state.docs.length===0?<h1>{this.state.msgCaption}</h1>:
-      <DocResultCard webDocs={this.state.docs}/>}
-      </Col>
-      </Row>
-      </Col>
-      </Row>
-      </div>
-      );
+    {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+    <SelectedConcepts conceptChips={this.state.selectedConcept}
+    deleteConcept={this.deleteConcepts.bind(this)} />}
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    <br/><br/>
+    <Row>
+    <Col sm={12}>
+    {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
+    <DocResultCard webDocs={this.state.docs}/>}
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    </div>
+    );
 }
 }
 

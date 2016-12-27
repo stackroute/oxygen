@@ -9,6 +9,7 @@ import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import {Link} from 'react-router';
 
+
 class Welcome extends React.Component {
   constructor(props) {
     super(props);

@@ -30,7 +30,7 @@ const addSearchJob = function(domainName,concept) {
 		engineColl.forEach(function(engineData){
 			let JobData={
 				query:concept,
-				engineID:engineData.engine[1]+" "+engineData.key[2],
+				engineID:engineData.engine[3]+" "+engineData.key[3],
 				exactTerms:domainName,
 				results:config.NO_OF_RESULTS,
 				siteSearch:'NONE'

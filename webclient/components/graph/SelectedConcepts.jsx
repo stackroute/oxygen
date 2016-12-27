@@ -1,5 +1,4 @@
 import React from 'react';
-import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 
 const styles = {
@@ -39,30 +38,22 @@ export default class SelectedConcepts extends React.Component {
   renderChip(chipData)
   {
 
-    let splitWords=chipData.split(" ");
-    let avatarText=""
-    splitWords.forEach(function(word){
-      avatarText+=word.charAt(0).toUpperCase();
-    })
-    return( <Chip
-      key={chipData}
-      backgroundColor="#eaeaea"
-      onRequestDelete={()=>this.handleRequestDelete(chipData)}
-      style={styles.chip}
-      >
-      <Avatar size={32} color="white" backgroundColor="#1976d2">
-      {avatarText}
-      </Avatar>
-      {chipData}
-      </Chip>)
-  }
-  render() {
-    return (
-      <div style={styles.wrapper}>
-      {this.props.conceptChips.map(this.renderChip,this)}      
-      </div>
-      );
-  }
+   return( <Chip
+    key={chipData}
+    backgroundColor="#eaeaea"
+    onRequestDelete={()=>this.handleRequestDelete(chipData)}
+    style={styles.chip}
+    >
+    {chipData}
+    </Chip>)
+ }
+ render() {
+  return (
+    <div style={styles.wrapper}>
+    {this.props.conceptChips.map(this.renderChip,this)}      
+    </div>
+    );
+}
 }
 SelectedConcepts.propTypes = {
   deleteConcept:React.PropTypes.func,
