@@ -14,7 +14,7 @@ const layout={
   marginLeft:"auto",
   borderRadius:7,
   marginRight:"auto",
-  marginTop:5
+  marginTop:30
 };
 const styles = {
   chip: {

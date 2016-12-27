@@ -16,7 +16,6 @@ const fonts={
   color: "#1976d2"
 }
 const suggest={
-  float:'left',
   color:"grey"
 }
 const styles={
@@ -207,23 +206,23 @@ export default class Graph extends React.Component {
     <Row>
     <Col sm={12}>
     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
-      <SelectedConcepts conceptChips={this.state.selectedConcept}
-      deleteConcept={this.deleteConcepts.bind(this)} />}
-      </Col>
-      </Row>
-      </Col>
-      </Row>
-      <br/><br/>
-      <Row>
-      <Col sm={12}>
-      {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
-      <DocResultCard webDocs={this.state.docs}/>}
-      </Col>
-      </Row>
-      </Col>
-      </Row>
-      </div>
-      );
+    <SelectedConcepts conceptChips={this.state.selectedConcept}
+    deleteConcept={this.deleteConcepts.bind(this)} />}
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    <br/><br/>
+    <Row>
+    <Col sm={12}>
+    {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
+    <DocResultCard webDocs={this.state.docs}/>}
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    </div>
+    );
 }
 }
 

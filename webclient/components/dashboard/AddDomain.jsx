@@ -186,7 +186,7 @@ handleSubmit() {
       name="imageUrl"
       validationError={wordsError}
       updateImmediately
-      hintText="Image url to b displayed"
+      hintText="Image url to be displayed"
       style={tfont}
       fullWidth={true} onChange={this.onChangeImageUrl.bind(this)}/></Col>
       </Row>
