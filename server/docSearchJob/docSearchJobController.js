@@ -54,7 +54,7 @@ const addSearchJob = function(domainName,concept) {
                 message: concept,
                 status: 'search started'
                 }
-                datapublisher.publishOnServiceStart(redisSearch);
+                datapublisher.processStart(redisSearch);
 
 			});
 

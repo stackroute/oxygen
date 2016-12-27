@@ -56,7 +56,7 @@ const startIntentParser = function() {
               // message: dataObj.intent,
               status: 'intent parsing completed for the particular intent'
             }
-             datapublisher.publishOnServiceEnd(redisIntent);
+             datapublisher.processFinished(redisIntent);
        });
        }); //end of assertQueue
    }); //end of channelConnection

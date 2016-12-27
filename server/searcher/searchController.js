@@ -109,7 +109,7 @@ const storeURL = function(id) {
               message: jobDetails.query,
               status: 'search completed'
             }
-             datapublisher.publishOnServiceEnd(RedisSearch);
+             datapublisher.processFinished(RedisSearch);
               //ch.sendToQueue('hello', new Buffer(objId));
               let redisCrawl={
                 domain: jobDetails.exactTerms,
@@ -117,7 +117,7 @@ const storeURL = function(id) {
                 message: savedObj.url,
                 status: 'crawl started for the url'
               }
-              datapublisher.publishOnServiceStart(redisCrawl);
+              datapublisher.processStart(redisCrawl);
             }
           });
 
