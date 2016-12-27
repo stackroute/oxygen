@@ -2,6 +2,7 @@
 'use strict';
 const logger = require('./../../applogger');
 const searchModel = require('./searchEntity').searchModel;
+const datapublisher = require('../serviceLogger/redisLogger');
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
@@ -97,12 +98,26 @@ const storeURL = function(id) {
           else {
             console.log("saved "+i+" "+savedObj._id);
             let msgObj={
-              domain:jobDetails.exactTerms,
-              concept:jobDetails.query,
-              url:savedObj.url
+              domain: jobDetails.exactTerms,
+              concept: jobDetails.query,
+              url: savedObj.url
             };
             startCrawlerMQ(msgObj);
+            let RedisSearch={
+              domain: jobDetails.exactTerms,
+              actor: 'searcher',
+              message: jobDetails.query,
+              status: 'search completed'
+            }
+             datapublisher.publishOnServiceEnd(RedisSearch);
               //ch.sendToQueue('hello', new Buffer(objId));
+              let redisCrawl={
+                domain: jobDetails.exactTerms,
+                actor: 'crawler',
+                message: savedObj.url,
+                status: 'crawl started for the url'
+              }
+              datapublisher.publishOnServiceStart(redisCrawl);
             }
           });
 

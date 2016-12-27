@@ -4,6 +4,7 @@ const logger = require('./../../applogger');
 const request= require('request');
 const cheerio = require("cheerio");
 const startIntentParser = require('./docOpenIntentParserEngine').startIntentParser;
+const datapublisher = require('../serviceLogger/redisLogger');
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const urlIndexing= function(data)
@@ -82,6 +83,21 @@ const urlIndexing= function(data)
       logger.debug("At consupmtion Intent : "+dataObj.intent);
       logger.debug(res);
       startIntentParser(dataObj);
+      let redisCrawl={
+              domain: dataObj.domain,
+              actor: 'crawler',
+              message: dataObj.url,
+              status: 'crawling completed for the url'
+            }
+             datapublisher.publishOnServiceEnd(redisCrawl);
+      let redisIntent={
+              domain: dataObj.domain,
+              actor: 'intent parser',
+              message: dataObj.intent,
+              status: 'intent parsing started for the particular intent'
+            }
+             datapublisher.publishOnServiceStart(redisIntent);
+
     });
 
   });

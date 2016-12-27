@@ -2,12 +2,23 @@ import React from 'react';
 import DomainShow from './DashboardDomains.jsx';
 import Request from 'superagent';
 import AddDomain from './AddDomain.jsx';
+import Notification from './Notification.jsx'
 import {Container,Col,Row ,Visible} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+import RaisedButton from 'material-ui/RaisedButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import IconButton from 'material-ui/IconButton';
-
+const paginationStyle1 = {
+    margin: 12,
+    marginBottom:50,
+    float:'left'
+};
+const paginationStyle2 = {
+    margin: 12,
+    marginBottom:50,
+    float:'right'
+};
 const iconStyle={
 	iconSize: {
 
@@ -49,25 +60,21 @@ const iconStyle={
 		float:'right'
 	}
 }
-
-
 const fonts={
-	margin: "0px auto",
-	textAlign: "center",
-	fontFamily: "sans-serif",
-	color: "#1976d2 "
+    margin: "0px auto",
+    textAlign: "center",
+    fontFamily: "sans-serif",
+    color: "#1976d2 "
 }
-
 const style = {
-	refresh: {
-		marginTop:'200px',
-		display: 'inline-block',
-		position: 'relative'
-	}
+    refresh: {
+        marginTop:'200px',
+        display: 'inline-block',
+        position: 'relative'
+    }
 };
-
 export default class Dashboard extends React.Component {
-	constructor(props) {
+constructor(props) {
 		super(props);
 		this.state = {
 			domainList: [],canSubmit:false,errmsg:'',loading:'loading',pageNum:1};
@@ -249,8 +256,10 @@ export default class Dashboard extends React.Component {
 					</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
 					<AddDomain domainList={this.state.domainList}
 					addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
+					<Notification />
 					</div>
 
 					);
 		}
 	}
+
