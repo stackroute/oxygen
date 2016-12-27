@@ -146,14 +146,14 @@ export default class Graph extends React.Component {
   else {
     console.log("Response on documents show: ", JSON.parse(res.text));
     let response=JSON.parse(res.text);
-    if(typeof response.docs==="undefined" || response.docs.length===0 )
+    if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
         msgCaption:"SORRY NO DOCUMENTS TO SHOW"
       })
     }
     this.setState({
-      docs:response.docs
+      docs:response
     })
   }
 });

@@ -336,7 +336,7 @@ let freshlyIndexDomain = function(domain) {
 
 let fetchWebDocuments = function(domainObj) {
   logger.debug("Received request for fetching Webdocuments ", domainObj);
-
+ let docsDetails=[];
   let promise = new Promise(function(resolve, reject) {
 
     if (!domainObj ||
@@ -351,13 +351,47 @@ let fetchWebDocuments = function(domainObj) {
       logger.debug("inside the waterfall for fetching web docs"+domainObj)
       domainNeo4jController.getWebDocumentsCallback(domainObj,
         callback);
-    }
+    },
+    function(docs,callback) {
+      if(docs.length===0)
+      {
+       callback(null,docsDetails);
+     }
+     else{
+      for(let item in docs)
+      {
+       if (Object.prototype.hasOwnProperty.call(docs, item)) {
+         logger.debug("going to mongo ",docs.length);
+         let url=docs[item];
+         logger.debug("going to mongo url ",url);
+         domainMongoController.getSearchResultDocument(url)
+         .then(function(docObj) {
+          logger.debug("Successfully fetched doc details from mongo: ",
+            docObj);
+          docsDetails.push({title:docObj.title,description:docObj.description,url:docObj.url})
+          logger.debug("after each pushing",docsDetails);
+          if(docsDetails.length===docs.length)
+          {
+           callback(null,docsDetails);
+         }
+       },
+       function(err) {
+        logger.error("Encountered error in fetching doc details: ",
+          err);
+        reject(err);
+        return;
+      });
+       }
+     }
+     logger.debug("pushing ended",docsDetails);
+   }
+   }
     ],
-    function(err, domainObjDetails) {
+    function(err, docObjDetails) {
       if (err) {
         reject(err);
       }
-      resolve(domainObjDetails);
+      resolve(docObjDetails);
       }); //end of async.waterfall
 });
 

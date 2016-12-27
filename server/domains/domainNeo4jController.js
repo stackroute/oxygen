@@ -325,7 +325,7 @@ let getWebDocuments = function(domainObj) {
 
       });
       session.close();
-      resolve({docs:docs});
+      resolve(docs);
     })
     .catch(function(err) {
       logger.error("Error in neo4j query: ", err, ' query is: ',
