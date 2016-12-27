@@ -6,7 +6,7 @@ import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
 import {Row, Col} from 'react-grid-system';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import ActionHome from 'material-ui/svg-icons/action/home';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 const fonts={
@@ -171,17 +171,17 @@ export default class Graph extends React.Component {
     <div style={fonts}>
 
     <Row>
-    <Col sm={2}>
+    <Col sm={12} xs={3} md={3} lg={2} xl={2}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
-    <Col sm={10}>
+    <Col sm={12} xs={9} md={9} lg={10} xl={10}>
     <Row>
     <Col sm={12}>
     <h1 style={{textAlign:"left",color:"#8aa6bd",fontSize:"35pt"}}>
     {this.state.domainName.toUpperCase()} </h1>
     <Link to="/dashboard">
     <IconButton style={styles.place} iconStyle={styles.largeIcon}>
-    <NavigationArrowBack style={styles.large} color={"white"} />
+    <ActionHome style={styles.large} color={"white"} />
     </IconButton>
     </Link>
     </Col>

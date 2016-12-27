@@ -2,20 +2,55 @@ import React from 'react';
 import DomainShow from './DashboardDomains.jsx';
 import Request from 'superagent';
 import AddDomain from './AddDomain.jsx';
-import {Container,Col} from 'react-grid-system';
+import {Container,Col,Row ,Visible} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import RaisedButton from 'material-ui/RaisedButton';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
+import IconButton from 'material-ui/IconButton';
 
-const paginationStyle1 = {
-	margin: 12,
-	marginBottom:50,
-	float:'left'
-};
-const paginationStyle2 = {
-	margin: 12,
-	marginBottom:50,
-	float:'right'
-};
+const iconStyle={
+	iconSize: {
+
+		width: 30,
+		height: 30,
+		backgroundColor: "grey",
+		padding: 10,
+		borderRadius: 60
+	},
+	large: {
+		width: 120,
+		height: 120,
+		padding: 30
+	},
+	leftIcon:{
+		position:"fixed",
+		top:"45%",
+		left:"3%",
+		float:'left'
+	},
+	rightIcon:{
+		position:"fixed",
+		top:"45%",
+		right:"3%",
+		float:'right'
+	},
+	leftIconAvg:{
+		position:"relative",
+		margin:"20 0 0 ",
+		padding:0,
+		zDepth:10,
+		float:'left'
+	},
+	rightIconAvg:{
+		position:"relative",
+		margin:"20 0 0 ",		
+		padding:0,
+		zDepth:10,
+		float:'right'
+	}
+}
+
+
 const fonts={
 	margin: "0px auto",
 	textAlign: "center",
@@ -126,6 +161,22 @@ export default class Dashboard extends React.Component {
 
 
 		render() {
+			const smallNav=()=>{
+				return(<Row md={12} sm={12} xs={12} style={{marginBotton:20}}>				
+					<Col md={4} sm={4} xs={4} style={{float:"left"}}>
+					<IconButton style={iconStyle.leftIconAvg} label="prev" disabled={prevFlag} data-id="prev"
+					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+					<NavigationArrowBack style={iconStyle.large} color={"white"} />
+					</IconButton>
+					</Col>
+					<Col md={4} sm={4} xs={4} style={{float:"right"}}>
+					<IconButton style={iconStyle.rightIconAvg} label="next" disabled={nextFlag} data-id="next"
+					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+					<NavigationArrowForward style={iconStyle.large} color={"white"} />
+					</IconButton>
+					</Col>
+					</Row>)
+			}
 			let list=[];
 			let prevFlag=false;
 			let nextFlag=false;
@@ -162,7 +213,9 @@ export default class Dashboard extends React.Component {
 			return (
 				<div style={fonts}>
 				<h1 >Our Domains</h1>
-
+				<Visible md sm xs>
+				{smallNav}
+				</Visible>
 				{this.state.loading==="loading"?<RefreshIndicator
 				size={70}
 				left={10}
@@ -174,18 +227,25 @@ export default class Dashboard extends React.Component {
 
 					<Container>
 					{list.map((item,i) =>{
-						return (<Col lg={4} md={4} key={i}>
+						return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
 							<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
 							index={i} key={i} indexs={i} ref="show" item={item}/>
 							</Col>);
 					})}
-					</Container>
-					<Container>
-					<RaisedButton label="prev" disabled={prevFlag} data-id="prev"
-					style={paginationStyle1} onClick={this.onPageClick.bind(this)}/>
-					<RaisedButton label="next" disabled={nextFlag} data-id="next"
-					style={paginationStyle2} onClick={this.onPageClick.bind(this)}/>
-					</Container>
+					</Container>					
+					<Visible xl lg>
+					<IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+					<NavigationArrowBack style={iconStyle.large} color={"white"} />
+					</IconButton>
+					<IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+					<NavigationArrowForward style={iconStyle.large} color={"white"} />
+					</IconButton>
+					</Visible>					
+					<Visible md sm xs>
+					{smallNav}
+					</Visible>
 					</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
 					<AddDomain domainList={this.state.domainList} 
 					addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
