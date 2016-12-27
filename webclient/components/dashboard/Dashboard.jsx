@@ -109,7 +109,7 @@ export default class Dashboard extends React.Component {
 			}
 
 			else {
-				console.log("Response on show: ", JSON.parse(res.text).length);
+				console.log("Response on show: ", JSON.parse(res.text));
 				//let domainList1=this.state.domainList;
 				let response=JSON.parse(res.text);
 				if(response.length===0)
@@ -247,7 +247,7 @@ export default class Dashboard extends React.Component {
 					{smallNav}
 					</Visible>
 					</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
-					<AddDomain domainList={this.state.domainList} 
+					<AddDomain domainList={this.state.domainList}
 					addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
 					</div>
 

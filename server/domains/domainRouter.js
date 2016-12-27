@@ -125,7 +125,7 @@ router.post('/documents/:domainName', function(req, res) {
 
   let domainObj = req.body;
   domainCtrl.fetchWebDocuments(domainObj).then(function(webDocuments) {
-    logger.info("Successfully retrived all concepts and intents of a domain : ");
+    logger.info("Successfully retrived all we documents : ");
     logger.debug(webDocuments)
     res.send(webDocuments);
     return;

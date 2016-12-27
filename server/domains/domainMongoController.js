@@ -1,5 +1,5 @@
 const DomainModel = require('./domainEntity').DomainModel;
-
+const SearcherResultModel = require('./../searcher/searchEntity').searchModel;
 const logger = require('./../../applogger');
 
 let saveNewDomain = function(newDomainObj) {
@@ -68,6 +68,27 @@ let getAllDomain = function() {
 
 }
 
+let getSearchResultDocuments = function(url) {
+  let promise = new Promise(function(resolve, reject) {
+
+    let urlObj = {
+      url:url
+    };
+
+
+    SearcherResultModel.findOne(urlObj,function(err, foundDomain) {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(foundDomain);
+    });
+  })
+
+  return promise;
+
+}
+
 let saveNewDomainCallBack = function(newDomainObj, callback) {
   saveNewDomain(newDomainObj)
   .then(
@@ -78,6 +99,7 @@ let saveNewDomainCallBack = function(newDomainObj, callback) {
       callback(err, null);
     });
 }
+
 
 let checkDomainCallback = function(domainName, callback) {
   checkDomain(domainName)
@@ -137,6 +159,7 @@ module.exports = {
   checkDomainCallback:checkDomainCallback,
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,
-  getDomainObj: getDomainObj
+  getDomainObj: getDomainObj,
+  getSearchResultDocument:getSearchResultDocuments
 
 }
