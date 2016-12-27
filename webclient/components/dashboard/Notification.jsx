@@ -1,8 +1,6 @@
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 
-
-
 export default class Notification extends React.Component {
 
   constructor(props) {
@@ -11,10 +9,8 @@ export default class Notification extends React.Component {
     this.state = {
        message:{},
        open:false
-    }
-    
+    }   
   }
-
   componentWillMount() {
       let socket = io();
 

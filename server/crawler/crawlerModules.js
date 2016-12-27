@@ -3,6 +3,7 @@ const keyword_extractor = require("keyword-extractor");
 const crawlerNeo4jController = require('./crawlerNeo4jController');
 const crawlerMongoController = require('./crawlerMongoController');
 const logger = require('./../../applogger');
+
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const extractData=function(data){
@@ -17,6 +18,7 @@ const extractData=function(data){
   data.text = txt;
   logger.debug("Extracting the content from the URL");
   return data;
+
 }
 
 let termsFinder = function(data){
@@ -52,6 +54,8 @@ const termDensity=function(data){
 })
   logger.debug("Finding all the terms in the webDocument ")
   data.allTerms = conceptInDoc;
+  
+ 
   return data
 }
 
@@ -79,7 +83,8 @@ const interestedWords=function(data){
 logger.debug("Finding the terms and otherWords from the webDocuments ")
 data.terms = terms;
 data.otherWords = otherWords;
-console.log(data.terms)
+console.log(data.terms);
+
 return data;
 }
 
@@ -126,6 +131,8 @@ let parseEachIntent = function(dataWithIntentColln){
   logger.debug("parseEachIntent "+intents)
   intents.forEach(function(intent){
    data.intent=intent;
+   
+ 
    return data;
  })
 }
