@@ -5,10 +5,13 @@ import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
-import {Row, Col,ScreenClassRender} from 'react-grid-system';
+import {Row, Col,ScreenClassRender,Visible} from 'react-grid-system';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
+import MenuItem from 'material-ui/MenuItem';
+import Drawer from 'material-ui/Drawer';
 const fonts={
   margin: "0px auto",
   textAlign: "center",
@@ -31,19 +34,14 @@ large: {
   width: 120,
   height: 120,
   padding: 30
-},
-place:{
-  position:"relative",
-  marginTop: "10%",
-  marginRight:"5%"
 }
 }
 const styleFunction = (screenClass) => {
-  if (screenClass === 'xl') return { fontSize: '35px' };
-  if (screenClass === 'lg') return { fontSize: '35px' };
-  if (screenClass === 'md') return { fontSize: '25px' };
-  if (screenClass === 'sm') return { fontSize: '18px' };
-  return { fontSize: '15px' };
+  if (screenClass === 'xl') return { fontSize: '37px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'lg') return { fontSize: '35px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'md') return { fontSize: '30px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'sm') return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };
+  return { fontSize: '25px',textAlign:"left",color:"#8aa6bd" };
 };
 export default class Graph extends React.Component {
   constructor(props) {
@@ -56,9 +54,13 @@ export default class Graph extends React.Component {
       intents:[],
       docs:[],
       checkedIntent:[],
-      selectedConcept:[]
+      selectedConcept:[],
+      open:false
     }
   }
+
+  handleToggle = () => this.setState({open: !this.state.open});
+
   getConcepts(concept)
   {
     let newConcepts=this.state.selectedConcept;
@@ -181,25 +183,29 @@ export default class Graph extends React.Component {
     <div style={fonts}>
 
     <Row>
-    <Col sm={12} xs={12} md={2} lg={2} xl={2}>
+    <Visible lg xl>
+    <Col sm={12} xs={12} md={2} lg={2} xl={2} style={{minWidth:150}}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
-    <Col sm={12} xs={12} md={10} lg={10} xl={10}>
+    <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000}}>
     <Row>
-    <Col>
+    <Col lg={10} md={10} sm={10} xs={10}>
     <ScreenClassRender style={styleFunction}>
-    <h1 style={{textAlign:"left",color:"#8aa6bd"}}>
-    {this.state.domainName.toUpperCase()} </h1>
+    <h1>
+    {this.state.domainName.toUpperCase()} 
+    </h1>
     </ScreenClassRender>
+    </Col>
+    <Col lg={2} md={2} sm={2} xs={2} style={{paddingLeft:0}}>
     <Link to="/dashboard">
-    <IconButton style={styles.place} iconStyle={styles.largeIcon}>
+    <IconButton iconStyle={styles.largeIcon}>
     <ActionHome style={styles.large} color={"white"} />
     </IconButton>
     </Link>
     </Col>
     </Row>
     <Row>
-    <Col sm={12}>
+    <Col sm={12} xs={12} md={12} lg={12} xl={12}>
     <AutoCompleteSearchBox concepts={this.state.concepts}
     searchDocument={this.searchDocuments.bind(this)}
     getConcept={this.getConcepts.bind(this)}/>
@@ -220,6 +226,61 @@ export default class Graph extends React.Component {
     </Col>
     </Row>
     </Col>
+    </Visible>
+
+
+    <Visible md sm xs>
+
+    <Drawer open={this.state.open}>
+    <MenuItem><SelectPanel intents={this.state.intents} 
+    getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
+    </Drawer>
+
+    <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
+    <Row>
+    <Col md={8} sm={8} xs={8}>
+    <ScreenClassRender style={styleFunction}>
+    <h1>
+    {this.state.domainName.toUpperCase()} 
+    </h1>
+    </ScreenClassRender>
+    </Col>
+    <Col md={2} sm={2} xs={2} style={{paddingLeft:0}}>
+    <Link to="/dashboard">
+    <IconButton iconStyle={styles.largeIcon}>
+    <ActionHome style={styles.large} color={"white"} />
+    </IconButton>
+    </Link>
+    </Col>
+    <Col md={2} sm={2} xs={2}>
+    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle}>
+    <NavigationMenu style={styles.large} color={"white"} />
+    </IconButton>
+    </Col>
+    </Row>
+    <Row>
+    <Col sm={12} xs={12} md={12} lg={12} xl={12}>
+    <AutoCompleteSearchBox concepts={this.state.concepts}
+    searchDocument={this.searchDocuments.bind(this)}
+    getConcept={this.getConcepts.bind(this)}/>
+    <Row>
+    <Col sm={12}>
+    {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+    <SelectedConcepts conceptChips={this.state.selectedConcept}
+    deleteConcept={this.deleteConcepts.bind(this)} />}
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    <br/><br/>
+    <Row>
+    <Col sm={12}>
+    {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
+    <DocResultCard webDocs={this.state.docs}/>}
+    </Col>
+    </Row>
+    </Col>
+    </Visible>
     </Row>
     </div>
     );

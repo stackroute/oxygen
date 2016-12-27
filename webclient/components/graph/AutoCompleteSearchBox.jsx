@@ -4,7 +4,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
-
+import {Row, Col} from 'react-grid-system';
 const style = {
   maxHeight: 80,
   maxWidth: 750,
@@ -14,7 +14,10 @@ const style = {
   align:"center",
   textAlign: 'center'
 };
-
+const iconSize={
+  width:50,
+  height:50
+}
 
 
 export default class AutoCompleteSearchBox extends React.Component {
@@ -28,17 +31,21 @@ export default class AutoCompleteSearchBox extends React.Component {
     return(
       <div style={{align:"center"}}>
       <Paper style={style} zDepth={2} rounded={false}>
+      <Row style={{padding:10}}>
+      <Col xs={10} sm={10} md={10} lg={10} xl={10}>
       <AutoComplete
       floatingLabelText="Search"
       filter={AutoComplete.fuzzyFilter}
       dataSource={this.props.concepts}
-      style={{width:"-10px"}}
+      fullWidth={true}
       onNewRequest={this.props.getConcept}
-      textFieldStyle={{width:"680px"}}
-      listStyle={{width:"680px"}}
       maxSearchResults={5}
       />
-      <IconButton onClick={this.props.searchDocument}><ActionSearch /></IconButton>
+      </Col>
+      <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+      <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}><ActionSearch /></IconButton>
+      </Col>
+      </Row>
       </Paper>
       </div>
       )

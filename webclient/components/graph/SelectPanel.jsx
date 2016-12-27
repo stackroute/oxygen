@@ -8,7 +8,7 @@ const styles = {
 },
 paper:{
   marginTop:"-20px",
-  minWidth:250,
+  minWidth:150,
   backgroundColor:"#eaeaea",
   height:"731px",
   textAlign:"left",
