@@ -7,6 +7,7 @@ const jobcard={
   fontWeight: "bold",
   textAlign:"center"
 }
+
 const layout={
   maxWidth:1200,
   width:"auto",
@@ -34,13 +35,14 @@ export default class DocResultCard extends React.Component {
   }
   render() {
     return (<div>
+
     {
       this.props.webDocs.map(function(doc,i){
         return (<Paper key={i} zDepth={4} style={layout} rounded={false}>
           <Card style={layout}>
           <CardHeader style={jobcard}
-          textStyle={{padding:0}}
-          titleStyle={{"fontSize":"18pt",padding:"16px 16px 0"}}
+          textStyle={{padding:0,color:'grey'}}
+          titleStyle={{"fontSize":"18pt",padding:"16px 16px 0",color:'grey'}}
           title={doc.title}
           />
           <CardText style={{textAlign: "left",padding:"0px 16px"}}>

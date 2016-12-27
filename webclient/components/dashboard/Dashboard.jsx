@@ -13,7 +13,7 @@ const iconStyle={
 
 		width: 30,
 		height: 30,
-		backgroundColor: "grey",
+		backgroundColor: "teal",
 		padding: 10,
 		borderRadius: 60
 	},
@@ -43,7 +43,7 @@ const iconStyle={
 	},
 	rightIconAvg:{
 		position:"relative",
-		margin:"20 0 0 ",		
+		margin:"20 0 0 ",
 		padding:0,
 		zDepth:10,
 		float:'right'
@@ -162,7 +162,7 @@ export default class Dashboard extends React.Component {
 
 		render() {
 			const smallNav=()=>{
-				return(<Row md={12} sm={12} xs={12} style={{marginBotton:20}}>				
+				return(<Row md={12} sm={12} xs={12} style={{marginBotton:20}}>
 					<Col md={4} sm={4} xs={4} style={{float:"left"}}>
 					<IconButton style={iconStyle.leftIconAvg} label="prev" disabled={prevFlag} data-id="prev"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
@@ -232,7 +232,7 @@ export default class Dashboard extends React.Component {
 							index={i} key={i} indexs={i} ref="show" item={item}/>
 							</Col>);
 					})}
-					</Container>					
+					</Container>
 					<Visible xl lg>
 					<IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
@@ -242,7 +242,7 @@ export default class Dashboard extends React.Component {
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
 					<NavigationArrowForward style={iconStyle.large} color={"white"} />
 					</IconButton>
-					</Visible>					
+					</Visible>
 					<Visible md sm xs>
 					{smallNav}
 					</Visible>
