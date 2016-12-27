@@ -97,8 +97,12 @@ const storeURL = function(id) {
           }
           else {
             console.log("saved "+i+" "+savedObj._id);
-            let objId=savedObj._id;
-            startCrawlerMQ(objId.toString());
+            let msgObj={
+              domain:jobDetails.exactTerms,
+              concept:jobDetails.query,
+              url:savedObj.url
+            };
+            startCrawlerMQ(msgObj);
               //ch.sendToQueue('hello', new Buffer(objId));
             }
           });

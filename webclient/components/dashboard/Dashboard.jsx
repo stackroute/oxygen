@@ -108,7 +108,7 @@ export default class Dashboard extends React.Component {
 					console.log("each Domain item")
 					console.log(item);
 					return (<Col lg={4} md={4} key={i}>
-						<DomainShow index={i} key={i} indexs={i} ref="show" item={item} 
+						<DomainShow index={i} key={i} indexs={i} ref="show" item={item}
 						conceptColor={this.state.conceptColor} intentColor={this.state.intentColor}/>
 						</Col>);
 				})}

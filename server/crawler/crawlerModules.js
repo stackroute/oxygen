@@ -2,6 +2,7 @@
 const keyword_extractor = require("keyword-extractor");
 const crawlerNeo4jController = require('./crawlerNeo4jController');
 const crawlerMongoController = require('./crawlerMongoController');
+const logger = require('./../../applogger');
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const extractData=function(data){
@@ -14,77 +15,76 @@ const extractData=function(data){
     remove_duplicates: false
   })
   data.text = txt;
-  console.log("in extract data")
+  logger.debug("Extracting the content from the URL");
   return data;
 }
 
-let termsFinder =function(data){
-  let promise = new promise(
-    function(resolve, reject){
-      crawlerNeo4jController.getTerms(data)
-      .then(function(data){
-        logger.debug("sucessfully got the intent of all domain");
-        resolve(data);
-      },
-      function(err){
-        logger.error("Encountered error in publishing a new " , err)
-        reject(err);
-      })
-    }
-    )
+let termsFinder = function(data){
+  let promise = new Promise(function(resolve,reject){
+    logger.debug('Trying to get the terms...!');
+    crawlerNeo4jController.getTerms(data)
+    .then(function(data){
+      logger.debug("sucessfully got ALL TERMS OF THE domain");
+      resolve(data);
+    },
+    function(err){
+      logger.error("Encountered error in publishing a new " , err)
+      reject(err);
+    })
+
+  })
+
   return promise
 }
 
 const termDensity=function(data){
-  let corpus = [];
+  let conceptInDoc = [];
   data.text.forEach(function (word) {
-  // We don't want to include very short or long words because they're probably bad data.
-  if (word.length > 20) {
-   return;
- }
-
- if (corpus[word]) {
-   // If this word is already in our corpus,
-   //our collection of terms, increase the count for appearances of that word by one.
-   corpus[word]+=1;
- } else {
-   // Otherwise, say that we've found one of that word so far.
-   corpus[word] = 1;
+    if (word.length > 20) {
+     return;
+   }
+   if (conceptInDoc[word]) {
+    conceptInDoc[word]+=1;
+  }
+  else {
+   conceptInDoc[word] = 1;
  }
 })
-  console.log("in term density")
-  data.allTerms = corpus;
+  logger.debug("Finding all the terms in the webDocument ")
+  data["allTerms"] = conceptInDoc;
   return data
 }
 
 const interestedWords=function(data){
- let concept = [];
+ let terms = [];
  let otherWords =[];
  for (let prop in data.allTerms) {
 
-  if(data.intrestedTerms.includes(prop))
+  //console.log(data.intrestedTerms);
+  if(data.interestedTerms.includes(prop))
   {
-    concept.push({
+    terms.push({
       word:prop,
-      density:corpus[prop]
+      intensity:data.allTerms[prop]
     });
   }
   else
   {
     otherWords.push({
-      otherWords:prop,
-      density:corpus[prop]
+      word:prop,
+      intensity:data.allTerms[prop]
     });
   }
 }
-console.log("returning the final result")
-data.concept = concept;
+logger.debug("Finding the terms and otherWords from the webDocuments ")
+data.terms = terms;
 data.otherWords = otherWords;
+console.log(data.terms)
 return data;
 }
 
 let indexUrl =function(data){
-  let promise = new promise(
+  let promise = new Promise(
     function(resolve, reject){
       crawlerNeo4jController.getUrlIndexed(data)
       .then(function(data){
@@ -101,11 +101,12 @@ let indexUrl =function(data){
 }
 
 let saveWebDocument = function(data){
-  let promise = new promise(
+  let promise = new Promise(
     function(resolve, reject){
-      crawlerMongoController.mapWebDocument(data)
-      .then(function(data){
+      crawlerMongoController.saveNewWebDocument(data.data)
+      .then(function(mongoData){
         logger.debug("sucessfully saved the document")
+        logger.debug("after mongo saving "+data.intents)
         resolve(data);
       },
       function(err){
@@ -117,11 +118,24 @@ let saveWebDocument = function(data){
   return promise
 }
 
+let parseEachIntent = function(dataWithIntentColln){
+  let data=dataWithIntentColln.data;
+   let intents=dataWithIntentColln.intents;
+  logger.debug("parseEachIntent "+data.domain)
+   logger.debug("parseEachIntent "+intents)
+   intents.forEach(function(intent){
+     data['intent']=intent;
+
+     return data;
+   })
+}
+
 module.exports = {
  interestedWords:interestedWords,
  termDensity:termDensity,
  termsFinder: termsFinder,
  indexUrl: indexUrl,
  saveWebDocument:saveWebDocument,
- extractData:extractData
+ extractData:extractData,
+ parseEachIntent:parseEachIntent
 }
