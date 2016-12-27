@@ -5,7 +5,7 @@ import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
-import {Row, Col} from 'react-grid-system';
+import {Row, Col,ScreenClassRender} from 'react-grid-system';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
@@ -30,11 +30,18 @@ large: {
   padding: 30
 },
 place:{
-  position:"fixed",
-  top: "10%",
-  right:"5%"
+  position:"relative",
+  marginTop: "10%",
+  marginRight:"5%"
 }
 }
+const styleFunction = (screenClass) => {
+  if (screenClass === 'xl') return { fontSize: '35px' };
+  if (screenClass === 'lg') return { fontSize: '35px' };
+  if (screenClass === 'md') return { fontSize: '25px' };
+  if (screenClass === 'sm') return { fontSize: '18px' };
+  return { fontSize: '15px' };
+};
 export default class Graph extends React.Component {
   constructor(props) {
     super(props)
@@ -171,14 +178,16 @@ export default class Graph extends React.Component {
     <div style={fonts}>
 
     <Row>
-    <Col sm={12} xs={3} md={3} lg={2} xl={2}>
+    <Col sm={12} xs={12} md={2} lg={2} xl={2}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
-    <Col sm={12} xs={9} md={9} lg={10} xl={10}>
+    <Col sm={12} xs={12} md={10} lg={10} xl={10}>
     <Row>
-    <Col sm={12}>
-    <h1 style={{textAlign:"left",color:"#8aa6bd",fontSize:"35pt"}}>
+    <Col>
+    <ScreenClassRender style={styleFunction}>
+    <h1 style={{textAlign:"left",color:"#8aa6bd"}}>
     {this.state.domainName.toUpperCase()} </h1>
+    </ScreenClassRender>
     <Link to="/dashboard">
     <IconButton style={styles.place} iconStyle={styles.largeIcon}>
     <ActionHome style={styles.large} color={"white"} />

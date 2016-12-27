@@ -4,7 +4,7 @@ import Formsy from 'formsy-react';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import {Container, Row, Col} from 'react-grid-system';
+import {Container, Row, Col,Visible} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
 // const defaultImgURL='http://corevitality.com/'+
 // 'wp-content/uploads/2015/08/27114989-Coming-soon-blue'+
@@ -15,11 +15,20 @@ const style = {
   bottom: "5%",
   right:"5%"
 };
-
+const styleAvg = {
+  position:"relative",
+  marginBottom: "5%"
+};
 const tfont={
   fontSize:"15px"
 }
-const Label={paddingLeft:"30px",paddingTop:"20px",fontWeight:"bold"};
+const titleDialog={
+  color: "#858586",
+  fontSize: 30,
+  backgroundColor: "#c7c7c7"
+
+}
+const Label={paddingLeft:"15px",paddingTop:"20px",fontWeight:"bold",color:"grey"};
 
 const errorMessages= {
   wordsError: "Please only use letters"
@@ -104,10 +113,10 @@ handleSubmit() {
     const actions = [
     <FlatButton
     label="Cancel"
-    primary={true}
+    secondary={true}
     onTouchTap={this.handleClose} />,
     <FlatButton
-    label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
+    label={'Add'} primary={true}  type="submit" disabled={!this.state.canSubmit}
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
     let {wordsError} = errorMessages;
@@ -116,11 +125,19 @@ handleSubmit() {
     // });
     return (
       <div>
+      <Visible xl lg>
       <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
       <ContentAdd />
       </FloatingActionButton>
+      </Visible>
+      <Visible xs sm md>
+      <FloatingActionButton style={styleAvg} onTouchTap={this.handleOpen}>
+      <ContentAdd />
+      </FloatingActionButton>
+      </Visible>
       <Dialog
       title="Add Domain"
+      titleStyle={titleDialog}
       actions={actions}
       modal={true}
       autoScrollBodyContent={true}
@@ -145,7 +162,7 @@ handleSubmit() {
       fullWidth={true}
       updateImmediately
       required
-      hintText="value"
+      hintText="Name of the Domain"
       style={tfont} onChange={this.onChangeSubject.bind(this)}/></Col>
       </Row>
 
@@ -157,7 +174,7 @@ handleSubmit() {
       validationError={wordsError}
       updateImmediately
       required
-      hintText="value"
+      hintText="Some words about the Domain"
       style={tfont}
       fullWidth={true} onChange={this.onChangeDescription.bind(this)}/></Col>
       </Row>
@@ -169,7 +186,7 @@ handleSubmit() {
       name="imageUrl"
       validationError={wordsError}
       updateImmediately
-      hintText="value"
+      hintText="Image url to b displayed"
       style={tfont}
       fullWidth={true} onChange={this.onChangeImageUrl.bind(this)}/></Col>
       </Row>

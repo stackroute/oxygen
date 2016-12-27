@@ -8,6 +8,7 @@ const styles = {
 },
 paper:{
   marginTop:"-20px",
+  minWidth:250,
   backgroundColor:"#eaeaea",
   height:"731px",
   textAlign:"left",
@@ -29,7 +30,7 @@ export default class SelectPanel extends React.Component {
       <div >      
       <Paper style={styles.paper} zDepth={2} rounded={false}>
       <h2 style={{color:"grey"}}>INTENTS</h2>      
-      <div style={{overflowY:"scroll",height:"630px"}}>
+      <div style={{height:"630px"}}>
       {
         this.props.intents.map((intent,i)=>{
           return (<Checkbox

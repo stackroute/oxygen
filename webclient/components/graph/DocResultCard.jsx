@@ -5,7 +5,7 @@ import Paper from 'material-ui/Paper';
 const jobcard={
   padding: 0,
   fontWeight: "bold",
-  textAlign:"center"
+  textAlign:"left"
 }
 const layout={
   maxWidth:1200,
@@ -39,8 +39,7 @@ export default class DocResultCard extends React.Component {
         return (<Paper key={i} zDepth={4} style={layout} rounded={false}>
           <Card style={layout}>
           <CardHeader style={jobcard}
-          textStyle={{padding:0}}
-          titleStyle={{"fontSize":"18pt",padding:"16px 16px 0"}}
+          titleStyle={{fontSize:"18pt",padding:"16px 16px 0"}}
           title={doc.title}
           />
           <CardText style={{textAlign: "left",padding:"0px 16px"}}>
@@ -49,7 +48,7 @@ export default class DocResultCard extends React.Component {
           </p>
           <p style={{color:"gray"}}>
           <b>Link : </b>
-          <a href={doc.url} target="_blank">
+          <a href={doc.url} target="_blank" style={{fontSize:18,textDecoration:"none",color:"#1976d2 "}}>
           {doc.url}
           </a></p>
           </CardText>
