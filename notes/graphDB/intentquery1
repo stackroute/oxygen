@@ -37,12 +37,13 @@ FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'intent' THEN [1] ELSE [] END |
 # Create relationship among intent-intent, term-term and term-intent
 
 ### Create intent-intent relations
+
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
 MATCH (i:intent {name:Line.name})
 MATCH (pi:intent {nodeid:Line.`parent node id`})
-call apoc.create.relationship(i, Line.`parent relation`, {}, pi) YIELD rel as r
+call apoc.create.relationship(i, Line.`parent relation`,{weight:Line.weight}, pi) YIELD rel as r
 return i,pi,r
 
 
@@ -53,7 +54,7 @@ WITH Line
 WHERE Line.`node type` IS NOT NULL
 MATCH (n:term {name:Line.name})
 MATCH (pn:intent {nodeid:Line.`parent node id`})
-call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+call apoc.create.relationship(n, Line.`parent relation`,{weight:Line.weight}, pn) YIELD rel as r
 return n, pn, r
 
 ### Create term-term relations
@@ -63,7 +64,7 @@ WITH Line
 WHERE Line.`node type` IS NOT NULL
 MATCH (n:term {name:Line.name})
 MATCH (pn:term {nodeid:Line.`parent node id`})
-call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+call apoc.create.relationship(n, Line.`parent relation`, {weight:Line.weight}, pn) YIELD rel as r
 return n, pn, r
 
 
