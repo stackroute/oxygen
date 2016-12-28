@@ -23,36 +23,19 @@ const addJob = function(jobData, callback) {
 		return callback(null, job);
 	});
 };
-const addSearchJob = function(domainName,concept) {
+const addSearchJob = function(domainName,concept,selector) {
 	console.log(domainName+" "+concept)
-	let selector=0;
 	engineModel.find(function(err,engineColl)
 	{
 		engineColl.forEach(function(engineData){
-			let JobData;
-			if(selector!==config.ENGINES.length-1)
-			{
-				JobData={
-					query:concept,
-					engineID:engineData.engine[selector]+" "+engineData.key[selector],
-					exactTerms:domainName,
-					results:config.NO_OF_RESULTS,
-					siteSearch:'NONE'
-					
-				}
-				selector+=1;
-			}
-			else
-			{
-				selector=0;
-				JobData={
-					query:concept,
-					engineID:engineData.engine[selector]+" "+engineData.key[selector],
-					exactTerms:domainName,
-					results:config.NO_OF_RESULTS,
-					siteSearch:'NONE'
-					
-				}
+			
+			let JobData={
+				query:concept,
+				engineID:engineData.engine[selector]+" "+engineData.key[selector],
+				exactTerms:domainName,
+				results:config.NO_OF_RESULTS,
+				siteSearch:'NONE'
+
 			}
 			
 			let job=new docSearchJobModel(JobData);

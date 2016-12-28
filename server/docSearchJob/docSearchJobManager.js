@@ -38,7 +38,7 @@ let kickOffDomainIndexing = function(conceptsColln) {
           conceptsColln.Concepts.forEach(function(concept) {
 
             logger.debug("inside the domain indexing "+concept)
-            if(selector!==config.ENGINES.length-1)
+            if(selector!==config.KEYS.length-1)
             {
               jobCtrl.addSearchJob(conceptsColln.Domain, concept,selector);
               selector+=1;
