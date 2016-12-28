@@ -45,34 +45,24 @@ data.terms.forEach(function(term) {
   logger.debug("The prop "+ term.word);
   for (let counterItr in data.counterIndicatorTerms) {
 
-    if(term.word===data.counterIndicatorTerms[counterItr])
+    if(term.word===data.counterIndicatorTerms[counterItr].term)
     {
-      counter+=term.intensity;
+      counter+=(term.intensity)*(data.counterIndicatorTerms[counterItr].weight);
     }
   }
 
-  for (let indicatorItr in data.counterIndicatorTerms)
+  for (let indicatorItr in data.indicatorTerms)
   {
-    if(term.word===data.indicatorTerms[indicatorItr])
+    if(term.word===data.indicatorTerms[indicatorItr].term)
     {
-      indicator+=term.intensity;
+      indicator+=(term.intensity)*(data.indicatorTerms[indicatorItr].weight);
     }
   }
 })
 
 logger.debug("after calculation of counter "+ counter);
 logger.debug("after calculation of indicator "+ indicator);
-let intensity=0;
-if(indicator>0)
-{
-  let density=(indicator/(indicator+counter))*100;
-  density=(density-50)*2;
-  intensity=density;
-}
-else {
-  intensity=0;
-}
-logger.debug("after calculation of rating "+ intensity);
+let intensity=indicator-counter;
 data.intensity=intensity;
 
 return data;

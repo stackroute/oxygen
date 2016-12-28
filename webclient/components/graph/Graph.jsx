@@ -26,6 +26,10 @@ const fonts={
 const suggest={
   color:"grey"
 }
+const drawer={
+  paddingLeft:0,
+  paddingRight:0
+}
 const styles={
  largeIcon: {
 
@@ -197,7 +201,7 @@ export default class Graph extends React.Component {
     <Col lg={12} md={12} sm={12} xs={12}>
     <ScreenClassRender style={styleFunction}>
     <h1>
-    {this.state.domainName.toUpperCase()} 
+    {this.state.domainName.toUpperCase()}
     </h1>
     </ScreenClassRender>
     </Col>
@@ -218,7 +222,7 @@ export default class Graph extends React.Component {
     </Row>
     <br/><br/>
     <Row>
-    <Col sm={12}>
+    <Col sm={8}>
     {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
     <DocResultCard webDocs={this.state.docs}/>}
     </Col>
@@ -227,13 +231,14 @@ export default class Graph extends React.Component {
     </Visible>
 
 
-    <Visible md sm xs>
+    <Visible  style={{padding:0}} md sm xs>
 
     <Drawer open={this.state.open}
     onRequestChange={this.handleToggle}
     docked={false}
     >
-    <MenuItem><SelectPanel intents={this.state.intents} 
+    <MenuItem><SelectPanel intents={this.state.intents}
+      
     getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
     </Drawer>
 
@@ -242,7 +247,7 @@ export default class Graph extends React.Component {
     <Col md={10} sm={10} xs={10}>
     <ScreenClassRender style={styleFunction}>
     <h1>
-    {this.state.domainName.toUpperCase()} 
+    {this.state.domainName.toUpperCase()}
     </h1>
     </ScreenClassRender>
     </Col>

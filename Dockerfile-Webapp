@@ -4,4 +4,4 @@ WORKDIR /usr/src/app
 
 EXPOSE 8080
 
-CMD ["npm", "start", "--production"]
+CMD ["npm", "run", "www", "--production"]

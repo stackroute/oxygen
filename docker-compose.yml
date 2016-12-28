@@ -16,11 +16,17 @@ services:
     - mongodb
     - rabbitmq
     - neo4j
+    - redis
     environment:
-      RABBITMQ: amqp://localhost
+      RABBITMQ_HOST: amqp://localhost
+      RABBITMQ_PORT: 5672
+      NEO4J_PORT: 7474
+      NEO4J_HOST: localhost
       MONGO_HOST: localhost
       MONGO_PORT: 27017
       MONGO_DB_NAME: oxygen
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
   search:
     image: oxygen/oxygen-search:v0.1.0
     build: 
@@ -29,17 +35,19 @@ services:
     # container_name: oxygen-search
     network_mode: host
     restart: always
-    expose:
-      - 8081
     depends_on:
     - mongodb
     - rabbitmq
+    - redis
     environment:
-      RABBITMQ: amqp://localhost
+      RABBITMQ_HOST: amqp://localhost
+      RABBITMQ_PORT: 5672
       MONGO_HOST: localhost
       MONGO_PORT: 27017
       MONGO_DB_NAME: oxygen
-  crawl:
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+crawl:
     image: oxygen/crawl:v0.1.0
     build: 
       context: ./
@@ -47,17 +55,44 @@ services:
     # container_name: oxygen-crawl
     network_mode: host
     restart: always
-    expose:
-      - 8082
     depends_on:
     - mongodb
     - rabbitmq
     - neo4j
+    - redis
     environment:
-      RABBITMQ: amqp://localhost
+      RABBITMQ_HOST: amqp://localhost
+      RABBITMQ_PORT: 5672
+      NEO4J_PORT: 7474
+      NEO4J_HOST: localhost
       MONGO_HOST: localhost
       MONGO_PORT: 27017
       MONGO_DB_NAME: oxygen
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+  parser:
+    image: oxygen/parser:v0.1.0
+    build: 
+      context: ./
+      dockerfile: Dockerfile-Parser
+    # container_name: oxygen-parser
+    network_mode: host
+    restart: always
+    depends_on:
+    - mongodb
+    - rabbitmq
+    - neo4j
+    - redis
+    environment:
+      RABBITMQ_HOST: amqp://localhost
+      RABBITMQ_PORT: 5672
+      NEO4J_PORT: 7474
+      NEO4J_HOST: localhost
+      MONGO_HOST: localhost
+      MONGO_PORT: 27017
+      MONGO_DB_NAME: oxygen
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
   mongodb:
     # container_name: mongodb
     image: mvertes/alpine-mongo
@@ -79,15 +114,31 @@ services:
     expose:
       - 15672
     ports:
-      - "15672:15672"
+      - "15672:5672"
   neo4j:
     # container_name: neo4j
-    image: neo4j
+    image: neo4j:latest
     network_mode: host
     restart: always
-    volumes:
-      - /data:/data/db
-    expose:
-      - 7474
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    cap_add:
+      - SYS_RESOURCE
     ports:
       - "7474:7474"
+      - "7687:7687"
+      - "1337:1337"
+    volumes:
+      - ./neo4j/plugins:/plugins
+      - ./neo4j/data:/data
+      - ./neo4j/import:/var/lib/neo4j/import
+  redis:
+   # container_name: redis
+   image: smebberson/alpine-redis
+   restart: always
+   expose:
+     - 6379
+   ports:
+      - "6379:6379"
+
+
