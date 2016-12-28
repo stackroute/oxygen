@@ -19,7 +19,7 @@ const rabbitmq = {
 
 const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' + masterMongoDBName);
 
-const neo4jURL = ('bolt://172.23.238.184');
+const neo4jURL = ('bolt://localhost');
 
 const rabbitmqURL = ('amqp://' + rabbitmq.host + ':' + rabbitmq.port);
 
@@ -32,7 +32,7 @@ module.exports = {
 	REDIS_PORT: '6379',
 	REDIS_HOST: 'localhost',	
 	MONGO_URL: mongoURL,
-	NEO4J_HOST: '172.23.238.184',
+	NEO4J_HOST: 'localhost',
 	NEO4J_BOLT_URL: neo4jURL,
 	NEO4J_USR: 'neo4j',
 	NEO4J_PWD: 'password',
