@@ -31,8 +31,8 @@ let initialiseDomainOntology = function(domainName) {
     query += 'MERGE (cti:'+config.NEO4J_TERM+'{name:{counterIndicatorTerm}}) ';
     query += 'MERGE (c)-[cr:'+config.NEO4J_CON_REL+']->(d) ';
     query += 'MERGE (i)-[ir:'+config.NEO4J_INT_REL+']->(d) ';
-    query += 'MERGE (ti)-[tir:'+config.NEO4J_IND_REL+']->(i) ';
-    query += 'MERGE (cti)-[ctir:'+config.NEO4J_CIND_REL+']->(i) ';
+    query += 'MERGE (ti)-[tir:'+config.NEO4J_IND_REL+' {weight:5}]->(i) ';
+    query += 'MERGE (cti)-[ctir:'+config.NEO4J_CIND_REL+' {weight:5}]->(i) ';
     query += 'return c,i,d,ti,cti,cr,ir,tir,ctir';
 
     const defaultConceptName = domainName;

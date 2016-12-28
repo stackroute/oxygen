@@ -79,7 +79,7 @@ let fetchCounterIndicatorTerms = function(data) {
     let query='MATCH (i:'+config.NEO4J_INTENT+'{name:{intentName}}) ';
     query+='MATCH (t:'+config.NEO4J_TERM+') ';
     query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
-    query += 'MATCH (n)<-[r:'+config.NEO4J_CIND_REL+']-(t) return t';
+    query += 'MATCH (n)<-[r:'+config.NEO4J_CIND_REL+']-(t) return t.name,r.weight';
 
     let params = {
       domainName: data.domain,
@@ -100,7 +100,7 @@ let fetchCounterIndicatorTerms = function(data) {
           }
           else
           {
-            obj['weight']=fields;
+            obj['weight']=Number(fields);
           counterIndicatorTerm.push(obj);
           }
         });
