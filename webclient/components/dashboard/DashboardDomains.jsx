@@ -1,19 +1,36 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
+import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
-import {Card, CardTitle,CardActions, CardMedia, CardText} from 'material-ui/Card';
-import {Row, Col} from 'react-grid-system';
+import {Card, CardTitle, CardMedia, CardText} from 'material-ui/Card';
+import {Container,Row, Col,Visible,Hidden,ScreamClassRender} from 'react-grid-system';
 import {Link} from 'react-router';
-import {grey300} from 'material-ui/styles/colors';
-import ActionBook from 'material-ui/svg-icons/action/book';
-const domaincard={
-	fontSize: "20px",
-	fontWeight: "bold",
-	textAlign:"left"
+import ActionInfo from 'material-ui/svg-icons/action/info';
+import {blue300,lime800,lightGreen500} from 'material-ui/styles/colors';
+import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 
-};
+const tooltipStyle={
+	padding:'10px',
+	zDepth:9999,
+	fontSize:'15px'
+}
+const info={
+	paddingLeft:0,
+	paddingTop:3
+}
+const iconStyles={
+	width:'28px',
+	height:'28px',
+	marginTop:5,
+	marginLeft:3
+}
+const iconStyles1={
+	width:'28px',
+	height:'28px',
+	marginTop: '5px',
+	paddingLeft:0,
+	float:'left'
+}
 const roundImg={
 	borderRadius: '50%',
 	minWidth:'0%',
@@ -22,109 +39,225 @@ const roundImg={
 	height:'145px'
 }
 const styles = {
-  chip: {
-    marginLeft: '5px',
-    padding:0,
-    marginBottom:'7px',
-		marginRight:'2px',
-  },
+	cardLabel:{
+		color:"white",
+		fontWeight:600
+	},
+	chip: {
+		marginTop: '10px',
+		marginLeft: '5px',
+		padding:0,
+		marginBottom:'7px',
+		marginRight:'2px'
+	},
 	cardRound:{
 		borderRadius: '2%',
+		marginBottom: '50px'
 	},
-  wrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  colorCode:{
-    color:'gray'
-  },
-  padd:{
-    paddingTop:'2px',
-    paddingBottom:'8px'
-  },
-  paddHeader:{
-    paddingTop:0,
-    paddingBottom:'6px',
-    marginRight:'7px',
-    color:'gray',
-  },
-  paddIcon:{
-    paddingTop:'5px',
-		width:'48',
-		height:'48',
-    marginBottom:0
-  }
+	colorCode:{
+		color:'grey',
+		padding:0
+	},
+	padd:{
+		paddingTop:'2px',
+		paddingBottom:'8px'
+	}
 };
-const cusbut={
-	paddingRight:0,
-  color:'green'
+const xsChip = {
+	cardLabel:{
+		color:"white",
+		fontWeight:600,
+		fontSize:20
+	},
+	chip: {
+		marginTop: '10px',
+		marginLeft: '5px',
+		padding:0,
+		fontWeight:600,
+		fontSize:20,
+		marginBottom:'7px',
+		marginRight:'2px'
+	}
 };
+
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {canSubmit:false}
-}
+		this.state = {canSubmit:false,conceptColor:'',intentColor:'',docsColor:''};
+	}
+
+	handleRefresh() {
+		console.log('inside handle refresh');
+		this.props.freshlyIndex(this.props.item.name);
+	}
+
+
+	componentWillMount() 
+	{
+
+		if(this.props.item.docs===0)
+		{
+			this.setState({docsColor:blue300});
+		}
+		else if(this.props.item.docs<11)
+		{
+			this.setState({docsColor:lime800});
+		}
+		else {
+			this.setState({docsColor:lightGreen500});
+		}
+
+		if(this.props.item.intents.length===0)
+		{
+			this.setState({intentColor:blue300});
+		}
+		else if(this.props.item.intents.length<11)
+		{
+			this.setState({intentColor:lime800});
+		}
+		else {
+			this.setState({intentColor:lightGreen500});
+		}
+
+
+		if(this.props.item.concepts.length<5)
+		{
+			this.setState({conceptColor:blue300});
+		}
+		else if(this.props.item.concepts<15)
+		{
+			this.setState({conceptColor:lime800});
+		}
+		else {
+			this.setState({conceptColor:lightGreen500});
+		}
+
+	}
+
 	render()
 	{
 
 		return(
-			<div>
-        <Row style={{marginBottom: '20px',marginLeft:'10px'}}>
-				<Link to='/graph' style={{textDecoration:'none'}}>
-  			<Card style={styles.cardRound}>
-        <CardMedia style={{height:'280px',borderRadius: '2%',width :'100%',backgroundColor:this.props.conceptColor}} overlay={<CardTitle title={this.props.item.subject} subtitle="Domain" style={styles.padd}/>}>
-				<img src={this.props.item.image} style={roundImg}/>
-			  </CardMedia>
-        <CardText style={styles.colorCode}>
-        {this.props.item.description}
-        </CardText>
-        <Row>
-        <Col sm={3}><IconButton><ActionBook style={styles.paddIcon} /></IconButton></Col>
-        <Col sm={9}><h3 style={styles.paddHeader}>Concepts Available:{this.props.item.concepts}</h3></Col>
-        </Row>
-
-        <div>
-          <Row>
-          <Col sm={6}>
-          <Chip backgroundColor={grey300} style={styles.chip}>
-          <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[0]}>I</Avatar>
-          {this.props.item.intents[0].intent} {this.props.item.intents[0].docs}
-          </Chip>
-          </Col>
-          <Col sm={6}>
-          <Chip backgroundColor={grey300} style={styles.chip}>
-          <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[1]}>I</Avatar>
-          {this.props.item.intents[1].intent} {this.props.item.intents[1].docs}
-          </Chip>
-          </Col>
-          </Row>
-          <Row>
-            <Col sm={6}>
-            <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[2]}>I</Avatar>
-            {this.props.item.intents[2].intent} {this.props.item.intents[2].docs}
-            </Chip>
-            </Col>
-            <Col sm={6}>
-            <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[3]}>I</Avatar>
-            {this.props.item.intents[3].intent} {this.props.item.intents[3].docs}
-            </Chip>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={6}>
-            <Chip backgroundColor={grey300} style={styles.chip}>
-            <Avatar size={32} color={grey300} backgroundColor={this.props.intentColor[4]}>I</Avatar>
-            {this.props.item.intents[4].intent} {this.props.item.intents[4].docs}
-            </Chip>
-            </Col>
-          </Row>
-         </div>
-  			</Card>
-				</Link>
-  			</Row>
-			</div>
+			
+			<Card style={styles.cardRound}>
+			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
+			<CardMedia style={{height:'280px',borderRadius: '2%',
+			width :'100%',backgroundColor:this.state.conceptColor}}
+			overlay={<CardTitle title={this.props.item.name} subtitle="Domain" style={styles.padd}/>}>
+			<img src={this.props.item.domainImgURL} style={roundImg}/>
+			</CardMedia>
+			</Link>
+			<CardText style={styles.colorCode}>
+			<Row style={{margin:"auto 0px"}}>
+			<Col xs={2} sm={2} >
+			<IconButton iconStyle={iconStyles} tooltip={this.props.item.description}
+			tooltipStyles={tooltipStyle} tooltipPosition="top-left">
+			<ActionInfo />
+			</IconButton>
+			</Col>
+			<Col xs={8} sm={8} >
+			<h2 style={info}>Domain Information</h2>
+			</Col>
+			<Col xs={2} sm={2} >
+			<IconButton iconStyle={iconStyles1} style={{paddingLeft:0}}
+			onClick={this.handleRefresh.bind(this)}>
+			<NavigationRefresh/>
+			</IconButton>
+			</Col>
+			</Row>
+			</CardText>
+			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
+			<Row style={{margin:"auto 0px"}}>
+			<Visible sm md lg xl>
+			<Row style={{paddingLeft:45}}>			
+			<Col sm={6}>
+			<Chip backgroundColor={"grey"} labelStyle={styles.cardLabel}
+			style={styles.chip}>Concepts Available:</Chip>			
+			</Col>
+			<Col sm={3} style={{paddingLeft:58}}>
+			<Chip backgroundColor={this.state.conceptColor}
+			labelStyle={styles.cardLabel} style={styles.chip}>
+			{this.props.item.concepts.length}
+			</Chip>
+			</Col>
+			</Row>
+			<Row style={{paddingLeft:45}}>
+			<Col sm={6}>			
+			<Chip backgroundColor={"grey"}
+			labelStyle={styles.cardLabel}
+			style={styles.chip}>Intents Available:</Chip>			
+			</Col>
+			<Col sm={3} style={{paddingLeft:58}}>
+			<Chip backgroundColor={this.state.intentColor}
+			labelStyle={styles.cardLabel} style={styles.chip}>
+			{this.props.item.intents.length}
+			</Chip>
+			</Col>
+			</Row>
+			<Row style={{paddingLeft:45,paddingBottom:10}}>
+			<Col sm={6}>			
+			<Chip backgroundColor={"grey"}
+			labelStyle={styles.cardLabel}
+			style={styles.chip}>Documents Available:</Chip>			
+			</Col>
+			<Col sm={3}style={{paddingLeft:58}}>
+			<Chip backgroundColor={this.state.docsColor}
+			labelStyle={styles.cardLabel}
+			style={styles.chip}>
+			{this.props.item.docs}
+			</Chip>
+			</Col>					
+			</Row>	
+			</Visible>	
+			<Visible xs>
+			<Container>
+			<Row style={{marginLeft:"-5px",padding:"0 15px 20px"}}>
+			<Col xs={4} style={{paddingLeft:0}}>
+			<Chip
+			labelStyle={xsChip.cardLabel}
+			style={xsChip.chip}
+			backgroundColor={this.state.conceptColor}
+			>
+			<Avatar size={32} color="white" backgroundColor="grey">
+			C
+			</Avatar>			
+			{this.props.item.concepts.length}
+			</Chip>
+			</Col>
+			<Col xs={4} style={{paddingLeft:0}}>
+			<Chip
+			labelStyle={xsChip.cardLabel}
+			style={xsChip.chip}
+			backgroundColor={this.state.intentColor}
+			>
+			<Avatar size={32} color="white" backgroundColor="grey">
+			I
+			</Avatar>			
+			{this.props.item.intents.length}
+			</Chip>
+			</Col>
+			<Col xs={4} style={{paddingLeft:0}}>
+			<Chip
+			labelStyle={xsChip.cardLabel}
+			style={xsChip.chip}
+			backgroundColor={this.state.docsColor}
+			>
+			<Avatar size={32} color="white" backgroundColor="grey">
+			D
+			</Avatar>			
+			{this.props.item.docs}
+			</Chip>
+			</Col>
+			</Row>
+			</Container>
+			</Visible>	
+			</Row>
+			</Link>
+			</Card>
 			);
 	}
+}
+DomainShow.propTypes = {
+	item: React.PropTypes.object,
+	freshlyIndex:React.PropTypes.func
 }

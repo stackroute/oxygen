@@ -3,6 +3,7 @@ const keyword_extractor = require("keyword-extractor");
 const crawlerNeo4jController = require('./crawlerNeo4jController');
 const crawlerMongoController = require('./crawlerMongoController');
 const logger = require('./../../applogger');
+
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const extractData=function(data){
@@ -17,15 +18,16 @@ const extractData=function(data){
   data.text = txt;
   logger.debug("Extracting the content from the URL");
   return data;
+
 }
 
 let termsFinder = function(data){
   let promise = new Promise(function(resolve,reject){
     logger.debug('Trying to get the terms...!');
     crawlerNeo4jController.getTerms(data)
-    .then(function(data){
+    .then(function(dataWithTerms){
       logger.debug("sucessfully got ALL TERMS OF THE domain");
-      resolve(data);
+      resolve(dataWithTerms);
     },
     function(err){
       logger.error("Encountered error in publishing a new " , err)
@@ -51,7 +53,9 @@ const termDensity=function(data){
  }
 })
   logger.debug("Finding all the terms in the webDocument ")
-  data["allTerms"] = conceptInDoc;
+  data.allTerms = conceptInDoc;
+  
+ 
   return data
 }
 
@@ -79,7 +83,8 @@ const interestedWords=function(data){
 logger.debug("Finding the terms and otherWords from the webDocuments ")
 data.terms = terms;
 data.otherWords = otherWords;
-console.log(data.terms)
+console.log(data.terms);
+
 return data;
 }
 
@@ -87,9 +92,9 @@ let indexUrl =function(data){
   let promise = new Promise(
     function(resolve, reject){
       crawlerNeo4jController.getUrlIndexed(data)
-      .then(function(data){
+      .then(function(indexedData){
         logger.debug("successfully indexed the url")
-        resolve(data);
+        resolve(indexedData);
       },
       function(err){
         logger.error("Encountered error in publishing a new " , err)
@@ -106,6 +111,7 @@ let saveWebDocument = function(data){
       crawlerMongoController.saveNewWebDocument(data.data)
       .then(function(mongoData){
         logger.debug("sucessfully saved the document")
+        logger.debug(mongoData);
         logger.debug("after mongo saving "+data.intents)
         resolve(data);
       },
@@ -120,14 +126,15 @@ let saveWebDocument = function(data){
 
 let parseEachIntent = function(dataWithIntentColln){
   let data=dataWithIntentColln.data;
-   let intents=dataWithIntentColln.intents;
+  let intents=dataWithIntentColln.intents;
   logger.debug("parseEachIntent "+data.domain)
-   logger.debug("parseEachIntent "+intents)
-   intents.forEach(function(intent){
-     data['intent']=intent;
-
-     return data;
-   })
+  logger.debug("parseEachIntent "+intents)
+  intents.forEach(function(intent){
+   data.intent=intent;
+   
+ 
+   return data;
+ })
 }
 
 module.exports = {

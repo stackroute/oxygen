@@ -19,14 +19,14 @@ let fetchIndicatorTerms = function(data) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query='MATCH (i:Intent{name:{intentName}}) ';
-    query+='MATCH (t:Term) ';
-    query += 'MATCH (d:Domain{name:{domainName}})';
-    query += 'MATCH (n)<-[r:IndicatorOf]-(t) return t';
+    let query='MATCH (i:'+config.NEO4J_INTENT+'{name:{intentName}}) ';
+    query+='MATCH (t:'+config.NEO4J_TERM+') ';
+    query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
+    query += 'MATCH (n)<-[r:'+config.NEO4J_IND_REL+']-(t) return t';
 
     let params = {
       domainName: data.domain,
-      intentName: data.intent,
+      intentName: data.intent
     };
 
     session.run(query, params)
@@ -54,7 +54,7 @@ let fetchIndicatorTerms = function(data) {
 let fetchCounterIndicatorTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
 
-    logger.debug("Now proceeding to fetch Counter Indicator Terms: ",  data.intent);
+    logger.debug("Now proceeding to fetch Counter Indicator Terms: ",data.intent);
 
     let session = driver.session();
 
@@ -62,14 +62,14 @@ let fetchCounterIndicatorTerms = function(data) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query='MATCH (i:Intent{name:{intentName}}) ';
-    query+='MATCH (t:Term) ';
-    query += 'MATCH (d:Domain{name:{domainName}})';
-    query += 'MATCH (n)<-[r:CounterIndicatorOf]-(t) return t';
+    let query='MATCH (i:'+config.NEO4J_INTENT+'{name:{intentName}}) ';
+    query+='MATCH (t:'+config.NEO4J_TERM+') ';
+    query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
+    query += 'MATCH (n)<-[r:'+config.NEO4J_CIND_REL+']-(t) return t';
 
     let params = {
       domainName: data.domain,
-      intentName: data.intent,
+      intentName: data.intent
     };
 
     session.run(query, params)
@@ -106,18 +106,19 @@ let addIntentRelationship = function(data) {
     else {
 
 
-      logger.debug("Now proceeding to add intent as relationship b/w concept and doc ", data.intensity);
+      logger.debug("Now proceeding to add intent as relationship"
+        +" b/w concept and doc ", data.intensity);
 
       let session = driver.session();
 
-    logger.debug("domain "+data.domain);
+      logger.debug("domain "+data.domain);
       logger.debug("intent "+data.intent);
-        logger.debug("concept"+data.concept);
-          logger.debug("url"+data.url);
+      logger.debug("concept"+data.concept);
+      logger.debug("url"+data.url);
 
-      let query='MATCH (w:WebDocument{name:{documentUrl}}) ';
-      query+='MATCH (c:Concept{name:{conceptName}}) ';
-      query += 'MATCH (d:Domain{name:{domainName}})';
+      let query='MATCH (w:'+config.NEO4J_WEBDOCUMENT+'{name:{documentUrl}}) ';
+      query+='MATCH (c:'+config.NEO4J_CONCEPT+'{name:{conceptName}}) ';
+      query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
       query += 'MERGE (c)<-[r:'+data.intent+']-(w) SET r.intensity={intensity}';
 
       let params = {
@@ -128,9 +129,9 @@ let addIntentRelationship = function(data) {
         intensity: data.intensity
       };
 
-    session.run(query, params)
-    .then(function(result) {
-
+      session.run(query, params)
+      .then(function(result) {
+        logger.debug(result);
         // Completed!
         session.close();
         resolve(data);

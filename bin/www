@@ -6,6 +6,7 @@
 
 //Create instance of express based web app
 var app = require('../server/webapp.service')();
+var socketServer = require('../server/webapp.socket.server.js');
 var config = require('../config');
 var debug = require('debug')('dataDisplayApp:server');
 var http = require('http');
@@ -22,7 +23,7 @@ var port = normalizePort(config.WWW_PORT);
  */
 
 var server = http.createServer(app);
-
+socketServer.attach(server);
 /**
  * Listen on provided port, on all network interfaces.
  */

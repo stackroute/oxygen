@@ -1,24 +1,23 @@
 const logger = require('./../../applogger');
-
-//const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
-const highland = require('highland');
-
+const config = require('./../../config');
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function(urlDataObj) {
- let amqpConn = amqp.connect('amqp://localhost');
 
- amqpConn
- .then(function(conn) {
+  logger.debug("creating a connection with external source : ");
+  let amqpConn = amqp.connect(config.RABBITMQ_URL);
+
+
+  amqpConn
+  .then(function(conn) {
    logger.info('[*] Connected to AMQP successfully..!');
    return conn.createChannel();
  })
- .then(function(chConn) {
+  .then(function(chConn) {
    logger.info('[*] Established AMQP Channel connection successfully..!');
 
      //@TODO take the crawler MQ name from Config
      let crawlerMQName = 'crawler';
-     let arr=[]
      //making durable as false, so that .....
      chConn.assertQueue(crawlerMQName, { durable: false })
      .then(function(ok) {

@@ -4,31 +4,35 @@ import Formsy from 'formsy-react';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import {Container, Row, Col} from 'react-grid-system';
+import {Container, Row, Col,Visible} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
-import MenuItem from 'material-ui/MenuItem';
-import FormsySelect from 'formsy-material-ui/lib/FormsySelect';
-
+// const defaultImgURL='http://corevitality.com/'+
+// 'wp-content/uploads/2015/08/27114989-Coming-soon-blue'+
+// '-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
+const defaultImgURL='./../../assets/images/bulb.png';
 const style = {
   position:"fixed",
   bottom: "5%",
   right:"5%"
 };
-
+const styleAvg = {
+  position:"relative",
+  marginBottom: "5%"
+};
 const tfont={
   fontSize:"15px"
 }
-const Label={paddingLeft:"30px",paddingTop:"20px",fontWeight:"bold"};
+const titleDialog={
+  color: "#858586",
+  fontSize: 30,
+  backgroundColor: "#c7c7c7"
+
+}
+const Label={paddingLeft:"15px",paddingTop:"20px",fontWeight:"bold",color:"grey"};
 
 const errorMessages= {
-  wordsError: "Please only use letters",
-  numberError: "Please enter less than 100"
+  wordsError: "Please only use letters"
 } ;
-const customContentStyle = {
-  width: '100%',
-  height: '100%',
-  maxWidth: 'none'
-};
 
 export default class AddDomain extends React.Component {
 
@@ -40,30 +44,29 @@ export default class AddDomain extends React.Component {
     this.state={domain:{},
     canSubmit:false,
     open: false,
-    subject:"",
-    description:""}
+    subject:'',
+    description:'',
+    imageUrl:defaultImgURL
   }
-  handleSubmit() {
-    console.log('on calling handle sumbit while adding job');
-    var d=new Date();
-    var dte=""+d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();
-    let domain = {
-      subject: this.state.subject,
-      description:this.state.description,
-      user:'Admin',
-      creationDate:dte,
-      concepts:0,
-      image:'./../../assets/images/soon.png',
-      intents:[
-    		{intent:'basic',docs: 0},
-    		{intent:'tutorial',docs: 0},
-    		{intent:'example',docs: 0},
-    		{intent:'manual',docs: 0},
-    		{intent:'completeReference',docs: 0},
-    	 ]
+}
+handleSubmit() {
+  console.log('on calling handle sumbit while adding domain');
+  console.log(this.state.imageUrl)
+  console.log('going to ADD '+this.state.imageUrl);
+  let domain = {
+    name: this.state.subject,
+    description:this.state.description,
+    domainImgURL:this.state.imageUrl
+      //domainImgURL:'./../../assets/images/soon.png',
     };
+    if(domain.domainImgURL===""|| domain.domainImgURL.length<=5)
+    {
+      domain.domainImgURL=defaultImgURL;
+    }
     this.refs.form.reset();
     this.setState({domain:domain})
+    this.setState(
+      {imageUrl:defaultImgURL})
     console.log(domain);
     this.props.addDomain(domain);
   }
@@ -77,7 +80,18 @@ export default class AddDomain extends React.Component {
     this.setState({description:e.target.value})
     console.log(this.state.description);
   }
-
+  onChangeImageUrl(e)
+  {
+    this.setState({imageUrl:e.target.value})
+    if(this.state.imageUrl==='')
+    {
+      this.setState(
+        {imageUrl:'http://corevitality.com/'+
+        'wp-content/uploads/2015/08/27114989-Coming-soon-blue-grunge-retro-style-'+
+        'isolated-seal-Stock-Photo.jpg'})
+    }
+    console.log(this.state.imageUrl);
+  }
 
   handleOpen = () => {
     this.setState({open: true});
@@ -99,23 +113,34 @@ export default class AddDomain extends React.Component {
     const actions = [
     <FlatButton
     label="Cancel"
-    primary={true}
+    secondary={true}
     onTouchTap={this.handleClose} />,
     <FlatButton
-    label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
-    onTouchTap={this.handleClose} onClick={this.handleSubmit.bind(this)}/>
+    label={'Add'} primary={true}  type="submit" disabled={!this.state.canSubmit}
+    onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
-    let { wordsError, numberError,UrlError} = errorMessages;
+    let {wordsError} = errorMessages;
+    // Formsy.addValidationRule('isIn', function (values, value, array) {
+    // return array.indexOf(value) >= 0;
+    // });
     return (
       <div>
+      <Visible xl lg>
       <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
       <ContentAdd />
       </FloatingActionButton>
+      </Visible>
+      <Visible xs sm md>
+      <FloatingActionButton style={styleAvg} onTouchTap={this.handleOpen}>
+      <ContentAdd />
+      </FloatingActionButton>
+      </Visible>
       <Dialog
       title="Add Domain"
+      titleStyle={titleDialog}
       actions={actions}
       modal={true}
-    autoScrollBodyContent={true}
+      autoScrollBodyContent={true}
       open={this.state.open}
       >
       <Container>
@@ -124,7 +149,7 @@ export default class AddDomain extends React.Component {
       style={{"padding": "50px 24px"}}
       onValid={this.enableButton}
       onInvalid={this.disableButton}
-      onValidSubmit={this.handleSubmit.bind(this)}
+      onValidSubmit={this.handleSubmit}
       >
       <Row>
       <Col lg={3} style={Label}>DOMAIN</Col>
@@ -134,9 +159,10 @@ export default class AddDomain extends React.Component {
       name="domain"
       validations="isWords"
       validationError={wordsError}
+      fullWidth={true}
       updateImmediately
       required
-      hintText="value"
+      hintText="Name of the Domain"
       style={tfont} onChange={this.onChangeSubject.bind(this)}/></Col>
       </Row>
 
@@ -145,15 +171,25 @@ export default class AddDomain extends React.Component {
       <Col lg={9}><FormsyText
       type="textarea"
       name="description"
-      validations="isWords"
       validationError={wordsError}
       updateImmediately
       required
-      hintText="value"
+      hintText="Some words about the Domain"
       style={tfont}
       fullWidth={true} onChange={this.onChangeDescription.bind(this)}/></Col>
       </Row>
 
+      <Row>
+      <Col lg={3} style={Label}>IMAGE URL</Col>
+      <Col lg={9}><FormsyText
+      type="textarea"
+      name="imageUrl"
+      validationError={wordsError}
+      updateImmediately
+      hintText="Image url to be displayed"
+      style={tfont}
+      fullWidth={true} onChange={this.onChangeImageUrl.bind(this)}/></Col>
+      </Row>
 
       </Formsy.Form>
       </Container>
@@ -161,4 +197,7 @@ export default class AddDomain extends React.Component {
       </div>
       );
   }
+}
+AddDomain.propTypes = {
+  addDomain: React.PropTypes.func
 }

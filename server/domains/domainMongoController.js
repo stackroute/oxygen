@@ -1,13 +1,13 @@
 const DomainModel = require('./domainEntity').DomainModel;
-
+const SearcherResultModel = require('./../searcher/searchEntity').searchModel;
 const logger = require('./../../applogger');
 
 let saveNewDomain = function(newDomainObj) {
   let promise = new Promise(function(resolve, reject) {
 
-    newDomainObj = new DomainModel(newDomainObj);
+    let saveDomainObj = new DomainModel(newDomainObj);
 
-    newDomainObj.save(function(err, savedDomainObj) {
+    saveDomainObj.save(function(err, savedDomainObj) {
       if (err) {
         reject(err);
       }
@@ -17,7 +17,7 @@ let saveNewDomain = function(newDomainObj) {
           error: 'Null domain object created in mongo..!'
         });
       }
-
+      logger.debug("saved man")
       resolve(savedDomainObj);
     });
   })
@@ -28,9 +28,10 @@ let saveNewDomain = function(newDomainObj) {
 let checkDomain = function(domainName) {
   let promise = new Promise(function(resolve, reject) {
 
-    domainObj = {
+    let domainObj = {
       name:domainName
     };
+
 
     DomainModel.findOne(domainObj,function(err, foundDomain) {
       if (err) {
@@ -49,6 +50,45 @@ let checkDomain = function(domainName) {
   return promise;
 
 }
+
+let getAllDomain = function() {
+ let promise = new Promise(function(resolve, reject) {
+
+   DomainModel.find({},function(err, domainColln) {
+     if (err) {
+       reject(err);
+     }
+
+     logger.debug('**************',domainColln);
+     resolve(domainColln);
+   });
+ })
+
+ return promise;
+
+}
+
+let getSearchResultDocuments = function(url) {
+  let promise = new Promise(function(resolve, reject) {
+
+    let urlObj = {
+      url:url
+    };
+
+
+    SearcherResultModel.findOne(urlObj,function(err, foundDomain) {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(foundDomain);
+    });
+  })
+
+  return promise;
+
+}
+
 let saveNewDomainCallBack = function(newDomainObj, callback) {
   saveNewDomain(newDomainObj)
   .then(
@@ -60,6 +100,7 @@ let saveNewDomainCallBack = function(newDomainObj, callback) {
     });
 }
 
+
 let checkDomainCallback = function(domainName, callback) {
   checkDomain(domainName)
   .then(
@@ -69,6 +110,17 @@ let checkDomainCallback = function(domainName, callback) {
     function(err) {
       callback(err, null);
     });
+}
+
+let getAllDomainsCallback = function(callback) {
+ getAllDomain()
+ .then(
+   function(domainColln) {
+     callback(null, domainColln);
+   },
+   function(err) {
+     callback(err, null);
+   });
 }
 
 let getDomainObj = function(domainName, callback) {
@@ -102,8 +154,12 @@ let updateDomainStatus = function(domainName, status, statusText, callback) {
 module.exports = {
   saveNewDomain: saveNewDomain,
   checkDomain:checkDomain,
+  getAllDomain:getAllDomain,
+  getAllDomainsCallback:getAllDomainsCallback,
   checkDomainCallback:checkDomainCallback,
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,
-  getDomainObj: getDomainObj
+  getDomainObj: getDomainObj,
+  getSearchResultDocument:getSearchResultDocuments
+
 }

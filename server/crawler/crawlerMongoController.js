@@ -1,3 +1,4 @@
+
 const webDocumentsModel = require('./webDocumentsEntity').webDocumentsModel;
 
 const logger = require('./../../applogger');
@@ -10,9 +11,9 @@ let saveNewWebDocument = function(webDocument) {
 
   let promise = new Promise(function(resolve, reject) {
 
-    webDocument = new webDocumentsModel(webDocument);
+    let saveWebDocument = new webDocumentsModel(webDocument);
 
-    webDocument.save(function(err, data) {
+    saveWebDocument.save(function(err, data) {
       if (err) {
         reject(err);
       }

@@ -2,11 +2,10 @@
 'use strict';
 const logger = require('./../../applogger');
 const searchModel = require('./searchEntity').searchModel;
+const datapublisher = require('../serviceLogger/redisLogger');
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
 const Request = require('superagent');
-
-const amqp = require('amqplib');
 const startCrawlerMQ=require('./docOpenCrawlerEngine').startCrawler;
 
 const getURL= function(jobDetails,i,callback)
@@ -29,10 +28,11 @@ const getURL= function(jobDetails,i,callback)
   {
     if(err)
     {
-      console.log(body);
+      logger.error("encountered error while communicating with the google api :")
+      logger.error(err);
     }
 
-    //console.log(body);
+    console.log(body);
     let data = JSON.parse(body.text);
     //console.log(data)
     for (let k = 0; k < data.items.length; k+=1) {
@@ -98,12 +98,26 @@ const storeURL = function(id) {
           else {
             console.log("saved "+i+" "+savedObj._id);
             let msgObj={
-              domain:jobDetails.exactTerms,
-              concept:jobDetails.query,
-              url:savedObj.url
+              domain: jobDetails.exactTerms,
+              concept: jobDetails.query,
+              url: savedObj.url
             };
             startCrawlerMQ(msgObj);
+            let RedisSearch={
+              domain: jobDetails.exactTerms,
+              actor: 'searcher',
+              message: jobDetails.query,
+              status: 'search completed'
+            }
+             datapublisher.processFinished(RedisSearch);
               //ch.sendToQueue('hello', new Buffer(objId));
+              let redisCrawl={
+                domain: jobDetails.exactTerms,
+                actor: 'crawler',
+                message: savedObj.url,
+                status: 'crawl started for the url'
+              }
+              datapublisher.processStart(redisCrawl);
             }
           });
 
