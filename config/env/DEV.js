@@ -1,18 +1,18 @@
 const masterMongoDBName = process.env.APP_DB || 'oxygen';
 
 const mongo = {
-	host: process.env.MONGO_HOST || '127.0.0.1',
+	host: process.env.MONGO_HOST || 'localhost',
 	port: process.env.MONGO_PORT || 27017
 };
 
 
 const redis = {
-	host : process.env.REDIS_HOST || '127.0.0.1',
+	host : process.env.REDIS_HOST || 'localhost',
 	port : process.env.REDIS_PORT || 6379
 }
 
 const rabbitmq = {
-	host: process.env.RABBITMQ_HOST || '127.0.0.1',
+	host: process.env.RABBITMQ_HOST || 'localhost',
 	port: process.env.RABBITMQ_PORT || 5672
 };
 
@@ -30,7 +30,7 @@ module.exports = {
 	MONGO_MASTER_SERVER: mongo,
 	REDIS_SERVER : redis,
 	REDIS_PORT: '6379',
-	REDIS_HOST: 'localhost',	
+	REDIS_HOST: 'localhost',
 	MONGO_URL: mongoURL,
 	NEO4J_HOST: 'localhost',
 	NEO4J_BOLT_URL: neo4jURL,

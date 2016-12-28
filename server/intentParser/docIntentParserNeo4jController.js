@@ -22,7 +22,7 @@ let fetchIndicatorTerms = function(data) {
     let query='MATCH (i:'+config.NEO4J_INTENT+'{name:{intentName}}) ';
     query+='MATCH (t:'+config.NEO4J_TERM+') ';
     query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
-    query += 'MATCH (n)<-[r:'+config.NEO4J_IND_REL+']-(t) return t';
+    query += 'MATCH (n)<-[r:'+config.NEO4J_IND_REL+']-(t) return t.name,r.weight';
 
     let params = {
       domainName: data.domain,
@@ -33,7 +33,21 @@ let fetchIndicatorTerms = function(data) {
     .then(function(result) {
       result.records.forEach(function(record) {
         logger.debug("Result from neo4j: ", record);
-        indicatorTerm.push(record._fields[0].properties.name);
+        let i=0;
+        let obj={};
+        record._fields.forEach(function(fields){
+          i++;
+          if(i==1)
+          {
+            obj['term']=fields;
+          }
+          else
+          {
+            obj['weight']=fields;
+          indicatorTerm.push(obj);
+          }
+        });
+
       });
 
         // Completed!
@@ -76,7 +90,21 @@ let fetchCounterIndicatorTerms = function(data) {
     .then(function(result) {
       result.records.forEach(function(record) {
         logger.debug("Result from neo4j: ", record);
-        counterIndicatorTerm.push(record._fields[0].properties.name);
+        let i=0;
+        let obj={};
+        record._fields.forEach(function(fields){
+          i++;
+          if(i==1)
+          {
+            obj['term']=fields;
+          }
+          else
+          {
+            obj['weight']=fields;
+          counterIndicatorTerm.push(obj);
+          }
+        });
+
       });
 
         // Completed!
