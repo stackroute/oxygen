@@ -25,6 +25,7 @@ const rabbitmqURL = ('amqp://' + rabbitmq.host + ':' + rabbitmq.port);
 
 module.exports = {
 
+
     WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
     MONGO_MASTER_DB_NAME: masterMongoDBName,
     MONGO_MASTER_SERVER: mongo,
@@ -68,5 +69,6 @@ module.exports = {
     "AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY",
     "AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U"],
     NO_OF_RESULTS:2
+
 
 };
