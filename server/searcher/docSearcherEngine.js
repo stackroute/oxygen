@@ -47,6 +47,7 @@ const startSearcher = function() {
        .each(function(dataObj) {
          logger.debug("Consuming the data: ", dataObj);
          storeURL(dataObj.data);
+  
        });
        }); //end of assertQueue
    }); //end of channelConnection

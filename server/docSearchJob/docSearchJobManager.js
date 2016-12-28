@@ -34,9 +34,21 @@ let kickOffDomainIndexing = function(conceptsColln) {
         
         innerPromise.then(function(data){
           logger.debug(data);
+          let selector=0;          
           conceptsColln.Concepts.forEach(function(concept) {
+
             logger.debug("inside the domain indexing "+concept)
-            jobCtrl.addSearchJob(conceptsColln.Domain, concept);
+            if(selector!==config.KEYS.length-1)
+            {
+              jobCtrl.addSearchJob(conceptsColln.Domain, concept,selector);
+              selector+=1;
+            }
+            else
+            {
+              selector=0;
+              jobCtrl.addSearchJob(conceptsColln.Domain, concept,selector);
+            }
+            
           })
           resolve({msg:'searcher and crawler finished their work'});
 

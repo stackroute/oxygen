@@ -8,11 +8,10 @@ const styles = {
 },
 paper:{
   marginTop:"-20px",
-  backgroundColor:"#eaeaea",
-  height:"731px",
-  textAlign:"left",
-  padding:"20px 25px 0px"
-
+  minWidth:150,
+ // backgroundColor:"#eaeaea",
+ textAlign:"left",
+ padding:"20 0 5px "
 
 }
 };
@@ -26,10 +25,8 @@ export default class SelectPanel extends React.Component {
   render()
   {
     return(
-      <div >      
-      <Paper style={styles.paper} zDepth={2} rounded={false}>
-      <h2 style={{color:"grey"}}>INTENTS</h2>      
-      <div style={{overflowY:"scroll",height:"630px"}}>
+      <div style={{textAlign:"left",paddingLeft:25}}>     
+      <h2 style={{color:"grey"}}>INTENTS</h2> 
       {
         this.props.intents.map((intent,i)=>{
           return (<Checkbox
@@ -41,9 +38,7 @@ export default class SelectPanel extends React.Component {
             style={styles.checkbox}
             />)
         })
-      }    
-      </div>
-      </Paper>
+      }
       </div>
       )
   }

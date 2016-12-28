@@ -4,10 +4,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {blue400, blue700} from 'material-ui/styles/colors';
-import Oxygen, {Welcome} from '../components/Welcome/';
-import JobResult, {Job} from '../components/Job/';
-import Dashboard from '../components/Dashboard/';
-import Graph from '../components/Graph';
+import Oxygen, {Welcome} from '../components/welcome/';
+import JobResult, {Job} from '../components/job/';
+import Dashboard from '../components/dashboard/';
+import Graph from '../components/graph';
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 injectTapEventPlugin();
 

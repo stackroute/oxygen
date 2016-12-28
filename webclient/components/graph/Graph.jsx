@@ -5,22 +5,37 @@ import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
-import {Row, Col} from 'react-grid-system';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import {Row, Col,ScreenClassRender,Visible} from 'react-grid-system';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import ActionHome from 'material-ui/svg-icons/action/home';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
+import MenuItem from 'material-ui/MenuItem';
+import Drawer from 'material-ui/Drawer';
+const iPanel={
+  minWidth:150,
+  backgroundColor:"#dadada",
+  minHeight:680
+}
 const fonts={
   margin: "0px auto",
   textAlign: "center",
   fontFamily: "sans-serif",
   color: "#1976d2"
 }
+const suggest={
+  color:"grey"
+}
+const drawer={
+  paddingLeft:0,
+  paddingRight:0
+}
 const styles={
  largeIcon: {
 
-  width: 30,
-  height: 30,
-  backgroundColor: "grey",
+  width: 28,
+  height: 28,
+  backgroundColor: "#a9a9a9",
   padding: 10,
   borderRadius: 60
 },
@@ -28,27 +43,33 @@ large: {
   width: 120,
   height: 120,
   padding: 30
-},
-place:{
-  position:"fixed",
-  top: "10%",
-  right:"5%"
 }
 }
+const styleFunction = (screenClass) => {
+  if (screenClass === 'xl') return { fontSize: '37px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'lg') return { fontSize: '35px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'md') return { fontSize: '30px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'sm') return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };
+  return { fontSize: '25px',textAlign:"left",color:"#8aa6bd" };
+};
 export default class Graph extends React.Component {
   constructor(props) {
     super(props)
     console.log(this.props)
     this.state={
-      msgCaption:"CLICK SEARCH TO SHOW THE DOCUMENTS",
+      msgCaption:"FIND YOUR SUGGESTED DOCUMENTS HERE",
       domainName:"",
       concepts:[],
       intents:[],
       docs:[],
       checkedIntent:[],
-      selectedConcept:[]
+      selectedConcept:[],
+      open:false
     }
   }
+
+  handleToggle = () => this.setState({open: !this.state.open});
+
   getConcepts(concept)
   {
     let newConcepts=this.state.selectedConcept;
@@ -116,10 +137,10 @@ export default class Graph extends React.Component {
   }
   searchDocuments()
   {
-    if(this.state.checkedIntent.length===0||this.state.selectedConcept.length===0)
+    if(this.state.selectedConcept.length===0)
     {
       this.setState({
-        msgCaption:"SORRY NO DOCUMENTS TO SHOW",
+        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN",
         docs:[]
       })
     }
@@ -146,14 +167,14 @@ export default class Graph extends React.Component {
   else {
     console.log("Response on documents show: ", JSON.parse(res.text));
     let response=JSON.parse(res.text);
-    if(typeof response.docs==="undefined" || response.docs.length===0 )
+    if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
-        msgCaption:"SORRY NO DOCUMENTS TO SHOW"
+        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN"
       })
     }
     this.setState({
-      docs:response.docs
+      docs:response
     })
   }
 });
@@ -171,46 +192,97 @@ export default class Graph extends React.Component {
     <div style={fonts}>
 
     <Row>
-    <Col sm={2}>
+    <Visible  lg xl>
+    <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
-    <Col sm={10}>
+    <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000}}>
     <Row>
-    <Col sm={12}>
-    <h1 style={{textAlign:"left",color:"#8aa6bd",fontSize:"35pt"}}>
-    {this.state.domainName.toUpperCase()} </h1>
-    <Link to="/dashboard">
-    <IconButton style={styles.place} iconStyle={styles.largeIcon}>
-    <NavigationArrowBack style={styles.large} color={"white"} />
-    </IconButton>
-    </Link>
+    <Col lg={12} md={12} sm={12} xs={12}>
+    <ScreenClassRender style={styleFunction}>
+    <h1>
+    {this.state.domainName.toUpperCase()}
+    </h1>
+    </ScreenClassRender>
     </Col>
     </Row>
     <Row>
-    <Col sm={12}>
+    <Col sm={12} xs={12} md={12} lg={12} xl={12}>
     <AutoCompleteSearchBox concepts={this.state.concepts}
     searchDocument={this.searchDocuments.bind(this)}
     getConcept={this.getConcepts.bind(this)}/>
     <Row>
     <Col sm={12}>
-    {this.state.selectedConcept.length===0?<h4>SELECT THE CONCEPTS</h4>:
-      <SelectedConcepts conceptChips={this.state.selectedConcept}
-      deleteConcept={this.deleteConcepts.bind(this)} />}
-      </Col>
-      </Row>
-      </Col>
-      </Row>
-      <br/><br/>
-      <Row>
-      <Col sm={12}>
-      {this.state.docs.length===0?<h1>{this.state.msgCaption}</h1>:
-      <DocResultCard webDocs={this.state.docs}/>}
-      </Col>
-      </Row>
-      </Col>
-      </Row>
-      </div>
-      );
+    {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+    <SelectedConcepts conceptChips={this.state.selectedConcept}
+    deleteConcept={this.deleteConcepts.bind(this)} />}
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    <br/><br/>
+    <Row>
+    <Col sm={8}>
+    {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
+    <DocResultCard webDocs={this.state.docs}/>}
+    </Col>
+    </Row>
+    </Col>
+    </Visible>
+
+
+    <Visible  style={{padding:0}} md sm xs>
+
+    <Drawer open={this.state.open}
+    onRequestChange={this.handleToggle}
+    docked={false}
+    >
+    <MenuItem><SelectPanel intents={this.state.intents}
+      
+    getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
+    </Drawer>
+
+    <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
+    <Row>
+    <Col md={10} sm={10} xs={10}>
+    <ScreenClassRender style={styleFunction}>
+    <h1>
+    {this.state.domainName.toUpperCase()}
+    </h1>
+    </ScreenClassRender>
+    </Col>
+    <Col md={2} sm={2} xs={2}>
+    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
+    <NavigationMenu style={styles.large} color={"white"} />
+    </IconButton>
+    </Col>
+    </Row>
+    <Row>
+    <Col sm={12} xs={12} md={12} lg={12} xl={12}>
+    <AutoCompleteSearchBox concepts={this.state.concepts}
+    searchDocument={this.searchDocuments.bind(this)}
+    getConcept={this.getConcepts.bind(this)}/>
+    <Row>
+    <Col sm={12}>
+    {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+    <SelectedConcepts conceptChips={this.state.selectedConcept}
+    deleteConcept={this.deleteConcepts.bind(this)} />}
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    <br/><br/>
+    <Row>
+    <Col sm={12}>
+    {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
+    <DocResultCard webDocs={this.state.docs}/>}
+    </Col>
+    </Row>
+    </Col>
+    </Visible>
+    </Row>
+    </div>
+    );
 }
 }
 
