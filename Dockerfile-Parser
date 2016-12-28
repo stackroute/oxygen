@@ -1,0 +1,5 @@
+FROM oxygen-base
+
+WORKDIR /usr/src/app
+
+CMD ["npm", "run", "parser", "--production"]

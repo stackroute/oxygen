@@ -5,21 +5,20 @@ const mongo = {
 	port: process.env.MONGO_PORT || 27017
 };
 
-
-const redis = {
-	host : process.env.REDIS_HOST || '127.0.0.1',
-	port : process.env.REDIS_PORT || 6379
-}
-
 const rabbitmq = {
 	host: process.env.RABBITMQ_HOST || '127.0.0.1',
 	port: process.env.RABBITMQ_PORT || 5672
 };
 
+const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' +
+	masterMongoDBName);
 
-const mongoURL = ('mongodb://' + mongo.host + ':' + mongo.port + '/' + masterMongoDBName);
+const neo4j = {
+	host: process.env.NEO4J_HOST || '127.0.0.1',
+	port: process.env.NEO4J_PORT || '7687'	
+};
 
-const neo4jURL = ('bolt://localhost');
+const neo4jURL = ('bolt://' + neo4j.host + ':' + neo4j.port);
 
 const rabbitmqURL = ('amqp://' + rabbitmq.host + ':' + rabbitmq.port);
 
@@ -28,11 +27,13 @@ module.exports = {
 	WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
 	MONGO_MASTER_DB_NAME: masterMongoDBName,
 	MONGO_MASTER_SERVER: mongo,
-	REDIS_SERVER : redis,
-	REDIS_PORT: '6379',
-	REDIS_HOST: 'localhost',	
 	MONGO_URL: mongoURL,
-	NEO4J_HOST: 'localhost',
+	MONGO_HOST: mongo.host,
+	MONGO_PORT: mongo.port,
+	RABBITMQ_HOST: rabbitmq.host,
+	RABBITMQ_PORT: rabbitmq.port,
+	NEO4J_HOST: neo4j.host,
+	NEO4J_PORT: neo4j.port,
 	NEO4J_BOLT_URL: neo4jURL,
 	NEO4J_USR: 'neo4j',
 	NEO4J_PWD: 'password',
