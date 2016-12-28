@@ -25,16 +25,36 @@ const addJob = function(jobData, callback) {
 };
 const addSearchJob = function(domainName,concept) {
 	console.log(domainName+" "+concept)
+	let selector=0;
 	engineModel.find(function(err,engineColl)
 	{
 		engineColl.forEach(function(engineData){
-			let JobData={
-				query:concept,
-				engineID:engineData.engine[3]+" "+engineData.key[3],
-				exactTerms:domainName,
-				results:config.NO_OF_RESULTS,
-				siteSearch:'NONE'
+			let JobData;
+			if(selector!==config.ENGINES.length-1)
+			{
+				JobData={
+					query:concept,
+					engineID:engineData.engine[selector]+" "+engineData.key[selector],
+					exactTerms:domainName,
+					results:config.NO_OF_RESULTS,
+					siteSearch:'NONE'
+					
+				}
+				selector+=1;
 			}
+			else
+			{
+				selector=0;
+				JobData={
+					query:concept,
+					engineID:engineData.engine[selector]+" "+engineData.key[selector],
+					exactTerms:domainName,
+					results:config.NO_OF_RESULTS,
+					siteSearch:'NONE'
+					
+				}
+			}
+			
 			let job=new docSearchJobModel(JobData);
 			job.save(function(errorOnSave,data) {
 				if (errorOnSave) {
@@ -49,12 +69,12 @@ const addSearchJob = function(domainName,concept) {
 				// place the redis function here searcher started 
 				// job sent to searcher mq
 				let redisSearch={
-                domain: domainName,
-             	actor: 'searcher',
-                message: concept,
-                status: 'search started'
-                }
-                datapublisher.processStart(redisSearch);
+					domain: domainName,
+					actor: 'searcher',
+					message: concept,
+					status: 'search started'
+				}
+				datapublisher.processStart(redisSearch);
 
 			});
 

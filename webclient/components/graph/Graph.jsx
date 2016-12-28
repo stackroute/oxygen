@@ -12,6 +12,11 @@ import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
+const iPanel={
+  minWidth:150,
+  backgroundColor:"#dadada",
+  minHeight:680
+}
 const fonts={
   margin: "0px auto",
   textAlign: "center",
@@ -24,9 +29,9 @@ const suggest={
 const styles={
  largeIcon: {
 
-  width: 30,
-  height: 30,
-  backgroundColor: "grey",
+  width: 28,
+  height: 28,
+  backgroundColor: "#a9a9a9",
   padding: 10,
   borderRadius: 60
 },
@@ -183,25 +188,18 @@ export default class Graph extends React.Component {
     <div style={fonts}>
 
     <Row>
-    <Visible lg xl>
-    <Col sm={12} xs={12} md={2} lg={2} xl={2} style={{minWidth:150}}>
+    <Visible  lg xl>
+    <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
     <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000}}>
     <Row>
-    <Col lg={10} md={10} sm={10} xs={10}>
+    <Col lg={12} md={12} sm={12} xs={12}>
     <ScreenClassRender style={styleFunction}>
     <h1>
     {this.state.domainName.toUpperCase()} 
     </h1>
     </ScreenClassRender>
-    </Col>
-    <Col lg={2} md={2} sm={2} xs={2} style={{paddingLeft:0}}>
-    <Link to="/dashboard">
-    <IconButton iconStyle={styles.largeIcon}>
-    <ActionHome style={styles.large} color={"white"} />
-    </IconButton>
-    </Link>
     </Col>
     </Row>
     <Row>
@@ -231,29 +229,25 @@ export default class Graph extends React.Component {
 
     <Visible md sm xs>
 
-    <Drawer open={this.state.open}>
+    <Drawer open={this.state.open}
+    onRequestChange={this.handleToggle}
+    docked={false}
+    >
     <MenuItem><SelectPanel intents={this.state.intents} 
     getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
     </Drawer>
 
     <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
     <Row>
-    <Col md={8} sm={8} xs={8}>
+    <Col md={10} sm={10} xs={10}>
     <ScreenClassRender style={styleFunction}>
     <h1>
     {this.state.domainName.toUpperCase()} 
     </h1>
     </ScreenClassRender>
     </Col>
-    <Col md={2} sm={2} xs={2} style={{paddingLeft:0}}>
-    <Link to="/dashboard">
-    <IconButton iconStyle={styles.largeIcon}>
-    <ActionHome style={styles.large} color={"white"} />
-    </IconButton>
-    </Link>
-    </Col>
     <Col md={2} sm={2} xs={2}>
-    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle}>
+    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
     <NavigationMenu style={styles.large} color={"white"} />
     </IconButton>
     </Col>

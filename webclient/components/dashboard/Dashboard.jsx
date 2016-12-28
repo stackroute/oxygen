@@ -10,21 +10,21 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import IconButton from 'material-ui/IconButton';
 const paginationStyle1 = {
-    margin: 12,
-    marginBottom:50,
-    float:'left'
+	margin: 12,
+	marginBottom:50,
+	float:'left'
 };
 const paginationStyle2 = {
-    margin: 12,
-    marginBottom:50,
-    float:'right'
+	margin: 12,
+	marginBottom:50,
+	float:'right'
 };
 const iconStyle={
 	iconSize: {
 
 		width: 30,
 		height: 30,
-		backgroundColor: "teal",
+		backgroundColor: "#a9a9a9",
 		padding: 10,
 		borderRadius: 60
 	},
@@ -61,20 +61,20 @@ const iconStyle={
 	}
 }
 const fonts={
-    margin: "0px auto",
-    textAlign: "center",
-    fontFamily: "sans-serif",
-    color: "#1976d2 "
+	margin: "0px auto",
+	textAlign: "center",
+	fontFamily: "sans-serif",
+	color: "#1976d2 "
 }
 const style = {
-    refresh: {
-        marginTop:'200px',
-        display: 'inline-block',
-        position: 'relative'
-    }
+	refresh: {
+		marginTop:'200px',
+		display: 'inline-block',
+		position: 'relative'
+	}
 };
 export default class Dashboard extends React.Component {
-constructor(props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			domainList: [],canSubmit:false,errmsg:'',loading:'loading',pageNum:1};
