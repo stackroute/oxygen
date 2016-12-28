@@ -24,7 +24,8 @@ const fonts={
   color: "#1976d2"
 }
 const suggest={
-  color:"grey"
+  color:"grey",
+  textAlign:"center"
 }
 const drawer={
   paddingLeft:0,
@@ -154,7 +155,8 @@ export default class Graph extends React.Component {
       this.setState({
         docs:[]
       })
-
+      console.log("sending the data")
+      console.log(reqObj)
       let url =`/domain/documents/`+reqObj.domainName;
       Request
       .post(url)
@@ -162,7 +164,7 @@ export default class Graph extends React.Component {
       .end((err, res) => {
         if(err) {
     //res.send(err);
-    this.setState({errmsg: res.body});
+    console.log(err)
   }
   else {
     console.log("Response on documents show: ", JSON.parse(res.text));
@@ -212,7 +214,7 @@ export default class Graph extends React.Component {
     searchDocument={this.searchDocuments.bind(this)}
     getConcept={this.getConcepts.bind(this)}/>
     <Row>
-    <Col sm={12}>
+    <Col md={12} lg={12} xl={12}>
     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
     <SelectedConcepts conceptChips={this.state.selectedConcept}
     deleteConcept={this.deleteConcepts.bind(this)} />}
@@ -222,7 +224,7 @@ export default class Graph extends React.Component {
     </Row>
     <br/><br/>
     <Row>
-    <Col sm={8}>
+    <Col md={12} lg={12} xl={12}>
     {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
     <DocResultCard webDocs={this.state.docs}/>}
     </Col>
@@ -238,7 +240,7 @@ export default class Graph extends React.Component {
     docked={false}
     >
     <MenuItem><SelectPanel intents={this.state.intents}
-      
+    
     getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
     </Drawer>
 
@@ -258,12 +260,12 @@ export default class Graph extends React.Component {
     </Col>
     </Row>
     <Row>
-    <Col sm={12} xs={12} md={12} lg={12} xl={12}>
+    <Col sm={12} xs={12} md={12}>
     <AutoCompleteSearchBox concepts={this.state.concepts}
     searchDocument={this.searchDocuments.bind(this)}
     getConcept={this.getConcepts.bind(this)}/>
     <Row>
-    <Col sm={12}>
+    <Col sm={12} xs={12} md={12}>
     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
     <SelectedConcepts conceptChips={this.state.selectedConcept}
     deleteConcept={this.deleteConcepts.bind(this)} />}
@@ -273,7 +275,7 @@ export default class Graph extends React.Component {
     </Row>
     <br/><br/>
     <Row>
-    <Col sm={12}>
+    <Col sm={12} xs={12} md={12}>
     {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
     <DocResultCard webDocs={this.state.docs}/>}
     </Col>
