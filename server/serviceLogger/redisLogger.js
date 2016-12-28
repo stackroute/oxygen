@@ -1,25 +1,24 @@
-var redis = require('redis');
+const redis = require('redis');
 const config = require('./../../config');
-var client = redis.createClient(config.REDIS_PORT,config.REDIS_HOST); 
 
-var channelname = '';
+const client = redis.createClient(config.REDIS_PORT, config.REDIS_HOST); 
 
-
-const publishOnServiceStart = function(data){
-publishLog(data);
+const processStart = function(data){
+	let channelName = 'oxygen:onServiceUpdate';
+	publishLog(channelName, data);
 }
 
-const publishOnServiceEnd = function(data){
-publishLog(data);
+const processFinished = function(data){
+	let channelName = 'oxygen:onServiceUpdate';
+	publishLog(channelName, data);
 }
 
-publishLog = function(data) {
-data_string = JSON.stringify(data);
-channelname = 'oxygen:onServiceUpdate';
-client.publish(channelname,data_string);
+const publishLog = function(channelname, data) {
+	dataStr = JSON.stringify(data);
+	client.publish(channelname, dataStr);
 }
 
 module.exports = {
-  publishOnServiceStart: publishOnServiceStart,
-  publishOnServiceEnd: publishOnServiceEnd
+  processStart: processStart,
+  processFinished: processFinished
 }

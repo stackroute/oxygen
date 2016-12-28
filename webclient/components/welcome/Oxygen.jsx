@@ -29,7 +29,7 @@ export default class Oxygen extends React.Component {
      <div>
      <Link to="/welcome" style={{outline:0,border:"none"}}>
      <ScreenClassRender style={imgStyle}>
-     <img src='./../assets/images/oxy.png' />
+     <img src='./../assets/images/oxygen.jpg' />
      </ScreenClassRender>
      </Link>
      </div>

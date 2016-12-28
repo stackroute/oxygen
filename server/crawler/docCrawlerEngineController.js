@@ -89,14 +89,14 @@ const urlIndexing= function(data)
               message: dataObj.url,
               status: 'crawling completed for the url'
             }
-             datapublisher.publishOnServiceEnd(redisCrawl);
+             datapublisher.processFinished(redisCrawl);
       let redisIntent={
               domain: dataObj.domain,
               actor: 'intent parser',
               message: dataObj.intent,
               status: 'intent parsing started for the particular intent'
             }
-             datapublisher.publishOnServiceStart(redisIntent);
+             datapublisher.processStart(redisIntent);
 
     });
 
