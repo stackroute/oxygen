@@ -42,11 +42,12 @@ let findIntentIntensity=function(data){
 
 //check for alll trems indicator and counterIndicator
 data.terms.forEach(function(term) {
-  logger.debug("The prop "+ term.word);
+      logger.debug("The prop  "+ term.word+ " intensity "+term.intensity);
   for (let counterItr in data.counterIndicatorTerms) {
 
     if(term.word===data.counterIndicatorTerms[counterItr].term)
     {
+      logger.debug("This is the counter word "+ term.word+ " intensity "+term.intensity);
       counter+=(term.intensity)*(data.counterIndicatorTerms[counterItr].weight);
     }
   }
@@ -55,6 +56,7 @@ data.terms.forEach(function(term) {
   {
     if(term.word===data.indicatorTerms[indicatorItr].term)
     {
+      logger.debug("This is the counter word "+ term.word+ " intensity "+term.intensity);
       indicator+=(term.intensity)*(data.indicatorTerms[indicatorItr].weight);
     }
   }
