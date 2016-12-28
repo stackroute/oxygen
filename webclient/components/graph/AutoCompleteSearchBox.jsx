@@ -15,8 +15,9 @@ const style = {
   textAlign: 'center'
 };
 const iconSize={
-  width:50,
-  height:50
+  width:40,
+  height:40,
+  paddingTop:10
 }
 
 
@@ -31,7 +32,7 @@ export default class AutoCompleteSearchBox extends React.Component {
     return(
       <div style={{align:"center"}}>
       <Paper style={style} zDepth={2} rounded={false}>
-      <Row style={{padding:10}}>
+      <Row style={{padding:"0 20px"}}>
       <Col xs={10} sm={10} md={10} lg={10} xl={10}>
       <AutoComplete
       floatingLabelText="Search"
