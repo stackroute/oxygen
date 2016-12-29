@@ -9,12 +9,9 @@ const rev = require('gulp-rev');
 const minifyCss = require('gulp-minify-css');
 const clean = require('gulp-clean');
 const flatten = require('gulp-flatten');
-
 const eslint = require('gulp-eslint');
 const htmlhint = require('gulp-htmlhint');
-
 const gulpWebpack = require('gulp-webpack');
-
 const mocha = require('gulp-mocha');
 
 gulp.task('webpack', ['clean'], function() {
