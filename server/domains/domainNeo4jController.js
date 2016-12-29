@@ -308,29 +308,37 @@ let getWebDocuments = function(domainObj) {
 
     logger.debug("obtained connection with neo4j");
     let query='';
-    if(domainObj.reqIntents.length===0)
-    {
-      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) match(c:'+graphConsts.NODE_CONCEPT
-      +'{name:{conceptName}}) match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+
-      ']-(c) MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+') match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) RETURN w';
-    }
-    else {
-      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) match(c:'+graphConsts.NODE_CONCEPT
-      +'{name:{conceptName}}) match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+
-      ']-(c) MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+') match(c)<-[r1:'+
-      domainObj.reqIntents[0]+']-(w) RETURN w';
-    }
+    let str=JSON.stringify(domainObj.reqConcepts);
+    let str1=JSON.stringify(domainObj.reqIntents);
+    logger.debug("***********"+str+"     "+str1);
+      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) match(c:'+graphConsts.NODE_CONCEPT;
+      query+=') match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c) MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
+      query+=' match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
+      query+=' return w.name,sum(r.intensity) as sum order by sum desc';
 
     let params = {
-      domainName: domainObj.domainName,
-      conceptName: domainObj.reqConcepts[0]
+      domainName: domainObj.domainName
     };
+  logger.debug("@@@@@@@@@ "+query);
+
     let docs=[];
     session.run(query, params)
     .then(function(result) {
       result.records.forEach(function(record) {
+        logger.debug("Result from neo4j: ", record);
+        let i=0;
+        let obj={};
         record._fields.forEach(function(fields){
-          docs.push(fields.properties.name);
+          i++;
+          if(i==1)
+          {
+            obj['url']=fields;
+          }
+          else
+          {
+            obj['intensity']=Number(fields);
+          docs.push(obj);
+          }
         });
 
       });

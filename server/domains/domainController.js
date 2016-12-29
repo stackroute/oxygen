@@ -362,13 +362,13 @@ let fetchWebDocuments = function(domainObj) {
       {
        if (Object.prototype.hasOwnProperty.call(docs, item)) {
          logger.debug("going to mongo ",docs.length);
-         let url=docs[item];
+         let url=docs[item].url;
          logger.debug("going to mongo url ",url);
          domainMongoController.getSearchResultDocument(url)
          .then(function(docObj) {
           logger.debug("Successfully fetched doc details from mongo: ",
             docObj);
-          docsDetails.push({title:docObj.title,description:docObj.description,url:docObj.url})
+          docsDetails.push({title:docObj.title,description:docObj.description,url:docObj.url,intensity:docs[item].intensity})
           logger.debug("after each pushing",docsDetails);
           if(docsDetails.length===docs.length)
           {
@@ -398,6 +398,25 @@ let fetchWebDocuments = function(domainObj) {
   return promise;
 }
 
+let getAllDomain = function() {
+logger.debug("Received request for retriving all domain: ");
+
+
+let promise = new Promise(function(resolve, reject) {
+
+  async.waterfall([function(callback) {
+    domainMongoController.getAllDomainsCallback(callback);
+  }],
+  function(err, domainColln) {
+    logger.debug("getting it")
+    if(!err)
+      resolve(domainColln)
+    reject(err)
+    }); //end of async.waterfall
+});
+return promise;
+}
+
 
 module.exports = {
   publishNewDomain: publishNewDomain,
@@ -405,5 +424,6 @@ module.exports = {
   fetchDomainCardDetails:fetchDomainCardDetails,
   getAllDomainDetails:getAllDomainDetails,
   freshlyIndexDomain:freshlyIndexDomain,
-  fetchWebDocuments:fetchWebDocuments
+  fetchWebDocuments:fetchWebDocuments,
+  getAllDomain:getAllDomain
 }
