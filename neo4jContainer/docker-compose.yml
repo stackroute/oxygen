@@ -13,6 +13,6 @@ services:
       - "17687:7687"
       - "11337:1337"
     volumes:
-      - ./neo4j/plugins:/plugins
+      - ./neo4j/plugins:/var/lib/neo4j/plugins
       - ./neo4j/data:/data
       - ./neo4j/import:/var/lib/neo4j/import
