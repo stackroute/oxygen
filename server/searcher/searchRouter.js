@@ -26,7 +26,7 @@ Router.get('/:jobID', function(req, res) {
       error: 'Something went wrong while pathing, please try later..!'
     });
   }
-  
+
 
 });
 

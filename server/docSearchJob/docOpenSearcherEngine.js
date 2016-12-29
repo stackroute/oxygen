@@ -5,7 +5,7 @@ const amqp = require('amqplib');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startSearcher = function(urlDataObjId) {
- let amqpConn = amqp.connect(config.RABBITMQ_URL);
+ let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
 
  amqpConn
  .then(function(conn) {

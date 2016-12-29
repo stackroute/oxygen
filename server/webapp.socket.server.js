@@ -1,6 +1,6 @@
 var io = require('socket.io')();
 var redis = require('redis');
-var appConfig = require('../config/');
+var config = require('../config/');
 var logger = require('../applogger');
 
 var redisClient = undefined;
@@ -10,8 +10,8 @@ io.on('connection', function(socket) {
 
   if (!redisClient) {
     redisClient = redis.createClient({
-      host: appConfig.REDIS_SERVER.host,
-      port: appConfig.REDIS_SERVER.port
+      host: config.REDIS.host,
+      port: config.REDIS.port
     });
   }
 
@@ -20,7 +20,7 @@ io.on('connection', function(socket) {
 
   redisClient.on('message', function(channel, chDataStr) {
     var chData = JSON.parse(chDataStr);
-    
+
     logger.debug("Got message from channel ", channel, " data is: ", chData);
 
     //create socketEvent
