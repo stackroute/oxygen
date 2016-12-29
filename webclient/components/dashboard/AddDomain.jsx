@@ -160,11 +160,11 @@ handleSubmit() {
     let {wordsError, DuplicationError} = errorMessages;
     let domainAr=this.state.domains;
     let domainArr=[];
-    for(let it in domainArr)
+    for(let it in domainAr)
     {
-     domainArr.push(domainArr[it].name);
+     domainArr.push(domainAr[it].name);
     }
-    console.log(domainArr);
+    console.log("The domain arr"+domainArr);
     Formsy.addValidationRule('isIn', function (values, value, array) {
     return domainArr.indexOf(value) < 0;
     });
