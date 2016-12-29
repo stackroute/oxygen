@@ -1,5 +1,5 @@
 node id,name,parent node id,node type,parent node type,parent relation,weight
-JAVA:INT:1,Java Web Application Development,,intent,intent,,0
+JAVA:INT:1,Java Web Application Development,,domain,intent,,0
 JAVA:INT:2,basics,JAVA:INT:1,intent,intent,IntentOf,0
 JAVA:INT:3,tutorials,JAVA:INT:1,intent,intent,IntentOf,0
 JAVA:INT:4,example,JAVA:INT:1,intent,intent,IntentOf,0

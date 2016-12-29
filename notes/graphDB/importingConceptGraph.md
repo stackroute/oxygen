@@ -35,7 +35,7 @@ FOREACH(ignoreme in CASE WHEN rl = "related" THEN [1] ELSE [] END | MERGE (c)-[:
 
 ##Creating a Domain and create relation between domain and concepts
 
-Match (c:Concept) merge (d:Domain {name:'Java Web Programming'}) merge (c)-[r:ConceptOf]->(d) return c,r,d
+Match (c:Concept) merge (d:Domain {name:'Java Web Application Development'}) merge (c)-[r:ConceptOf]->(d) return c,r,d
 
 ##To return all the node from database
 MATCH (c:Concept)

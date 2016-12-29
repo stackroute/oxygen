@@ -24,6 +24,15 @@ MERGE (n:Intent {name:Line.name})
 SET n.nodeid = Line.`node id`
 return n
 
+### Creates all nodes from the CSV, for the mentioned node type
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` = 'domain'
+MERGE (n:Domain {name:Line.name})
+SET n.nodeid = Line.`node id`
+return n
+
 ### Creates all nodes from the CSV, you need add one FOREACH clause for each node type, which is possible in the CSV
 USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line 
@@ -42,7 +51,7 @@ LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
 MATCH (i:Intent {name:Line.name})
-MATCH (pi:Intent {nodeid:Line.`parent node id`})
+MATCH (pi:Domain {nodeid:Line.`parent node id`})
 call apoc.create.relationship(i, Line.`parent relation`,{weight:Line.weight}, pi) YIELD rel as r
 return i,pi,r
 
