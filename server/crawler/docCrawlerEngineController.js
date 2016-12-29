@@ -67,8 +67,9 @@ const urlIndexing= function(data)
   let dataObj=JSON.parse(data);
   let text;
   request.get(dataObj.url, function (error, response, body) {
-    let page = cheerio.load(body);
-
+    if(!error && response.statusCode===200 )
+    {
+      let page = cheerio.load(body);
     text = page("body").text();
     text = text.replace(/\s+/g, " ")
     .replace(/[^a-zA-Z ]/g, "")
@@ -99,6 +100,7 @@ const urlIndexing= function(data)
              datapublisher.processStart(redisIntent);
 
     });
+    }
 
   });
 
