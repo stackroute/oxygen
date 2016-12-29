@@ -1,48 +1,104 @@
-node id,name,parent node id,node type,parent node type,parent relation
-JAVA:INT:1,Java Web Application Development,,intent,intent,
-JAVA:INT:2,basics,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:3,beginner,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:4,fundamentals,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:5,tutorial,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:6,code example,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:7,example,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:8,sample,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:9,theory,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:10,conceptual,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:11,architecture,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:12,scalability,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:13,scaling,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:14,best practice,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:15,work around,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:16,troubleshooting,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:17,troubleshoot,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:18,debug,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:19,pitfall,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:20,Manual,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:21,Reference,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:22,Comparison,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:23,cookbook,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:24,recipe,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:25,basic,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:26,step by step guide,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:27,guide,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:28,mastering,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:29,expert document,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:30,blog,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:31,source code,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:32,worked out example,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:33,installation,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:34,development,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:35,hello world,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:36,helloworld,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:37,how to,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:38,introduction,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:39,instruction,JAVA:INT:1,intent,intent,intentOf
-JAVA:INT:40,getting started,JAVA:INT:2,term,intent,indicatorOf
-JAVA:INT:41,getting started,JAVA:INT:3,term,intent,indicatorOf
-JAVA:INT:42,getting started,JAVA:INT:4,term,intent,indicatorOf
-JAVA:INT:43,how to,JAVA:INT:6,term,intent,indicatorOf
-JAVA:INT:44,advanced,JAVA:INT:2,term,intent,counterIndicatorOf
-JAVA:INT:45,complete reference,JAVA:INT:2,term,intent,counterIndicatorOf
-JAVA:INT:46,in depth,JAVA:INT:2,term,intent,counterIndicatorOf
-JAVA:INT:47,in depth,JAVA:INT:45,term,term,sameAs
+node id,name,parent node id,node type,parent node type,parent relation,weight
+JAVA:INT:1,Java Web Application Development,,intent,intent,,0
+JAVA:INT:2,basics,JAVA:INT:1,intent,intent,intentOf,0
+JAVA:INT:3,tutorials,JAVA:INT:1,intent,intent,intentOf,0
+JAVA:INT:4,example,JAVA:INT:1,intent,intent,intentOf,0
+JAVA:INT:5,complete reference,JAVA:INT:1,intent,intent,intentOf,0
+JAVA:INT:6,trouble shooting,JAVA:INT:1,intent,intent,intentOf,0
+JAVA:INT:7,fundamental,JAVA:INT:1,intent,intent,intentOf,0
+JAVA:INT:8,beginner,JAVA:INT:1,intent,intent,intentOf,9
+JAVA:INT:9,advance,JAVA:INT:1,intent,intent,intentOf,8
+JAVA:INT:10,getting started,JAVA:INT:1,intent,intent,intentOf,7
+JAVA:INT:11,main,JAVA:INT:2,term,intent,indicatorOf,3
+JAVA:INT:12,fundamental,JAVA:INT:2,term,intent,indicatorOf,0
+JAVA:INT:13,essential,JAVA:INT:2,term,intent,indicatorOf,0
+JAVA:INT:14,beginner,JAVA:INT:2,term,intent,indicatorOf,9
+JAVA:INT:15,basics,JAVA:INT:2,term,intent,indicatorOf,6
+JAVA:INT:16,model,JAVA:INT:2,term,intent,counterIndicatorOf,4
+JAVA:INT:17,secondary,JAVA:INT:2,term,intent,counterIndicatorOf,6
+JAVA:INT:18,additional,JAVA:INT:2,term,intent,counterIndicatorOf,3
+JAVA:INT:19,auxillary,JAVA:INT:2,term,intent,counterIndicatorOf,7
+JAVA:INT:20,snippets,JAVA:INT:2,term,intent,counterIndicatorOf,3
+JAVA:INT:21,acedemic,JAVA:INT:3,term,intent,indicatorOf,7
+JAVA:INT:22,acedemic,JAVA:INT:8,term,intent,indicatorOf,7
+JAVA:INT:23,informational,JAVA:INT:3,term,intent,indicatorOf,7
+JAVA:INT:24,informational,JAVA:INT:10,term,term,indicatorOf,6
+JAVA:INT:25,instructive,JAVA:INT:10,term,term,indicatorOf,8
+JAVA:INT:26,instructive,JAVA:INT:3,term,intent,indicatorOf,8
+JAVA:INT:27,guidance,JAVA:INT:3,term,intent,indicatorOf,7
+JAVA:INT:28,instructional,JAVA:INT:3,term,intent,indicatorOf,8
+JAVA:INT:29,tutorials,JAVA:INT:3,term,intent,indicatorOf,8
+JAVA:INT:30,primary,JAVA:INT:10,term,term,counterIndicatorOf,8
+JAVA:INT:31,primitive,JAVA:INT:10,term,term,counterIndicatorOf,6
+JAVA:INT:32,foundation,JAVA:INT:10,term,term,counterIndicatorOf,5
+JAVA:INT:33,source code,JAVA:INT:27,term,term,indicatorOf,6
+JAVA:INT:34,guidance,JAVA:INT:8,term,intent,indicatorOf,7
+JAVA:INT:35,beginner,JAVA:INT:27,term,term,counterIndicatorOf,5
+JAVA:INT:36,fundamental,JAVA:INT:10,term,term,counterIndicatorOf,6
+JAVA:INT:37,training,JAVA:INT:3,term,intent,indicatorOf,7
+JAVA:INT:38,primary,JAVA:INT:3,term,intent,counterIndicatorOf,6
+JAVA:INT:39,primitive,JAVA:INT:3,term,intent,counterIndicatorOf,5
+JAVA:INT:40,foundation,JAVA:INT:3,term,intent,counterIndicatorOf,7
+JAVA:INT:41,fundamental,JAVA:INT:3,term,intent,counterIndicatorOf,8
+JAVA:INT:42,beginner,JAVA:INT:3,term,intent,counterIndicatorOf,7
+JAVA:INT:43,source code,JAVA:INT:4,term,intent,indicatorOf,8
+JAVA:INT:44,reference,JAVA:INT:4,term,intent,indicatorOf,6
+JAVA:INT:45,relating,JAVA:INT:4,term,intent,indicatorOf,6
+JAVA:INT:46,snippets,JAVA:INT:4,term,intent,indicatorOf,7
+JAVA:INT:47,sample,JAVA:INT:4,term,intent,indicatorOf,8
+JAVA:INT:48,expression,JAVA:INT:4,term,intent,indicatorOf,5
+JAVA:INT:49,model,JAVA:INT:4,term,intent,indicatorOf,8
+JAVA:INT:50,instance,JAVA:INT:4,term,intent,indicatorOf,6
+JAVA:INT:51,class,JAVA:INT:4,term,intent,indicatorOf,7
+JAVA:INT:52,function,JAVA:INT:4,term,intent,indicatorOf,6
+JAVA:INT:53,instructive,JAVA:INT:4,term,intent,counterIndicatorOf,5
+JAVA:INT:54,guidance,JAVA:INT:4,term,intent,counterIndicatorOf,8
+JAVA:INT:54,guidance,JAVA:INT:8,term,intent,counterIndicatorOf,8
+JAVA:INT:55,informational,JAVA:INT:4,term,intent,counterIndicatorOf,4
+JAVA:INT:56,simple,JAVA:INT:8,term,intent,counterIndicatorOf,6
+JAVA:INT:56,simple,JAVA:INT:4,term,intent,counterIndicatorOf,6
+JAVA:INT:57,primary,JAVA:INT:4,term,intent,counterIndicatorOf,5
+JAVA:INT:58,model,JAVA:INT:4,term,intent,counterIndicatorOf,4
+JAVA:INT:59,essential,JAVA:INT:4,term,intent,counterIndicatorOf,3
+JAVA:INT:59,essential,JAVA:INT:8,term,intent,counterIndicatorOf,3
+JAVA:INT:60,note,JAVA:INT:5,term,intent,indicatorOf,7
+JAVA:INT:61,implementation,JAVA:INT:5,term,intent,indicatorOf,8
+JAVA:INT:62,relating,JAVA:INT:5,term,intent,indicatorOf,6
+JAVA:INT:63,indicates,JAVA:INT:5,term,intent,indicatorOf,7
+JAVA:INT:64,meaning,JAVA:INT:5,term,intent,indicatorOf,6
+JAVA:INT:65,source code,JAVA:INT:5,term,intent,indicatorOf,6
+JAVA:INT:66,advance,JAVA:INT:5,term,intent,indicatorOf,6
+JAVA:INT:67,refer to,JAVA:INT:5,term,intent,indicatorOf,7
+JAVA:INT:68,extract,JAVA:INT:5,term,intent,indicatorOf,6
+JAVA:INT:69,give us example,JAVA:INT:5,term,intent,indicatorOf,8
+JAVA:INT:69,give us example,JAVA:INT:8,term,intent,indicatorOf,8
+JAVA:INT:70,sample,JAVA:INT:5,term,intent,counterIndicatorOf,6
+JAVA:INT:71,expression,JAVA:INT:5,term,intent,counterIndicatorOf,7
+JAVA:INT:72,snippets,JAVA:INT:5,term,intent,counterIndicatorOf,5
+JAVA:INT:73,guidance,JAVA:INT:5,term,intent,counterIndicatorOf,7
+JAVA:INT:74,source,JAVA:INT:5,term,intent,counterIndicatorOf,4
+JAVA:INT:75,rectify,JAVA:INT:6,term,intent,IndicatorOf,7
+JAVA:INT:76,fix,JAVA:INT:6,term,intent,IndicatorOf,7
+JAVA:INT:77,service,JAVA:INT:6,term,intent,IndicatorOf,6
+JAVA:INT:78,improve,JAVA:INT:6,term,intent,IndicatorOf,5
+JAVA:INT:79,support,JAVA:INT:6,term,intent,IndicatorOf,6
+JAVA:INT:80,repair,JAVA:INT:6,term,intent,IndicatorOf,7
+JAVA:INT:81,note,JAVA:INT:8,term,intent,indicatorOf,8
+JAVA:INT:82,implementation,JAVA:INT:8,term,intent,indicatorOf,8
+JAVA:INT:83,give us example,JAVA:INT:8,term,intent,indicatorOf,7
+JAVA:INT:84,sample,JAVA:INT:8,term,intent,counterIndicatorOf,7
+JAVA:INT:85,expression,JAVA:INT:8,term,intent,counterIndicatorOf,7
+JAVA:INT:86,helloworld,JAVA:INT:8,term,intent,indicatorOf,7
+JAVA:INT:87,how to code,JAVA:INT:8,term,intent,indicatorOf,7
+JAVA:INT:88,guide book,JAVA:INT:7,term,intent,indicatorOf,7
+JAVA:INT:89,primary,JAVA:INT:7,term,intent,indicatorOf,6
+JAVA:INT:90,essential,JAVA:INT:7,term,intent,indicatorOf,6
+JAVA:INT:91,principal,JAVA:INT:7,term,intent,indicatorOf,6
+JAVA:INT:92,theoretical,JAVA:INT:7,term,intent,indicatorOf,6
+JAVA:INT:93,elementary,JAVA:INT:7,term,intent,indicatorOf,6
+JAVA:INT:94,cookbook,JAVA:INT:1,intent,intent,intentOf,0
+JAVA:INT:95,guide book,JAVA:INT:94,term,intent,indicatorOf,6
+JAVA:INT:96,text book,JAVA:INT:94,term,intent,indicatorOf,5
+JAVA:INT:97,reference book,JAVA:INT:94,term,intent,indicatorOf,6
+JAVA:INT:98,implication,JAVA:INT:94,term,intent,indicatorOf,7
+JAVA:INT:99,work book,JAVA:INT:94,term,intent,counterIndicatorOf,6
