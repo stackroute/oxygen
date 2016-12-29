@@ -38,7 +38,10 @@ export default class DocResultCard extends React.Component {
 
     {
       this.props.webDocs.map(function(doc,i){
-        return (<Paper key={i} zDepth={4} style={layout} rounded={false}>
+        return (
+          <Row>
+          <Col>
+          <Paper key={i} zDepth={4} style={layout} rounded={false}>
           <Card style={layout}>
           <CardHeader style={jobcard}
           textStyle={{padding:0,color:'grey'}}
@@ -54,16 +57,16 @@ export default class DocResultCard extends React.Component {
           <a href={doc.url} target="_blank" style={{fontSize:18,textDecoration:"none",color:"#1976d2 "}}>
           {doc.url}
           </a></p>
-          </CardText>
-          <div style={styles.wrapper}>
-          <Chip style={styles.chip}>Basic:</Chip>
-          <Chip style={styles.chip}>Tutorial:</Chip>
-          <Chip style={styles.chip}>Example:</Chip>
-          <Chip style={styles.chip}>Manual:</Chip>
-          <Chip style={styles.chip}>CompleteReference:</Chip>
-          </div>
+          </CardText>          
           </Card>
-          </Paper>)
+          </Paper>
+          </Col>
+          <Col>
+          <h1>fdgoip</h1>
+          </Col>
+          </Row>
+          
+          )
       })
     }
     </div>
