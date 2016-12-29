@@ -102,20 +102,22 @@ const storeURL = function(id) {
     {
       res.map((ele)=>{
         ele.map((data,i)=>{
-          send.push(data);
+          //send.push(data);
           let saveUrl=new searchModel(data);
-          saveUrl.save(function (saveErr,savedObj) {
-            if (saveErr) {
-              logger.error(saveErr);
-            }
-            else {
-              logger.debug("saved "+i+" "+savedObj.query);
-              let msgObj={
-                domain: jobDetails.exactTerms,
-                concept: jobDetails.query,
-                url: savedObj.url
-              };
+         // saveUrl.save(function (saveErr,savedObj) {
+          //  if (saveErr) {
+           //   logger.error(saveErr);
+           // }
+           // else {
+            logger.debug("sending "+i+" "+data.query);
+            let msgObj={
+              domain: jobDetails.exactTerms,
+              concept: jobDetails.query,
+              url: data.url
+            };
+              //searchModel.close()
               startCrawlerMQ(msgObj);
+
               let RedisSearch={
                 domain: jobDetails.exactTerms,
                 actor: 'searcher',
@@ -127,14 +129,14 @@ const storeURL = function(id) {
               let redisCrawl={
                 domain: jobDetails.exactTerms,
                 actor: 'crawler',
-                message: savedObj.url,
+                message: data.url,
                 status: 'crawl started for the url'
               }
               datapublisher.processStart(redisCrawl);
-            }
-          });
+           // }
+         // });
 
-        })
+       })
 
       })
     }
