@@ -37,61 +37,49 @@ const styles = {
 export default class DocResultCard extends React.Component {
   constructor(props) {
     super(props);
-    console.log("from the docresultcard page")
+    console.log(" props from the result doc card component")
     console.log(props)
 
   }
   render() {
-    return (<div>
-
-    {
-      this.props.webDocs.map(function(doc,i){
-        return (
-
-          <Paper zDepth={4} style={layout} rounded={false}>
-          <Row  key={i} >
-          
-          <Col lg={10} xl={10} md={10} sm={12} xs={12} style={{paddingRight:0}}>
-          <Card>
-          <CardHeader style={jobcard}
-          textStyle={{padding:0,color:'grey'}}
-          titleStyle={{"fontSize":"18pt",padding:"16px 16px 0",color:'grey'}}
-          title={doc.title}
-          />
-          <CardText style={{textAlign: "left",padding:"0px 16px"}}>
-          <p style={{color:"gray"}}><b>Description :
-          </b>{doc.description}
-          </p>
-          <Visible sm xs>
-          <h2 style={{padding:"15px 0",textAlign:"center"}}><b  style={{color:"grey"}}>RATING :
-          </b>{doc.intensity}</h2>
-          </Visible>
-          <p style={{color:"grey"}}>
-          <b>Link : </b>
-          <ScreenClassRender style={styleFunction}>
-          <a href={doc.url} target="_blank">
-          {doc.url}
-          </a>
-          </ScreenClassRender>
-          </p>
-          </CardText>          
-          </Card>
-          </Col>
-          <Visible lg xl md>
-          <Col lg={2} xl={2} md={2} style={{paddingLeft:0,backgroundColor:"#dadada",borderRadius:10}}>
-          <h1 style={{padding:"15px 0"}}><b  style={{color:"grey"}}>RATING
-          </b><br/>{doc.intensity}</h1>
-          </Col>
-          </Visible>
-          </Row>          
-          </Paper>
-          
-          )
-      })
-    }
-    </div>
-
-    );
+    return (
+      <Paper zDepth={4} style={layout} rounded={false}>
+      <Row>
+      <Col lg={10} xl={10} md={10} sm={12} xs={12} style={{paddingRight:0}}>
+      <Card>
+      <CardHeader style={jobcard}
+      textStyle={{padding:0,color:'grey'}}
+      titleStyle={{"fontSize":"18pt",padding:"16px 16px 0",color:'grey'}}
+      title={this.props.webDoc.title}
+      />
+      <CardText style={{textAlign: "left",padding:"0px 16px"}}>
+      <p style={{color:"gray"}}><b>Description :
+      </b>{this.props.webDoc.description}
+      </p>
+      <Visible sm xs>
+      <h2 style={{padding:"15px 0",textAlign:"center"}}><b  style={{color:"grey"}}>RATING :
+      </b>{this.props.webDoc.intensity}</h2>
+      </Visible>
+      <p style={{color:"grey"}}>
+      <b>Link : </b>
+      <ScreenClassRender style={styleFunction}>
+      <a href={this.props.webDoc.url} target="_blank">
+      {this.props.webDoc.url}
+      </a>
+      </ScreenClassRender>
+      </p>
+      </CardText>          
+      </Card>
+      </Col>
+      <Visible lg xl md>
+      <Col lg={2} xl={2} md={2} style={{paddingLeft:0,backgroundColor:"#dadada",borderRadius:10}}>
+      <h1 style={{padding:"15px 0"}}><b  style={{color:"grey"}}>RATING
+      </b><br/>{this.props.webDoc.intensity}</h1>
+      </Col>
+      </Visible>
+      </Row>          
+      </Paper>
+      )
   }
 }
 DocResultCard.propTypes = {
