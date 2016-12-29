@@ -94,7 +94,7 @@ services:
     ports:
       - "5672:5672"
   neo4j:
-    image: neo4j:latest
+    image: neo4j:3.0.7
     network_mode: host
     restart: always
     environment:
@@ -111,7 +111,7 @@ services:
       - "1337:1337"
     volumes:
       - ./neo4jContainer/neo4j/plugins:/plugins
-      - ./neo4jContainer/neo4j/data:/data
+      - /data/w11:/data/db
       - ./neo4jContainer/neo4j/import:/var/lib/neo4j/import
   redis:
    image: smebberson/alpine-redis
