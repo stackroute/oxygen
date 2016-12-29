@@ -62,6 +62,30 @@ router.get('/', function(req, res) {
   }
 });
 
+// Get all domain in the system
+router.get('/domains', function(req, res) {
+  try {
+    domainCtrl.getAllDomain().then(function(domainObj) {
+      logger.debug("Successfully retrived all details to show length----->",domainObj.length);
+      res.send(domainObj);
+      return;
+    },
+    function(err) {
+      logger.error("Encountered error in retriving  domain: ",
+        err);
+      res.send(err);
+      return;
+    })
+
+  } catch (err) {
+    logger.error("Caught a error in retriving domains ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
+});
+
 // Get details of a specific domain by its name
 router.get('/:domainName', function(req, res) {
 

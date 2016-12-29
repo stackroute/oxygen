@@ -398,6 +398,25 @@ let fetchWebDocuments = function(domainObj) {
   return promise;
 }
 
+let getAllDomain = function() {
+logger.debug("Received request for retriving all domain: ");
+
+
+let promise = new Promise(function(resolve, reject) {
+
+  async.waterfall([function(callback) {
+    domainMongoController.getAllDomainsCallback(callback);
+  }],
+  function(err, domainColln) {
+    logger.debug("getting it")
+    if(!err)
+      resolve(domainColln)
+    reject(err)
+    }); //end of async.waterfall
+});
+return promise;
+}
+
 
 module.exports = {
   publishNewDomain: publishNewDomain,
@@ -405,5 +424,6 @@ module.exports = {
   fetchDomainCardDetails:fetchDomainCardDetails,
   getAllDomainDetails:getAllDomainDetails,
   freshlyIndexDomain:freshlyIndexDomain,
-  fetchWebDocuments:fetchWebDocuments
+  fetchWebDocuments:fetchWebDocuments,
+  getAllDomain:getAllDomain
 }
