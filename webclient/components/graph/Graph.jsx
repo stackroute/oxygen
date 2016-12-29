@@ -173,8 +173,8 @@ export default class Graph extends React.Component {
     console.log(err)
   }
   else {
-    console.log("Response on documents show: ", JSON.parse(res.text));
     let response=JSON.parse(res.text);
+    console.log("Response on documents show: ",response);    
     if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
@@ -232,65 +232,67 @@ export default class Graph extends React.Component {
     <Row>
     <Col md={12} lg={12} xl={12}>
     {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
-    <DocResultCard webDocs={this.state.docs}/>}
-    </Col>
-    </Row>
-    </Col>
-    </Visible>
+    this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})
+  }
+  </Col>
+  </Row>
+  </Col>
+  </Visible>
 
 
-    <Visible  style={{padding:0}} md sm xs>
+  <Visible  style={{padding:0}} md sm xs>
 
-    <Drawer open={this.state.open}
-    onRequestChange={this.handleToggle}
-    docked={false}
-    >
-    <MenuItem><SelectPanel intents={this.state.intents}
+  <Drawer open={this.state.open}
+  onRequestChange={this.handleToggle}
+  docked={false}
+  >
+  <MenuItem><SelectPanel intents={this.state.intents}
 
-    getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
-    </Drawer>
+  getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
+  </Drawer>
 
-    <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
-    <Row>
-    <Col md={10} sm={10} xs={10}>
-    <ScreenClassRender style={styleFunction}>
-    <h1>
-    {this.state.domainName.toUpperCase()}
-    </h1>
-    </ScreenClassRender>
-    </Col>
-    <Col md={2} sm={2} xs={2}>
-    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
-    <NavigationMenu style={styles.large} color={"white"} />
-    </IconButton>
-    </Col>
-    </Row>
-    <Row>
-    <Col sm={12} xs={12} md={12}>
-    <AutoCompleteSearchBox concepts={this.state.concepts}
-    searchDocument={this.searchDocuments.bind(this)}
-    getConcept={this.getConcepts.bind(this)}/>
-    <Row>
-    <Col sm={12} xs={12} md={12}>
-    {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
-    <SelectedConcepts conceptChips={this.state.selectedConcept}
-    deleteConcept={this.deleteConcepts.bind(this)} />}
-    </Col>
-    </Row>
-    </Col>
-    </Row>
-    <br/><br/>
-    <Row>
-    <Col sm={12} xs={12} md={12}>
-    {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
-    <DocResultCard webDocs={this.state.docs}/>}
-    </Col>
-    </Row>
-    </Col>
-    </Visible>
-    </Row>
-    </div>
-    );
+  <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
+  <Row>
+  <Col md={10} sm={10} xs={10}>
+  <ScreenClassRender style={styleFunction}>
+  <h1>
+  {this.state.domainName.toUpperCase()}
+  </h1>
+  </ScreenClassRender>
+  </Col>
+  <Col md={2} sm={2} xs={2}>
+  <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
+  <NavigationMenu style={styles.large} color={"white"} />
+  </IconButton>
+  </Col>
+  </Row>
+  <Row>
+  <Col sm={12} xs={12} md={12}>
+  <AutoCompleteSearchBox concepts={this.state.concepts}
+  searchDocument={this.searchDocuments.bind(this)}
+  getConcept={this.getConcepts.bind(this)}/>
+  <Row>
+  <Col sm={12} xs={12} md={12}>
+  {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+  <SelectedConcepts conceptChips={this.state.selectedConcept}
+  deleteConcept={this.deleteConcepts.bind(this)} />}
+  </Col>
+  </Row>
+  </Col>
+  </Row>
+  <br/><br/>
+  <Row>
+  <Col sm={12} xs={12} md={12}>
+  {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
+  this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})
+}
+</Col>
+</Row>
+</Col>
+</Visible>
+</Row>
+</div>
+);
 }
 }
 
