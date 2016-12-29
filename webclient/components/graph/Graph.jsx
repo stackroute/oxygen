@@ -15,10 +15,11 @@ import Drawer from 'material-ui/Drawer';
 const iPanel={
   minWidth:150,
   backgroundColor:"#dadada",
-  minHeight:680
+  minHeight:740,
+  position:"fixed"
 }
 const fonts={
-  margin: "0px auto",
+  margin: 0,
   textAlign: "center",
   fontFamily: "sans-serif",
   color: "#1976d2"
@@ -198,12 +199,12 @@ export default class Graph extends React.Component {
   return(
     <div style={fonts}>
 
-    <Row>
+    <Row style={{margin:0}}>
     <Visible  lg xl>
     <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
-    <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000}}>
+    <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000,marginLeft:"16.5%"}}>
     <Row>
     <Col lg={12} md={12} sm={12} xs={12}>
     <ScreenClassRender style={styleFunction}>
