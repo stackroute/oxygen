@@ -55,13 +55,12 @@ const termDensity=function(data){
   logger.debug("Finding all the terms in the webDocument ")
   data.allTerms = conceptInDoc;
   
- 
+  
   return data
 }
 
 const interestedWords=function(data){
  let terms = [];
- let otherWords =[];
  for (let prop in data.allTerms) {
 
   //console.log(data.intrestedTerms);
@@ -72,17 +71,9 @@ const interestedWords=function(data){
       intensity:data.allTerms[prop]
     });
   }
-  else
-  {
-    otherWords.push({
-      word:prop,
-      intensity:data.allTerms[prop]
-    });
-  }
 }
 logger.debug("Finding the terms and otherWords from the webDocuments ")
 data.terms = terms;
-data.otherWords = otherWords;
 console.log(data.terms);
 
 return data;
@@ -132,7 +123,7 @@ let parseEachIntent = function(dataWithIntentColln){
   intents.forEach(function(intent){
    data.intent=intent;
    
- 
+   
    return data;
  })
 }
