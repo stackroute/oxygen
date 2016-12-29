@@ -52,6 +52,9 @@ export default class DocResultCard extends React.Component {
           <p style={{color:"gray"}}><b>Description :
           </b>{doc.description}
           </p>
+          <p style={{color:"gray"}}><b>Rating :
+          </b>{doc.intensity}
+          </p>
           <p style={{color:"gray"}}>
           <b>Link : </b>
           <a href={doc.url} target="_blank" style={{fontSize:18,textDecoration:"none",color:"#1976d2 "}}>

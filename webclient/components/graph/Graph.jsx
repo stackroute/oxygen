@@ -152,6 +152,11 @@ export default class Graph extends React.Component {
         reqIntents:this.state.checkedIntent,
         reqConcepts:this.state.selectedConcept
       }
+
+      if(reqObj.reqIntents.length===0)
+      {
+        reqObj.reqIntents=this.state.intents;
+      }
       this.setState({
         docs:[]
       })
@@ -240,7 +245,7 @@ export default class Graph extends React.Component {
     docked={false}
     >
     <MenuItem><SelectPanel intents={this.state.intents}
-    
+
     getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
     </Drawer>
 
