@@ -33,15 +33,6 @@ class Welcome extends React.Component {
   render() {
     return (
       <div>
-
-      <AppBar
-      onLeftIconButtonTouchTap={this.handleToggle}
-      title="Oxygen"
-      iconElementRight={<span>
-        <Link to="/dashboard"><IconButton iconStyle={styles.largeIcon}>
-        <ActionHome color={"white"} />
-        </IconButton></Link></span>
-      }/>
       <Drawer
       docked={false}
       width={250}
@@ -62,7 +53,16 @@ class Welcome extends React.Component {
       </Link>
       </MenuItem>
       </Drawer>
-      <main>
+      <AppBar
+      onLeftIconButtonTouchTap={this.handleToggle}
+      title="Oxygen"
+      style={{position:"fixed",top:0}}
+      iconElementRight={<span>
+        <Link to="/dashboard"><IconButton iconStyle={styles.largeIcon}>
+        <ActionHome color={"white"} />
+        </IconButton></Link></span>
+      }/>      
+      <main style={{marginTop:50}}>
       {this.props.children}
       </main>
       </div>

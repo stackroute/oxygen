@@ -1,16 +1,17 @@
 const neo4jDriver = require('neo4j-driver').v1;
 const logger = require('./../../applogger');
 const config = require('./../../config');
+const graphConsts = require('./../common/graphConstants');
 
-let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
-  neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false});
+let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+  neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd),{encrypted:false});
 
 let getTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
     logger.debug("Now proceeding to get all terms of domain: ", data.domain);
 
-    let query = 'MATCH(d:'+config.NEO4J_DOMAIN+')<-[]-(i:'+config.NEO4J_INTENT+')<-[]-(t:'
-    +config.NEO4J_TERM+') where d.name={name} return t';
+    let query = 'MATCH(d:'+graphConsts.NODE_DOMAIN+')<-[]-(i:'+graphConsts.NODE_INTENT+')<-[]-(t:'
+    +graphConsts.NODE_TERM+') where d.name={name} return t';
 
     let params = {
       name: data.domain
@@ -53,10 +54,10 @@ let getUrlIndexed = function(data) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query = 'Match (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})  Match (c:'
-    +config.NEO4J_CONCEPT+'{name:{conceptName}}) Match (i:'
-    +config.NEO4J_INTENT+') MERGE(c)<-[r:'+config.NEO4J_DOC_REL
-    +']-(u:'+config.NEO4J_WEBDOCUMENT+'{name:{urlName}}) return i';
+    let query = 'Match (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})  Match (c:'
+    +graphConsts.NODE_CONCEPT+'{name:{conceptName}}) Match (i:'
+    +graphConsts.NODE_INTENT+') MERGE(c)<-[r:'+graphConsts.REL_HAS_EXPLANATION_OF
+    +']-(u:'+graphConsts.NODE_WEBDOCUMENT+'{name:{urlName}}) return i';
     let params = {
       domainName: data.domain,
       conceptName: data.concept,

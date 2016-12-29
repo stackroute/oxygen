@@ -254,7 +254,7 @@ export default class Dashboard extends React.Component {
 					{smallNav}
 					</Visible>
 					</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
-					<AddDomain domainList={this.state.domainList}
+					<AddDomain
 					addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
 					<Notification />
 					</div>
@@ -262,4 +262,3 @@ export default class Dashboard extends React.Component {
 					);
 		}
 	}
-

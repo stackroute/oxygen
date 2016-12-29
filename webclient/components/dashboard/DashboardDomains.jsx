@@ -8,12 +8,8 @@ import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import {blue300,lime800,lightGreen500} from 'material-ui/styles/colors';
 import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
+import Snackbar from 'material-ui/Snackbar';
 
-const tooltipStyle={
-	padding:'10px',
-	zDepth:9999,
-	fontSize:'15px'
-}
 const info={
 	paddingLeft:0,
 	paddingTop:3
@@ -83,14 +79,23 @@ const xsChip = {
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {canSubmit:false,conceptColor:'',intentColor:'',docsColor:''};
+		this.state = {canSubmit:false,conceptColor:'',intentColor:'',docsColor:'',open:false};
 	}
 
 	handleRefresh() {
 		console.log('inside handle refresh');
 		this.props.freshlyIndex(this.props.item.name);
 	}
-
+	handleTouchTap = () => {
+		this.setState({
+			open: true,
+		});
+	};
+	handleRequestClose = () => {
+		this.setState({
+			open: false,
+		});
+	};
 
 	componentWillMount() 
 	{
@@ -136,9 +141,14 @@ export default class DomainShow extends React.Component {
 
 	render()
 	{
-
 		return(
-			
+			<div>
+			<Snackbar
+			open={this.state.open}
+			message={this.props.item.description}
+			autoHideDuration={6000}
+			onRequestClose={this.handleRequestClose}
+			/>
 			<Card style={styles.cardRound}>
 			<Link to={'/graph/'+this.props.item.name} style={{textDecoration:'none'}}>
 			<CardMedia style={{height:'280px',borderRadius: '2%',
@@ -150,8 +160,7 @@ export default class DomainShow extends React.Component {
 			<CardText style={styles.colorCode}>
 			<Row style={{margin:"auto 0px"}}>
 			<Col xs={2} sm={2} >
-			<IconButton iconStyle={iconStyles} tooltip={this.props.item.description}
-			tooltipStyles={tooltipStyle} tooltipPosition="top-left">
+			<IconButton iconStyle={iconStyles} onTouchTap={this.handleTouchTap}>
 			<ActionInfo />
 			</IconButton>
 			</Col>
@@ -254,6 +263,7 @@ export default class DomainShow extends React.Component {
 			</Row>
 			</Link>
 			</Card>
+			</div>
 			);
 	}
 }

@@ -69,6 +69,7 @@ const urlIndexing= function(data)
   request.get(dataObj.url, function (error, response, body) {
     if(!error && response.statusCode===200 )
     {
+
       let page = cheerio.load(body);
     text = page("body").text();
     text = text.replace(/\s+/g, " ")
@@ -105,8 +106,12 @@ const urlIndexing= function(data)
   });
 
 
+
 }
 
 module.exports = {
  urlIndexing: urlIndexing
 };
+
+
+

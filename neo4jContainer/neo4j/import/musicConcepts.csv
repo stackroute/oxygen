@@ -1,0 +1,26 @@
+node id,name,parent node id,node type,node class,parent relation
+MUSIC:1,MUSIC,,concept,concept,
+MUSIC:2,Acid rock,MUSIC:1,concept,concept,conceptOf
+MUSIC:3,Gothic Rock,MUSIC:1,concept,concept,conceptOf
+MUSIC:4,Hardcore Punk,MUSIC:1,concept,concept,conceptOf
+MUSIC:5,Hard Rock,MUSIC:1,concept,concept,conceptOf
+MUSIC:6,Indie Rock,MUSIC:1,concept,concept,conceptOf
+MUSIC:7,New Wave,MUSIC:1,concept,concept,conceptOf
+MUSIC:8,Progressive Rock,MUSIC:1,concept,concept,conceptOf
+MUSIC:9,Dance Music,MUSIC:1,concept,concept,conceptOf
+MUSIC:10,Electronic Music,MUSIC:1,concept,concept,conceptOf
+MUSIC:11,Hip Hop,MUSIC:1,concept,concept,conceptOf
+MUSIC:12,Indie Pop,MUSIC:1,concept,concept,conceptOf
+MUSIC:13,Inspirational ,MUSIC:1,concept,concept,conceptOf
+MUSIC:14,Early Music,MUSIC:1,concept,concept,conceptOf
+MUSIC:15,Romantic,MUSIC:1,concept,concept,conceptOf
+MUSIC:16,Country Gospel,MUSIC:1,concept,concept,conceptOf
+MUSIC:17,Garage,MUSIC:1,concept,concept,conceptOf
+MUSIC:18,Karaoke,MUSIC:1,concept,concept,conceptOf
+MUSIC:19,Healing,MUSIC:1,concept,concept,conceptOf
+MUSIC:20,Nature,MUSIC:1,concept,concept,conceptOf
+MUSIC:21,Death Metal,MUSIC:1,concept,concept,conceptOf
+MUSIC:22,Metal Core,MUSIC:1,concept,concept,conceptOf
+MUSIC:23,Jam Bands,MUSIC:1,concept,concept,conceptOf
+MUSIC:24,Rock Roll,MUSIC:1,concept,concept,conceptOf
+MUSIC:25,Classic,MUSIC:1,concept,concept,conceptOf

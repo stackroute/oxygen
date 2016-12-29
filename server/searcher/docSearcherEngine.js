@@ -7,7 +7,7 @@ const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startSearcher = function() {
- let amqpConn = amqp.connect(config.RABBITMQ_URL);
+ let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
 
  amqpConn
  .then(function(conn) {
@@ -47,7 +47,7 @@ const startSearcher = function() {
        .each(function(dataObj) {
          logger.debug("Consuming the data: ", dataObj);
          storeURL(dataObj.data);
-  
+
        });
        }); //end of assertQueue
    }); //end of channelConnection

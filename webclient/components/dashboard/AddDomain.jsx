@@ -6,6 +6,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Container, Row, Col,Visible} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
+import Request from 'superagent';
 // const defaultImgURL='http://corevitality.com/'+
 // 'wp-content/uploads/2015/08/27114989-Coming-soon-blue'+
 // '-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
@@ -31,7 +32,8 @@ const titleDialog={
 const Label={paddingLeft:"15px",paddingTop:"20px",fontWeight:"bold",color:"grey"};
 
 const errorMessages= {
-  wordsError: "Please only use letters"
+  limitError: "Domain length can't be more than 15",
+  DuplicationError: "domain name should be unique"
 } ;
 
 export default class AddDomain extends React.Component {
@@ -41,7 +43,8 @@ export default class AddDomain extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.enableButton = this.enableButton.bind(this);
     this.disableButton = this.disableButton.bind(this);
-    this.state={domain:{},
+    this.state={domains:[],
+      errMsg:'',
     canSubmit:false,
     open: false,
     subject:'',
@@ -49,12 +52,47 @@ export default class AddDomain extends React.Component {
     imageUrl:defaultImgURL
   }
 }
+domianFetch()
+{
+  let url =`/domain/domains`;
+
+  Request
+  .get(url)
+  .end((err, res) => {
+    if(err) {
+    //res.send(err);
+    this.setState({errMsg: res.body});
+  }
+
+  else {
+    console.log("Response on show in child: ", JSON.parse(res.text));
+    //let domainList1=this.state.domainList;
+    let response=JSON.parse(res.text);
+    if(response.length===0)
+    {
+      this.setState({domains:[]});
+    }
+    else {
+      this.setState({domains:response});
+    }
+  }
+});
+}
+
+componentDidMount()
+{
+  this.domianFetch();
+}
+
 handleSubmit() {
   console.log('on calling handle sumbit while adding domain');
   console.log(this.state.imageUrl)
+  let sub=this.state.subject;
+  sub=sub.replace(/\b[a-z]/g,function(f){return f.toUpperCase();});
+
   console.log('going to ADD '+this.state.imageUrl);
   let domain = {
-    name: this.state.subject,
+    name:sub,
     description:this.state.description,
     domainImgURL:this.state.imageUrl
       //domainImgURL:'./../../assets/images/soon.png',
@@ -119,10 +157,17 @@ handleSubmit() {
     label={'Add'} primary={true}  type="submit" disabled={!this.state.canSubmit}
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
-    let {wordsError} = errorMessages;
-    // Formsy.addValidationRule('isIn', function (values, value, array) {
-    // return array.indexOf(value) >= 0;
-    // });
+    let {wordsError, DuplicationError} = errorMessages;
+    let domainAr=this.state.domains;
+    let domainArr=[];
+    for(let it in domainAr)
+    {
+     domainArr.push(domainAr[it].name);
+    }
+    console.log("The domain arr"+domainArr);
+    Formsy.addValidationRule('isIn', function (values, value, array) {
+    return domainArr.indexOf(value) < 0;
+    });
     return (
       <div>
       <Visible xl lg>
@@ -157,8 +202,8 @@ handleSubmit() {
       <FormsyText
       type="text"
       name="domain"
-      validations="isWords"
-      validationError={wordsError}
+      validations="isIn"
+      validationError={DuplicationError}
       fullWidth={true}
       updateImmediately
       required

@@ -59,7 +59,7 @@ let getAllDomain = function() {
        reject(err);
      }
 
-     logger.debug('**************',domainColln);
+     logger.debug('domains',domainColln);
      resolve(domainColln);
    });
  })

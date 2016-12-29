@@ -7,10 +7,10 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 function setupMongooseConnections() {
-  mongoose.connect(config.MONGO_URL);
+  mongoose.connect(config.MONGO.mongoURL);
 
   mongoose.connection.on('connected', function() {
-    logger.debug('Mongoose is now connected to ', config.MONGO_URL);
+    logger.debug('Mongoose is now connected to ', config.MONGO.mongoURL);
   });
 
   mongoose.connection.on('error', function(err) {

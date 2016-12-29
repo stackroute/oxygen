@@ -5,7 +5,7 @@ const config = require('./../../config');
 const startCrawler = function(urlDataObj) {
 
   logger.debug("creating a connection with external source : ");
-  let amqpConn = amqp.connect(config.RABBITMQ_URL);
+  let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
 
 
   amqpConn
