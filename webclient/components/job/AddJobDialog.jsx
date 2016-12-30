@@ -10,22 +10,22 @@ import MenuItem from 'material-ui/MenuItem';
 import FormsySelect from 'formsy-material-ui/lib/FormsySelect';
 
 const style = {
-  position:"fixed",
-  bottom: "5%",
-  right:"5%"
+  position: 'fixed',
+  bottom: '5%',
+  right: '5%'
 };
 
+const tfont = {
+  fontSize: '15px'
+};
 
-const tfont={
-  fontSize:"15px"
-}
-const Label={paddingLeft:"30px",paddingTop:"20px",fontWeight:"bold"};
+const Label = {paddingLeft: '30px', paddingTop: '20px', fontWeight: 'bold'};
 
-const errorMessages= {
-  wordsError: "Please only use letters",
-  numberError: "Please enter less than 100",
-  UrlError:"please enter a URL"
-} ;
+const errorMessages = {
+  wordsError: 'Please only use letters',
+  numberError: 'Please enter less than 100',
+  UrlError: 'please enter a URL'
+};
 const customContentStyle = {
   width: '100%',
   height: '100%',
@@ -39,48 +39,48 @@ export default class AddJobDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.enableButton = this.enableButton.bind(this);
     this.disableButton = this.disableButton.bind(this);
-    this.state={job:{},
-    canSubmit:false,
+    this.state = {job: {},
+    canSubmit: false,
     open: false,
-    query:"",
-    engineID:"009216953448521283757:ibz3hdutpom AIzaSyAZlmGbpm66fk3sHXENieM61djlueEds9Y",
-    exactTerms:"",
-    results:0,
-    siteSearch:""}
+    query: '',
+    engineID: '009216953448521283757:ibz3hdutpom AIzaSyAZlmGbpm66fk3sHXENieM61djlueEds9Y',
+    exactTerms: '',
+    results: 0,
+    siteSearch: ''};
   }
   handleSubmit() {
-    console.log('on calling handle sumbit while adding job')
+    // console.log('on calling handle sumbit while adding job')
     let newJob = {
       query: this.state.query,
       engineID: this.state.engineID,
-      exactTerms:(this.state.exactTerms ===""?"NONE":this.state.exactTerms),
-      results:this.state.results,
-      siteSearch:(this.state.siteSearch ===""?"NONE":this.state.siteSearch)
+      exactTerms: (this.state.exactTerms ==='' ?'NONE':this.state.exactTerms),
+      results: this.state.results,
+      siteSearch: (this.state.siteSearch ===''?'NONE':this.state.siteSearch)
     };
     this.refs.form.reset();
-    this.setState({job:newJob})
-    console.log(newJob)
+    this.setState({job: newJob});
+    // console.log(newJob);
     this.props.addJob(newJob)
   }
   onChangeQuery(e)
   {
-    this.setState({query:e.target.value})
+    this.setState({query: e.target.value})
   }
   onChangeEngineID = (event, index) => {
-    this.setState({engineID:index})
+    this.setState({engineID: index})
   };
   
   onChangeExactTerms(e)
   {
-    this.setState({exactTerms:e.target.value})
+    this.setState({exactTerms: e.target.value})
   }
   onChangeResults(e)
   {  
-    this.setState({results:e.target.value})
+    this.setState({results: e.target.value})
   }
   onChangeSite(e)
   {
-    this.setState({siteSearch:e.target.value})
+    this.setState({siteSearch: e.target.value})
   }
 
   handleOpen = () => {
@@ -158,7 +158,7 @@ export default class AddJobDialog extends React.Component {
       primaryText="Engine - A" />
       <MenuItem value="015901048907159908775:bu8jkb0g1c0 AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60" 
       primaryText="Engine - B" />
-      <MenuItem value="017039332294312221469:tjlfw4hfuwc AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY" 
+      <MenuItem value="017039332294312221469:tjlfw4hfuwc AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY"
       primaryText="Engine - C" />
       </FormsySelect></Col>
       </Row>
@@ -185,23 +185,22 @@ export default class AddJobDialog extends React.Component {
       updateImmediately
       required
       hintText="value"
-      //value={this.state.query==0?"":this.state.query}
+      // value={this.state.query==0?"":this.state.query}
       style={tfont}
       fullWidth={true} onChange={this.onChangeResults.bind(this)}/></Col>
       </Row>
       <Row>
       <Col lg={3} style={Label}>SITE-SEARCH<small> (Specific-search) </small></Col>
       <Col lg={9}><FormsyText
-      type="text"
-      validations="isUrl"
-      validationError={UrlError}
+      type= 'text'
+      validations= 'isUrl'
+      validationError= {UrlError}
       updateImmediately
-      hintText="value"
-      name="siteSearch"
+      hintText= 'value'
+      name= 'siteSearch'
       style={tfont}
       fullWidth={true} onChange={this.onChangeSite.bind(this)}/></Col>
       </Row>
-
       </Formsy.Form>
       </Container>
       </Dialog>
@@ -209,6 +208,6 @@ export default class AddJobDialog extends React.Component {
       );
   }
 }
-AddJobDialog.propTypes = {  
+AddJobDialog.propTypes = {
   addJob: React.PropTypes.func
-}
+};

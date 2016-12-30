@@ -50,6 +50,24 @@ const urlIndexing = function(data) {
 
   processors.push(highland.map(function(webDocument) {
     let promise = crawlerModules.saveWebDocument(webDocument)
+        function(result){ return result; }, 
+        function(err){ return err; }
+        ))));
+
+  processors.push(highland.map(function(dataToGetIntents){
+    let promise=crawlerModules.getIntents(dataToGetIntents)
+    return promise
+
+  }));
+  processors.push(highland.flatMap(
+    promise => highland(
+      promise.then(
+        function(result){ return result; }, 
+        function(err){ return err; }
+        ))));
+
+  processors.push(highland.map(function(webDocument){
+    let promise=crawlerModules.saveWebDocument(webDocument)
     return promise
   }));
   processors.push(highland.flatMap(

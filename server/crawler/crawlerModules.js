@@ -81,7 +81,28 @@ let saveWebDocument = function(data) {
   )
   return promise
 }
+<<<<<<< HEAD
 let getIntents = function(data) {
+=======
+let getIntents =function(data){
+  let promise = new Promise(
+    function(resolve, reject){
+      crawlerNeo4jController.fetchIntents(data)
+      .then(function(dataWithIntents){
+        logger.debug("successfully indexed the url")
+        resolve(dataWithIntents);
+      },
+      function(err){
+        logger.error("Encountered error in publishing a new " , err)
+        reject(err);
+      })
+    }
+    )
+  return promise
+}
+
+let saveWebDocument = function(data){
+>>>>>>> 73d8b72482330c36d124d4514564f547f5095ab4
   let promise = new Promise(
     function(resolve, reject) {
       crawlerNeo4jController.fetchIntents(data)
@@ -110,12 +131,12 @@ let parseEachIntent = function(dataWithIntentColln) {
   })
 }
 module.exports = {
-  interestedWords: interestedWords,
-  termDensity: termDensity,
-  termsFinder: termsFinder,
-  indexUrl: indexUrl,
-  saveWebDocument: saveWebDocument,
-  extractData: extractData,
-  parseEachIntent: parseEachIntent,
-  fetchIntents: fetchIntents
+ interestedWords:interestedWords,
+ termDensity:termDensity,
+ termsFinder: termsFinder,
+ indexUrl: indexUrl,
+ getIntents:getIntents,
+ saveWebDocument:saveWebDocument,
+ extractData:extractData,
+ parseEachIntent:parseEachIntent
 }

@@ -9,26 +9,24 @@ import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import {Link} from 'react-router';
 import ActionHome from 'material-ui/svg-icons/action/home';
-const styles={
+const styles = {
  largeIcon: {
   width: 30,
   height: 30
 }
-}
-
+};
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data:true,open: false}
+    this.state = {data: true, open: false};
     this.updateState = this.updateState.bind(this);
   }
-
   handleToggle = () => this.setState({open: !this.state.open});
 
   handleClose = () => this.setState({open: false});
 
   updateState() {
-    this.setState({data:false});
+    this.setState({data: false});
   }
   render() {
     return (
@@ -42,34 +40,34 @@ class Welcome extends React.Component {
       <MenuItem onTouchTap={this.handleToggle}>
       <Link to="/job">
       <IconButton><ActionSearch /></IconButton>
-      <FlatButton label="Job" style={{fontSize:"50px",marginTop:"4px"}}/>
+      <FlatButton label="Job" style={{fontSize: '50px', marginTop: '4px'}}/>
       </Link>
       </MenuItem>
 
       <MenuItem onTouchTap={this.handleToggle}>
       <Link to="/dashboard">
       <IconButton><ActionDashboard/></IconButton>
-      <FlatButton label="dashboard" style={{fontSize:"50px",marginTop:"4px"}}/>
+      <FlatButton label="dashboard" style={{fontSize: '50px', marginTop: '4px'}}/>
       </Link>
       </MenuItem>
       </Drawer>
       <AppBar
       onLeftIconButtonTouchTap={this.handleToggle}
       title="Oxygen"
-      style={{position:"fixed",top:0}}
+      style={{position: 'fixed', top: 0}}
       iconElementRight={<span>
         <Link to="/dashboard"><IconButton iconStyle={styles.largeIcon}>
-        <ActionHome color={"white"} />
+        <ActionHome color={'white'} />
         </IconButton></Link></span>
-      }/>      
-      <main style={{marginTop:50}}>
+      }/>
+      <main style={{marginTop: 50}}>
       {this.props.children}
       </main>
       </div>
       );
   }
 }
-Welcome.propTypes = {  
+Welcome.propTypes = {
   children: React.PropTypes.node.isRequired
-}
+};
 export default Welcome;
