@@ -1,5 +1,5 @@
 const DomainModel = require('./domainEntity').DomainModel;
-const webDocumentsModel = require('./../crawler/webDocumentsEntity').webDocumentsModel;
+const webDocumentModel = require('./../crawler/webDocumentsEntity').webDocumentsModel;
 const logger = require('./../../applogger');
 
 let saveNewDomain = function(newDomainObj) {
@@ -76,12 +76,12 @@ let getSearchResultDocuments = function(url) {
     };
 
 
-    webDocumentsModel.findOne(urlObj,function(err, foundDomain) {
+    webDocumentModel.findOne(urlObj,function(err, foundDocument) {
       if (err) {
         reject(err);
       }
 
-      resolve(foundDomain);
+      resolve(foundDocument);
     });
   })
 

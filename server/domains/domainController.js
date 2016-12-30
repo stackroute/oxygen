@@ -336,7 +336,7 @@ let freshlyIndexDomain = function(domain) {
 
 let fetchWebDocuments = function(domainObj) {
   logger.debug("Received request for fetching Webdocuments ", domainObj);
- let docsDetails=[];
+  let docsDetails=[];
   let promise = new Promise(function(resolve, reject) {
 
     if (!domainObj ||
@@ -369,6 +369,7 @@ let fetchWebDocuments = function(domainObj) {
           logger.debug("Successfully fetched doc details from mongo: ",
             docObj);
           docsDetails.push({title:docObj.title,description:docObj.description,url:docObj.url,intensity:docs[item].intensity})
+          
           logger.debug("after each pushing",docsDetails);
           if(docsDetails.length===docs.length)
           {
@@ -385,13 +386,13 @@ let fetchWebDocuments = function(domainObj) {
      }
      logger.debug("pushing ended",docsDetails);
    }
-   }
-    ],
-    function(err, docObjDetails) {
-      if (err) {
-        reject(err);
-      }
-      resolve(docObjDetails);
+ }
+ ],
+ function(err, docObjDetails) {
+  if (err) {
+    reject(err);
+  }
+  resolve(docObjDetails);
       }); //end of async.waterfall
 });
 
@@ -399,22 +400,22 @@ let fetchWebDocuments = function(domainObj) {
 }
 
 let getAllDomain = function() {
-logger.debug("Received request for retriving all domain: ");
+  logger.debug("Received request for retriving all domain: ");
 
 
-let promise = new Promise(function(resolve, reject) {
+  let promise = new Promise(function(resolve, reject) {
 
-  async.waterfall([function(callback) {
-    domainMongoController.getAllDomainsCallback(callback);
-  }],
-  function(err, domainColln) {
-    logger.debug("getting it")
-    if(!err)
-      resolve(domainColln)
-    reject(err)
+    async.waterfall([function(callback) {
+      domainMongoController.getAllDomainsCallback(callback);
+    }],
+    function(err, domainColln) {
+      logger.debug("getting it")
+      if(!err)
+        resolve(domainColln)
+      reject(err)
     }); //end of async.waterfall
-});
-return promise;
+  });
+  return promise;
 }
 
 
