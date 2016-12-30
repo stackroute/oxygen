@@ -113,7 +113,9 @@ const storeURL = function(id) {
             let msgObj={
               domain: jobDetails.exactTerms,
               concept: jobDetails.query,
-              url: data.url
+              url: data.url,
+              title:data.title,
+              description:data.description
             };
               //searchModel.close()
               startCrawlerMQ(msgObj);

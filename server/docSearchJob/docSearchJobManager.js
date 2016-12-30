@@ -6,7 +6,6 @@ let kickOffDomainIndexing = function(conceptsColln) {
 
   // Kick off search jobs for each concept  
   let promise = new Promise(function(resolve, reject) {
-    console.log(conceptsColln)
     //Looping through for each given concept, as each concept should be one job
     process.nextTick(
       function(){
