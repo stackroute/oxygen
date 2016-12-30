@@ -8,7 +8,6 @@ module.exports = {
 	"003695602015436075747:i42bqanbirm",
 	"003695602015436075747:i42bqanbirm",
 	"003695602015436075747:i42bqanbirm",
-	"003695602015436075747:i42bqanbirm",
 	"017039332294312221469:d-gysmzc27a",
 	"017039332294312221469:d-gysmzc27a",
 	"017039332294312221469:d-gysmzc27a",
@@ -55,8 +54,7 @@ module.exports = {
 	"002680892164634372765:2axe-kbjpjm",
 	"002680892164634372765:2axe-kbjpjm"
 	],
-	KEYS:["AIzaSyA6Sr4ahYQKSG3awo_xSTOQO-0HFFMfj5k",
-	"AIzaSyDymWriOVQ09JuNtpgPMh_qTwi9F_SV1CE",
+	KEYS:["AIzaSyDymWriOVQ09JuNtpgPMh_qTwi9F_SV1CE",
 	"AIzaSyACz6YjivlKAhyYytn9fa2z8fd69n8lQfo",
 	"AIzaSyAlcMU0_vzoNXOdzgh1onwJt7qMo82NZrU",
 	"AIzaSyAoUSOFoLmAOyAd7jFSp4ZCawxP1OcUE8c",

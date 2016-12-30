@@ -13,12 +13,12 @@ let insertUrls=function(dataToInsert){
   console.log(dataToInsert)
   try{
     dataToInsert.data.concepts.forEach(function(concept){
-      concept.urls.forEach(function(urlData){
+      concept.urls.forEach(function(url){
 
         let msgObj={
           domain: dataToInsert.domainName,
           concept: concept.name,
-          url: urlData.url
+          url:url
           
         };
         console.log(msgObj)

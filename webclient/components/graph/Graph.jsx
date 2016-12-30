@@ -169,6 +169,10 @@ export default class Graph extends React.Component {
   else {
     let response=JSON.parse(res.text);
     console.log("Response on documents show: ",response);
+    response.sort(function(a, b) {
+      return a.intensity - b.intensity
+    })
+
     if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
