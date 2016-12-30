@@ -61,16 +61,13 @@ const urlIndexing = function(data) {
     promise => highland(
       promise.then(
         function(result) {
+
           return result;
         },
         function(err) {
           return err;
         }
         ))));
-  processors.push(highland.map(function(dataForParseIntents) {
-    let processedInfo = crawlerModules.parseEachIntent(dataForParseIntents)
-    return processedInfo;
-  }));
   let dataObj = JSON.parse(data);
   let text;
   request.get(dataObj.url, function(error, response, body) {
@@ -129,9 +126,20 @@ const urlIndexing = function(data) {
   highland(dataArr)
   .pipe(highland.pipeline.apply(null, processors))
   .each(function(res) {
-    logger.debug("At consupmtion Intent : " + dataObj.intent);
+    logger.debug("At consupmtion Intent : ");
     logger.debug(res);
-    startIntentParser(dataObj);
+    let intents=res.intents;
+    delete res.intents
+    logger.debug(intents);   
+    intents.forEach(function(intent) {
+      logger.debug(" at each intent to send as msg ", intent)
+      let obj= JSON.parse(JSON.stringify(res.data));
+      obj.intent = intent;
+      logger.debug("printing the msg to send to parser");
+      logger.debug(obj);
+      startIntentParser(obj);
+    })
+
   });
 });
 }

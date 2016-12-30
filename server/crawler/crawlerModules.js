@@ -28,7 +28,7 @@ const extractData = function(data) {
     //console.log( item + " " + count);
     terms.push({
       word: data.interestedTerms[index],
-      density: count
+      intensity: count
     });
     data.text = data.text.replace(pattern, '');
   })
@@ -86,7 +86,7 @@ let getIntents = function(data) {
       .then(function(neoData) {
         logger.debug("sucessfully saved the document")
         logger.debug(neoData);
-        logger.debug("after mongo saving " + data.intents)
+        logger.debug("after neo4J fetching of intents " , neoData.intents)
         resolve(neoData);
       },
       function(err) {
@@ -97,21 +97,10 @@ let getIntents = function(data) {
     )
   return promise
 }
-let parseEachIntent = function(dataWithIntentColln) {
-  let data = dataWithIntentColln.data;
-  let intents = dataWithIntentColln.intents;
-  logger.debug("parseEachIntent " + data.domain)
-  logger.debug("parseEachIntent " + intents)
-  intents.forEach(function(intent) {
-    data.intent = intent;
-    return data;
-  })
-}
 module.exports = {
  termsFinder: termsFinder,
  indexUrl: indexUrl,
  getIntents:getIntents,
  saveWebDocument:saveWebDocument,
- extractData:extractData,
- parseEachIntent:parseEachIntent
+ extractData:extractData
 }
