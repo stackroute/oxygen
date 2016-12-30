@@ -64,7 +64,7 @@ gulp.task('eslint', function() {
     ])
   .pipe(eslint())
   .pipe(eslint.format())
-  //.pipe(eslint.failAfterError())
+  .pipe(eslint.failAfterError())
   // .pipe(eslint.result(result => {
   //       // Called for each ESLint result.
 
