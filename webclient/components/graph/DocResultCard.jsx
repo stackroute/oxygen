@@ -34,7 +34,7 @@ export default class DocResultCard extends React.Component {
       <Paper zDepth={4} style={layout} rounded={false}>
       <Row>
       <Col lg={10} xl={10} md={10} sm={12} xs={12} style={{paddingRight:0}}>
-      <Card>
+      <Card style={{paddingBottom:15}}>
       <CardHeader style={jobcard}
       textStyle={{padding:0,color:'grey'}}
       titleStyle={{"fontSize":"18pt",padding:"16px 16px 0",color:'grey'}}
@@ -56,7 +56,7 @@ export default class DocResultCard extends React.Component {
       </a>
       </ScreenClassRender>
       </p>
-      </CardText>          
+      </CardText>
       </Card>
       </Col>
       <Visible lg xl md>
@@ -65,11 +65,11 @@ export default class DocResultCard extends React.Component {
       </b><br/>{this.props.webDoc.intensity}</h1>
       </Col>
       </Visible>
-      </Row>          
+      </Row>
       </Paper>
       )
   }
 }
 DocResultCard.propTypes = {
-  webDocs: React.PropTypes.arrayOf(React.PropTypes.object)
+  webDoc: React.PropTypes.object
 }

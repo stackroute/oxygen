@@ -6,6 +6,7 @@ const logger = require('./../../applogger');
 let saveNewWebDocument = function(webDocument) {
   delete webDocument.text;
   delete webDocument.allTerms;
+  delete webDocument.interestedTerms;
   logger.debug("Saving the webDocument : ")
   logger.debug(webDocument)
 
