@@ -319,8 +319,8 @@ let getWebDocuments = function(domainObj) {
     logger.debug("***********"+str+"     "+str1);
       if(domainObj.reqIntents.length===0)
       {
-      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-      query += 'match(c:'+graphConsts.NODE_CONCEPT')'
+      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})';
+      query += 'match(c:'+graphConsts.NODE_CONCEPT+')'
       query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
       query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
       query +=' match(w)-[r]-(c) where c.name in '+str;
@@ -329,11 +329,11 @@ let getWebDocuments = function(domainObj) {
       else
       {
       query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-      query += 'match (c:'+graphConsts.NODE_CONCEPT')'
+      query += 'match (c:'+graphConsts.NODE_CONCEPT+')'
       query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
       query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
-      query+=  'match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
-      query+=  'return w.name,sum(r.intensity) as sum order by sum desc';
+      query +=  'match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
+      query +=  'return w.name,sum(r.intensity) as sum order by sum desc';
       }
 
     let params = {
