@@ -1,13 +1,10 @@
-
 import React from 'react';
-import {Link} from 'react-router';
 import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
 import {Row, Col,ScreenClassRender,Visible} from 'react-grid-system';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import ActionHome from 'material-ui/svg-icons/action/home';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
@@ -28,13 +25,8 @@ const suggest={
   color:"grey",
   textAlign:"center"
 }
-const drawer={
-  paddingLeft:0,
-  paddingRight:0
-}
 const styles={
  largeIcon: {
-
   width: 28,
   height: 28,
   backgroundColor: "#a9a9a9",
@@ -48,10 +40,10 @@ large: {
 }
 }
 const styleFunction = (screenClass) => {
-  if (screenClass === 'xl') return { fontSize: '37px',textAlign:"left",color:"#8aa6bd" };
-  if (screenClass === 'lg') return { fontSize: '35px',textAlign:"left",color:"#8aa6bd" };
-  if (screenClass === 'md') return { fontSize: '30px',textAlign:"left",color:"#8aa6bd" };
-  if (screenClass === 'sm') return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'xl') {return { fontSize: '37px',textAlign:"left",color:"#8aa6bd" };}
+  if (screenClass === 'lg') {return { fontSize: '35px',textAlign:"left",color:"#8aa6bd" };}
+  if (screenClass === 'md') {return { fontSize: '30px',textAlign:"left",color:"#8aa6bd" };}
+  if (screenClass === 'sm') {return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };}
   return { fontSize: '25px',textAlign:"left",color:"#8aa6bd" };
 };
 export default class Graph extends React.Component {
@@ -200,7 +192,7 @@ export default class Graph extends React.Component {
     <div style={fonts}>
 
     <Row style={{margin:0}}>
-    <Visible  lg xl>
+    <Visible lg xl>
     <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
     </Col>
@@ -240,7 +232,7 @@ export default class Graph extends React.Component {
   </Visible>
 
 
-  <Visible  style={{padding:0}} md sm xs>
+  <Visible style={{padding:0}} md sm xs>
 
   <Drawer open={this.state.open}
   onRequestChange={this.handleToggle}

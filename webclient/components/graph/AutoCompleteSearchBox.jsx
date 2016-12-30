@@ -44,7 +44,8 @@ export default class AutoCompleteSearchBox extends React.Component {
       />
       </Col>
       <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-      <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}><ActionSearch /></IconButton>
+      <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
+      <ActionSearch /></IconButton>
       </Col>
       </Row>
       </Paper>
