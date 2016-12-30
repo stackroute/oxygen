@@ -112,6 +112,7 @@ let fetchIntents = function(data) {
      });
         // Completed!
         session.close();
+        logger.debug('inside neo4J intent fetching ',intents)
         resolve({data:data,intents:intents});
       })
     .catch(function(err) {
