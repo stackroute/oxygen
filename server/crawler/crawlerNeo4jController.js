@@ -50,14 +50,14 @@ let getUrlIndexed = function(data) {
 
     let session = driver.session();
 
-    let intents=[];
+    //let rel=[];
 
     logger.debug("obtained connection with neo4j");
 
     let query = 'Match (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})  Match (c:'
-    +graphConsts.NODE_CONCEPT+'{name:{conceptName}}) Match (i:'
-    +graphConsts.NODE_INTENT+') MERGE(c)<-[r:'+graphConsts.REL_HAS_EXPLANATION_OF
-    +']-(u:'+graphConsts.NODE_WEBDOCUMENT+'{name:{urlName}}) return i';
+    +graphConsts.NODE_CONCEPT+'{name:{conceptName}}) Match(d)<-[r1:'+
+    graphConsts.REL_CONCEPT_OF+']-(c) MERGE(c)<-[r:'+graphConsts.REL_HAS_EXPLANATION_OF
+    +']-(u:'+graphConsts.NODE_WEBDOCUMENT+'{name:{urlName}}) return r';
     let params = {
       domainName: data.domain,
       conceptName: data.concept,
@@ -65,14 +65,52 @@ let getUrlIndexed = function(data) {
     };
     session.run(query , params)
     .then(function(result) {
+      logger.debug("Result for terms from neo4j: ", result);
+        //rel.push(record._fields[0].properties.name);
+
+              // Completed!
+
+              session.close();
+              resolve(data);
+            })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+  });
+
+  return promise;
+}
+
+let fetchIntents = function(data) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to get intents to domain: ", data.concept);
+
+    let session = driver.session();
+
+    let intents=[];
+
+    logger.debug("obtained connection with neo4j");
+
+    let query = 'Match (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) Match (i:'+
+    graphConsts.NODE_INTENT+') Match(d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) return i';
+    let params = {
+      domainName: data.domain
+    };
+    session.run(query , params)
+    .then(function(result) {     
       result.records.forEach(function(record) {
-        logger.debug("Result for terms from neo4j: ", record);
-        intents.push(record._fields[0].properties.name);
 
-      });
+       record._fields.forEach(function(field){
+        logger.debug("Result for getting intents from neo4j: ", field.properties.name);
+        intents.push(field.properties.name);
+      })
 
+
+     });
         // Completed!
-
         session.close();
         resolve({data:data,intents:intents});
       })
@@ -88,5 +126,6 @@ let getUrlIndexed = function(data) {
 
 module.exports = {
   getTerms: getTerms,
-  getUrlIndexed:getUrlIndexed
+  getUrlIndexed:getUrlIndexed,
+  fetchIntents:fetchIntents
 }

@@ -95,6 +95,22 @@ let indexUrl =function(data){
     )
   return promise
 }
+let getIntents =function(data){
+  let promise = new Promise(
+    function(resolve, reject){
+      crawlerNeo4jController.fetchIntents(data)
+      .then(function(dataWithIntents){
+        logger.debug("successfully indexed the url")
+        resolve(dataWithIntents);
+      },
+      function(err){
+        logger.error("Encountered error in publishing a new " , err)
+        reject(err);
+      })
+    }
+    )
+  return promise
+}
 
 let saveWebDocument = function(data){
   let promise = new Promise(
@@ -133,6 +149,7 @@ module.exports = {
  termDensity:termDensity,
  termsFinder: termsFinder,
  indexUrl: indexUrl,
+ getIntents:getIntents,
  saveWebDocument:saveWebDocument,
  extractData:extractData,
  parseEachIntent:parseEachIntent
