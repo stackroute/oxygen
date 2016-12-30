@@ -72,7 +72,7 @@ export default class DocResultCard extends React.Component {
       </Card>
       </Col>
       <Visible lg xl md>
-      <Col lg={2} xl={2} md={2} style={{paddingLeft:0,backgroundColor:"#dadada",borderRadius:10}}>
+      <Col lg={2} xl={2} md={2} style={{paddingLeft:0,paddingBottom:15,backgroundColor:"#dadada",borderRadius:10}}>
       <h1 style={{padding:"15px 0"}}><b  style={{color:"grey"}}>RATING
       </b><br/>{this.props.webDoc.intensity}</h1>
       </Col>

@@ -16,7 +16,6 @@ const schema = new mongoose.Schema({
 	terms : [contentSchema],
 	title:{type:String},
 	description:{type:String},
-	prevIndexedOn:{type:Date, default: Date.now },
 	lastIndexedOn:{type:Date, default: Date.now }
 }, {collection: 'WebDocuments', versionKey: false});
 

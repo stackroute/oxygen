@@ -117,27 +117,27 @@ router.get('/:domainName', function(req, res) {
 
 // Freshly index a domain
 router.post('/:domainName/index', function(req, res) {
-    logger.debug("going to freshly index domain ", req.params.domainName);
-    try {
-      domainCtrl.freshlyIndexDomain(req.params.domainName).then(function(obj) {
-        logger.debug("Successfully indexing for all concepts  ----->",obj);
-        res.send("Successfully done");
-        return;
-      },
-      function(err) {
-        logger.error("Encountered error in retrived concept(s) of domain: ",
-          err);
-        res.send(err);
-        return;
-      })
-
-    } catch (err) {
-      logger.error("Caught a error in retrived concept(s) of domain ", err);
-      res.status(500).send({
-        error: "Something went wrong, please try later..!"
-      });
+  logger.debug("going to freshly index domain ", req.params.domainName);
+  try {
+    domainCtrl.freshlyIndexDomain(req.params.domainName).then(function(obj) {
+      logger.debug("Successfully indexing for all concepts  ----->",obj);
+      res.send("Successfully done");
       return;
-    }
+    },
+    function(err) {
+      logger.error("Encountered error in retrived concept(s) of domain: ",
+        err);
+      res.send(err);
+      return;
+    })
+
+  } catch (err) {
+    logger.error("Caught a error in retrived concept(s) of domain ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
 });
 
 //get web Documents
@@ -145,29 +145,29 @@ router.post('/documents/:domainName', function(req, res) {
   logger.debug("got request for retriving web documents ",req.body);
   logger.debug("Domin name ",req.body.domainName);
   //res.send('success');
- try {
+  try {
 
-  let domainObj = req.body;
-  domainCtrl.fetchWebDocuments(domainObj).then(function(webDocuments) {
-    logger.info("Successfully retrived all we documents : ");
-    logger.debug(webDocuments)
-    res.send(webDocuments);
-    return;
-  },
-  function(err) {
-    logger.error("Encountered error in retrived concept(s) of domain: ",
-      err);
-    res.send(err);
-    return;
-  })
+    let domainObj = req.body;
+    domainCtrl.fetchWebDocuments(domainObj).then(function(webDocuments) {
+      logger.info("Successfully retrived all we documents : ");
+      logger.debug(webDocuments)
+      res.send(webDocuments);
+      return;
+    },
+    function(err) {
+      logger.error("Encountered error in retrived concept(s) of domain: ",
+        err);
+      res.send(err);
+      return;
+    })
 
-} catch (err) {
-  logger.error("Caught a error in retrived concept(s) of domain ", err);
-  res.status(500).send({
-    error: "Something went wrong, please try later..!"
-  });
-  return;
-}
+  } catch (err) {
+    logger.error("Caught a error in retrived concept(s) of domain ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
 
 });
 
