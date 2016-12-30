@@ -63,27 +63,7 @@ let indexUrl = function(data) {
   )
   return promise
 }
-let saveWebDocument = function(data) {
-  let promise = new Promise(
-    function(resolve, reject) {
-      crawlerMongoController.saveNewWebDocument(data)
-        .then(function(mongoData) {
-            logger.debug("sucessfully saved the document")
-            logger.debug(mongoData);
-            //logger.debug("after mongo saving " + data.intents)
-            resolve(mongoData);
-          },
-          function(err) {
-            logger.error("Encountered error in saving ", err)
-            reject(err);
-          })
-    }
-  )
-  return promise
-}
-<<<<<<< HEAD
-let getIntents = function(data) {
-=======
+
 let getIntents =function(data){
   let promise = new Promise(
     function(resolve, reject){
@@ -102,7 +82,6 @@ let getIntents =function(data){
 }
 
 let saveWebDocument = function(data){
->>>>>>> 73d8b72482330c36d124d4514564f547f5095ab4
   let promise = new Promise(
     function(resolve, reject) {
       crawlerNeo4jController.fetchIntents(data)
@@ -131,8 +110,6 @@ let parseEachIntent = function(dataWithIntentColln) {
   })
 }
 module.exports = {
- interestedWords:interestedWords,
- termDensity:termDensity,
  termsFinder: termsFinder,
  indexUrl: indexUrl,
  getIntents:getIntents,

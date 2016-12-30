@@ -48,12 +48,7 @@ const urlIndexing = function(data) {
         }
       ))));
 
-  processors.push(highland.map(function(webDocument) {
-    let promise = crawlerModules.saveWebDocument(webDocument)
-        function(result){ return result; }, 
-        function(err){ return err; }
-        ))));
-
+ 
   processors.push(highland.map(function(dataToGetIntents){
     let promise=crawlerModules.getIntents(dataToGetIntents)
     return promise
@@ -105,7 +100,7 @@ const urlIndexing = function(data) {
 
   request.get(dataObj.url, function(error, response, body) {
     let page = cheerio.load(body);
-   if( dataObj.title = undefined && dataObj.description = undefined)
+   if( dataObj.title === 'undefined'  && dataObj.description === 'undefined')
    {
     var meta = page('meta')
   var keys = Object.keys(meta)
@@ -115,7 +110,7 @@ const urlIndexing = function(data) {
   let desc;
 
   keys.forEach(function(key){
-    if (  meta[key].attribs
+    if (meta[key].attribs
        && meta[key].attribs.property
        && meta[key].attribs.property === 'og:type') {
       ogType = meta[key].attribs.content;
@@ -123,7 +118,7 @@ const urlIndexing = function(data) {
   });
 
   keys.forEach(function(key){
-    if (  meta[key].attribs
+    if (meta[key].attribs
        && meta[key].attribs.property
        && meta[key].attribs.property === 'og:title') {
       ogTitle = meta[key].attribs.content;
@@ -131,7 +126,7 @@ const urlIndexing = function(data) {
   });
 
   keys.forEach(function(key){
-    if (  meta[key].attribs
+    if (meta[key].attribs
       && meta[key].attribs.property
        && meta[key].attribs.property === 'og:description') {
       desc = meta[key].attribs.content;

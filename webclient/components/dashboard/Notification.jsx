@@ -6,21 +6,12 @@ export default class Notification extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = 
+    this.state = {
        message:{},
        open:false
     }   
   }
-  componentWillMount() {
-         let socket = io.connect();
-      socket.emit('test' , 'abc');
-      socket.on('oxygen::progressUpdate', function(data) {
-        console.log(data);
-      });
-     message:{},
-     open:false
-   }   
- }
+ 
  componentWillMount() {
   let socket = io.connect();
 
