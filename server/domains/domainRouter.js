@@ -40,8 +40,7 @@ router.post('/:domainName', function(req, res) {
 router.post('/:domainName/crawl', function(req, res) {
   try {
 
-    let reqObj =
-    {
+    let reqObj ={
       domainName:req.params.domainName,
       data: req.body
     } 

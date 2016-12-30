@@ -18,9 +18,8 @@ let insertUrls=function(dataToInsert){
         let msgObj={
           domain: dataToInsert.domainName,
           concept: concept.name,
-          url: urlData.url,
-          title:urlData.title,
-          description:urlData.description
+          url: urlData.url
+          
         };
         console.log(msgObj)
         startCrawlerMQ(msgObj);
