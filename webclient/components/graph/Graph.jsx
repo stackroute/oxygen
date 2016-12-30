@@ -9,8 +9,6 @@ import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 
 const iPanel={
   minWidth:150,
@@ -27,50 +25,6 @@ const fonts={
 const suggest={
   color:"grey",
   textAlign:"center"
-}
-
-const drawer={
-  paddingLeft:0,
-  paddingRight:0
-}
-const iconStyle={
-	iconSize: {
-
-		width: 30,
-		height: 30,
-		backgroundColor: "#a9a9a9",
-		padding: 10,
-		borderRadius: 60
-	},
-	large: {
-		width: 120,
-		height: 120,
-		padding: 30
-	},
-	leftIcon:{
-		position:"fixed",
-		left:"45%",
-		float:'left'
-	},
-	rightIcon:{
-		position:"fixed",
-		right:"33%",
-		float:'right'
-	},
-	leftIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'left'
-	},
-	rightIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'right'
-	}
 }
 const styles={
  largeIcon: {
@@ -285,51 +239,6 @@ export default class Graph extends React.Component {
    }
    return(
      <div style={fonts}>
-
-<<<<<<< HEAD
-    <Row style={{margin:0}}>
-    <Visible lg xl>
-    <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
-    <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
-    </Col>
-    <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000,marginLeft:"16.5%"}}>
-    <Row>
-    <Col lg={12} md={12} sm={12} xs={12}>
-    <ScreenClassRender style={styleFunction}>
-    <h1>
-    {this.state.domainName.toUpperCase()}
-    </h1>
-    </ScreenClassRender>
-    </Col>
-    </Row>
-    <Row>
-    <Col sm={12} xs={12} md={12} lg={12} xl={12}>
-    <AutoCompleteSearchBox concepts={this.state.concepts}
-    searchDocument={this.searchDocuments.bind(this)}
-    getConcept={this.getConcepts.bind(this)}/>
-    <Row>
-    <Col md={12} lg={12} xl={12}>
-    {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
-    <SelectedConcepts conceptChips={this.state.selectedConcept}
-    deleteConcept={this.deleteConcepts.bind(this)} />}
-    </Col>
-    </Row>
-    </Col>
-    </Row>
-    <br/><br/>
-    <Row>
-    <Col md={12} lg={12} xl={12}>
-    {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:
-    this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})
-  }
-  </Col>
-  </Row>
-  </Col>
-  </Visible>
-
-
-  <Visible style={{padding:0}} md sm xs>
-=======
      <Row style={{margin:0}}>
      <Visible  lg xl>
      <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
@@ -373,7 +282,6 @@ export default class Graph extends React.Component {
 
 
    <Visible  style={{padding:0}} md sm xs>
->>>>>>> dfe22c13fd8402e8df5f0642cdafc49aa3907fd9
 
    <Drawer open={this.state.open}
    onRequestChange={this.handleToggle}

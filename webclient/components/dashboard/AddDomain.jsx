@@ -154,7 +154,7 @@ handleSubmit() {
     secondary={true}
     onTouchTap={this.handleClose} />,
     <FlatButton
-    label={'Add'} primary={true}  type="submit" disabled={!this.state.canSubmit}
+    label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
     let {wordsError, DuplicationError} = errorMessages;
@@ -165,7 +165,7 @@ handleSubmit() {
      domainArr.push(domainAr[it].name);
     }
     console.log("The domain arr"+domainArr);
-    Formsy.addValidationRule('isIn', function (values, value, array) {
+    Formsy.addValidationRule('isIn', function (values, value) {
     return domainArr.indexOf(value) < 0;
     });
     return (

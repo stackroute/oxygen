@@ -57,9 +57,9 @@ let getAllDomainConcept = function(domainNameColln) {
 
     domainNameColln.forEach(function(domainName){
 
-      let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) match(c:'
-      +graphConsts.NODE_CONCEPT+') match(d)<-[r:'+graphConsts.REL_CONCEPT_OF
-      +']-(c)  RETURN d,count(c)';
+      let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+          query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
+          query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c)  RETURN d,count(c)';
 
       let params = {
         domainName: domainName
@@ -117,8 +117,9 @@ let getDomainConcept = function(domainName) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) match(c:'+graphConsts.NODE_CONCEPT
-    +') match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
+    let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+        query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
+        query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
     let params = {
       domainName: domainName
     };
@@ -156,8 +157,9 @@ let getDomainIntent = function(domain) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) match(i:'+graphConsts.NODE_INTENT
-    +') match(d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
+    let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+        query+= 'match(i:'+graphConsts.NODE_INTENT+')'
+        query+= 'match(d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
     let params = {
       domainName: domain.Domain
     };
@@ -195,8 +197,9 @@ let getDomainCardDetails = function(domainObj) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) match(c:'+graphConsts.NODE_CONCEPT
-    +') match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
+    let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+        query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
+        query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
     let params = {
       domainName: domainObj
     };
@@ -213,8 +216,9 @@ let getDomainCardDetails = function(domainObj) {
       });
     //  domainObj['concepts']=concepts;
    //number of concepts calculated
-   let query1 = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) MATCH (i:'+graphConsts.NODE_INTENT
-   +') MATCH (d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
+   let query1 = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+       query1+= 'MATCH (i:'+graphConsts.NODE_INTENT+')'
+       query1+= 'MATCH (d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
    let params1 = {
     domainName: domainObj
   };
@@ -237,9 +241,11 @@ let getDomainCardDetails = function(domainObj) {
           // fetching intents Completed!
 
           logger.debug("proceeding to fetch no of documents");
-          let query2 = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}}) MATCH (c:'
-          +graphConsts.NODE_CONCEPT+') MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+') match(d)<-[r:'
-          +graphConsts.REL_CONCEPT_OF+']-(c) match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) RETURN w';
+          let query2 = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+              query2+= 'MATCH (c:'+graphConsts.NODE_CONCEPT+')'
+              query2+= 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')'
+              query2+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c)'
+              query2+= 'match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) RETURN w';
           let params2 = {
             domainName: domainObj
           };
@@ -414,15 +420,15 @@ let getWebDocumentsCallback = function(domainObj, callback) {
 
 module.exports = {
   indexNewDomain: indexNewDomain,
-  getDomainConcept:getDomainConcept,
-  getDomainIntent:getDomainIntent,
-  getAllDomainConcept:getAllDomainConcept,
+  getDomainConcept: getDomainConcept,
+  getDomainIntent: getDomainIntent,
+  getAllDomainConcept: getAllDomainConcept,
   indexNewDomainCallBack: indexNewDomainCallBack,
   getDomainConceptCallback: getDomainConceptCallback,
   getDomainIntentCallback: getDomainIntentCallback,
   getAllDomainConceptCallback: getAllDomainConceptCallback,
   getDomainCardDetailsCallback: getDomainCardDetailsCallback,
-  getDomainCardDetails:getDomainCardDetails,
-  getWebDocumentsCallback:getWebDocumentsCallback,
-  getWebDocuments:getWebDocuments
+  getDomainCardDetails: getDomainCardDetails,
+  getWebDocumentsCallback: getWebDocumentsCallback,
+  getWebDocuments: getWebDocuments
 }

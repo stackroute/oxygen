@@ -45,7 +45,7 @@ export default class DocResultCard extends React.Component {
       </b>{this.props.webDoc.description}
       </p>
       <Visible sm xs>
-      <h2 style={{padding:"15px 0",textAlign:"center"}}><b  style={{color:"grey"}}>RATING :
+      <h2 style={{padding:"15px 0",textAlign:"center"}}><b style={{color:"grey"}}>RATING :
       </b>{this.props.webDoc.intensity}</h2>
       </Visible>
       <p style={{color:"grey"}}>
