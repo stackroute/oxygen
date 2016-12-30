@@ -18,27 +18,21 @@ let fetchDomainCardDetails = function(domain) {
   let promise = new Promise(function(resolve, reject) {
 
 
-    if (!domain ||
-      domain.length <= DOMAIN_NAME_MIN_LENGTH) {
-      reject({
-        error: "Invalid domain name..!"
-      });
-  }
 
-  async.waterfall([
-    function(callback) {
-      logger.debug("inside the waterfall "+domain)
-      domainNeo4jController.getDomainCardDetailsCallback(domain,
-        callback);
-    }
-    ],
-    function(err, domainObjDetails) {
-      if (err) {
-        reject(err);
+    async.waterfall([
+      function(callback) {
+        logger.debug("inside the waterfall "+domain)
+        domainNeo4jController.getDomainCardDetailsCallback(domain,
+          callback);
       }
-      resolve(domainObjDetails);
+      ],
+      function(err, domainObjDetails) {
+        if (err) {
+          reject(err);
+        }
+        resolve(domainObjDetails);
       }); //end of async.waterfall
-});
+  });
 
   return promise;
 }
@@ -203,35 +197,30 @@ let getDomain = function(domainName) {
 
   let promise = new Promise(function(resolve, reject) {
 
-    if (!domainName ||
-      domainName.length <= DOMAIN_NAME_MIN_LENGTH) {
-      reject({
-        error: "Invalid domain name..!"
-      });
-  }
+   
 
-  async.waterfall([function(callback) {
-    domainMongoController.checkDomainCallback(domainName,
-      callback);
-  },
-  function(checkedDomain, callback) {
+    async.waterfall([function(callback) {
+      domainMongoController.checkDomainCallback(domainName,
+        callback);
+    },
+    function(checkedDomain, callback) {
 
-    domainNeo4jController.getDomainConceptCallback(checkedDomain.name,
-      callback)
-  },
-  function(checkedDomainWithConcepts, callback) {
+      domainNeo4jController.getDomainConceptCallback(checkedDomain.name,
+        callback)
+    },
+    function(checkedDomainWithConcepts, callback) {
 
-    domainNeo4jController.getDomainIntentCallback(checkedDomainWithConcepts,
-      callback)
-  }
-  ],
-  function(err, retrivedDomainConceptsAndIntents) {
-    if (err) {
-      reject(err);
+      domainNeo4jController.getDomainIntentCallback(checkedDomainWithConcepts,
+        callback)
     }
-    resolve(retrivedDomainConceptsAndIntents);
+    ],
+    function(err, retrivedDomainConceptsAndIntents) {
+      if (err) {
+        reject(err);
+      }
+      resolve(retrivedDomainConceptsAndIntents);
       }); //end of async.waterfall
-});
+  });
   return promise;
 }
 
@@ -339,65 +328,60 @@ let fetchWebDocuments = function(domainObj) {
   let docsDetails=[];
   let promise = new Promise(function(resolve, reject) {
 
-    if (!domainObj ||
-      domainObj.length <= DOMAIN_NAME_MIN_LENGTH) {
-      reject({
-        error: "Invalid domain name..!"
-      });
-  }
+    
 
-  async.waterfall([
-    function(callback) {
-      logger.debug("inside the waterfall for fetching web docs"+domainObj)
-      domainNeo4jController.getWebDocumentsCallback(domainObj,
-        callback);
-    },
-    function(docs,callback) {
-      if(docs.length===0)
-      {
-       callback(null,docsDetails);
-     }
-     else{
-      for(let item in docs)
-      {
-       if (Object.prototype.hasOwnProperty.call(docs, item)) {
-         logger.debug("going to mongo ",docs.length);
-         let url=docs[item].url;
-         logger.debug("going to mongo url ",url);
-         domainMongoController.getSearchResultDocument(url)
-         .then(function(docObj) {
-          logger.debug("Successfully fetched doc details from mongo: ",
-            docObj);
-          docsDetails.push({title:docObj.title,
-                            description:docObj.description,
-                            url:docObj.url,
-                            intensity:docs[item].intensity})
-          
-          logger.debug("after each pushing",docsDetails);
-          if(docsDetails.length===docs.length)
-          {
-           callback(null,docsDetails);
-         }
-       },
-       function(err) {
-        logger.error("Encountered error in fetching doc details: ",
-          err);
-        reject(err);
-        return;
-      });
+    async.waterfall([
+      function(callback) {
+        logger.debug("inside the waterfall for fetching web docs"+domainObj)
+        domainNeo4jController.getWebDocumentsCallback(domainObj,
+          callback);
+      },
+      function(docs,callback) {
+        if(docs.length===0)
+        {
+         callback(null,docsDetails);
        }
+       else{
+        for(let item in docs)
+        {
+         if (Object.prototype.hasOwnProperty.call(docs, item)) {
+           logger.debug("going to mongo ",docs.length);
+           let url=docs[item].url;
+           logger.debug("going to mongo url ",url);
+           domainMongoController.getSearchResultDocument(url)
+           .then(function(docObj) {
+            logger.debug("Successfully fetched doc details from mongo: ",
+              docObj);
+            docsDetails.push({title:docObj.title,
+              description:docObj.description,
+              url:docObj.url,
+              intensity:docs[item].intensity})
+            
+            logger.debug("after each pushing",docsDetails);
+            if(docsDetails.length===docs.length)
+            {
+             callback(null,docsDetails);
+           }
+         },
+         function(err) {
+          logger.error("Encountered error in fetching doc details: ",
+            err);
+          reject(err);
+          return;
+        });
+         }
+       }
+       logger.debug("pushing ended",docsDetails);
      }
-     logger.debug("pushing ended",docsDetails);
    }
- }
- ],
- function(err, docObjDetails) {
-  if (err) {
-    reject(err);
-  }
-  resolve(docObjDetails);
+   ],
+   function(err, docObjDetails) {
+    if (err) {
+      reject(err);
+    }
+    resolve(docObjDetails);
       }); //end of async.waterfall
-});
+  });
 
   return promise;
 }

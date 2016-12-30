@@ -1,9 +1,10 @@
+/*eslint no-undefined: 0 */
+/*eslint no-undef-init: 0*/
 let io = require('socket.io')();
 let redis = require('redis');
 let config = require('../config/');
 let logger = require('../applogger');
-let redisClient;
-redisClient = undefined;
+let redisClient = undefined;
 
 io.on('connection', function(socket) {
   logger.debug("subscribing to client socket connection..!");
