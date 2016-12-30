@@ -1,9 +1,9 @@
-var io = require('socket.io')();
-var redis = require('redis');
-var config = require('../config/');
-var logger = require('../applogger');
-
-var redisClient = undefined;
+let io = require('socket.io')();
+let redis = require('redis');
+let config = require('../config/');
+let logger = require('../applogger');
+let redisClient;
+redisClient = undefined;
 
 io.on('connection', function(socket) {
   logger.debug("subscribing to client socket connection..!");
@@ -19,16 +19,19 @@ io.on('connection', function(socket) {
   redisClient.subscribe('oxygen:onServiceUpdate');
 
   redisClient.on('message', function(channel, chDataStr) {
-    var chData = JSON.parse(chDataStr);
+
+    let socketEventName = 'oxygen::progressUpdate';
+    let chData = JSON.parse(chDataStr);
+    let socketEventData = {
+      'data': chData
+    };
+
 
     logger.debug("Got message from channel ", channel, " data is: ", chData);
 
     //create socketEvent
     // var socketEventName = 'oxygen::progressUpdate' + '::' + chData.domainName;
-    var socketEventName = 'oxygen::progressUpdate';
-    var socketEventData = {
-      'data': chData,
-    };
+    
 
     logger.debug('Emiting Socket event: ', socketEventName, ' data: ', socketEventData);
     socket.emit(socketEventName, socketEventData);

@@ -368,7 +368,10 @@ let fetchWebDocuments = function(domainObj) {
          .then(function(docObj) {
           logger.debug("Successfully fetched doc details from mongo: ",
             docObj);
-          docsDetails.push({title:docObj.title,description:docObj.description,url:docObj.url,intensity:docs[item].intensity})
+          docsDetails.push({title:docObj.title,
+                            description:docObj.description,
+                            url:docObj.url,
+                            intensity:docs[item].intensity})
           
           logger.debug("after each pushing",docsDetails);
           if(docsDetails.length===docs.length)
@@ -410,8 +413,9 @@ let getAllDomain = function() {
     }],
     function(err, domainColln) {
       logger.debug("getting it")
-      if(!err)
+      if(!err){
         resolve(domainColln)
+      }
       reject(err)
     }); //end of async.waterfall
   });

@@ -45,7 +45,8 @@ const startIntentParser = function() {
          logger.debug("Consuming the data: ", dataObj);
          intentParser(dataObj.data);
        })
-       .each(function(dataObj) {
+
+       .each(function() {
         let redisIntent={
               //domain: dataObj.domain,
               actor: 'intent parser',

@@ -1,15 +1,13 @@
 import React from 'react';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Row, Col,Visible,ScreenClassRender} from 'react-grid-system';
-import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
 
-
 const styleFunction = (screenClass) => {
-  if (screenClass === 'xl') return {fontSize:18,color:"#1976d2"};
-  if (screenClass === 'lg') return {fontSize:18,color:"#1976d2"};
-  if (screenClass === 'md') return {fontSize:18,color:"#1976d2"};
-  if (screenClass === 'sm') return {fontSize:18,color:"#1976d2"};
+  if (screenClass === 'xl') {return {fontSize:18,color:"#1976d2"};}
+  if (screenClass === 'lg') {return {fontSize:18,color:"#1976d2"};}
+  if (screenClass === 'md') {return {fontSize:18,color:"#1976d2"};}
+  if (screenClass === 'sm') {return {fontSize:18,color:"#1976d2"};}
   return {fontSize:15,color:"#1976d2 "};
 };
 const jobcard={
@@ -22,17 +20,7 @@ const layout={
   maxWidth:1050,
   width:"auto",
   margin:" 30px auto 0",
-  borderRadius:7,
-};
-const styles = {
-  chip: {
-    margin: 4
-  },
-  wrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    padding:"0 10px 10px"
-  }
+  borderRadius:7
 };
 export default class DocResultCard extends React.Component {
   constructor(props) {
@@ -57,7 +45,7 @@ export default class DocResultCard extends React.Component {
       </b>{this.props.webDoc.description}
       </p>
       <Visible sm xs>
-      <h2 style={{padding:"15px 0",textAlign:"center"}}><b  style={{color:"grey"}}>RATING :
+      <h2 style={{padding:"15px 0",textAlign:"center"}}><b style={{color:"grey"}}>RATING :
       </b>{this.props.webDoc.intensity}</h2>
       </Visible>
       <p style={{color:"grey"}}>
@@ -68,7 +56,7 @@ export default class DocResultCard extends React.Component {
       </a>
       </ScreenClassRender>
       </p>
-      </CardText>          
+      </CardText>
       </Card>
       </Col>
       <Visible lg xl md>
@@ -77,11 +65,11 @@ export default class DocResultCard extends React.Component {
       </b><br/>{this.props.webDoc.intensity}</h1>
       </Col>
       </Visible>
-      </Row>          
+      </Row>
       </Paper>
       )
   }
 }
 DocResultCard.propTypes = {
-  webDocs: React.PropTypes.arrayOf(React.PropTypes.object)
+  webDoc: React.PropTypes.object
 }
