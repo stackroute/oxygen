@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 const logger = require('./../../applogger');
-const searchModel = require('./searchEntity').searchModel;
+//const searchModel = require('./searchEntity').searchModel;
 const datapublisher = require('../serviceLogger/redisLogger');
 const async = require('async');
 const docSearchJobModel = require('./../docSearchJob/docSearchJobEntity').docSearchJobModel;
@@ -26,7 +26,7 @@ const getURL= function(jobDetails,i,callback)
   .get(url)
   .end(function(err,body)
   {
-
+    let data;
     if(err)
     {
       logger.error("encountered error while communicating with the google api :")
@@ -35,30 +35,34 @@ const getURL= function(jobDetails,i,callback)
     }
     else
     {
-      let data = JSON.parse(body.text);
-      if(Object.keys(data).length===6)
-      {
-        logger.debug("retrived the "+data.items.length+" document for concept"+jobDetails.query);
+      data = JSON.parse(body.text);
+    } 
 
-        for (let k = 0; k < data.items.length; k+=1) {
 
-          if((i+k)<=jobDetails.results)
-          {
-            let searchResult={
-              "jobID":jobDetails._id,
-              "query":jobDetails.query,
-              "title":data.items[k].title,
-              "url":data.items[k].link,
-              "description":data.items[k].snippet
-            };
-            searchResults.push(searchResult);
-          }
-          else
-            {break;}
+    if(typeof data!=="undefined" && Object.keys(data).length===6)
+    {
+      logger.debug("retrived the "+data.items.length+" document for concept"+jobDetails.query);
+
+      for (let k = 0; k < data.items.length; k+=1) {
+
+        if((i+k)<=jobDetails.results)
+        {
+          let searchResult={
+            "jobID":jobDetails._id,
+            "query":jobDetails.query,
+            "title":data.items[k].title,
+            "url":data.items[k].link,
+            "description":data.items[k].snippet
+          };
+          searchResults.push(searchResult);
         }
+        else
+          {break;}
       }
       callback(null,searchResults);
-    } 
+    }
+
+
   });
 
 }
@@ -142,6 +146,7 @@ const storeURL = function(id) {
 
       })
     }
+    return {msg:"done on searcher and sent msg to crawler"};
   })
   return sendData;
 });

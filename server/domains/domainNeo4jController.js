@@ -58,8 +58,8 @@ let getAllDomainConcept = function(domainNameColln) {
     domainNameColln.forEach(function(domainName){
 
       let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-          query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
-          query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c)  RETURN d,count(c)';
+      query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
+      query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c)  RETURN d,count(c)';
 
       let params = {
         domainName: domainName
@@ -118,8 +118,8 @@ let getDomainConcept = function(domainName) {
     logger.debug("obtained connection with neo4j");
 
     let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-        query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
-        query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
+    query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
+    query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
     let params = {
       domainName: domainName
     };
@@ -158,8 +158,8 @@ let getDomainIntent = function(domain) {
     logger.debug("obtained connection with neo4j");
 
     let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-        query+= 'match(i:'+graphConsts.NODE_INTENT+')'
-        query+= 'match(d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
+    query+= 'match(i:'+graphConsts.NODE_INTENT+')'
+    query+= 'match(d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
     let params = {
       domainName: domain.Domain
     };
@@ -198,8 +198,8 @@ let getDomainCardDetails = function(domainObj) {
     logger.debug("obtained connection with neo4j");
 
     let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-        query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
-        query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
+    query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
+    query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
     let params = {
       domainName: domainObj
     };
@@ -217,8 +217,8 @@ let getDomainCardDetails = function(domainObj) {
     //  domainObj['concepts']=concepts;
    //number of concepts calculated
    let query1 = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-       query1+= 'MATCH (i:'+graphConsts.NODE_INTENT+')'
-       query1+= 'MATCH (d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
+   query1+= 'MATCH (i:'+graphConsts.NODE_INTENT+')'
+   query1+= 'MATCH (d)<-[r:'+graphConsts.REL_INTENT_OF+']-(i) RETURN i';
    let params1 = {
     domainName: domainObj
   };
@@ -242,10 +242,10 @@ let getDomainCardDetails = function(domainObj) {
 
           logger.debug("proceeding to fetch no of documents");
           let query2 = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-              query2+= 'MATCH (c:'+graphConsts.NODE_CONCEPT+')'
-              query2+= 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')'
-              query2+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c)'
-              query2+= 'match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) RETURN w';
+          query2+= 'MATCH (c:'+graphConsts.NODE_CONCEPT+')'
+          query2+= 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')'
+          query2+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c)'
+          query2+= 'match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) RETURN w';
           let params2 = {
             domainName: domainObj
           };
@@ -317,29 +317,29 @@ let getWebDocuments = function(domainObj) {
     let str=JSON.stringify(domainObj.reqConcepts);
     let str1=JSON.stringify(domainObj.reqIntents);
     logger.debug("***********"+str+"     "+str1);
-      if(domainObj.reqIntents.length===0)
-      {
+    if(domainObj.reqIntents.length===0)
+    {
       query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-      query += 'match(c:'+graphConsts.NODE_CONCEPT')'
+      query += 'match(c:'+graphConsts.NODE_CONCEPT+')'
       query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
       query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
       query +=' match(w)-[r]-(c) where c.name in '+str;
       query +=' return w.name,sum(r.intensity) as sum order by sum desc';
-      }
-      else
-      {
+    }
+    else
+    {
       query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-      query += 'match (c:'+graphConsts.NODE_CONCEPT')'
+      query += 'match (c:'+graphConsts.NODE_CONCEPT+')'
       query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
       query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
-      query+=  'match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
-      query+=  'return w.name,sum(r.intensity) as sum order by sum desc';
-      }
+      query+= 'match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
+      query+= 'return w.name,sum(r.intensity) as sum order by sum desc';
+    }
 
     let params = {
       domainName: domainObj.domainName
     };
-  logger.debug("@@@@@@@@@ "+query);
+    logger.debug("@@@@@@@@@ "+query);
 
     let docs=[];
     session.run(query, params)
@@ -349,15 +349,15 @@ let getWebDocuments = function(domainObj) {
         let i=0;
         let obj={};
         record._fields.forEach(function(fields){
-          i++;
-          if(i==1)
+          i+=1;
+          if(i===1)
           {
-            obj['url']=fields;
+            obj.url=fields;
           }
           else
           {
-            obj['intensity']=Number(fields);
-          docs.push(obj);
+            obj.intensity=Number(fields);
+            docs.push(obj);
           }
         });
 

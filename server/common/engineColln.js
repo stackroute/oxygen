@@ -12,6 +12,5 @@ module.exports = {
 	"AIzaSyBl8v_Yn_j7bep81L29-WHqYzBpdiuH_eU",
 	"AIzaSyAMO8Sj76Iiyjkn863QcgSEBP7NzT3QnAM",
 	"AIzaSyCgSevOCbfPPR8gSdLNrM37-7JMp8o1Tpo",
-	"AIzaSyD_VD0jKA5AzEY5TGgE6KZOfHGJFiRH-iA"],
-	
+	"AIzaSyD_VD0jKA5AzEY5TGgE6KZOfHGJFiRH-iA"]	
 }

@@ -59,8 +59,8 @@ export default class Graph extends React.Component {
       docs:[],
       checkedIntent:[],
       selectedConcept:[],
-      open:false,
-      pageNum:1
+      open:false
+      //pageNum:1
     }
   }
 
@@ -188,62 +188,62 @@ export default class Graph extends React.Component {
    this.getIntentsAndConcepts();
 
  }
- onPageClick(e)
- {
-   let page=this.state.pageNum;
-   if(e.currentTarget.dataset.id==="prev")
-   {
-     page-=1;
-     this.setState({pageNum:page});
-   }
-   else
-   {
-     page+=1;
-     this.setState({pageNum:page});
-   }
- }
+ // onPageClick(e)
+ // {
+ //   let page=this.state.pageNum;
+ //   if(e.currentTarget.dataset.id==="prev")
+ //   {
+ //     page-=1;
+ //     this.setState({pageNum:page});
+ //   }
+ //   else
+ //   {
+ //     page+=1;
+ //     this.setState({pageNum:page});
+ //   }
+ // }
  render()
  {
-   let list=[];
-   let prevFlag;
-   let nextFlag;
-   let dList=this.state.docs;
-   if(dList.length>0)
-   {
-     let pages=Math.ceil(dList.length/6);
-     let pageNow=this.state.pageNum;
-     if(pages===pageNow)
-     {
-       nextFlag=true;
-     }
-     if(this.state.pageNum===1)
-     {
-       prevFlag=true;
-     }
-     if(pages===1 || pages===pageNow)
-     {
-       list=[];
-       for(let i=6*(pageNow-1);i<this.state.docs.length;i+=1)
-       {
-         list.push(this.state.docs[i]);
-       }
-     }
-     else {
-       list=[];
-       let foo=6*(pageNow-1);
-       for(let i=foo;i<(foo+6);i+=1)
-       {
-         list.push(this.state.docs[i]);
-       }
-     }
-   }
+   //let list=[];
+   // let prevFlag;
+   // let nextFlag;
+   // let dList=this.state.docs;
+   // if(dList.length>0)
+   // {
+   //   let pages=Math.ceil(dList.length/6);
+   //   let pageNow=this.state.pageNum;
+   //   if(pages===pageNow)
+   //   {
+   //     nextFlag=true;
+   //   }
+   //   if(this.state.pageNum===1)
+   //   {
+   //     prevFlag=true;
+   //   }
+   //   if(pages===1 || pages===pageNow)
+   //   {
+   //     list=[];
+   //     for(let i=6*(pageNow-1);i<this.state.docs.length;i+=1)
+   //     {
+   //       list.push(this.state.docs[i]);
+   //     }
+   //   }
+   //   else {
+   //     list=[];
+   //     let foo=6*(pageNow-1);
+   //     for(let i=foo;i<(foo+6);i+=1)
+   //     {
+   //       list.push(this.state.docs[i]);
+   //     }
+   //   }
+   // }
    return(
      <div style={fonts}>
      <Row style={{margin:0}}>
      <Visible lg xl>
      <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
      <SelectPanel intents={this.state.intents} 
-                  getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+     getCheckedIntent={this.getCheckedIntents.bind(this)}/>
      </Col>
      <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000,marginLeft:"16.5%"}}>
      <Row>
@@ -274,7 +274,7 @@ export default class Graph extends React.Component {
      <Col md={12} lg={12} xl={12}>
      {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:<div>
      {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
-   </div>
+     </div>
    }
    </Col>
    </Row>
@@ -329,7 +329,7 @@ export default class Graph extends React.Component {
    {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
    <br/>
 
- </div>
+   </div>
  }
  </Col>
  </Row>

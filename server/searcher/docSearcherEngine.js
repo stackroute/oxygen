@@ -20,7 +20,9 @@ const startSearcher = function() {
      chConn.assertQueue(config.OXYGEN.SEARCHER_MQ_NAME, { durable: false })
      .then(function(ok) {
        logger.debug("What is ok: ", ok);
-       logger.debug('[*] Waiting for messages on [' + config.OXYGEN.SEARCHER_MQ_NAME + '], to exit press CTRL+C ');
+       logger.debug('[*] Waiting for messages on [' 
+        + config.OXYGEN.SEARCHER_MQ_NAME +
+        '], to exit press CTRL+C ');
 
        highland(function(push, next) {
          chConn.consume(config.OXYGEN.SEARCHER_MQ_NAME, function(msg) {
