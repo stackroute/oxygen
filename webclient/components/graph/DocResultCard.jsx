@@ -68,7 +68,7 @@ export default class DocResultCard extends React.Component {
       </a>
       </ScreenClassRender>
       </p>
-      </CardText>          
+      </CardText>
       </Card>
       </Col>
       <Visible lg xl md>
@@ -77,11 +77,11 @@ export default class DocResultCard extends React.Component {
       </b><br/>{this.props.webDoc.intensity}</h1>
       </Col>
       </Visible>
-      </Row>          
+      </Row>
       </Paper>
       )
   }
 }
 DocResultCard.propTypes = {
-  webDocs: React.PropTypes.arrayOf(React.PropTypes.object)
+  webDoc: React.PropTypes.object
 }

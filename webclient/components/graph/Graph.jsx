@@ -199,7 +199,7 @@ export default class Graph extends React.Component {
 
       if(reqObj.reqIntents.length===0)
       {
-        reqObj.reqIntents=this.state.intents;
+        reqObj.reqIntents=[];
       }
       this.setState({
         docs:[]

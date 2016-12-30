@@ -8,7 +8,7 @@ const highland = require('highland');
 
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 const startCrawler = function() {
- let amqpConn = amqp.connect(config.RABBITMQ_URL);
+ let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
 
  amqpConn
  .then(function(conn) {

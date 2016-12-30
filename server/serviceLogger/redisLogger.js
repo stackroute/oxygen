@@ -1,7 +1,7 @@
 const redis = require('redis');
 const config = require('./../../config');
 
-const client = redis.createClient(config.REDIS_PORT, config.REDIS_HOST); 
+const client = redis.createClient(config.REDIS.port, config.REDIS.host);
 
 const processStart = function(data){
 	let channelName = 'oxygen:onServiceUpdate';

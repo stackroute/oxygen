@@ -3,9 +3,10 @@ const neo4jDriver = require('neo4j-driver').v1;
 const logger = require('./../../applogger');
 
 const config = require('./../../config');
+const graphConsts = require('./../common/graphConstants');
 
-let driver = neo4jDriver.driver(config.NEO4J_BOLT_URL,
-  neo4jDriver.auth.basic(config.NEO4J_USR, config.NEO4J_PWD),{encrypted:false}
+let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+  neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd),{encrypted:false}
   );
 
 let fetchIndicatorTerms = function(data) {
@@ -19,10 +20,10 @@ let fetchIndicatorTerms = function(data) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query='MATCH (i:'+config.NEO4J_INTENT+'{name:{intentName}}) ';
-    query+='MATCH (t:'+config.NEO4J_TERM+') ';
-    query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
-    query += 'MATCH (n)<-[r:'+config.NEO4J_IND_REL+']-(t) return t.name,r.weight';
+    let query='MATCH (i:'+graphConsts.NODE_INTENT+'{name:{intentName}}) ';
+    query+='MATCH (t:'+graphConsts.NODE_TERM+') ';
+    query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})';
+    query += 'MATCH (n)<-[r:'+graphConsts.REL_INDICATOR_OF+']-(t) return t.name,r.weight';
 
     let params = {
       domainName: data.domain,
@@ -76,10 +77,10 @@ let fetchCounterIndicatorTerms = function(data) {
 
     logger.debug("obtained connection with neo4j");
 
-    let query='MATCH (i:'+config.NEO4J_INTENT+'{name:{intentName}}) ';
-    query+='MATCH (t:'+config.NEO4J_TERM+') ';
-    query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
-    query += 'MATCH (n)<-[r:'+config.NEO4J_CIND_REL+']-(t) return t.name,r.weight';
+    let query='MATCH (i:'+graphConsts.NODE_INTENT+'{name:{intentName}}) ';
+    query+='MATCH (t:'+graphConsts.NODE_TERM+') ';
+    query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})';
+    query += 'MATCH (n)<-[r:'+graphConsts.REL_COUNTER_INDICATOR_OF+']-(t) return t.name,r.weight';
 
     let params = {
       domainName: data.domain,
@@ -144,9 +145,9 @@ let addIntentRelationship = function(data) {
       logger.debug("concept"+data.concept);
       logger.debug("url"+data.url);
 
-      let query='MATCH (w:'+config.NEO4J_WEBDOCUMENT+'{name:{documentUrl}}) ';
-      query+='MATCH (c:'+config.NEO4J_CONCEPT+'{name:{conceptName}}) ';
-      query += 'MATCH (d:'+config.NEO4J_DOMAIN+'{name:{domainName}})';
+      let query='MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+'{name:{documentUrl}}) ';
+      query+='MATCH (c:'+graphConsts.NODE_CONCEPT+'{name:{conceptName}}) ';
+      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})';
       query += 'MERGE (c)<-[r:'+data.intent+']-(w) SET r.intensity={intensity}';
 
       let params = {

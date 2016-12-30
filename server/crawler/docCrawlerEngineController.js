@@ -67,40 +67,41 @@ const urlIndexing= function(data)
   let dataObj=JSON.parse(data);
   let text;
   request.get(dataObj.url, function (error, response, body) {
-    let page = cheerio.load(body);
+    if(!error && response.statusCode===200 )
+    {
+     let page = cheerio.load(body);
+     text = page("body").text();
+     text = text.replace(/\s+/g, " ")
+     .replace(/[^a-zA-Z ]/g, "")
+     .toLowerCase();
+     logger.debug("created texts for "+dataObj.url)
+     dataObj.text=text;
+     let dataArr=[];
+     dataArr.push(dataObj);
+     highland(dataArr)
+     .pipe( highland.pipeline.apply(null, processors))
+     .each(function(res){
+       logger.debug("At consupmtion Intent : "+dataObj.intent);
+       logger.debug(res);
+       startIntentParser(dataObj);
+       let redisCrawl={
+         domain: dataObj.domain,
+         actor: 'crawler',
+         message: dataObj.url,
+         status: 'crawling completed for the url'
+       }
+       datapublisher.processFinished(redisCrawl);
+       let redisIntent={
+         domain: dataObj.domain,
+         actor: 'intent parser',
+         message: dataObj.intent,
+         status: 'intent parsing started for the particular intent'
+       }
+       datapublisher.processStart(redisIntent);
+     });
+   }
 
-    text = page("body").text();
-    text = text.replace(/\s+/g, " ")
-    .replace(/[^a-zA-Z ]/g, "")
-    .toLowerCase();
-    logger.debug("created texts for "+dataObj.url)
-    dataObj.text=text;
-    let dataArr=[];
-    dataArr.push(dataObj);
-    highland(dataArr)
-    .pipe( highland.pipeline.apply(null, processors))
-    .each(function(res){
-      logger.debug("At consupmtion Intent : "+dataObj.intent);
-      logger.debug(res);
-      startIntentParser(dataObj);
-      let redisCrawl={
-              domain: dataObj.domain,
-              actor: 'crawler',
-              message: dataObj.url,
-              status: 'crawling completed for the url'
-            }
-             datapublisher.processFinished(redisCrawl);
-      let redisIntent={
-              domain: dataObj.domain,
-              actor: 'intent parser',
-              message: dataObj.intent,
-              status: 'intent parsing started for the particular intent'
-            }
-             datapublisher.processStart(redisIntent);
-
-    });
-
-  });
+ });
 
 
 }
@@ -108,3 +109,6 @@ const urlIndexing= function(data)
 module.exports = {
  urlIndexing: urlIndexing
 };
+
+
+
