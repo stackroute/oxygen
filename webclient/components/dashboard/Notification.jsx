@@ -1,6 +1,6 @@
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
-
+import io from 'socket.io-client';
 export default class Notification extends React.Component {
 
   constructor(props) {
@@ -12,8 +12,7 @@ export default class Notification extends React.Component {
     }   
   }
   componentWillMount() {
-      let socket = io();
-
+         let socket = io.connect();
       socket.emit('test' , 'abc');
       socket.on('oxygen::progressUpdate', function(data) {
         console.log(data);
