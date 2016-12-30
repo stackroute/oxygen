@@ -89,11 +89,11 @@ const storeURL = function(id) {
 
 
   let sendData=async.parallel(stack,function(errs,res){
-    let send=[];
+    // let send=[];
     if(errs){
-      return errs;
       logger.error("some error in google api :")
       logger.error(errs)
+      return errs;
       //return callback(null, {'saved urls':send.length,'content':send});
     }
     logger.info("response array")
@@ -103,7 +103,7 @@ const storeURL = function(id) {
       res.map((ele)=>{
         ele.map((data,i)=>{
           //send.push(data);
-          let saveUrl=new searchModel(data);
+          // let saveUrl=new searchModel(data);
          // saveUrl.save(function (saveErr,savedObj) {
           //  if (saveErr) {
            //   logger.error(saveErr);

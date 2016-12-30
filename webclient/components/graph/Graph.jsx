@@ -205,8 +205,8 @@ export default class Graph extends React.Component {
  render()
  {
    let list=[];
-   let prevFlag=false;
-   let nextFlag=false;
+   let prevFlag;
+   let nextFlag;
    let dList=this.state.docs;
    if(dList.length>0)
    {
@@ -240,9 +240,10 @@ export default class Graph extends React.Component {
    return(
      <div style={fonts}>
      <Row style={{margin:0}}>
-     <Visible  lg xl>
+     <Visible lg xl>
      <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
-     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+     <SelectPanel intents={this.state.intents} 
+                  getCheckedIntent={this.getCheckedIntents.bind(this)}/>
      </Col>
      <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000,marginLeft:"16.5%"}}>
      <Row>
@@ -281,7 +282,7 @@ export default class Graph extends React.Component {
    </Visible>
 
 
-   <Visible  style={{padding:0}} md sm xs>
+   <Visible style={{padding:0}} md sm xs>
 
    <Drawer open={this.state.open}
    onRequestChange={this.handleToggle}
