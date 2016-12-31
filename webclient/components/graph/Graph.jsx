@@ -13,7 +13,7 @@ import Drawer from 'material-ui/Drawer';
 const iPanel={
   minWidth:150,
   backgroundColor:"#dadada",
-  minHeight:740,
+  minHeight:4000,
   position:"fixed"
 }
 const fonts={
