@@ -45,21 +45,21 @@ export default class AddDomain extends React.Component {
     this.disableButton = this.disableButton.bind(this);
     this.state={domains:[],
       errMsg:'',
-    canSubmit:false,
-    open: false,
-    subject:'',
-    description:'',
-    imageUrl:defaultImgURL
+      canSubmit:false,
+      open: false,
+      subject:'',
+      description:'',
+      imageUrl:defaultImgURL
+    }
   }
-}
-domianFetch()
-{
-  let url =`/domain/domains`;
+  domianFetch()
+  {
+    let url =`/domain/domains`;
 
-  Request
-  .get(url)
-  .end((err, res) => {
-    if(err) {
+    Request
+    .get(url)
+    .end((err, res) => {
+      if(err) {
     //res.send(err);
     this.setState({errMsg: res.body});
   }
@@ -77,24 +77,24 @@ domianFetch()
     }
   }
 });
-}
+  }
 
-componentDidMount()
-{
-  this.domianFetch();
-}
+  componentDidMount()
+  {
+    this.domianFetch();
+  }
 
-handleSubmit() {
-  console.log('on calling handle sumbit while adding domain');
-  console.log(this.state.imageUrl)
-  let sub=this.state.subject;
-  sub=sub.replace(/\b[a-z]/g,function(f){return f.toUpperCase();});
+  handleSubmit() {
+    console.log('on calling handle sumbit while adding domain');
+    console.log(this.state.imageUrl)
+    let sub=this.state.subject;
+    sub=sub.replace(/\b[a-z]/g,function(f){return f.toUpperCase();});
 
-  console.log('going to ADD '+this.state.imageUrl);
-  let domain = {
-    name:sub,
-    description:this.state.description,
-    domainImgURL:this.state.imageUrl
+    console.log('going to ADD '+this.state.imageUrl);
+    let domain = {
+      name:sub,
+      description:this.state.description,
+      domainImgURL:this.state.imageUrl
       //domainImgURL:'./../../assets/images/soon.png',
     };
     if(domain.domainImgURL===""|| domain.domainImgURL.length<=5)
@@ -154,19 +154,19 @@ handleSubmit() {
     secondary={true}
     onTouchTap={this.handleClose} />,
     <FlatButton
-    label={'Add'} primary={true}  type="submit" disabled={!this.state.canSubmit}
+    label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
     let {wordsError, DuplicationError} = errorMessages;
     let domainAr=this.state.domains;
     let domainArr=[];
-    for(let it in domainAr)
-    {
-     domainArr.push(domainAr[it].name);
-    }
+    domainAr.forEach(function(domain){
+      domainArr.push(domain.name);
+    })
+    
     console.log("The domain arr"+domainArr);
-    Formsy.addValidationRule('isIn', function (values, value, array) {
-    return domainArr.indexOf(value) < 0;
+    Formsy.addValidationRule('isIn', function (values, value) {
+      return domainArr.indexOf(value) < 0;
     });
     return (
       <div>

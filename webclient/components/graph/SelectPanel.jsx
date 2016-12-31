@@ -1,6 +1,5 @@
 import React from 'react';
 import Checkbox from 'material-ui/Checkbox';
-import Paper from 'material-ui/Paper';
 
 const styles = {
  checkbox: {

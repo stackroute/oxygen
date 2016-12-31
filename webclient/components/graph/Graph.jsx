@@ -1,19 +1,14 @@
-
 import React from 'react';
-import {Link} from 'react-router';
 import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
 import {Row, Col,ScreenClassRender,Visible} from 'react-grid-system';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import ActionHome from 'material-ui/svg-icons/action/home';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 
 const iPanel={
   minWidth:150,
@@ -31,52 +26,8 @@ const suggest={
   color:"grey",
   textAlign:"center"
 }
-const drawer={
-  paddingLeft:0,
-  paddingRight:0
-}
-const iconStyle={
-	iconSize: {
-
-		width: 30,
-		height: 30,
-		backgroundColor: "#a9a9a9",
-		padding: 10,
-		borderRadius: 60
-	},
-	large: {
-		width: 120,
-		height: 120,
-		padding: 30
-	},
-	leftIcon:{
-		position:"fixed",
-		left:"45%",
-		float:'left'
-	},
-	rightIcon:{
-		position:"fixed",
-		right:"33%",
-		float:'right'
-	},
-	leftIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'left'
-	},
-	rightIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'right'
-	}
-}
 const styles={
  largeIcon: {
-
   width: 28,
   height: 28,
   backgroundColor: "#a9a9a9",
@@ -90,10 +41,10 @@ large: {
 }
 }
 const styleFunction = (screenClass) => {
-  if (screenClass === 'xl') return { fontSize: '37px',textAlign:"left",color:"#8aa6bd" };
-  if (screenClass === 'lg') return { fontSize: '35px',textAlign:"left",color:"#8aa6bd" };
-  if (screenClass === 'md') return { fontSize: '30px',textAlign:"left",color:"#8aa6bd" };
-  if (screenClass === 'sm') return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };
+  if (screenClass === 'xl') {return { fontSize: '37px',textAlign:"left",color:"#8aa6bd" };}
+  if (screenClass === 'lg') {return { fontSize: '35px',textAlign:"left",color:"#8aa6bd" };}
+  if (screenClass === 'md') {return { fontSize: '30px',textAlign:"left",color:"#8aa6bd" };}
+  if (screenClass === 'sm') {return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };}
   return { fontSize: '25px',textAlign:"left",color:"#8aa6bd" };
 };
 export default class Graph extends React.Component {
@@ -108,8 +59,8 @@ export default class Graph extends React.Component {
       docs:[],
       checkedIntent:[],
       selectedConcept:[],
-      open:false,
-      pageNum:1
+      open:false
+      //pageNum:1
     }
   }
 
@@ -218,6 +169,10 @@ export default class Graph extends React.Component {
   else {
     let response=JSON.parse(res.text);
     console.log("Response on documents show: ",response);
+    response.sort(function(a, b) {
+      return a.intensity - b.intensity
+    })
+
     if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
@@ -237,62 +192,62 @@ export default class Graph extends React.Component {
    this.getIntentsAndConcepts();
 
  }
- onPageClick(e)
- {
-   let page=this.state.pageNum;
-   if(e.currentTarget.dataset.id==="prev")
-   {
-     page-=1;
-     this.setState({pageNum:page});
-   }
-   else
-   {
-     page+=1;
-     this.setState({pageNum:page});
-   }
- }
+ // onPageClick(e)
+ // {
+ //   let page=this.state.pageNum;
+ //   if(e.currentTarget.dataset.id==="prev")
+ //   {
+ //     page-=1;
+ //     this.setState({pageNum:page});
+ //   }
+ //   else
+ //   {
+ //     page+=1;
+ //     this.setState({pageNum:page});
+ //   }
+ // }
  render()
  {
-   let list=[];
-   let prevFlag=false;
-   let nextFlag=false;
-   let dList=this.state.docs;
-   if(dList.length>0)
-   {
-     let pages=Math.ceil(dList.length/6);
-     let pageNow=this.state.pageNum;
-     if(pages===pageNow)
-     {
-       nextFlag=true;
-     }
-     if(this.state.pageNum===1)
-     {
-       prevFlag=true;
-     }
-     if(pages===1 || pages===pageNow)
-     {
-       list=[];
-       for(let i=6*(pageNow-1);i<this.state.docs.length;i+=1)
-       {
-         list.push(this.state.docs[i]);
-       }
-     }
-     else {
-       list=[];
-       let foo=6*(pageNow-1);
-       for(let i=foo;i<(foo+6);i+=1)
-       {
-         list.push(this.state.docs[i]);
-       }
-     }
-   }
+   //let list=[];
+   // let prevFlag;
+   // let nextFlag;
+   // let dList=this.state.docs;
+   // if(dList.length>0)
+   // {
+   //   let pages=Math.ceil(dList.length/6);
+   //   let pageNow=this.state.pageNum;
+   //   if(pages===pageNow)
+   //   {
+   //     nextFlag=true;
+   //   }
+   //   if(this.state.pageNum===1)
+   //   {
+   //     prevFlag=true;
+   //   }
+   //   if(pages===1 || pages===pageNow)
+   //   {
+   //     list=[];
+   //     for(let i=6*(pageNow-1);i<this.state.docs.length;i+=1)
+   //     {
+   //       list.push(this.state.docs[i]);
+   //     }
+   //   }
+   //   else {
+   //     list=[];
+   //     let foo=6*(pageNow-1);
+   //     for(let i=foo;i<(foo+6);i+=1)
+   //     {
+   //       list.push(this.state.docs[i]);
+   //     }
+   //   }
+   // }
    return(
      <div style={fonts}>
-
      <Row style={{margin:0}}>
-     <Visible  lg xl>
+     <Visible lg xl>
      <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
-     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+     <SelectPanel intents={this.state.intents} 
+     getCheckedIntent={this.getCheckedIntents.bind(this)}/>
      </Col>
      <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000,marginLeft:"16.5%"}}>
      <Row>
@@ -323,7 +278,7 @@ export default class Graph extends React.Component {
      <Col md={12} lg={12} xl={12}>
      {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:<div>
      {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
-   </div>
+     </div>
    }
    </Col>
    </Row>
@@ -331,7 +286,7 @@ export default class Graph extends React.Component {
    </Visible>
 
 
-   <Visible  style={{padding:0}} md sm xs>
+   <Visible style={{padding:0}} md sm xs>
 
    <Drawer open={this.state.open}
    onRequestChange={this.handleToggle}
@@ -378,7 +333,7 @@ export default class Graph extends React.Component {
    {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
    <br/>
 
- </div>
+   </div>
  }
  </Col>
  </Row>

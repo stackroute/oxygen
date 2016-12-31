@@ -3,7 +3,7 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import {Card, CardTitle, CardMedia, CardText} from 'material-ui/Card';
-import {Container,Row, Col,Visible,Hidden,ScreamClassRender} from 'react-grid-system';
+import {Container,Row, Col,Visible} from 'react-grid-system';
 import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import {blue300,lime800,lightGreen500} from 'material-ui/styles/colors';
@@ -88,12 +88,12 @@ export default class DomainShow extends React.Component {
 	}
 	handleTouchTap = () => {
 		this.setState({
-			open: true,
+			open: true
 		});
 	};
 	handleRequestClose = () => {
 		this.setState({
-			open: false,
+			open: false
 		});
 	};
 

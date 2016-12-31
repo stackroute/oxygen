@@ -5,20 +5,9 @@ import AddDomain from './AddDomain.jsx';
 import Notification from './Notification.jsx'
 import {Container,Col,Row ,Visible} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import RaisedButton from 'material-ui/RaisedButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import IconButton from 'material-ui/IconButton';
-const paginationStyle1 = {
-	margin: 12,
-	marginBottom:50,
-	float:'left'
-};
-const paginationStyle2 = {
-	margin: 12,
-	marginBottom:50,
-	float:'right'
-};
 const iconStyle={
 	iconSize: {
 
@@ -168,6 +157,8 @@ export default class Dashboard extends React.Component {
 
 
 		render() {
+			let prevFlag=false;
+			let nextFlag=false;
 			const smallNav=()=>{
 				return(<Row md={12} sm={12} xs={12} style={{marginBotton:20}}>
 					<Col md={4} sm={4} xs={4} style={{float:"left"}}>
@@ -185,8 +176,7 @@ export default class Dashboard extends React.Component {
 					</Row>)
 			}
 			let list=[];
-			let prevFlag=false;
-			let nextFlag=false;
+
 			let dList=this.state.domainList;
 			if(dList.length>0)
 			{

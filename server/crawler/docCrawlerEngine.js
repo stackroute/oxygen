@@ -19,17 +19,16 @@ const startCrawler = function() {
    logger.info('[*] Established AMQP Channel connection successfully..!');
 
      //@TODO take the crawler MQ name from Config
-     let crawlerMQName = 'crawler';
 
      //making durable as false, so that .....
-     chConn.assertQueue(crawlerMQName, { durable: false })
+     chConn.assertQueue(config.OXYGEN.CRAWLER_MQ_NAME, { durable: false })
      .then(function(ok) {
        logger.debug("What is ok: ", ok);
        logger.debug('[*] Waiting for messages on ['
-        + crawlerMQName + '], Reciever to exit press CTRL+C ');
+        + config.OXYGEN.CRAWLER_MQ_NAME + '], Reciever to exit press CTRL+C ');
 
        highland(function(push, next) {
-         chConn.consume(crawlerMQName, function(msg) {
+         chConn.consume(config.OXYGEN.CRAWLER_MQ_NAME, function(msg) {
           console.log(msg.content.toString());
           logger.debug('[*] GOT [', msg.fields.routingKey, ']  [', msg.fields.consumerTag, ']');
 

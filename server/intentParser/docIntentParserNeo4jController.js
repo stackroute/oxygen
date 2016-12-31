@@ -38,15 +38,15 @@ let fetchIndicatorTerms = function(data) {
         let i=0;
         let obj={};
         record._fields.forEach(function(fields){
-          i++;
-          if(i==1)
+          i+=1;
+          if(i===1)
           {
-            obj['term']=fields;
+            obj.term=fields;
           }
           else
           {
-            obj['weight']=fields;
-          indicatorTerm.push(obj);
+            obj.weight=fields;
+            indicatorTerm.push(obj);
           }
         });
 
@@ -96,15 +96,15 @@ let fetchCounterIndicatorTerms = function(data) {
         let i=0;
         let obj={};
         record._fields.forEach(function(fields){
-          i++;
-          if(i==1)
+          i+=1;
+          if(i===1)
           {
-            obj['term']=fields;
+            obj.term=fields;
           }
           else
           {
-            obj['weight']=Number(fields);
-          counterIndicatorTerm.push(obj);
+            obj.weight=Number(fields);
+            counterIndicatorTerm.push(obj);
           }
         });
 
