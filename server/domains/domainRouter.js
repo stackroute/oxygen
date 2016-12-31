@@ -37,7 +37,27 @@ router.post('/:domainName', function(req, res) {
     return;
   }
 });
+router.post('/:domainName/crawl', function(req, res) {
+  try {
 
+    let reqObj ={
+      domainName:req.params.domainName,
+      data: req.body
+    } 
+    logger.debug("sending data manually ",reqObj);
+
+    res.send(domainCtrl.insertUrls(reqObj));
+    return;
+
+
+  } catch (err) {
+    logger.error("Caught a error in posting urls manually ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
+});
 // Get details of all domain in the system
 router.get('/', function(req, res) {
   try {

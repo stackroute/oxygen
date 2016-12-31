@@ -38,13 +38,13 @@ let rabbitMQ = {
 };
 rabbitMQ['rabbitmqURL'] = ('amqp://' + rabbitMQ.host + ':' + rabbitMQ.port);
 
-let config = {    
+let config = {
     OXYGEN: oxygen,
     MONGO: mongo,
     NEO4J: neo4j,
     REDIS: redis,
     RABBITMQ: rabbitMQ,
-    NO_OF_RESULTS:2
+    NO_OF_RESULTS:20
 };
 
 module.exports = config;

@@ -2,14 +2,39 @@
 const domainNeo4jController = require('./domainNeo4jController');
 const domainMongoController = require('./domainMongoController');
 const domainMgr = require('./domainManager');
-
+const startCrawlerMQ=require('./../searcher/docOpenCrawlerEngine').startCrawler;
 const logger = require('./../../applogger');
 
 const async = require('async');
 
 const DOMAIN_NAME_MIN_LENGTH = 3;
 
+let insertUrls=function(dataToInsert){
+  console.log(dataToInsert)
+  try{
+    dataToInsert.data.concepts.forEach(function(concept){
+      concept.urls.forEach(function(url){
 
+        let msgObj={
+          domain: dataToInsert.domainName,
+          concept: concept.name,
+          url:url
+          
+        };
+        console.log(msgObj)
+        startCrawlerMQ(msgObj);
+
+
+      })
+    })
+    return {msg:"manually added urls successfully "}
+  }
+  catch(err)
+  {
+
+    return {msg:"error while manually adding",err:err}
+  }
+}
 let fetchDomainCardDetails = function(domain) {
   logger.debug("Received request for retriving domain details ", domain);
   //Save to Mongo DB
@@ -197,7 +222,7 @@ let getDomain = function(domainName) {
 
   let promise = new Promise(function(resolve, reject) {
 
-   
+
 
     async.waterfall([function(callback) {
       domainMongoController.checkDomainCallback(domainName,
@@ -328,7 +353,7 @@ let fetchWebDocuments = function(domainObj) {
   let docsDetails=[];
   let promise = new Promise(function(resolve, reject) {
 
-    
+
 
     async.waterfall([
       function(callback) {
@@ -410,6 +435,7 @@ let getAllDomain = function() {
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain,
+  insertUrls:insertUrls,
   fetchDomainCardDetails:fetchDomainCardDetails,
   getAllDomainDetails:getAllDomainDetails,
   freshlyIndexDomain:freshlyIndexDomain,

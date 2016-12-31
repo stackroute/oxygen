@@ -9,14 +9,13 @@ import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
-
-const iPanel = {
-  minWidth: 150,
-  backgroundColor: '#dadada',
-  minHeight: 740,
-  position: 'fixed'
-};
-const fonts = {
+const iPanel={
+  minWidth:150,
+  backgroundColor:"#dadada",
+  minHeight:4000,
+  position:"fixed"
+}
+const fonts={
   margin: 0,
   textAlign: 'center',
   fontFamily: 'sans-serif',
@@ -163,9 +162,13 @@ export default class Graph extends React.Component {
  // console.log(err)
   }
   else {
-    let response = JSON.parse(res.text);
-    // console.log('Response on documents show: ',response);
-    if(typeof response === 'undefined' || response.length === 0 )
+    let response=JSON.parse(res.text);
+    console.log("Response on documents show: ",response);
+    response.sort(function(a, b) {
+      return a.intensity - b.intensity
+    })
+    if(typeof response==="undefined" || response.length===0 )
+
     {
       this.setState({
         msgCaption: 'SORRY NO SUGGESTED DOCUMENTS TRY AGAIN'

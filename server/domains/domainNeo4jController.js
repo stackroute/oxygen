@@ -335,7 +335,6 @@ let getWebDocuments = function(domainObj) {
       query+= 'match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
       query+= 'return w.name,sum(r.intensity) as sum order by sum desc';
     }
-
     let params = {
       domainName: domainObj.domainName
     };
