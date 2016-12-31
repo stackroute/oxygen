@@ -23,7 +23,8 @@ let fetchIndicatorTerms = function(data) {
     let query='MATCH (i:'+graphConsts.NODE_INTENT+'{name:{intentName}}) ';
     query+='MATCH (t:'+graphConsts.NODE_TERM+') ';
     query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})';
-    query += 'MATCH (n)<-[r:'+graphConsts.REL_INDICATOR_OF+']-(t) return t.name,r.weight';
+    query += 'MATCH (d)<-[r1:'+graphConsts.REL_INTENT_OF+']-(i)';
+    query += 'MATCH (i)<-[r:'+graphConsts.REL_INDICATOR_OF+']-(t) return t.name,r.weight';
 
     let params = {
       domainName: data.domain,
@@ -80,7 +81,8 @@ let fetchCounterIndicatorTerms = function(data) {
     let query='MATCH (i:'+graphConsts.NODE_INTENT+'{name:{intentName}}) ';
     query+='MATCH (t:'+graphConsts.NODE_TERM+') ';
     query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})';
-    query += 'MATCH (n)<-[r:'+graphConsts.REL_COUNTER_INDICATOR_OF+']-(t) return t.name,r.weight';
+    query += 'MATCH (d)<-[r1:'+graphConsts.REL_INTENT_OF+']-(i)';
+    query += 'MATCH (i)<-[r:'+graphConsts.REL_COUNTER_INDICATOR_OF+']-(t) return t.name,r.weight';
 
     let params = {
       domainName: data.domain,
