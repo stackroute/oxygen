@@ -156,7 +156,7 @@ export default class Graph extends React.Component {
     })
     console.log("selected concept")
     console.log(newConcepts)
-    
+
   }
 
   getCheckedIntents(event,checked)
@@ -232,7 +232,7 @@ export default class Graph extends React.Component {
         reqIntents:this.state.checkedIntent,
         reqConcepts:this.state.selectedConcept
       }
-
+      reqObj.allIntents=this.state.intents;
       if(reqObj.reqIntents.length===0)
       {
         reqObj.reqIntents=[];

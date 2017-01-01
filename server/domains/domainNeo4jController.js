@@ -301,11 +301,11 @@ let getDomainCardDetails = function(domainObj) {
   return promise;
 }
 
-let getIntentforDocument = function(domainObj) {
+let getIntentforDocument = function(domain) {
   let promise = new Promise(function(resolve, reject) {
 
     logger.debug("Now proceeding to retrive "+
-      "the web Documents for domain name: ", domainObj.domainName);
+      "the intent relationship: ", domain.domainObj.domainName);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd),{encrypted:false}
       );
@@ -314,33 +314,21 @@ let getIntentforDocument = function(domainObj) {
 
     logger.debug("obtained connection with neo4j");
     let query='';
-    let str=JSON.stringify(domainObj.reqConcepts);
-    let str1=JSON.stringify(domainObj.reqIntents);
-    logger.debug("***********"+str+"     "+str1);
-    if(domainObj.reqIntents.length===0)
-    {
-      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-      query += 'match(c:'+graphConsts.NODE_CONCEPT+')'
-      query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
-      query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
-      query +=' match(w)-[r]-(c) where c.name in '+str;
-      query +=' return w.name,sum(r.intensity) as sum order by sum desc';
-    }
-    else
-    {
-      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
-      query += 'match (c:'+graphConsts.NODE_CONCEPT+')'
-      query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
-      query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
-      query+= 'match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
-      query+= 'return w.name,sum(r.intensity) as sum order by sum desc';
-    }
-    let params = {
-      domainName: domainObj.domainName
-    };
-    logger.debug("@@@@@@@@@ "+query);
+    let str=JSON.stringify(domain.domainObj.allIntents);
 
-    let docs=[];
+      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+      query += 'MATCH(c:'+graphConsts.NODE_CONCEPT+')'
+      query += 'MATCH(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
+      query += 'MATCH(c)<-[r]-(w:'+graphConsts.NODE_WEBDOCUMENT+'{name:{docName}})';
+      query +=' where type(r) in '+str;
+      query +='return type(r),count(r)';
+
+    let params = {
+      domainName: domain.domainObj.domainName,
+      docName: domain.docs
+    };
+
+    let intents=[];
     session.run(query, params)
     .then(function(result) {
       result.records.forEach(function(record) {
@@ -351,18 +339,18 @@ let getIntentforDocument = function(domainObj) {
           i+=1;
           if(i===1)
           {
-            obj.url=fields;
+            obj.intent=fields;
           }
           else
           {
-            obj.intensity=Number(fields);
-            docs.push(obj);
+            obj.count=Number(fields);
+            intents.push(obj);
           }
         });
 
       });
       session.close();
-      resolve(docs);
+      resolve(intents);
     })
     .catch(function(err) {
       logger.error("Error in neo4j query: ", err, ' query is: ',
@@ -411,7 +399,7 @@ let getWebDocuments = function(domainObj) {
     let params = {
       domainName: domainObj.domainName
     };
-    logger.debug("@@@@@@@@@ "+query);
+    logger.debug("query "+query);
 
     let docs=[];
     session.run(query, params)
@@ -506,5 +494,6 @@ module.exports = {
   getDomainCardDetailsCallback: getDomainCardDetailsCallback,
   getDomainCardDetails: getDomainCardDetails,
   getWebDocumentsCallback: getWebDocumentsCallback,
-  getWebDocuments: getWebDocuments
+  getWebDocuments: getWebDocuments,
+  getIntentforDocument: getIntentforDocument
 }

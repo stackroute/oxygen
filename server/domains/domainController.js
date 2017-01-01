@@ -367,31 +367,32 @@ let fetchWebDocuments = function(domainObj) {
          callback(null,docsDetails);
        }
        else{
+         let abc=[];
         for(let item in docs)
         {
          if (Object.prototype.hasOwnProperty.call(docs, item)) {
            logger.debug("going to neo4J ",docs.length);
            let url=docs[item].url;
            logger.debug("going to neo4J ",url);
-           domainNeo4jController.getIntentforDocument({domainObj:domainObj,docs:docs})
+           domainNeo4jController.getIntentforDocument({domainObj:domainObj,docs:url})
            .then(function(intentObj) {
-            docsDetails.push({})
             docs[item].intentObj=intentObj;
-            logger.debug("after each pushing",docsDetails);
-            if(docsDetails.length===docs.length)
+            abc.push('hi');
+            logger.debug("url--> ",url);
+            logger.debug("after each pushing of intents*****",docs[item].intentObj);
+            if(abc.length===docs.length)
             {
-             callback(null,docsDetails);
+             callback(null,docs);
            }
          },
          function(err) {
-          logger.error("Encountered error in fetching doc details: ",
+          logger.error("Encountered error in fetching doc intentObj details: ",
             err);
           reject(err);
           return;
         });
          }
        }
-       logger.debug("pushing ended",docsDetails);
       }
       },
       function(docs,callback) {
@@ -408,12 +409,14 @@ let fetchWebDocuments = function(domainObj) {
            logger.debug("going to mongo url ",url);
            domainMongoController.getSearchResultDocument(url)
            .then(function(docObj) {
-            logger.debug("Successfully fetched doc details from mongo: ",
+            logger.debug("Successfully fetched doc details from mongo *****: ",
               docObj);
-            docsDetails.push({title:docObj.title,
-              description:docObj.description,
-              url:docObj.url,
-              intensity:docs[item].intensity})
+            docsDetails.push({title: docObj.title,
+              description: docObj.description,
+              url: docObj.url,
+              intensity: docs[item].intensity,
+              intentObj: docs[item].intentObj
+            })
 
             logger.debug("after each pushing",docsDetails);
             if(docsDetails.length===docs.length)
