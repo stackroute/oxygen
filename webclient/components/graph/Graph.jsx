@@ -9,13 +9,13 @@ import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
-const iPanel={
-  minWidth:150,
-  backgroundColor:"#dadada",
-  minHeight:4000,
-  position:"fixed"
-}
-const fonts={
+const iPanel = {
+  minWidth: 150,
+  backgroundColor: '#dadada',
+  minHeight: 4000,
+  position: 'fixed'
+};
+const fonts = {
   margin: 0,
   textAlign: 'center',
   fontFamily: 'sans-serif',
@@ -158,16 +158,16 @@ export default class Graph extends React.Component {
       .send(reqObj)
       .end((err, res) => {
         if(err) {
- //res.send(err);
+ // res.send(err);
  // console.log(err)
   }
   else {
-    let response=JSON.parse(res.text);
-    console.log("Response on documents show: ",response);
+    let response = JSON.parse(res.text);
+    // console.log('Response on documents show: ',response);
     response.sort(function(a, b) {
-      return a.intensity - b.intensity
-    })
-    if(typeof response==="undefined" || response.length===0 )
+      return a.intensity - b.intensity;
+    });
+    if(typeof response === 'undefined' || response.length === 0)
 
     {
       this.setState({
@@ -201,7 +201,7 @@ export default class Graph extends React.Component {
  // }
  render()
  {
-   //let list=[];
+   // let list=[];
    // let prevFlag;
  // let nextFlag;
    // let dList=this.state.docs;
@@ -272,7 +272,7 @@ export default class Graph extends React.Component {
      <Row>
      <Col md={12} lg={12} xl={12}>
      {this.state.docs.length === 0 ? <h2 style = {suggest}>{this.state.msgCaption}</h2> : <div>
-     {this.state.docs.map((doc, i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+     {this.state.docs.map((doc, i) => {return <DocResultCard key={i} webDoc={doc}/>})}
      </div>
    };
    </Col>
@@ -326,7 +326,7 @@ export default class Graph extends React.Component {
    <Row>
    <Col sm={12} xs={12} md={12}>
    {this.state.docs.length === 0 ? <h2 style={suggest}>{this.state.msgCaption}</h2> : <div>
-   {this.state.docs.map((doc, i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+   {this.state.docs.map((doc, i) => {return <DocResultCard key={i} webDoc={doc}/>})}
    <br/>
    </div>
  }

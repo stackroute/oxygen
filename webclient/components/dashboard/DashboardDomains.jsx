@@ -145,7 +145,7 @@ export default class DomainShow extends React.Component {
 			onRequestClose={this.handleRequestClose}
 			/>
 			<Card style = {styles.cardRound}>
-			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration:'none'}}>
+			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
 			<CardMedia style = {{height: '280px', borderRadius: '2%',
 			width: '100%', backgroundColor: this.state.conceptColor}}
 			overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
@@ -174,10 +174,10 @@ export default class DomainShow extends React.Component {
 			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
 			<Row style={{margin: 'auto 0px'}}>
 			<Visible sm md lg xl>
-			<Row style={{paddingLeft: 45}}>			
+			<Row style={{paddingLeft: 45}}>
 			<Col sm={6}>
 			<Chip backgroundColor = {'grey'} labelStyle = {styles.cardLabel}
-			style = {styles.chip}>Concepts Available:</Chip>			
+			style = {styles.chip}>Concepts Available:</Chip>
 			</Col>
 			<Col sm={3} style={{paddingLeft: 58}}>
 			<Chip backgroundColor = {this.state.conceptColor}
@@ -187,10 +187,10 @@ export default class DomainShow extends React.Component {
 			</Col>
 			</Row>
 			<Row style = {{paddingLeft: 45}}>
-			<Col sm={6}>			
+			<Col sm={6}>
 			<Chip backgroundColor = {'grey'}
 			labelStyle = {styles.cardLabel}
-			style = {styles.chip}>Intents Available : </Chip>			
+			style = {styles.chip}>Intents Available : </Chip>
 			</Col>
 			<Col sm={3} style={{paddingLeft: 58}}>
 			<Chip backgroundColor = {this.state.intentColor}
@@ -200,7 +200,7 @@ export default class DomainShow extends React.Component {
 			</Col>
 			</Row>
 			<Row style = {{paddingLeft: 45, paddingBottom: 10}}>
-			<Col sm={6}>			
+			<Col sm={6}>
 			<Chip backgroundColor={'grey'}
 			labelStyle={styles.cardLabel}
 			style={styles.chip}>Documents Available:</Chip>
@@ -212,8 +212,8 @@ export default class DomainShow extends React.Component {
 			{this.props.item.docs}
 			</Chip>
 			</Col>
-			</Row>	
-			</Visible>	
+			</Row>
+			</Visible>
 			<Visible xs>
 			<Container>
 			<Row style = {{marginLeft: '-5px', padding: '0 15px 20px'}}>
@@ -225,7 +225,7 @@ export default class DomainShow extends React.Component {
 			>
 			<Avatar size={32} color = 'white' backgroundColor='grey'>
 			C
-			</Avatar>			
+			</Avatar>
 			{this.props.item.concepts.length}
 			</Chip>
 			</Col>
@@ -237,7 +237,7 @@ export default class DomainShow extends React.Component {
 			>
 			<Avatar size={32} color='white' backgroundColor='grey'>
 			I
-			</Avatar>			
+			</Avatar>
 			{this.props.item.intents.length}
 			</Chip>
 			</Col>
@@ -255,7 +255,7 @@ export default class DomainShow extends React.Component {
 			</Col>
 			</Row>
 			</Container>
-			</Visible>	
+			</Visible>
 			</Row>
 			</Link>
 			</Card>

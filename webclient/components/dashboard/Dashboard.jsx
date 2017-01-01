@@ -95,14 +95,14 @@ export default class Dashboard extends React.Component {
 			.get(url)
 			.end((err, res) => {
 				if(err) {
-				//res.send(err);
+				// res.send(err);
 				this.setState({errmsg: res.body, loading: 'hide'});
 			}
 
 			else {
 				// console.log('Response on show: ', JSON.parse(res.text));
-				//let domainList1=this.state.domainList;
-				let response=JSON.parse(res.text);
+				// let domainList1=this.state.domainList;
+				let response = JSON.parse(res.text);
 				if(response.length === 0)
 				{
 					this.setState({domainList: [], loading: 'hide'});
@@ -137,7 +137,7 @@ export default class Dashboard extends React.Component {
 
 		freshlyIndex(domain)
 		{
-			console.log('inside Index refresh '+domain);
+			// console.log('inside Index refresh '+domain);
 			let url = `/domain/` + domain + `/index`;
 			Request
 			.post(url)
@@ -153,7 +153,7 @@ export default class Dashboard extends React.Component {
 		render() {
 			let prevFlag = false;
 			let nextFlag = false;
-			const smallNav=()=>{
+			const smallNav = () => {
 				return(<Row md={12} sm={12} xs={12} style={{marginBotton: 20}}>
 					<Col md={4} sm={4} xs={4} style={{float: 'left'}}>
 					<IconButton style={iconStyle.leftIconAvg} label='prev' disabled={prevFlag} data-id='prev'
