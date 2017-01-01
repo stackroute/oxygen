@@ -22,10 +22,7 @@ const fonts={
   fontFamily: "sans-serif",
   color: "#1976d2"
 }
-const suggest={
-  color:"grey",
-  textAlign:"center"
-}
+
 const styles={
  largeIcon: {
   width: 28,
@@ -47,12 +44,48 @@ const styleFunction = (screenClass) => {
   if (screenClass === 'sm') {return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };}
   return { fontSize: '25px',textAlign:"left",color:"#8aa6bd" };
 };
+
+const imgStyle = (screenClass) => {
+  if (screenClass === 'xl') {return { width: '500px',height:"auto" };}
+  if (screenClass === 'lg') {return { width: '400px',height:"auto"};}
+  if (screenClass === 'md') {return { width: '400px',height:"auto" };}
+  if (screenClass === 'sm') {return { width: '400px',height:"auto" };}
+  return { width: '300px',height:"auto"};
+};
+
+const divStyle = (screenClass) => {
+  if (screenClass === 'xl') {return { width: '500px',margin:"0 auto auto" };}
+  if (screenClass === 'lg') {return { width: '400px',margin:"0 auto auto" };}
+  if (screenClass === 'md') {return { width: '400px',margin:"0 auto auto" };}
+  if (screenClass === 'sm') {return { width: '400px',margin:"0 auto auto" };}
+  return { width: '300px',margin:"0 auto auto"};
+};
+
+class ShowImg extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+  }
+  render(){
+   return(<ScreenClassRender style={divStyle}>
+    <div>   
+    <ScreenClassRender style={imgStyle}>
+    <img src={'./../assets/images/'+this.props.imgName} />
+    </ScreenClassRender>    
+    </div>
+    </ScreenClassRender >)
+
+ }
+}
+
+
 export default class Graph extends React.Component {
   constructor(props) {
     super(props)
     console.log(this.props)
     this.state={
-      msgCaption:"FIND YOUR SUGGESTED DOCUMENTS HERE",
+      imgSelector:"default.png",
       domainName:"",
       concepts:[],
       intents:[],
@@ -136,7 +169,7 @@ export default class Graph extends React.Component {
     if(this.state.selectedConcept.length===0)
     {
       this.setState({
-        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN",
+        imgSelector:"noDoc.png",
         docs:[]
       })
     }
@@ -176,7 +209,7 @@ export default class Graph extends React.Component {
     if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
-        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN"
+        imgSelector:"noDoc.png"
       })
     }
     this.setState({
@@ -266,7 +299,7 @@ export default class Graph extends React.Component {
      getConcept={this.getConcepts.bind(this)}/>
      <Row>
      <Col md={12} lg={12} xl={12}>
-     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
      <SelectedConcepts conceptChips={this.state.selectedConcept}
      deleteConcept={this.deleteConcepts.bind(this)} />}
      </Col>
@@ -276,7 +309,7 @@ export default class Graph extends React.Component {
      <br/><br/>
      <Row>
      <Col md={12} lg={12} xl={12}>
-     {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:<div>
+     {this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
      {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
      </div>
    }
@@ -319,7 +352,7 @@ export default class Graph extends React.Component {
    getConcept={this.getConcepts.bind(this)}/>
    <Row>
    <Col sm={12} xs={12} md={12}>
-   {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+   {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
    <SelectedConcepts conceptChips={this.state.selectedConcept}
    deleteConcept={this.deleteConcepts.bind(this)} />}
    </Col>
@@ -329,7 +362,7 @@ export default class Graph extends React.Component {
    <br/><br/>
    <Row>
    <Col sm={12} xs={12} md={12}>
-   {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:<div>
+   {this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
    {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
    <br/>
 
