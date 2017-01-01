@@ -374,14 +374,9 @@ let fetchWebDocuments = function(domainObj) {
            let url=docs[item].url;
            logger.debug("going to neo4J ",url);
            domainNeo4jController.getIntentforDocument({domainObj:domainObj,docs:docs})
-           .then(function(docObj) {
-            logger.debug("Successfully fetched doc details from mongo: ",
-              docObj);
-            docsDetails.push({title:docObj.title,
-              description:docObj.description,
-              url:docObj.url,
-              intensity:docs[item].intensity})
-
+           .then(function(intentObj) {
+            docsDetails.push({})
+            docs[item].intentObj=intentObj;
             logger.debug("after each pushing",docsDetails);
             if(docsDetails.length===docs.length)
             {
