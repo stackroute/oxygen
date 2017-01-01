@@ -19,7 +19,6 @@ let insertUrls = function(dataToInsert) {
           domain: dataToInsert.domainName,
           concept: concept.name,
           url: url
-
         };
         console.log(msgObj)
         startCrawlerMQ(msgObj);
@@ -342,94 +341,112 @@ let freshlyIndexDomain = function(domain) {
 }
 
 let fetchWebDocuments = function(domainObj) {
-  logger.debug("Received request for fetching Webdocuments ", domainObj);
-  let docsDetails = [];
-  let promise = new Promise(function(resolve, reject) {
+    logger.debug("Received request for fetching Webdocuments ", domainObj);
+    let docsDetails = [];
+    let promise = new Promise(function(resolve, reject) {
 
 
 
-    async.waterfall([
-        function(callback) {
-          logger.debug("inside the waterfall for fetching web docs" + domainObj)
-          domainNeo4jController.getWebDocumentsCallback(domainObj,
-            callback);
-        },
-        function(docs, callback) {
-          if (docs.length === 0) {
-            callback(null, docsDetails);
-          } else {
-            for (let item in docs) {
-              if (Object.prototype.hasOwnProperty.call(docs, item)) {
-                logger.debug("going to mongo ", docs.length);
-                let url = docs[item].url;
-                logger.debug("going to mongo url ", url);
-                domainMongoController.getSearchResultDocument(url)
-                  .then(function(docObj) {
-                      logger.debug("Successfully fetched doc details from mongo: ",
-                        docObj);
-                      docsDetails.push({
-                        title: docObj.title,
-                        description: docObj.description,
-                        url: docObj.url,
-                        intensity: docs[item].intensity
-                      })
-
-                      logger.debug("after each pushing", docsDetails);
-                      if (docsDetails.length === docs.length) {
-                        callback(null, docsDetails);
+          async.waterfall([
+                function(callback) {
+                  logger.debug("inside the waterfall for fetching web docs" + domainObj)
+                  domainNeo4jController.getWebDocumentsCallback(domainObj,
+                    callback);
+                },
+                function(docs, callback) {
+                  if (docs.length === 0) {
+                    callback(null, docsDetails);
+                  } else {
+                    for (let item in docs) {
+                      if (Object.prototype.hasOwnProperty.call(docs, item)) {
+                        logger.debug("going to neo4J ", docs.length);
+                        let url = docs[item].url;
+                        logger.debug("going to neo4J ", url);
+                        domainNeo4jController.getIntentforDocument({ domainObj: domainObj, docs: docs })
+                          .then(function(intentObj) {
+                              docsDetails.push({})
+                              docs[item].intentObj = intentObj;
+                              logger.debug("after each pushing", docsDetails);
+                              if (docsDetails.length === docs.length) {
+                                callback(null, docsDetails);
+                              }
+                            },
+                            function(err) {
+                              logger.error("Encountered error in fetching doc details: ",
+                                err);
+                              reject(err);
+                              return;
+                            });
                       }
-                    },
-                    function(err) {
-                      logger.error("Encountered error in fetching doc details: ",
-                        err);
-                      reject(err);
-                      return;
+                    }
+                    logger.debug("pushing ended", docsDetails);
+                  }
+                },
+                function(docs, callback) {
+                  if (docs.length === 0) {
+                    callback(null, docsDetails);
+                  } else {
+                    for (let item in docs) {
+                      if (Object.prototype.hasOwnProperty.call(docs, item)) {
+                        logger.debug("going to mongo ", docs.length);
+                        let url = docs[item].url;
+                        logger.debug("going to mongo url ", url);
+                        domainMongoController.getSearchResultDocument(url)
+                          .then(function(docObj) {
+                              logger.debug("Successfully fetched doc details from mongo: ",
+                                docObj);
+                              docsDetails.push({
+                                title: docObj.title,
+                                description: docObj.description,
+                                url: docObj.url,
+                                intensity: docs[item].intensity
+                              })
+
+                              logger.debug("after each pushing", docsDetails);
+                              if (docsDetails.length === docs.length) {
+                                callback(null, docsDetails);
+                              }
+                            },
+                            function(err) {
+                              logger.error("Encountered error in fetching doc details: ",
+                                err);
+                              reject(err);
+                            }
+                            resolve(docObjDetails);
+                          }); //end of async.waterfall
+                    };
+
+                    return promise;
+                  }
+
+                  let getAllDomain = function() {
+                    logger.debug("Received request for retriving all domain: ");
+
+
+                    let promise = new Promise(function(resolve, reject) {
+
+                      async.waterfall([function(callback) {
+                          domainMongoController.getAllDomainsCallback(callback);
+                        }],
+                        function(err, domainColln) {
+                          logger.debug("getting it")
+                          if (!err) {
+                            resolve(domainColln)
+                          }
+                          reject(err)
+                        }); //end of async.waterfall
                     });
-              }
-            }
-            logger.debug("pushing ended", docsDetails);
-          }
-        }
-      ],
-      function(err, docObjDetails) {
-        if (err) {
-          reject(err);
-        }
-        resolve(docObjDetails);
-      }); //end of async.waterfall
-  });
-
-  return promise;
-}
-
-let getAllDomain = function() {
-  logger.debug("Received request for retriving all domain: ");
+                    return promise;
+                  }
 
 
-  let promise = new Promise(function(resolve, reject) {
-
-    async.waterfall([function(callback) {
-        domainMongoController.getAllDomainsCallback(callback);
-      }],
-      function(err, domainColln) {
-        logger.debug("getting it")
-        if (!err) {
-          resolve(domainColln)
-        }
-        reject(err)
-      }); //end of async.waterfall
-  });
-  return promise;
-}
-
-
-module.exports = {
-  publishNewDomain: publishNewDomain,
-  getDomain: getDomain,
-  insertUrls: insertUrls,
-  fetchDomainCardDetails: fetchDomainCardDetails,
-  getAllDomainDetails: getAllDomainDetails,
-  freshlyIndexDomain: freshlyIndexDomain,
-  fetchWebDocuments: fetchWebDocuments,
-  getAllDomain: getAllDomain
-}
+                  module.exports = {
+                    publishNewDomain: publishNewDomain,
+                    getDomain: getDomain,
+                    insertUrls: insertUrls,
+                    fetchDomainCardDetails: fetchDomainCardDetails,
+                    getAllDomainDetails: getAllDomainDetails,
+                    freshlyIndexDomain: freshlyIndexDomain,
+                    fetchWebDocuments: fetchWebDocuments,
+                    getAllDomain: getAllDomain
+                  }

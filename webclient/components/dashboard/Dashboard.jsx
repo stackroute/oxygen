@@ -8,7 +8,24 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import IconButton from 'material-ui/IconButton';
-const iconStyle = {
+import {ScreenClassRender} from 'react-grid-system';
+
+const imgStyle = (screenClass) => {
+	if (screenClass === 'xl') {return { width: '700px',height:"auto" };}
+	if (screenClass === 'lg') {return { width: '600px',height:"auto"};}
+	if (screenClass === 'md') {return { width: '600px',height:"auto" };}
+	if (screenClass === 'sm') {return { width: '600px',height:"auto" };}
+	return { width: '300px',height:"auto"};
+};
+const divStyle = (screenClass) => {
+	if (screenClass === 'xl') {return { width: '700px',margin:"5% auto auto" };}
+	if (screenClass === 'lg') {return { width: '600px',margin:"5% auto auto"};}
+	if (screenClass === 'md') {return { width: '600px',margin:"5% auto auto" };}
+	if (screenClass === 'sm') {return { width: '600px',margin:"5% auto auto" };}
+	return { width: '300px',margin:"6% auto auto"};
+};
+
+const iconStyle={
 	iconSize: {
 		width: 30,
 		height: 30,
@@ -47,13 +64,14 @@ const iconStyle = {
 		zDepth: 10,
 		float: 'right'
 	}
-};
-const fonts = {
-	margin: '0px auto',
-	textAlign: 'center',
-	fontFamily: 'sans-serif',
-	color: '#1976d2 '
-};
+}
+const fonts={
+	
+	textAlign: "center",
+	fontFamily: "sans-serif",
+	color: "#1976d2 "
+	
+}
 const style = {
 	refresh: {
 		marginTop: '200px',
@@ -61,6 +79,21 @@ const style = {
 		position: 'relative'
 	}
 };
+
+const NoContent=()=>{
+	return(
+		<ScreenClassRender style={divStyle}>
+		<div>		
+		<ScreenClassRender style={imgStyle}>
+		<img src='./../assets/images/sry.png' />
+		</ScreenClassRender>		
+		</div>
+		</ScreenClassRender >
+		);
+}
+
+
+
 export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
@@ -151,28 +184,30 @@ export default class Dashboard extends React.Component {
 
 
 		render() {
-			let prevFlag = false;
-			let nextFlag = false;
-			const smallNav = () => {
-				return(<Row md={12} sm={12} xs={12} style={{marginBotton: 20}}>
-					<Col md={4} sm={4} xs={4} style={{float: 'left'}}>
-					<IconButton style={iconStyle.leftIconAvg} label='prev' disabled={prevFlag} data-id='prev'
+			let prevFlag=false;
+			let nextFlag=false;
+			const smallNav=()=>{
+				return(<Row md={12} sm={12} xs={12} style={{marginBotton:20}}>
+
+					<Col md={4} sm={4} xs={4} style={{float:"left"}}>
+					<IconButton style={iconStyle.leftIconAvg} label="prev" disabled={prevFlag} data-id="prev"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
 					<NavigationArrowBack style={iconStyle.large} color={'white'} />
 					</IconButton>
 					</Col>
-					<Col md={4} sm={4} xs={4} style={{float: 'right'}}>
-					<IconButton style={iconStyle.rightIconAvg} label='next' disabled={nextFlag} data-id='next'
+					<Col md={4} sm={4} xs={4} style={{float:"right"}}>
+					<IconButton style={iconStyle.rightIconAvg} label="next" disabled={nextFlag} data-id="next"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
 					<NavigationArrowForward style={iconStyle.large} color={'white'} />
 					</IconButton>
 					</Col>
+
 					</Row>)
 			}
-			let list = [];
 
-			let dList = this.state.domainList;
-			if(dList.length > 0)
+			let list=[];
+			let dList=this.state.domainList;
+			if(dList.length>0)
 			{
 				let pages = Math.ceil(dList.length/6);
 				let pageNow = this.state.pageNum;
@@ -186,63 +221,71 @@ export default class Dashboard extends React.Component {
 				}
 				if(pages === 1 || pages === pageNow)
 				{
-					list = [];
-					for(let i = 6*(pageNow-1); i < this.state.domainList.length; i += 1)
+					list=[];
+					for(let i=6*(pageNow-1);i < this.state.domainList.length; i+=1)
 					{
 						list.push(this.state.domainList[i]);
 					}
 				}
-				else {
-					list = [];
-					let foo = 6*(pageNow-1);
-					for(let i=foo; i<(foo+6); i += 1)
+				else 
+				{
+					list=[];
+					let foo=6*(pageNow-1);
+					for(let i=foo;i<(foo+6);i+=1)
 					{
 						list.push(this.state.domainList[i]);
 					}
 				}
 			}
 			return (
-				<div style={fonts}>
-				<h1 >Our Domains</h1>
-				<Visible md sm xs>
-				{smallNav}
-				</Visible>
-				{this.state.loading === 'loading' ? <RefreshIndicator
-				size={70}
-				left={10}
-				top={0}
-				status={this.state.loading}
-				style={style.refresh}
-				/>:<div>
-				{list.length !== 0 ? <div>
+				<div style={fonts}>				
+				{
+					this.state.loading==="loading"?<RefreshIndicator
+					size={70}
+					left={10}
+					top={0}
+					status={this.state.loading}
+					style={style.refresh}
+					/>:<div>					
+					{
+						list.length!==0?<div>
+						<br/>
+						<h1>OUR DOMAINS</h1>
+						<Container>
+						{
+							list.map((item,i) =>{
 
-					<Container>
-					{list.map((item, i) => {
-						return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
-							<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
-							index={i} key={i} indexs={i} ref='show' item={item}/>
-							</Col>);
-					})}
-					</Container>
-					<Visible xl lg>
-					<IconButton style={iconStyle.leftIcon} label='prev' disabled={prevFlag} data-id='prev'
-					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowBack style={iconStyle.large} color={'white'} />
-					</IconButton>
-					<IconButton style={iconStyle.rightIcon} label='next' disabled={nextFlag} data-id='next'
-					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowForward style={iconStyle.large} color={'white'} />
-					</IconButton>
-					</Visible>
-					<Visible md sm xs>
-					{smallNav}
-					</Visible>
-					</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
-					<AddDomain
-					addDomain={this.addDomain.bind(this)} style={{color: '#1976d2 '}}/>
-					<Notification />
+								return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
+									<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
+									index={i} key={i} indexs={i} ref="show" item={item}/>
+									</Col>);
+							})
+						}
+						</Container>
+
+						<Visible xl lg>
+						<IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+						iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+						<NavigationArrowBack style={iconStyle.large} color={"white"} />
+						</IconButton>
+						<IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+						iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+						<NavigationArrowForward style={iconStyle.large} color={"white"} />
+						</IconButton>
+						</Visible>
+
+						<Visible md sm xs>
+						{smallNav}
+						</Visible>
+						</div>:<NoContent />
+					}
 					</div>
+				}
+				<AddDomain
+				addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
+				<Notification />
+				</div>
 
-					);
+				);
 		}
 	}

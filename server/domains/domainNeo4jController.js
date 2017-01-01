@@ -295,6 +295,79 @@ let getDomainCardDetails = function(domainObj) {
   return promise;
 }
 
+let getIntentforDocument = function(domainObj) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to retrive "+
+      "the web Documents for domain name: ", domainObj.domainName);
+    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd),{encrypted:false}
+      );
+
+    let session = driver.session();
+
+    logger.debug("obtained connection with neo4j");
+    let query='';
+    let str=JSON.stringify(domainObj.reqConcepts);
+    let str1=JSON.stringify(domainObj.reqIntents);
+    logger.debug("***********"+str+"     "+str1);
+    if(domainObj.reqIntents.length===0)
+    {
+      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+      query += 'match(c:'+graphConsts.NODE_CONCEPT+')'
+      query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
+      query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
+      query +=' match(w)-[r]-(c) where c.name in '+str;
+      query +=' return w.name,sum(r.intensity) as sum order by sum desc';
+    }
+    else
+    {
+      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+      query += 'match (c:'+graphConsts.NODE_CONCEPT+')'
+      query += 'match(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
+      query += 'MATCH (w:'+graphConsts.NODE_WEBDOCUMENT+')';
+      query+= 'match(w)-[r]-(c) where type(r) in '+str1+' and c.name in '+str;
+      query+= 'return w.name,sum(r.intensity) as sum order by sum desc';
+    }
+    let params = {
+      domainName: domainObj.domainName
+    };
+    logger.debug("@@@@@@@@@ "+query);
+
+    let docs=[];
+    session.run(query, params)
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        logger.debug("Result from neo4j: ", record);
+        let i=0;
+        let obj={};
+        record._fields.forEach(function(fields){
+          i+=1;
+          if(i===1)
+          {
+            obj.url=fields;
+          }
+          else
+          {
+            obj.intensity=Number(fields);
+            docs.push(obj);
+          }
+        });
+
+      });
+      session.close();
+      resolve(docs);
+    })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+  });
+
+  return promise;
+}
+
 let getWebDocuments = function(domainObj) {
   let promise = new Promise(function(resolve, reject) {
 
