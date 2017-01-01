@@ -224,15 +224,14 @@ export default class Graph extends React.Component {
         docs:[]
       })
     }
-
-    else {
-      let reqObj = {
-        domainName: this.state.domainName,
-        reqIntents: this.state.checkedIntent,
-        reqConcepts: this.state.selectedConcept
-      };
-
-      if(reqObj.reqIntents.length === 0)
+    else{
+      let reqObj={
+        domainName:this.state.domainName,
+        reqIntents:this.state.checkedIntent,
+        reqConcepts:this.state.selectedConcept
+      }
+      reqObj.allIntents=this.state.intents;
+      if(reqObj.reqIntents.length===0)
       {
         reqObj.reqIntents = [];
       }
