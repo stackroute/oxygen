@@ -31,50 +31,51 @@ export default class AutoCompleteSearchBox extends React.Component {
   }
   filterFunc(searchText,key)
   {
-   if(searchText.length>=3 && searchText!==''){
-    return (key.indexOf(searchText) !== -1)
+    let sepDoc=key.split(" - ")
+    if(searchText.length>=3 && searchText!==''){
+      return (sepDoc[0].indexOf(searchText) !== -1)
+    }
+    return false;
   }
-  return false;
-}
-handleUpdateInput(concept)
-{
-  this.setState({
-    searchText: concept
-  })
-}
-getConcept(concept){
-  this.setState({
-    searchText: ''
-  })
-  this.props.getConcept(concept);
-}
-render()
-{
-  return(
-    <div style={{align:"center"}}>
-    <Paper style={style} zDepth={2} rounded={false}>
-    <Row style={{padding:"0 20px"}}>
-    <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
-    <AutoComplete
-    hintText="What do you want to search..??"
-    filter={this.filterFunc}
-    dataSource={this.props.concepts}
-    fullWidth={true}
-    searchText={this.state.searchText}
-    onUpdateInput={this.handleUpdateInput.bind(this)}
-    onNewRequest={this.getConcept.bind(this)}
-    maxSearchResults={5}
-    />
-    </Col>
-    <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-    <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
-    <ActionSearch /></IconButton>
-    </Col>
-    </Row>
-    </Paper>
-    </div>
-    )
-}
+  handleUpdateInput(concept)
+  {
+    this.setState({
+      searchText: concept
+    })
+  }
+  getConcept(concept){
+    this.setState({
+      searchText: ''
+    })
+    this.props.getConcept(concept);
+  }
+  render()
+  {
+    return(
+      <div style={{align:"center"}}>
+      <Paper style={style} zDepth={2} rounded={false}>
+      <Row style={{padding:"0 20px"}}>
+      <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
+      <AutoComplete
+      hintText="What do you want to search..??"
+      filter={this.filterFunc}
+      dataSource={this.props.concepts}
+      fullWidth={true}
+      searchText={this.state.searchText}
+      onUpdateInput={this.handleUpdateInput.bind(this)}
+      onNewRequest={this.getConcept.bind(this)}
+      maxSearchResults={5}
+      />
+      </Col>
+      <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+      <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
+      <ActionSearch /></IconButton>
+      </Col>
+      </Row>
+      </Paper>
+      </div>
+      )
+  }
 }
 AutoCompleteSearchBox.propTypes = {
   searchDocument: React.PropTypes.func,

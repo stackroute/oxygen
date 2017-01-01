@@ -119,20 +119,22 @@ let getDomainConcept = function(domainName) {
 
     let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
     query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
-    query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
+    query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) '
+    query+= 'match(w:'+graphConsts.NODE_WEBDOCUMENT+')'
+    query+= 'match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) '
+    query+='RETURN c.name,count(w)';
     let params = {
       domainName: domainName
     };
     let concepts=[];
     session.run(query, params)
     .then(function(result) {
-      result.records.forEach(function(record) {
-        record._fields.forEach(function(fields){
-          concepts.push(fields.properties.name);
-        });
-
+      result.records.forEach(function(record) {        
+        concepts.push(record._fields[0]+" - ( "+record._fields[1]+" ) Documents");
       });
       session.close();
+      logger.debug("from fetching cocepts and no of doc");
+      logger.debug(concepts);
       resolve({Domain:domainName,Concepts:concepts});
     })
     .catch(function(err) {

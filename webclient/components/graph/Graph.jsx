@@ -123,11 +123,11 @@ class ShowImg extends React.Component {
 export default class Graph extends React.Component {
   constructor(props) {
     super(props)
-    console.log(this.props)
     this.state={
       imgSelector:"default.png",
       domainName:"",
       concepts:[],
+      conceptsOnly:[],
       intents:[],
       docs:[],
       checkedIntent:[],
@@ -139,10 +139,12 @@ export default class Graph extends React.Component {
 
   handleToggle = () => this.setState({open: !this.state.open});
 
-  getConcepts(concept)
+  getConcepts(conceptWithDocCnt)
   {
+    let sepDoc=conceptWithDocCnt.split(" - ")
+    let concept=sepDoc[0];
     let newConcepts=this.state.selectedConcept;
-    if(this.state.concepts.includes(concept))
+    if(this.state.conceptsOnly.includes(concept))
     {
       if(!newConcepts.includes(concept)){
         newConcepts.push(concept)
@@ -154,6 +156,7 @@ export default class Graph extends React.Component {
     })
     console.log("selected concept")
     console.log(newConcepts)
+    
   }
 
   getCheckedIntents(event,checked)
@@ -183,6 +186,7 @@ export default class Graph extends React.Component {
     {
       selectedConcept:delConcepts
     })
+    console.log(delConcepts)
   }
   getIntentsAndConcepts()
   {
@@ -193,13 +197,21 @@ export default class Graph extends React.Component {
     .end((err, res) => {
      if(!err){
        let domainDetails=JSON.parse(res.text);
-       console.log("from the grph whole data")
+       console.log("received concepts and intent for the current domain")
        console.log(domainDetails)
+       let conOnly=[];
+       domainDetails.Concepts.map(function(conceptWithDocCnt){
+        let sepDoc=conceptWithDocCnt.split(" - ");
+        conOnly.push(sepDoc[0]);
+      })
+       console.log("extracted concepts :")
+       console.log(conOnly);
        that.setState(
        {
         domainName:domainDetails.Domain,
         concepts:domainDetails.Concepts,
-        intents:domainDetails.Intents
+        intents:domainDetails.Intents,
+        conceptsOnly:conOnly
       })
      }
    });
@@ -228,7 +240,7 @@ export default class Graph extends React.Component {
       this.setState({
         docs:[]
       })
-      console.log("sending the data")
+      console.log("sending the data to fetch documents")
       console.log(reqObj)
       let url =`/domain/documents/`+reqObj.domainName;
       Request
@@ -241,7 +253,7 @@ export default class Graph extends React.Component {
   }
   else {
     let response=JSON.parse(res.text);
-    console.log("Response on documents show: ",response);
+    console.log("Response on documents to show: ",response);
     response.sort(function(a, b) {
       return Number(b.intensity) - Number(a.intensity)
     })
