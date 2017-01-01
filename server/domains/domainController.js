@@ -19,7 +19,7 @@ let insertUrls=function(dataToInsert){
           domain: dataToInsert.domainName,
           concept: concept.name,
           url:url
-          
+
         };
         console.log(msgObj)
         startCrawlerMQ(msgObj);
@@ -370,6 +370,44 @@ let fetchWebDocuments = function(domainObj) {
         for(let item in docs)
         {
          if (Object.prototype.hasOwnProperty.call(docs, item)) {
+           logger.debug("going to neo4J ",docs.length);
+           let url=docs[item].url;
+           logger.debug("going to neo4J ",url);
+           domainNeo4jController.getIntentforDocument({domainObj:domainObj,docs:docs})
+           .then(function(docObj) {
+            logger.debug("Successfully fetched doc details from mongo: ",
+              docObj);
+            docsDetails.push({title:docObj.title,
+              description:docObj.description,
+              url:docObj.url,
+              intensity:docs[item].intensity})
+
+            logger.debug("after each pushing",docsDetails);
+            if(docsDetails.length===docs.length)
+            {
+             callback(null,docsDetails);
+           }
+         },
+         function(err) {
+          logger.error("Encountered error in fetching doc details: ",
+            err);
+          reject(err);
+          return;
+        });
+         }
+       }
+       logger.debug("pushing ended",docsDetails);
+      }
+      },
+      function(docs,callback) {
+        if(docs.length===0)
+        {
+         callback(null,docsDetails);
+       }
+       else{
+        for(let item in docs)
+        {
+         if (Object.prototype.hasOwnProperty.call(docs, item)) {
            logger.debug("going to mongo ",docs.length);
            let url=docs[item].url;
            logger.debug("going to mongo url ",url);
@@ -381,7 +419,7 @@ let fetchWebDocuments = function(domainObj) {
               description:docObj.description,
               url:docObj.url,
               intensity:docs[item].intensity})
-            
+
             logger.debug("after each pushing",docsDetails);
             if(docsDetails.length===docs.length)
             {

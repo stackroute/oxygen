@@ -5,6 +5,8 @@ import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
 import {Row, Col,ScreenClassRender,Visible} from 'react-grid-system';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
@@ -22,7 +24,45 @@ const fonts={
   fontFamily: "sans-serif",
   color: "#1976d2"
 }
+const iconStyle={
+	iconSize: {
 
+		width: 30,
+		height: 30,
+		backgroundColor: "#a9a9a9",
+		padding: 10,
+		borderRadius: 60
+	},
+	large: {
+		width: 120,
+		height: 120,
+		padding: 30
+	},
+	leftIcon:{
+		position:"fixed",
+		left:"45%",
+		float:'left'
+	},
+	rightIcon:{
+		position:"fixed",
+		right:"33%",
+		float:'right'
+	},
+	leftIconAvg:{
+		position:"relative",
+		margin:"20 0 0 ",
+		padding:0,
+		zDepth:10,
+		float:'left'
+	},
+	rightIconAvg:{
+		position:"relative",
+		margin:"20 0 0 ",
+		padding:0,
+		zDepth:10,
+		float:'right'
+	}
+}
 const styles={
  largeIcon: {
   width: 28,
@@ -69,12 +109,12 @@ class ShowImg extends React.Component {
   }
   render(){
    return(<ScreenClassRender style={divStyle}>
-    <div>   
+    <div>
     <ScreenClassRender style={imgStyle}>
     <img src={'./../assets/images/'+this.props.imgName} />
-    </ScreenClassRender>    
+    </ScreenClassRender>
     </div>
-    </ScreenClassRender >)
+  </ScreenClassRender >)
 
  }
 }
@@ -92,8 +132,8 @@ export default class Graph extends React.Component {
       docs:[],
       checkedIntent:[],
       selectedConcept:[],
-      open:false
-      //pageNum:1
+      open:false,
+      pageNum:1
     }
   }
 
@@ -203,7 +243,7 @@ export default class Graph extends React.Component {
     let response=JSON.parse(res.text);
     console.log("Response on documents show: ",response);
     response.sort(function(a, b) {
-      return a.intensity - b.intensity
+      return Number(b.intensity) - Number(a.intensity)
     })
 
     if(typeof response==="undefined" || response.length===0 )
@@ -225,61 +265,67 @@ export default class Graph extends React.Component {
    this.getIntentsAndConcepts();
 
  }
- // onPageClick(e)
- // {
- //   let page=this.state.pageNum;
- //   if(e.currentTarget.dataset.id==="prev")
- //   {
- //     page-=1;
- //     this.setState({pageNum:page});
- //   }
- //   else
- //   {
- //     page+=1;
- //     this.setState({pageNum:page});
- //   }
- // }
+ onPageClick(e)
+ {
+   let page=this.state.pageNum;
+   if(e.currentTarget.dataset.id==="prev")
+   {
+     page-=1;
+     this.setState({pageNum:page});
+   }
+   else
+   {
+     page+=1;
+     this.setState({pageNum:page});
+   }
+ }
  render()
  {
-   //let list=[];
-   // let prevFlag;
-   // let nextFlag;
-   // let dList=this.state.docs;
-   // if(dList.length>0)
-   // {
-   //   let pages=Math.ceil(dList.length/6);
-   //   let pageNow=this.state.pageNum;
-   //   if(pages===pageNow)
-   //   {
-   //     nextFlag=true;
-   //   }
-   //   if(this.state.pageNum===1)
-   //   {
-   //     prevFlag=true;
-   //   }
-   //   if(pages===1 || pages===pageNow)
-   //   {
-   //     list=[];
-   //     for(let i=6*(pageNow-1);i<this.state.docs.length;i+=1)
-   //     {
-   //       list.push(this.state.docs[i]);
-   //     }
-   //   }
-   //   else {
-   //     list=[];
-   //     let foo=6*(pageNow-1);
-   //     for(let i=foo;i<(foo+6);i+=1)
-   //     {
-   //       list.push(this.state.docs[i]);
-   //     }
-   //   }
-   // }
+   let list=[];
+   let prevFlag;
+   let nextFlag;
+   let dList=this.state.docs;
+   let docsPerImg=2;
+   if(dList.length>0)
+   {
+     let pages=Math.ceil(dList.length/docsPerImg);
+     console.log('pages '+pages);
+     let pageNow=this.state.pageNum;
+     console.log('pageNow '+pageNow);
+     if(pages===pageNow)
+     {
+       nextFlag=true;
+     }
+     if(this.state.pageNum===1)
+     {
+       prevFlag=true;
+     }
+     if(pages===1 || pages===pageNow)
+     {
+       list=[];
+      console.log(list);
+       for(let i=docsPerImg*(pageNow-1);i<this.state.docs.length;i+=1)
+       {
+         list.push(this.state.docs[i]);
+       }
+       console.log('printing list in if '+list);
+     }
+     else {
+       list=[];
+       let foo=docsPerImg*(pageNow-1);
+       for(let i=foo;i<(foo+docsPerImg);i+=1)
+       {
+         list.push(this.state.docs[i]);
+       }
+      console.log('printing list in else'+list);
+     }
+   }
    return(
      <div style={fonts}>
      <Row style={{margin:0}}>
      <Visible lg xl>
      <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
-     <SelectPanel intents={this.state.intents} 
+     <SelectPanel intents={this.state.intents}
      getCheckedIntent={this.getCheckedIntents.bind(this)}/>
      </Col>
      <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000,marginLeft:"16.5%"}}>
@@ -308,12 +354,21 @@ export default class Graph extends React.Component {
      </Row>
      <br/><br/>
      <Row>
-     <Col md={12} lg={12} xl={12}>
-     {this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
-     {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+       <Col md={12} lg={12} xl={12}>
+       {list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
+       {list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+       <br/>
+       <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+       iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+       <NavigationArrowBack style={iconStyle.large} color={"white"} />
+       </IconButton>
+       <IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+       iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+       <NavigationArrowForward style={iconStyle.large} color={"white"} />
+       </IconButton>
      </div>
-   }
-   </Col>
+     }
+     </Col>
    </Row>
    </Col>
    </Visible>
@@ -361,14 +416,22 @@ export default class Graph extends React.Component {
    </Row>
    <br/><br/>
    <Row>
-   <Col sm={12} xs={12} md={12}>
-   {this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
-   {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
-   <br/>
+     <Col sm={12} xs={12} md={12}>
+      {list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
+      {list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+      <br/>
+      <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+      iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+      <NavigationArrowBack style={iconStyle.large} color={"white"} />
+      </IconButton>
+      <IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+      iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+      <NavigationArrowForward style={iconStyle.large} color={"white"} />
+      </IconButton>
 
-   </div>
- }
- </Col>
+    </div>
+    }
+    </Col>
  </Row>
  </Col>
  </Visible>
