@@ -2,8 +2,8 @@ import React from 'react';
 import DomainShow from './DashboardDomains.jsx';
 import Request from 'superagent';
 import AddDomain from './AddDomain.jsx';
-import Notification from './Notification.jsx'
-import {Container,Col,Row ,Visible} from 'react-grid-system';
+import Notification from './Notification.jsx';
+import {Container, Col, Row, Visible} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
@@ -27,10 +27,9 @@ const divStyle = (screenClass) => {
 
 const iconStyle={
 	iconSize: {
-
 		width: 30,
 		height: 30,
-		backgroundColor: "#a9a9a9",
+		backgroundColor: '#a9a9a9',
 		padding: 10,
 		borderRadius: 60
 	},
@@ -75,7 +74,7 @@ const fonts={
 }
 const style = {
 	refresh: {
-		marginTop:'200px',
+		marginTop: '200px',
 		display: 'inline-block',
 		position: 'relative'
 	}
@@ -99,54 +98,50 @@ export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			domainList: [],canSubmit:false,errmsg:'',loading:'loading',pageNum:1};
+			domainList: [], canSubmit: false, errmsg: '', loading: 'loading', pageNum: 1};
 		}
-
 		addDomain(domain)
 		{
-			console.log("in adding module "+domain.name);
-			console.log('length before call '+this.state.domainList.length);
-			let url =`/domain/`+domain.name;
+			// console.log('in adding module '+domain.name);
+			// console.log('length before call '+this.state.domainList.length);
+			let url = `/domain/` + domain.name;
 			Request
 			.post(url)
 			.send(domain)
 			.end((err, res) => {
 				if(err) {
-					console.log(err)
+					// console.log(err)
 				}
-				console.log("got response "+JSON.parse(res.text).name);
-				console.log('length after call '+this.state.domainList.length);
-				let domainList1=this.state.domainList;
-				let response=JSON.parse(res.text);
+				// console.log('got response '+JSON.parse(res.text).name);
+				// console.log('length after call '+this.state.domainList.length);
+				let domainList1 = this.state.domainList;
+				let response = JSON.parse(res.text);
 				domainList1.push(response);
-				console.log("Response for posting new job : ", response);
-				this.setState({domainList:domainList1});
+				// console.log('Response for posting new job : ', response);
+				this.setState({domainList: domainList1});
 			});
-
 		}
-
 		show()
 		{
-			let url =`/domain/`;
-
+			let url = `/domain/`;
 			Request
 			.get(url)
 			.end((err, res) => {
 				if(err) {
-				//res.send(err);
-				this.setState({errmsg: res.body,loading:"hide"});
+				// res.send(err);
+				this.setState({errmsg: res.body, loading: 'hide'});
 			}
 
 			else {
-				console.log("Response on show: ", JSON.parse(res.text));
-				//let domainList1=this.state.domainList;
-				let response=JSON.parse(res.text);
-				if(response.length===0)
+				// console.log('Response on show: ', JSON.parse(res.text));
+				// let domainList1=this.state.domainList;
+				let response = JSON.parse(res.text);
+				if(response.length === 0)
 				{
-					this.setState({domainList:[],loading:'hide'});
+					this.setState({domainList: [], loading: 'hide'});
 				}
 				else {
-					this.setState({domainList:response,loading:'hide'});
+					this.setState({domainList: response, loading: 'hide'});
 				}
 			}
 		});
@@ -159,25 +154,24 @@ export default class Dashboard extends React.Component {
 
 		onPageClick(e)
 		{
-			let page=this.state.pageNum;
-			if(e.currentTarget.dataset.id==="prev")
+			let page = this.state.pageNum;
+			if(e.currentTarget.dataset.id === 'prev')
 			{
-				page-=1;
-				this.setState({pageNum:page});
+				page -= 1;
+				this.setState({pageNum: page});
 			}
 			else
 			{
-				page+=1;
-				this.setState({pageNum:page});
+				page += 1;
+				this.setState({pageNum: page});
 			}
 		}
 
 
 		freshlyIndex(domain)
 		{
-			console.log('inside Index refresh '+domain);
-			let url =`/domain/`+domain+`/index`;
-
+			// console.log('inside Index refresh '+domain);
+			let url = `/domain/` + domain + `/index`;
 			Request
 			.post(url)
 			.send(domain)
@@ -198,36 +192,34 @@ export default class Dashboard extends React.Component {
 					<Col md={4} sm={4} xs={4} style={{float:"left"}}>
 					<IconButton style={iconStyle.leftIconAvg} label="prev" disabled={prevFlag} data-id="prev"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowBack style={iconStyle.large} color={"white"} />
+					<NavigationArrowBack style={iconStyle.large} color={'white'} />
 					</IconButton>
 					</Col>
-
 					<Col md={4} sm={4} xs={4} style={{float:"right"}}>
 					<IconButton style={iconStyle.rightIconAvg} label="next" disabled={nextFlag} data-id="next"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowForward style={iconStyle.large} color={"white"} />
+					<NavigationArrowForward style={iconStyle.large} color={'white'} />
 					</IconButton>
 					</Col>
 
 					</Row>)
 			}
-			
 
 			let list=[];
 			let dList=this.state.domainList;
 			if(dList.length>0)
 			{
-				let pages=Math.ceil(dList.length/6);
-				let pageNow=this.state.pageNum;
-				if(pages===pageNow)
+				let pages = Math.ceil(dList.length/6);
+				let pageNow = this.state.pageNum;
+				if(pages === pageNow)
 				{
-					nextFlag=true;
+					nextFlag = true;
 				}
-				if(this.state.pageNum===1)
+				if(this.state.pageNum === 1)
 				{
-					prevFlag=true;
+					prevFlag = true;
 				}
-				if(pages===1 || pages===pageNow)
+				if(pages === 1 || pages === pageNow)
 				{
 					list=[];
 					for(let i=6*(pageNow-1);i < this.state.domainList.length; i+=1)

@@ -15,8 +15,8 @@ let initialiseDomainOntology = function(domainName) {
 
 
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd),{encrypted:false}
-      );
+      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
+    );
 
     let session = driver.session();
 
@@ -49,11 +49,11 @@ let initialiseDomainOntology = function(domainName) {
     };
 
     session.run(query, params)
-    .then(function(result) {
-      result.records.forEach(function(record) {
-        logger.debug('[*] [domainManager] Result from neo4j: ',
-          record);
-      });
+      .then(function(result) {
+        result.records.forEach(function(record) {
+          logger.debug('[*] [domainManager] Result from neo4j: ',
+            record);
+        });
 
         // Completed!
         session.close();
@@ -76,41 +76,41 @@ let initialiseDomainOntology = function(domainName) {
 // Along with domain, specify exact concept(s) and intent(s)
 let buildDomainIndex = function(domainName) {
   let promise = new Promise(function(resolve, reject) {
-   // Fetch all domain concepts and intents
-   domainNeo4jController.getDomainConcept(domainName)
-   .then(function(conceptsColln) {
-    resolve(conceptsColln);
-    docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
-    .then(function(result) {
-      logger.debug(result)
-      resolve(conceptsColln);
-    }, function(err) {
-      reject(err);
-    });
-  }, function(err) {
-    reject(err);
+    // Fetch all domain concepts and intents
+    domainNeo4jController.getDomainConcept(domainName)
+      .then(function(conceptsColln) {
+        resolve(conceptsColln);
+        docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
+          .then(function(result) {
+            logger.debug(result)
+            resolve(conceptsColln);
+          }, function(err) {
+            reject(err);
+          });
+      }, function(err) {
+        reject(err);
+      });
   });
- });
 
   return promise;
 }
 
 let buildDomainIndexCallBack = function(domainName, callback) {
   buildDomainIndex(domainName)
-  .then(function(result) {
-    callback(null, result);
-  }, function(err) {
-    callback(err, null);
-  });
+    .then(function(result) {
+      callback(null, result);
+    }, function(err) {
+      callback(err, null);
+    });
 }
 
 let initialiseDomainOntologyCallBack = function(domainName, callback) {
   initialiseDomainOntology(domainName)
-  .then(function(result) {
-    callback(null, result);
-  }, function(err) {
-    callback(err, null);
-  });
+    .then(function(result) {
+      callback(null, result);
+    }, function(err) {
+      callback(err, null);
+    });
 }
 
 module.exports = {
