@@ -8,31 +8,30 @@ import {Row, Col} from 'react-grid-system';
 const style = {
   maxHeight: 80,
   maxWidth: 750,
-  marginLeft:"auto",
-  marginRight:"auto",
+  marginLeft: 'auto',
+  marginRight: 'auto',
   marginTop: 5,
-  align:"center",
+  align: 'center',
   textAlign: 'center'
 };
-const iconSize={
-  width:40,
-  height:40,
-  paddingTop:10
+const iconSize=  {
+  width: 40,
+  height: 40,
+  paddingTop: 10
 }
 
 
 export default class AutoCompleteSearchBox extends React.Component {
   constructor(props) {
-    super(props)
-
-  }
+    super(props);
+}
   
   render()
   {
     return(
-      <div style={{align:"center"}}>
+      <div style={{align: 'center'}}>
       <Paper style={style} zDepth={2} rounded={false}>
-      <Row style={{padding:"0 20px"}}>
+      <Row style={{padding: '0 20px'}}>
       <Col xs={10} sm={10} md={10} lg={10} xl={10}>
       <AutoComplete
       floatingLabelText="Search"
@@ -50,11 +49,11 @@ export default class AutoCompleteSearchBox extends React.Component {
       </Row>
       </Paper>
       </div>
-      )
+      );
   }
 }
 AutoCompleteSearchBox.propTypes = {
   searchDocument: React.PropTypes.func,
   getConcept: React.PropTypes.func,
   concepts: React.PropTypes.arrayOf(React.PropTypes.string)
-}
+};
