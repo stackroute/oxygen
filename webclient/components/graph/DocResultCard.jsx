@@ -60,7 +60,11 @@ export default class DocResultCard extends React.Component {
       <b>Link : </b>
       <ScreenClassRender style={styleFunction}>
       <a href={this.props.webDoc.url} target="_blank">
-      {this.props.webDoc.url.length < 70 ?this.props.webDoc.url: this.props.webDoc.url.substring(0,65)+"..."}
+      {
+        this.props.webDoc.url.length < 70 ?
+        this.props.webDoc.url: 
+        this.props.webDoc.url.substring(0,65)+"..."
+      }
       
       </a>
       </ScreenClassRender>

@@ -113,6 +113,47 @@ let getDomainConcept = function(domainName) {
     let session = driver.session();
 
     logger.debug("obtained connection with neo4j");
+
+    let query = 'MATCH (d:' + graphConsts.NODE_DOMAIN + '{name:{domainName}})'
+    query += 'match(c:' + graphConsts.NODE_CONCEPT + ')'
+    query += 'match(d)<-[r:' + graphConsts.REL_CONCEPT_OF + ']-(c) RETURN c';
+    let params = {
+      domainName: domainName
+    };
+    let concepts = [];
+    session.run(query, params)
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        record._fields.forEach(function(fields) {
+          concepts.push(fields.properties.name);
+        });
+
+      });
+      session.close();
+      resolve({ Domain: domainName, Concepts: concepts });
+    })
+    .catch(function(err) {
+      logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+  });
+
+  return promise;
+}
+
+
+let getDomainConceptWithDoc = function(domainName) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to retrive the concepts for domain name: ", domainName);
+    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
+      );
+
+    let session = driver.session();
+
+    logger.debug("obtained connection with neo4j");
     let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
     query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
     query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) '
@@ -122,16 +163,15 @@ let getDomainConcept = function(domainName) {
     let params = {
       domainName: domainName
     };
-    let concepts = [];
+    let conceptsWithDoc=[];
     session.run(query, params)
     .then(function(result) {
-      result.records.forEach(function(record) {        
-        concepts.push(record._fields[0]+" - ( "+record._fields[1]+" ) Documents");
+      result.records.forEach(function(record) { 
+        conceptsWithDoc.push(record._fields[0]+" - ( "+record._fields[1]+" ) Documents");
       });
       session.close();
-      logger.debug("from fetching cocepts and no of doc");
-      logger.debug(concepts);
-      resolve({Domain:domainName,Concepts:concepts});
+      logger.debug({Domain:domainName,ConceptsWithDoc:conceptsWithDoc})
+      resolve({Domain:domainName,ConceptsWithDoc:conceptsWithDoc});
     })
     .catch(function(err) {
       logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
@@ -143,6 +183,7 @@ let getDomainConcept = function(domainName) {
 
   return promise;
 }
+
 
 let getDomainIntent = function(domain) {
   let promise = new Promise(function(resolve, reject) {
@@ -173,6 +214,7 @@ let getDomainIntent = function(domain) {
       });
       session.close();
       domain.Intents = intents;
+      logger.debug(domain);
       resolve(domain);
     })
     .catch(function(err) {
@@ -436,6 +478,13 @@ let getDomainConceptCallback = function(domainName, callback) {
     callback(err, null);
   });
 }
+let getDomainConceptWithDocCallback = function(domainName, callback) {
+  getDomainConceptWithDoc(domainName).then(function(retrievedDomainConcept) {
+    callback(null, retrievedDomainConcept);
+  }, function(err) {
+    callback(err, null);
+  });
+}
 let getDomainIntentCallback = function(domainName, callback) {
   getDomainIntent(domainName).then(function(retrievedDomainConceptsAndIntents) {
     callback(null, retrievedDomainConceptsAndIntents);
@@ -472,10 +521,12 @@ let getWebDocumentsCallback = function(domainObj, callback) {
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept: getDomainConcept,
+  getDomainConceptWithDoc: getDomainConceptWithDoc,
   getDomainIntent: getDomainIntent,
   getAllDomainConcept: getAllDomainConcept,
   indexNewDomainCallBack: indexNewDomainCallBack,
   getDomainConceptCallback: getDomainConceptCallback,
+  getDomainConceptWithDocCallback: getDomainConceptWithDocCallback,
   getDomainIntentCallback: getDomainIntentCallback,
   getAllDomainConceptCallback: getAllDomainConceptCallback,
   getDomainCardDetailsCallback: getDomainCardDetailsCallback,

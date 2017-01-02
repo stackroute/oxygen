@@ -27,24 +27,24 @@ neo4j['neo4jURL'] = ('bolt://' + neo4j.host + ':' + neo4j.bolt);
 neo4j['neo4jHTTPURL'] = ('http://' + neo4j.host + ':' + neo4j.http);
 
 let redis = {
-    host: process.env.REDIS_HOST || '127.0.0.1',
-    port: process.env.REDIS_PORT || 6379
-  }
+  host: process.env.REDIS_HOST || '127.0.0.1',
+  port: process.env.REDIS_PORT || 6379
+}
   // redis['redisURL'] = ('redis://user:password@host:port/db-number');
 
-let rabbitMQ = {
-  host: process.env.RABBITMQ_HOST || '127.0.0.1',
-  port: process.env.RABBITMQ_PORT || 5672
-};
-rabbitMQ['rabbitmqURL'] = ('amqp://' + rabbitMQ.host + ':' + rabbitMQ.port);
+  let rabbitMQ = {
+    host: process.env.RABBITMQ_HOST || '127.0.0.1',
+    port: process.env.RABBITMQ_PORT || 5672
+  };
+  rabbitMQ['rabbitmqURL'] = ('amqp://' + rabbitMQ.host + ':' + rabbitMQ.port);
 
-let config = {
-  OXYGEN: oxygen,
-  MONGO: mongo,
-  NEO4J: neo4j,
-  REDIS: redis,
-  RABBITMQ: rabbitMQ,
-  NO_OF_RESULTS: 20
-};
+  let config = {
+    OXYGEN: oxygen,
+    MONGO: mongo,
+    NEO4J: neo4j,
+    REDIS: redis,
+    RABBITMQ: rabbitMQ,
+    NO_OF_RESULTS: 2
+  };
 
-module.exports = config;
+  module.exports = config;

@@ -187,19 +187,19 @@ export default class Graph extends React.Component {
     .end((err, res) => {
      if(!err) {
        let domainDetails = JSON.parse(res.text);
-       // console.log('received concepts and intent for the current domain')
-       // console.log(domainDetails)
+       console.log('received concepts and intent for the current domain')
+       console.log(domainDetails)
        let conOnly = [];
-       domainDetails.Concepts.map(function(conceptWithDocCnt) {
+       domainDetails.ConceptsWithDoc.map(function(conceptWithDocCnt) {
         let sepDoc = conceptWithDocCnt.split(' - ');
         conOnly.push(sepDoc[0]);
       });
-       // console.log('extracted concepts :')
-       // console.log(conOnly);
+       console.log('extracted concepts :')
+       console.log(conOnly);
        that.setState(
        {
         domainName: domainDetails.Domain,
-        concepts: domainDetails.Concepts,
+        concepts: domainDetails.ConceptsWithDoc,
         intents: domainDetails.Intents,
         conceptsOnly: conOnly
       });
@@ -414,7 +414,8 @@ else {
     <Row>
     <Col sm={12} xs={12} md={12}>
     {
-      this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
+      this.state.selectedConcept.length===0?
+      <h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
       <SelectedConcepts conceptChips={this.state.selectedConcept}
       deleteConcept={this.deleteConcepts.bind(this)} />}
       </Col>
@@ -453,4 +454,12 @@ else {
 }
 Graph.propTypes = {
   params: React.PropTypes.object
+
 };
+
+ShowImg.propTypes = {
+  imgName: React.PropTypes.string
+
+};
+
+
