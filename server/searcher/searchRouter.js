@@ -1,4 +1,3 @@
-
 'use strict';
 const logger = require('./../../applogger');
 const Router = require('express').Router();
@@ -6,7 +5,7 @@ const controller = require('./searchController');
 
 Router.get('/:jobID', function(req, res) {
   try {
-    let sendData=controller.storeURL(req.params.jobID, (err, result) => {
+    let sendData = controller.storeURL(req.params.jobID, (err, result) => {
       if (err) {
 
         logger.error('Error in fetching entity ', err);
@@ -16,7 +15,7 @@ Router.get('/:jobID', function(req, res) {
       }
       console.log("from the storeURL server side :")
       console.log(result)
-      //  SUCCESS
+        //  SUCCESS
       return res.json(result);
     });
     return sendData;

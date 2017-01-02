@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
-import io from 'socket.io-client';
+
 
 
 export default class Notification extends React.Component {

@@ -36,25 +36,26 @@ class Welcome extends React.Component {
       width={250}
       open={this.state.open}
       onRequestChange={(open) => this.setState({open})}>
-      <Link to="/job">
-      <MenuItem onTouchTap={this.handleToggle}>      
+      <Link to='/job'>
+      <MenuItem onTouchTap={this.handleToggle}>
       <IconButton><ActionSearch /></IconButton>
-      <FlatButton label="Job" hoverColor="#e8f1fb" labelStyle={{textAlign:"left"}} style={{fontSize: '50px', marginTop: '4px'}}/>     
+      <FlatButton label='Job' hoverColor= '#e8f1fb' labelStyle={{textAlign: 'left'}}
+      style = {{fontSize: '50px', marginTop: '4px'}}/>     
       </MenuItem>
       </Link>
-      <Link to="/dashboard">
-      <MenuItem onTouchTap={this.handleToggle}>      
+      <Link to='/dashboard'>
+      <MenuItem onTouchTap={this.handleToggle}>
       <IconButton><ActionDashboard/></IconButton>
-      <FlatButton label="dashboard" hoverColor="#e8f1fb" labelStyle={{textAlign:"left"}} style={{fontSize: '50px', marginTop: '4px'}}/>      
-      </MenuItem>
+      <FlatButton label='dashboard' hoverColor='#e8f1fb' labelStyle={{textAlign: 'left'}}
+      style={{fontSize: '50px', marginTop: '4px'}}/></MenuItem>
       </Link>
       </Drawer>
       <AppBar
       onLeftIconButtonTouchTap={this.handleToggle}
-      title="Oxygen"
+      title='Oxygen'
       style={{position: 'fixed', top: 0}}
       iconElementRight={<span>
-        <Link to="/dashboard"><IconButton iconStyle={styles.largeIcon}>
+        <Link to='/dashboard'><IconButton iconStyle={styles.largeIcon}>
         <ActionHome color={'white'} />
         </IconButton></Link></span>
       }/>

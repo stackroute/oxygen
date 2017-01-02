@@ -13,47 +13,45 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 const style = {
  refresh: {
-   marginTop:'200px',
+   marginTop: '200px',
    display: 'inline-block',
    position: 'relative'
  }
 };
 
-const fonts={
-  margin: "0px auto",
-  textAlign: "center",
-  fontFamily: "sans-serif",
-  color: "#1976d2",
-  width:"700px"
-}
+const fonts = {
+  margin: '0px auto',
+  textAlign: 'center',
+  fontFamily: 'sans-serif',
+  color: '#1976d2',
+  width: '700px'
+};
 export default class JobResult extends React.Component {
   constructor(props) {
-    super(props)
-    this.state={searchResult:[],query:"",loading:"loading",intentRating:[{
+    super(props);
+    this.state = {searchResult: [], query: '', loading: 'loading', intentRating: [{
       basic: 0,
       tutorial: 0,
       theory: 0,
-      manual:0,
-      completeReference:0
-    }]}
-    this.searchDetails=this.searchDetails.bind(this)
+      manual: 0,
+      completeReference: 0
+    }]};
+    this.searchDetails = this.searchDetails.bind(this);
   }
   searchDetails() {
-    console.log("from the searcherresult module "+this.props.params.jobID);
-    
-    let url =`/docsearchjob/:`+this.props.params.jobID;
+    let url = `/docsearchjob/:` + this.props.params.jobID;
     let that = this;
     Request
     .get(url)
-    .end(function(err, res){
-     let data=JSON.parse(res.text);
-     console.log(data);
-     let word="";
-     data.content.map((item)=>{word=item.query})
+    .end(function(err, res) {
+     let data = JSON.parse(res.text);
+     // console.log(data);
+     let word = '';
+     data.content.map((item) => {word = item.query});
      that.setState({
-      searchResult:data.content,
-      query:word,
-      loading:"hide"
+      searchResult: data.content,
+      query: word,
+      loading: 'hide'
     });
    });
   }
@@ -63,23 +61,22 @@ export default class JobResult extends React.Component {
   }
   render()
   {
-
     return(
-     <div style={fonts}>
+     <div style = {fonts}>
      <Container>
-     <Link to="/job">
-     <FlatButton label="Go Back to Job Page"
-     style={{fontSize:"50px",marginTop:"4px"}}/>
+     <Link to = '/job'>
+     <FlatButton label = 'Go Back to Job Page'
+     style={{fontSize: '50px', marginTop: '4px'}}/>
      </Link>
      <h1>Here are the search results for {this.state.query}</h1>
 
-     {this.state.loading==="loading"?<RefreshIndicator
-     size={70}
-     left={10}
-     top={0}
-     status={this.state.loading}
-     style={style.refresh}
-     />:<div>{this.state.searchResult.map((searchItem,i) =>
+     {this.state.loading === 'loading' ? <RefreshIndicator
+     size = {70}
+     left = {10}
+     top = {0}
+     status = {this.state.loading}
+     style = {style.refresh}
+     /> : <div>{this.state.searchResult.map((searchItem, i) =>
        <CardResult key={i} searchItem={searchItem} rating={this.state.intentRating}/>
        )}</div>}
      </Container>
@@ -89,4 +86,4 @@ export default class JobResult extends React.Component {
 }
 JobResult.propTypes = {
   params: React.PropTypes.object
-}
+};

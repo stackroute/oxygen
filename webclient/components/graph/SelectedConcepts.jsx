@@ -4,43 +4,36 @@ import Chip from 'material-ui/Chip';
 const styles = {
   chip: {
     margin: 4,
-    color:"white",
-    fontWeight:600
-
-  },
+    color: 'white',
+    fontWeight: 600
+ },
   wrapper: {
     display: 'flex',
     flexWrap: 'wrap',
-    width:"100%",
+    width: '100%',
     maxWidth: 680,
-    marginTop:10,
-    marginBottom:0,
-    marginLeft:"auto",
-    marginRight:"auto"
+    marginTop: 10,
+    marginBottom: 0,
+    marginLeft: 'auto',
+    marginRight: 'auto'
   }
 };
-
-
-
 export default class SelectedConcepts extends React.Component {
 
-  constructor(props) {
-    super(props)
-    
-    console.log("from the concept chiplets")
-    console.log(props.conceptChips)
-
-  }
+    constructor(props) {
+    super(props);
+    console.log('from the concept chiplets');
+    console.log(props.conceptChips);
+}
   handleRequestDelete=(data) => {
-    console.log("data to b deleted "+data)
+    console.log('data to b deleted' + data);
     this.props.deleteConcept(data);
   }
   renderChip(chipData)
   {
-
    return( <Chip
     key={chipData}
-    backgroundColor="#eaeaea"
+    backgroundColor= '#eaeaea'
     onRequestDelete={()=>this.handleRequestDelete(chipData)}
     style={styles.chip}
     >
