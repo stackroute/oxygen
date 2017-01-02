@@ -46678,18 +46678,20 @@
 	  return { width: '300px', height: 'auto' };
 	};
 	var divStyle = function divStyle(screenClass) {
+
 	  if (screenClass === 'xl') {
-	    return { width: '700px', margin: 'auto' };
+	    return { width: '700px', margin: '5% auto auto' };
 	  }
 	  if (screenClass === 'lg') {
-	    return { width: '600px', margin: 'auto' };
+	    return { width: '600px', margin: '5% auto auto' };
 	  }
 	  if (screenClass === 'md') {
-	    return { width: '600px', margin: 'auto' };
+	    return { width: '600px', margin: '5% auto auto' };
 	  }
 	  if (screenClass === 'sm') {
-	    return { width: '600px', margin: 'auto' };
+	    return { width: '600px', margin: '5% auto auto' };
 	  }
+
 	  return { width: '300px', margin: '40% auto auto' };
 	};
 
@@ -52068,10 +52070,10 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var fonts = {
-		margin: "0px auto",
-		textAlign: "center",
-		fontFamily: "sans-serif",
-		color: "#1976d2 "
+		margin: '0px auto',
+		textAlign: 'center',
+		fontFamily: 'sans-serif',
+		color: '#1976d2'
 	};
 
 	var Job = function (_React$Component) {
@@ -52093,7 +52095,7 @@
 			value: function addJob(job) {
 				var _this2 = this;
 
-				console.log("in adding module");
+				console.log('in adding module');
 				var url = '/docsearchjob/job';
 				_superagent2.default.post(url).send(job).end(function (err, res) {
 					if (err) {
@@ -52103,25 +52105,25 @@
 					var jobList1 = _this2.state.jobList;
 					jobList1.push(JSON.parse(res.text));
 					_this2.setState({ jobList: jobList1 });
-					//console.log("Response for posting new job : ", this.state.jobList);
+					// console.log("Response for posting new job : ", this.state.jobList);
 				});
 			}
 		}, {
 			key: 'deletejob',
 			value: function deletejob(id) {
-				console.log("in delete module");
+				console.log('in delete module');
 				var invert = this.state.jobList;
 				var deleteItem = invert.filter(function (ele) {
 					return ele._id !== id;
 				});
 				this.setState({ jobList: deleteItem });
-				console.log("deleting job with id " + id);
+				console.log('deleting job with id ' + id);
 				var url = '/docsearchjob/delete';
 				_superagent2.default.del(url).send({ '_id': id }).end(function (err, res) {
 					if (err) {
-						console.log("error deleting " + err);
+						console.log('error deleting ' + err);
 					} else {
-						console.log("deleted " + res);
+						console.log('deleted ' + res);
 					}
 				});
 			}
@@ -52131,13 +52133,12 @@
 				var _this3 = this;
 
 				var url = '/docsearchjob/show';
-
 				_superagent2.default.get(url).end(function (err, res) {
 					if (err) {
-						//res.send(err);
+						// res.send(err);
 						_this3.setState({ errmsg: res.body });
 					} else {
-						//console.log("Response on show: ", JSON.parse(res.text));
+						// console.log("Response on show: ", JSON.parse(res.text));
 						_this3.setState({ jobList: JSON.parse(res.text) });
 					}
 				});
@@ -52150,10 +52151,10 @@
 		}, {
 			key: 'update',
 			value: function update(id, newJob) {
-				console.log("in update module");
+				console.log('in update module');
 				var invert = this.state.jobList;
 				console.log(newJob);
-				if (typeof newJob !== "undefined") {
+				if (typeof newJob !== 'undefined') {
 					newJob._id = id;
 					var updateItem = invert.filter(function (ele) {
 						if (ele._id === id) {
@@ -52167,13 +52168,13 @@
 						return ele;
 					});
 					this.setState({ jobList: updateItem });
-					console.log("updating job with id " + id);
+					console.log('updating job with id ' + id);
 					var url = '/docsearchjob/update';
 					_superagent2.default.post(url).send(newJob).end(function (err, res) {
 						if (err) {
-							console.log("error updating " + err);
+							console.log('error updating' + err);
 						} else {
-							console.log("updated " + res);
+							console.log('updated ' + res);
 						}
 					});
 				}
@@ -52183,7 +52184,7 @@
 			value: function render() {
 				var _this4 = this;
 
-				console.log("from main job component");
+				console.log('from main job component');
 				return _react2.default.createElement(
 					'div',
 					{ style: fonts },
@@ -52209,7 +52210,7 @@
 							_reactGridSystem.Container,
 							null,
 							this.state.jobList.map(function (item, i) {
-								console.log("each job item");
+								console.log('each job item');
 								console.log(item);
 								return _react2.default.createElement(_JobShow2.default, { index: i, key: i, indexs: i, ref: 'show',
 									update: _this4.update.bind(_this4),
@@ -52221,7 +52222,7 @@
 						null,
 						'NO JOBS AVAILABLE'
 					),
-					_react2.default.createElement(_AddJobDialog2.default, { addJob: this.addJob.bind(this), style: { color: "#1976d2 " } })
+					_react2.default.createElement(_AddJobDialog2.default, { addJob: this.addJob.bind(this), style: { color: '#1976d2 ' } })
 				);
 			}
 		}, {
@@ -71417,10 +71418,10 @@
 	var style = {
 	  maxHeight: 80,
 	  maxWidth: 750,
-	  marginLeft: "auto",
-	  marginRight: "auto",
+	  marginLeft: 'auto',
+	  marginRight: 'auto',
 	  marginTop: 5,
-	  align: "center",
+	  align: 'center',
 	  textAlign: 'center'
 	};
 	var iconSize = {
@@ -71473,7 +71474,7 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { style: { align: "center" } },
+	        { style: { align: 'center' } },
 	        _react2.default.createElement(
 	          _Paper2.default,
 	          { style: style, zDepth: 2, rounded: false },
@@ -73502,19 +73503,18 @@
 	var styles = {
 	  chip: {
 	    margin: 4,
-	    color: "white",
+	    color: 'white',
 	    fontWeight: 600
-
 	  },
 	  wrapper: {
 	    display: 'flex',
 	    flexWrap: 'wrap',
-	    width: "100%",
+	    width: '100%',
 	    maxWidth: 680,
 	    marginTop: 10,
 	    marginBottom: 0,
-	    marginLeft: "auto",
-	    marginRight: "auto"
+	    marginLeft: 'auto',
+	    marginRight: 'auto'
 	  }
 	};
 
@@ -73527,13 +73527,12 @@
 	    var _this = _possibleConstructorReturn(this, (SelectedConcepts.__proto__ || Object.getPrototypeOf(SelectedConcepts)).call(this, props));
 
 	    _this.handleRequestDelete = function (data) {
-	      console.log("data to b deleted " + data);
+	      console.log('data to b deleted' + data);
 	      _this.props.deleteConcept(data);
 	    };
 
-	    console.log("from the concept chiplets");
+	    console.log('from the concept chiplets');
 	    console.log(props.conceptChips);
-
 	    return _this;
 	  }
 
