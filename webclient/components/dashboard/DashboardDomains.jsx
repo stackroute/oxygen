@@ -31,8 +31,8 @@ const roundImg = {
 	borderRadius: '50%',
 	minWidth: '0%',
 	width: '47%',
-	marginTop: '35px',
-	height: '145px'
+	marginTop: '32px',
+	height: '147px'
 };
 const styles = {
 	cardLabel: {
@@ -267,4 +267,3 @@ DomainShow.propTypes = {
 	item: React.PropTypes.object,
 	freshlyIndex: React.PropTypes.func
 };
-
