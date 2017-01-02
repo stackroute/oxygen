@@ -24,22 +24,46 @@ const iconSize={
 export default class AutoCompleteSearchBox extends React.Component {
   constructor(props) {
     super(props)
-
+    this.filterFunc=this.filterFunc.bind(this);
+    this.state={
+      searchText:''
+    }
   }
-  
+  filterFunc(searchText,key)
+  {
+    let sepDoc=key.split(" - ")
+    if(searchText.length>=3 && searchText!==''){
+      return (sepDoc[0].indexOf(searchText) !== -1)
+    }
+    return false;
+  }
+  handleUpdateInput(concept)
+  {
+    this.setState({
+      searchText: concept
+    })
+  }
+  getConcept(concept){
+    this.setState({
+      searchText: ''
+    })
+    this.props.getConcept(concept);
+  }
   render()
   {
     return(
       <div style={{align:"center"}}>
       <Paper style={style} zDepth={2} rounded={false}>
       <Row style={{padding:"0 20px"}}>
-      <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+      <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
       <AutoComplete
-      floatingLabelText="Search"
-      filter={AutoComplete.fuzzyFilter}
+      hintText="What do you want to search..??"
+      filter={this.filterFunc}
       dataSource={this.props.concepts}
       fullWidth={true}
-      onNewRequest={this.props.getConcept}
+      searchText={this.state.searchText}
+      onUpdateInput={this.handleUpdateInput.bind(this)}
+      onNewRequest={this.getConcept.bind(this)}
       maxSearchResults={5}
       />
       </Col>

@@ -76,6 +76,7 @@ const urlIndexing = function(data) {
   let dataObj = JSON.parse(data);
   let text;
   request.get(dataObj.url, function(error, response, body) {
+   if (!error && response.statusCode == 200) {
     let page = cheerio.load(body);
     if( typeof dataObj.title === 'undefined' && typeof dataObj.description === 'undefined')
     {
@@ -146,6 +147,7 @@ const urlIndexing = function(data) {
     })
 
   });
+}
 });
 }
 module.exports = {
