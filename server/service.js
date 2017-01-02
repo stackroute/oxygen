@@ -51,14 +51,6 @@ function setupMiddlewares(app) {
 
   const compression = require('compression');
   app.use(compression());
-  app.use(function(req,res,next)
-  {
-    res.header('Access-Control-Allow-Origin',"*");
-    res.header('Access-Control-Allow-Method','GET,POST,PUT,DELETE');
-    res.header('Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    next();
-  });
 
   return app;
 }
@@ -83,10 +75,10 @@ function setupWebpack(app) {
 }
 
 function setupMongooseConnections() {
-  mongoose.connect(config.MONGO_URL);
+  mongoose.connect(config.MONGO.mongoURL);
 
   mongoose.connection.on('connected', function() {
-    logger.debug('Mongoose is now connected to ', config.MONGO_URL);
+    logger.debug('Mongoose is now connected to ', config.MONGO.mongoURL);
   });
 
   mongoose.connection.on('error', function(err) {

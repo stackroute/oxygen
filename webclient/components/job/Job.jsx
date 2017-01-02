@@ -3,23 +3,23 @@ import Show from './JobShow.jsx';
 import Request from 'superagent';
 import AddJobDialog from './AddJobDialog.jsx';
 import {Container} from 'react-grid-system';
-const fonts={
-	margin: "0px auto",
-	textAlign: "center",
-	fontFamily: "sans-serif",
-	color: "#1976d2 "
+const fonts= {
+	margin: '0px auto',
+	textAlign: 'center',
+	fontFamily: 'sans-serif',
+	color: '#1976d2'
 }
 export default class Job extends React.Component {
 	constructor(props) {
 		super(props);
 		this.enableButton = this.enableButton.bind(this);
 		this.disableButton = this.disableButton.bind(this);
-		this.state = {jobList: [],canSubmit:false, errmsg: ""};
+		this.state = {jobList: [], canSubmit: false, errmsg: ""};
 	}
 
 	addJob(job)
 	{
-		console.log("in adding module")
+		console.log('in adding module');
 		let url =`/docsearchjob/job`;
 		Request
 		.post(url)
@@ -27,49 +27,48 @@ export default class Job extends React.Component {
 		.end((err, res) => {
 			if(err) {				
 				this.setState({errmsg: res.body, jobList: []});
-				console.log(err)
+				console.log(err);
 			}
 			let jobList1=this.state.jobList;
 			jobList1.push(JSON.parse(res.text));
-			this.setState({jobList:jobList1});
-			//console.log("Response for posting new job : ", this.state.jobList);
+			this.setState({jobList: jobList1});
+			// console.log("Response for posting new job : ", this.state.jobList);
 		});
 	}
 	deletejob(id)
 	{
-		console.log("in delete module");
+		console.log('in delete module');
 		let invert=this.state.jobList;
 		let deleteItem=invert.filter(function(ele) {
 			return ele._id!==id;
 		});		
 		this.setState({jobList:deleteItem});
-		console.log("deleting job with id "+ id);
+		console.log('deleting job with id ' + id);
 		let url =`/docsearchjob/delete`;
 		Request
 		.del(url)
 		.send({'_id':id})
-		.end(function(err, res){
+		.end(function(err, res) {
 			if(err)
-				{console.log("error deleting "+err)}
+				{console.log('error deleting ' + err);}
 			else
-				{console.log("deleted "+res)}
+				{console.log('deleted ' + res);}
 		});
 	}
 
 	show()
 	{
 		let url =`/docsearchjob/show`;
-		
 		Request
 		.get(url)
 		.end((err, res) => {
 			if(err) {
-				//res.send(err);
+				// res.send(err);
 				this.setState({errmsg: res.body});
 			}
 			else {
-				//console.log("Response on show: ", JSON.parse(res.text));
-				this.setState({jobList:JSON.parse(res.text)})
+				// console.log("Response on show: ", JSON.parse(res.text));
+				this.setState({jobList: JSON.parse(res.text)});
 			}
 		});
 	}
@@ -79,42 +78,42 @@ export default class Job extends React.Component {
 		this.show();
 	}
 
-	update(id,newJob)
+	update(id, newJob)
 	{
-		console.log("in update module");
+		console.log('in update module');
 		let invert=this.state.jobList;
 		console.log(newJob)
-		if(typeof newJob!=="undefined")
+		if(typeof newJob!=='undefined')
 		{
 			newJob._id=id;
 			let updateItem=invert.filter(function(ele) {
-				if(ele._id===id)
+				if(ele._id=== id)
 				{
-					ele.query=newJob.query;
-					ele.engineID=newJob.engineID;
-					ele.exactTerms=newJob.exactTerms;
-					ele.results=newJob.results;
-					ele.siteSearch=newJob.siteSearch;
+					ele.query= newJob.query;
+					ele.engineID= newJob.engineID;
+					ele.exactTerms= newJob.exactTerms;
+					ele.results= newJob.results;
+					ele.siteSearch= newJob.siteSearch;
 					return ele;
 				}
 				return ele;
 			});		
-			this.setState({jobList:updateItem});
-			console.log("updating job with id "+ id);
+			this.setState({jobList: updateItem});
+			console.log('updating job with id '+ id);
 			let url =`/docsearchjob/update`;
 			Request
 			.post(url)
 			.send(newJob)
 			.end(function(err, res){
 				if(err)
-					{console.log("error updating "+err)}
+					{console.log('error updating' + err);}
 				else
-					{console.log("updated "+res)}
+					{console.log('updated ' + res);}
 			});
 		}
 	}
 	render() {
-		console.log("from main job component")
+		console.log('from main job component');
 		return (
 			<div style={fonts}>
 			<h4>{this.state.errmsg}</h4>
@@ -124,15 +123,15 @@ export default class Job extends React.Component {
 
 				<Container>
 				{this.state.jobList.map((item,i) =>{
-					console.log("each job item")
-					console.log(item)
-					return (<Show index={i} key={i} indexs={i} ref="show"
+					console.log('each job item');
+					console.log(item);
+					return (<Show index={i} key={i} indexs={i} ref= 'show'
 						update={this.update.bind(this)}
 						deletejob={this.deletejob.bind(this)} item={item} />)
 				})}
 				</Container>
 				</div>:<h1>NO JOBS AVAILABLE</h1>}
-				<AddJobDialog addJob={this.addJob.bind(this)} style={{color: "#1976d2 "}}/>
+				<AddJobDialog addJob={this.addJob.bind(this)} style={{color: '#1976d2 '}}/>
 				</div>
 
 				);
@@ -147,5 +146,4 @@ export default class Job extends React.Component {
 			canSubmit: false
 		}));
 	}
-
 }

@@ -9,10 +9,10 @@ services:
     cap_add:
       - SYS_RESOURCE
     ports:
-      - "7474:7474"
-      - "7687:7687"
-      - "1337:1337"
+      - "17474:7474"
+      - "17687:7687"
+      - "11337:1337"
     volumes:
-      - ./neo4j/plugins:/plugins
+      - ./neo4j/plugins:/var/lib/neo4j/plugins
       - ./neo4j/data:/data
       - ./neo4j/import:/var/lib/neo4j/import

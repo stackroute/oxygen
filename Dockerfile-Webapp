@@ -1,7 +1,0 @@
-FROM oxygen-base
-
-WORKDIR /usr/src/app
-
-EXPOSE 8080
-
-CMD ["npm", "run", "www", "--production"]

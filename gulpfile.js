@@ -66,7 +66,7 @@ gulp.task('eslint', function() {
   .pipe(eslint.format())
   .pipe(eslint.failAfterError())
   // .pipe(eslint.result(result => {
-  //       // Called for each ESLint result.        
+  //       // Called for each ESLint result.
 
   //       if(result.errorCount!==0)
   //       {
@@ -86,7 +86,7 @@ gulp.task('eslint', function() {
 
   //         })
   //       }
-  
+
   //     }));
 });
 

@@ -16,7 +16,7 @@ var http = require('http');
  */
 
 // var port = normalizePort(process.env.PORT || '8080');
-var port = normalizePort(config.WWW_PORT);
+var port = normalizePort(config.OXYGEN.WWW_PORT);
 
 /**
  * Create HTTP server.

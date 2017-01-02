@@ -1,5 +1,5 @@
-CREATE CONSTRAINT ON (c:intent) ASSERT c.name IS UNIQUE;
-CREATE CONSTRAINT ON (c:term) ASSERT c.name IS UNIQUE;
+CREATE CONSTRAINT ON (c:Intent) ASSERT c.name IS UNIQUE;
+CREATE CONSTRAINT ON (c:Term) ASSERT c.name IS UNIQUE;
 
 # create constraint by loading CSV
 # @TODO
@@ -11,7 +11,7 @@ USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` = 'term'
-MERGE (n:term {name:Line.name})
+MERGE (n:Term {name:Line.name})
 SET n.nodeid = Line.`node id`
 return n
 
@@ -20,7 +20,16 @@ USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` = 'intent'
-MERGE (n:term {name:Line.name})
+MERGE (n:Intent {name:Line.name})
+SET n.nodeid = Line.`node id`
+return n
+
+### Creates all nodes from the CSV, for the mentioned node type
+USING PERIODIC COMMIT 50
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
+WITH Line
+WHERE Line.`node type` = 'domain'
+MERGE (n:Domain {name:Line.name})
 SET n.nodeid = Line.`node id`
 return n
 
@@ -29,20 +38,21 @@ USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line 
 WITH Line
 WHERE Line.`node type` IS NOT NULL
-FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'term' THEN [1] ELSE [] END | MERGE (n:term {name:Line.name}) SET n.nodeid = Line.`node id`)
-FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'intent' THEN [1] ELSE [] END | MERGE (n:intent {name:Line.name}) SET n.nodeid = Line.`node id`)
+FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'term' THEN [1] ELSE [] END | MERGE (n:Term {name:Line.name}) SET n.nodeid = Line.`node id`)
+FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'intent' THEN [1] ELSE [] END | MERGE (n:Intent {name:Line.name}) SET n.nodeid = Line.`node id`)
 
 # -- END of Creating Nodes ---
 
 # Create relationship among intent-intent, term-term and term-intent
 
 ### Create intent-intent relations
+
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
-MATCH (i:intent {name:Line.name})
-MATCH (pi:intent {nodeid:Line.`parent node id`})
-call apoc.create.relationship(i, Line.`parent relation`, {}, pi) YIELD rel as r
+MATCH (i:Intent {name:Line.name})
+MATCH (pi:Domain {nodeid:Line.`parent node id`})
+call apoc.create.relationship(i, Line.`parent relation`,{weight:Line.weight}, pi) YIELD rel as r
 return i,pi,r
 
 
@@ -51,9 +61,9 @@ return i,pi,r
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
-MATCH (n:term {name:Line.name})
-MATCH (pn:intent {nodeid:Line.`parent node id`})
-call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+MATCH (n:Term {name:Line.name})
+MATCH (pn:Intent {nodeid:Line.`parent node id`})
+call apoc.create.relationship(n, Line.`parent relation`,{weight:Line.weight}, pn) YIELD rel as r
 return n, pn, r
 
 ### Create term-term relations
@@ -61,9 +71,9 @@ return n, pn, r
 LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
-MATCH (n:term {name:Line.name})
-MATCH (pn:term {nodeid:Line.`parent node id`})
-call apoc.create.relationship(n, Line.`parent relation`, {}, pn) YIELD rel as r
+MATCH (n:Term {name:Line.name})
+MATCH (pn:Term {nodeid:Line.`parent node id`})
+call apoc.create.relationship(n, Line.`parent relation`, {weight:Line.weight}, pn) YIELD rel as r
 return n, pn, r
 
 

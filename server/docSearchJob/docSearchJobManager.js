@@ -1,12 +1,11 @@
 let jobCtrl = require('./docSearchJobController');
-const config = require('./../../config');
+const engineCollnData = require('./../common/engineColln');
 const engineModel = require('./docSearchJobEntity').engineModel;
 const logger = require('./../../applogger');
 let kickOffDomainIndexing = function(conceptsColln) {
 
   // Kick off search jobs for each concept  
   let promise = new Promise(function(resolve, reject) {
-    console.log(conceptsColln)
     //Looping through for each given concept, as each concept should be one job
     process.nextTick(
       function(){
@@ -16,7 +15,7 @@ let kickOffDomainIndexing = function(conceptsColln) {
           engineModel.find(function(err,data){
             if(data.length===0)
             {
-              new engineModel({"engine":config.ENGINES,"key":config.KEYS}).save(
+              new engineModel({"engine":engineCollnData.ENGINES,"key":engineCollnData.KEYS}).save(
                 function(saveError,engineData) {
                   if (saveError) {   
                     logger.error("saveError "+saveError);
@@ -38,7 +37,7 @@ let kickOffDomainIndexing = function(conceptsColln) {
           conceptsColln.Concepts.forEach(function(concept) {
 
             logger.debug("inside the domain indexing "+concept)
-            if(selector!==config.KEYS.length-1)
+            if(selector!==engineCollnData.KEYS.length-1)
             {
               jobCtrl.addSearchJob(conceptsColln.Domain, concept,selector);
               selector+=1;

@@ -1,148 +1,106 @@
-
 const keyword_extractor = require("keyword-extractor");
 const crawlerNeo4jController = require('./crawlerNeo4jController');
 const crawlerMongoController = require('./crawlerMongoController');
 const logger = require('./../../applogger');
-
 require('events').EventEmitter.defaultMaxListeners = Infinity;
-
-const extractData=function(data){
-  //filtering out the unwanted data from fetched data like stop words using library
-  let txt = keyword_extractor.extract(data.text,
-  {
-    language:"english",
-    remove_digits: true,
-    return_changed_case:true,
-    remove_duplicates: false
-  })
-  data.text = txt;
-  logger.debug("Extracting the content from the URL");
-  return data;
-
-}
-
-let termsFinder = function(data){
-  let promise = new Promise(function(resolve,reject){
+let termsFinder = function(data) {
+  let promise = new Promise(function(resolve, reject) {
     logger.debug('Trying to get the terms...!');
     crawlerNeo4jController.getTerms(data)
-    .then(function(dataWithTerms){
+    .then(function(dataWithTerms) {
       logger.debug("sucessfully got ALL TERMS OF THE domain");
       resolve(dataWithTerms);
     },
-    function(err){
-      logger.error("Encountered error in publishing a new " , err)
+    function(err) {
+      logger.error("Encountered error in publishing a new ", err)
       reject(err);
     })
-
   })
-
   return promise
 }
-
-const termDensity=function(data){
-  let conceptInDoc = [];
-  data.text.forEach(function (word) {
-    if (word.length > 20) {
-     return;
-   }
-   if (conceptInDoc[word]) {
-    conceptInDoc[word]+=1;
-  }
-  else {
-   conceptInDoc[word] = 1;
- }
-})
-  logger.debug("Finding all the terms in the webDocument ")
-  data.allTerms = conceptInDoc;
-  
- 
-  return data
-}
-
-const interestedWords=function(data){
- let terms = [];
- let otherWords =[];
- for (let prop in data.allTerms) {
-
-  //console.log(data.intrestedTerms);
-  if(data.interestedTerms.includes(prop))
-  {
+const extractData = function(data) {
+  //filtering out the unwanted data from fetched data like stop words using library
+  let count = 0;
+  let terms = [];
+  data.interestedTerms.forEach(function(item, index) {
+    let pattern = new RegExp(data.interestedTerms[index], 'gim');
+    count = (data.text.match(pattern) || []).length;
+    //console.log( item + " " + count);
     terms.push({
-      word:prop,
-      intensity:data.allTerms[prop]
+      word: data.interestedTerms[index],
+      intensity: count
     });
-  }
-  else
-  {
-    otherWords.push({
-      word:prop,
-      intensity:data.allTerms[prop]
-    });
-  }
+    data.text = data.text.replace(pattern, '');
+  })
+  let txt = keyword_extractor.extract(data.text, {
+    language: "english",
+    remove_digits: true,
+    return_changed_case: true,
+    remove_duplicates: false
+  })
+  data.text = txt;
+  //console.log(terms);
+  data.terms = terms;
+  logger.debug("Extracting the content from the URL");
+  return data;
 }
-logger.debug("Finding the terms and otherWords from the webDocuments ")
-data.terms = terms;
-data.otherWords = otherWords;
-console.log(data.terms);
-
-return data;
-}
-
-let indexUrl =function(data){
+let indexUrl = function(data) {
   let promise = new Promise(
-    function(resolve, reject){
+    function(resolve, reject) {
       crawlerNeo4jController.getUrlIndexed(data)
-      .then(function(indexedData){
+      .then(function(indexedData) {
         logger.debug("successfully indexed the url")
         resolve(indexedData);
       },
-      function(err){
-        logger.error("Encountered error in publishing a new " , err)
+      function(err) {
+        logger.error("Encountered error in publishing a new ", err)
         reject(err);
       })
     }
     )
   return promise
 }
-
-let saveWebDocument = function(data){
+let saveWebDocument = function(data) {
   let promise = new Promise(
-    function(resolve, reject){
-      crawlerMongoController.saveNewWebDocument(data.data)
-      .then(function(mongoData){
+    function(resolve, reject) {
+      crawlerMongoController.saveNewWebDocument(data)
+      .then(function(mongoData) {
         logger.debug("sucessfully saved the document")
         logger.debug(mongoData);
-        logger.debug("after mongo saving "+data.intents)
-        resolve(data);
+            //logger.debug("after mongo saving " + data.intents)
+            resolve(mongoData);
+          },
+          function(err) {
+            logger.error("Encountered error in saving ", err)
+            reject(err);
+          })
+    }
+    )
+  return promise
+}
+
+let getIntents = function(data) {
+  let promise = new Promise(
+    function(resolve, reject) {
+      crawlerNeo4jController.fetchIntents(data)
+      .then(function(neoData) {
+        logger.debug("sucessfully saved the document")
+        logger.debug(neoData);
+        logger.debug("after neo4J fetching of intents " , neoData.intents)
+        resolve(neoData);
       },
-      function(err){
-        logger.error("Encountered error in saving " , err)
+      function(err) {
+        logger.error("Encountered error in saving ", err)
         reject(err);
       })
     }
     )
   return promise
 }
-
-let parseEachIntent = function(dataWithIntentColln){
-  let data=dataWithIntentColln.data;
-  let intents=dataWithIntentColln.intents;
-  logger.debug("parseEachIntent "+data.domain)
-  logger.debug("parseEachIntent "+intents)
-  intents.forEach(function(intent){
-   data.intent=intent;
-   
- 
-   return data;
- })
-}
-
 module.exports = {
- interestedWords:interestedWords,
- termDensity:termDensity,
  termsFinder: termsFinder,
  indexUrl: indexUrl,
+ getIntents:getIntents,
  saveWebDocument:saveWebDocument,
- extractData:extractData,
- parseEachIntent:parseEachIntent
+ extractData:extractData
 }

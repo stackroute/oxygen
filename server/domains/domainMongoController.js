@@ -1,5 +1,5 @@
 const DomainModel = require('./domainEntity').DomainModel;
-const SearcherResultModel = require('./../searcher/searchEntity').searchModel;
+const webDocumentModel = require('./../crawler/webDocumentsEntity').webDocumentsModel;
 const logger = require('./../../applogger');
 
 let saveNewDomain = function(newDomainObj) {
@@ -29,11 +29,11 @@ let checkDomain = function(domainName) {
   let promise = new Promise(function(resolve, reject) {
 
     let domainObj = {
-      name:domainName
+      name: domainName
     };
 
 
-    DomainModel.findOne(domainObj,function(err, foundDomain) {
+    DomainModel.findOne(domainObj, function(err, foundDomain) {
       if (err) {
         reject(err);
       }
@@ -52,19 +52,19 @@ let checkDomain = function(domainName) {
 }
 
 let getAllDomain = function() {
- let promise = new Promise(function(resolve, reject) {
+  let promise = new Promise(function(resolve, reject) {
 
-   DomainModel.find({},function(err, domainColln) {
-     if (err) {
-       reject(err);
-     }
+    DomainModel.find({}, function(err, domainColln) {
+      if (err) {
+        reject(err);
+      }
 
-     logger.debug('**************',domainColln);
-     resolve(domainColln);
-   });
- })
+      logger.debug('domains', domainColln);
+      resolve(domainColln);
+    });
+  })
 
- return promise;
+  return promise;
 
 }
 
@@ -72,16 +72,16 @@ let getSearchResultDocuments = function(url) {
   let promise = new Promise(function(resolve, reject) {
 
     let urlObj = {
-      url:url
+      url: url
     };
 
 
-    SearcherResultModel.findOne(urlObj,function(err, foundDomain) {
+    webDocumentModel.findOne(urlObj, function(err, foundDocument) {
       if (err) {
         reject(err);
       }
 
-      resolve(foundDomain);
+      resolve(foundDocument);
     });
   })
 
@@ -91,36 +91,36 @@ let getSearchResultDocuments = function(url) {
 
 let saveNewDomainCallBack = function(newDomainObj, callback) {
   saveNewDomain(newDomainObj)
-  .then(
-    function(savedDomainObj) {
-      callback(null, savedDomainObj);
-    },
-    function(err) {
-      callback(err, null);
-    });
+    .then(
+      function(savedDomainObj) {
+        callback(null, savedDomainObj);
+      },
+      function(err) {
+        callback(err, null);
+      });
 }
 
 
 let checkDomainCallback = function(domainName, callback) {
   checkDomain(domainName)
-  .then(
-    function(foundDomain) {
-      callback(null, foundDomain);
-    },
-    function(err) {
-      callback(err, null);
-    });
+    .then(
+      function(foundDomain) {
+        callback(null, foundDomain);
+      },
+      function(err) {
+        callback(err, null);
+      });
 }
 
 let getAllDomainsCallback = function(callback) {
- getAllDomain()
- .then(
-   function(domainColln) {
-     callback(null, domainColln);
-   },
-   function(err) {
-     callback(err, null);
-   });
+  getAllDomain()
+    .then(
+      function(domainColln) {
+        callback(null, domainColln);
+      },
+      function(err) {
+        callback(err, null);
+      });
 }
 
 let getDomainObj = function(domainName, callback) {
@@ -153,13 +153,13 @@ let updateDomainStatus = function(domainName, status, statusText, callback) {
 
 module.exports = {
   saveNewDomain: saveNewDomain,
-  checkDomain:checkDomain,
-  getAllDomain:getAllDomain,
-  getAllDomainsCallback:getAllDomainsCallback,
-  checkDomainCallback:checkDomainCallback,
+  checkDomain: checkDomain,
+  getAllDomain: getAllDomain,
+  getAllDomainsCallback: getAllDomainsCallback,
+  checkDomainCallback: checkDomainCallback,
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,
   getDomainObj: getDomainObj,
-  getSearchResultDocument:getSearchResultDocuments
+  getSearchResultDocument: getSearchResultDocuments
 
 }

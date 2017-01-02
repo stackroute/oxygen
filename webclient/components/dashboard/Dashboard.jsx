@@ -2,29 +2,34 @@ import React from 'react';
 import DomainShow from './DashboardDomains.jsx';
 import Request from 'superagent';
 import AddDomain from './AddDomain.jsx';
-import Notification from './Notification.jsx'
-import {Container,Col,Row ,Visible} from 'react-grid-system';
+import Notification from './Notification.jsx';
+import {Container, Col, Row, Visible} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import RaisedButton from 'material-ui/RaisedButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import IconButton from 'material-ui/IconButton';
-const paginationStyle1 = {
-	margin: 12,
-	marginBottom:50,
-	float:'left'
+import {ScreenClassRender} from 'react-grid-system';
+
+const imgStyle = (screenClass) => {
+	if (screenClass === 'xl') {return { width: '700px',height:"auto" };}
+	if (screenClass === 'lg') {return { width: '600px',height:"auto"};}
+	if (screenClass === 'md') {return { width: '600px',height:"auto" };}
+	if (screenClass === 'sm') {return { width: '600px',height:"auto" };}
+	return { width: '300px',height:"auto"};
 };
-const paginationStyle2 = {
-	margin: 12,
-	marginBottom:50,
-	float:'right'
+const divStyle = (screenClass) => {
+	if (screenClass === 'xl') {return { width: '700px',margin:"5% auto auto" };}
+	if (screenClass === 'lg') {return { width: '600px',margin:"5% auto auto"};}
+	if (screenClass === 'md') {return { width: '600px',margin:"5% auto auto" };}
+	if (screenClass === 'sm') {return { width: '600px',margin:"5% auto auto" };}
+	return { width: '300px',margin:"6% auto auto"};
 };
+
 const iconStyle={
 	iconSize: {
-
 		width: 30,
 		height: 30,
-		backgroundColor: "#a9a9a9",
+		backgroundColor: '#a9a9a9',
 		padding: 10,
 		borderRadius: 60
 	},
@@ -33,98 +38,110 @@ const iconStyle={
 		height: 120,
 		padding: 30
 	},
-	leftIcon:{
-		position:"fixed",
-		top:"45%",
-		left:"3%",
-		float:'left'
+	leftIcon: {
+		position: 'fixed',
+		top: '45%',
+		left: '3%',
+		float: 'left'
 	},
-	rightIcon:{
-		position:"fixed",
-		top:"45%",
-		right:"3%",
-		float:'right'
+	rightIcon: {
+		position: 'fixed',
+		top: '45%',
+		right: '3%',
+		float: 'right'
 	},
-	leftIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'left'
+	leftIconAvg: {
+		position: 'relative',
+		margin: '20 0 0 ',
+		padding: 0,
+		zDepth: 10,
+		float: 'left'
 	},
-	rightIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'right'
+	rightIconAvg: {
+		position: 'relative',
+		margin: '20 0 0 ',
+		padding: 0,
+		zDepth: 10,
+		float: 'right'
 	}
 }
 const fonts={
-	margin: "0px auto",
+	
 	textAlign: "center",
 	fontFamily: "sans-serif",
 	color: "#1976d2 "
+	
 }
 const style = {
 	refresh: {
-		marginTop:'200px',
+		marginTop: '200px',
 		display: 'inline-block',
 		position: 'relative'
 	}
 };
+
+const NoContent=()=>{
+	return(
+		<ScreenClassRender style={divStyle}>
+		<div>		
+		<ScreenClassRender style={imgStyle}>
+		<img src='./../assets/images/sry.png' />
+		</ScreenClassRender>		
+		</div>
+		</ScreenClassRender >
+		);
+}
+
+
+
 export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			domainList: [],canSubmit:false,errmsg:'',loading:'loading',pageNum:1};
+			domainList: [], canSubmit: false, errmsg: '', loading: 'loading', pageNum: 1};
 		}
-
 		addDomain(domain)
 		{
-			console.log("in adding module "+domain.name);
-			console.log('length before call '+this.state.domainList.length);
-			let url =`/domain/`+domain.name;
+			// console.log('in adding module '+domain.name);
+			// console.log('length before call '+this.state.domainList.length);
+			let url = `/domain/` + domain.name;
 			Request
 			.post(url)
 			.send(domain)
 			.end((err, res) => {
 				if(err) {
-					console.log(err)
+					// console.log(err)
 				}
-				console.log("got response "+JSON.parse(res.text).name);
-				console.log('length after call '+this.state.domainList.length);
-				let domainList1=this.state.domainList;
-				let response=JSON.parse(res.text);
+				// console.log('got response '+JSON.parse(res.text).name);
+				// console.log('length after call '+this.state.domainList.length);
+				let domainList1 = this.state.domainList;
+				let response = JSON.parse(res.text);
 				domainList1.push(response);
-				console.log("Response for posting new job : ", response);
-				this.setState({domainList:domainList1});
+				// console.log('Response for posting new job : ', response);
+				this.setState({domainList: domainList1});
 			});
-
 		}
-
 		show()
 		{
-			let url =`/domain/`;
-
+			let url = `/domain/`;
 			Request
 			.get(url)
 			.end((err, res) => {
 				if(err) {
-				//res.send(err);
-				this.setState({errmsg: res.body,loading:"hide"});
+				// res.send(err);
+				this.setState({errmsg: res.body, loading: 'hide'});
 			}
 
 			else {
-				console.log("Response on show: ", JSON.parse(res.text));
-				//let domainList1=this.state.domainList;
-				let response=JSON.parse(res.text);
-				if(response.length===0)
+				// console.log('Response on show: ', JSON.parse(res.text));
+				// let domainList1=this.state.domainList;
+				let response = JSON.parse(res.text);
+				if(response.length === 0)
 				{
-					this.setState({domainList:[],loading:'hide'});
+					this.setState({domainList: [], loading: 'hide'});
 				}
 				else {
-					this.setState({domainList:response,loading:'hide'});
+					this.setState({domainList: response, loading: 'hide'});
 				}
 			}
 		});
@@ -137,25 +154,24 @@ export default class Dashboard extends React.Component {
 
 		onPageClick(e)
 		{
-			let page=this.state.pageNum;
-			if(e.currentTarget.dataset.id==="prev")
+			let page = this.state.pageNum;
+			if(e.currentTarget.dataset.id === 'prev')
 			{
-				page-=1;
-				this.setState({pageNum:page});
+				page -= 1;
+				this.setState({pageNum: page});
 			}
 			else
 			{
-				page+=1;
-				this.setState({pageNum:page});
+				page += 1;
+				this.setState({pageNum: page});
 			}
 		}
 
 
 		freshlyIndex(domain)
 		{
-			console.log('inside Index refresh '+domain);
-			let url =`/domain/`+domain+`/index`;
-
+			// console.log('inside Index refresh '+domain);
+			let url = `/domain/` + domain + `/index`;
 			Request
 			.post(url)
 			.send(domain)
@@ -168,47 +184,51 @@ export default class Dashboard extends React.Component {
 
 
 		render() {
+			let prevFlag=false;
+			let nextFlag=false;
 			const smallNav=()=>{
 				return(<Row md={12} sm={12} xs={12} style={{marginBotton:20}}>
+
 					<Col md={4} sm={4} xs={4} style={{float:"left"}}>
 					<IconButton style={iconStyle.leftIconAvg} label="prev" disabled={prevFlag} data-id="prev"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowBack style={iconStyle.large} color={"white"} />
+					<NavigationArrowBack style={iconStyle.large} color={'white'} />
 					</IconButton>
 					</Col>
 					<Col md={4} sm={4} xs={4} style={{float:"right"}}>
 					<IconButton style={iconStyle.rightIconAvg} label="next" disabled={nextFlag} data-id="next"
 					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowForward style={iconStyle.large} color={"white"} />
+					<NavigationArrowForward style={iconStyle.large} color={'white'} />
 					</IconButton>
 					</Col>
+
 					</Row>)
 			}
+
 			let list=[];
-			let prevFlag=false;
-			let nextFlag=false;
 			let dList=this.state.domainList;
 			if(dList.length>0)
 			{
-				let pages=Math.ceil(dList.length/6);
-				let pageNow=this.state.pageNum;
-				if(pages===pageNow)
+				let pages = Math.ceil(dList.length/6);
+				let pageNow = this.state.pageNum;
+				if(pages === pageNow)
 				{
-					nextFlag=true;
+					nextFlag = true;
 				}
-				if(this.state.pageNum===1)
+				if(this.state.pageNum === 1)
 				{
-					prevFlag=true;
+					prevFlag = true;
 				}
-				if(pages===1 || pages===pageNow)
+				if(pages === 1 || pages === pageNow)
 				{
 					list=[];
-					for(let i=6*(pageNow-1);i<this.state.domainList.length;i+=1)
+					for(let i=6*(pageNow-1);i < this.state.domainList.length; i+=1)
 					{
 						list.push(this.state.domainList[i]);
 					}
 				}
-				else {
+				else 
+				{
 					list=[];
 					let foo=6*(pageNow-1);
 					for(let i=foo;i<(foo+6);i+=1)
@@ -218,48 +238,54 @@ export default class Dashboard extends React.Component {
 				}
 			}
 			return (
-				<div style={fonts}>
-				<h1 >Our Domains</h1>
-				<Visible md sm xs>
-				{smallNav}
-				</Visible>
-				{this.state.loading==="loading"?<RefreshIndicator
-				size={70}
-				left={10}
-				top={0}
-				status={this.state.loading}
-				style={style.refresh}
-				/>:<div>
-				{list.length!==0?<div>
+				<div style={fonts}>				
+				{
+					this.state.loading==="loading"?<RefreshIndicator
+					size={70}
+					left={10}
+					top={0}
+					status={this.state.loading}
+					style={style.refresh}
+					/>:<div>					
+					{
+						list.length!==0?<div>
+						<br/>
+						<h1>OUR DOMAINS</h1>
+						<Container>
+						{
+							list.map((item,i) =>{
 
-					<Container>
-					{list.map((item,i) =>{
-						return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
-							<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
-							index={i} key={i} indexs={i} ref="show" item={item}/>
-							</Col>);
-					})}
-					</Container>
-					<Visible xl lg>
-					<IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
-					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowBack style={iconStyle.large} color={"white"} />
-					</IconButton>
-					<IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
-					iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-					<NavigationArrowForward style={iconStyle.large} color={"white"} />
-					</IconButton>
-					</Visible>
-					<Visible md sm xs>
-					{smallNav}
-					</Visible>
-					</div>:<h1>NO DOMAINS AVAILABLE</h1>}</div>}
-					<AddDomain domainList={this.state.domainList}
-					addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
-					<Notification />
+								return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
+									<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
+									index={i} key={i} indexs={i} ref="show" item={item}/>
+									</Col>);
+							})
+						}
+						</Container>
+
+						<Visible xl lg>
+						<IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+						iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+						<NavigationArrowBack style={iconStyle.large} color={"white"} />
+						</IconButton>
+						<IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+						iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+						<NavigationArrowForward style={iconStyle.large} color={"white"} />
+						</IconButton>
+						</Visible>
+
+						<Visible md sm xs>
+						{smallNav}
+						</Visible>
+						</div>:<NoContent />
+					}
 					</div>
+				}
+				<AddDomain
+				addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
+				<Notification />
+				</div>
 
-					);
+				);
 		}
 	}
-
