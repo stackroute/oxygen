@@ -16,19 +16,17 @@ const startIntentParser = function() {
    return conn.createChannel();
  })
  .then(function(chConn) {
-   logger.info('[*] Established AMQP Channel connection successfully..!');
-
-     //@TODO take the crawler MQ name from Config
-     let crawlerMQName = 'intentParser';
-
+  logger.info('[*] Established AMQP Channel connection successfully..!');
      //making durable as false, so that .....
-     chConn.assertQueue(crawlerMQName, { durable: false })
+     chConn.assertQueue(config.OXYGEN.PARSER_MQ_NAME, { durable: false })
      .then(function(ok) {
        logger.debug("What is ok: ", ok);
-       logger.debug('[*] Waiting for messages on [' + crawlerMQName + '], to exit press CTRL+C ');
+       logger.debug('[*] Waiting for messages on [' 
+        + config.OXYGEN.PARSER_MQ_NAME + 
+        '], to exit press CTRL+C ');
 
        highland(function(push, next) {
-         chConn.consume(crawlerMQName, function(msg) {
+         chConn.consume(config.OXYGEN.PARSER_MQ_NAME, function(msg) {
            logger.debug('[*] GOT [', msg.fields.routingKey, ']  [', msg.fields.consumerTag, ']');
 
            const dataObj = {
@@ -49,15 +47,16 @@ const startIntentParser = function() {
          logger.debug("Consuming the data: ", dataObj);
          intentParser(dataObj.data);
        })
-       .each(function(dataObj) {
-          let redisIntent={
+
+       .each(function() {
+        let redisIntent={
               //domain: dataObj.domain,
               actor: 'intent parser',
               // message: dataObj.intent,
               status: 'intent parsing completed for the particular intent'
             }
-             datapublisher.processFinished(redisIntent);
-       });
+            datapublisher.processFinished(redisIntent);
+          });
        }); //end of assertQueue
    }); //end of channelConnection
 }

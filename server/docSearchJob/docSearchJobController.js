@@ -7,7 +7,7 @@ const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
 const config = require('./../../config');
 const datapublisher = require('../serviceLogger/redisLogger');
 const addJob = function(jobData, callback) {
-	console.log(jobData)
+	logger.debug(jobData)
 	let job=new docSearchJobModel(jobData);
 	job.save(function(err,data) {
 		if (err) {
@@ -17,14 +17,14 @@ const addJob = function(jobData, callback) {
 
 			return callback(err, {});
 		}
-		console.log("saved job id is "+data._id);
+		logger.debug("saved job id is "+data._id);
 		let id=data._id;
 		startSearcherMQ(id.toString());
 		return callback(null, job);
 	});
 };
 const addSearchJob = function(domainName,concept,selector) {
-	console.log(domainName+" "+concept)
+	logger.debug(domainName+" "+concept)
 	engineModel.find(function(err,engineColl)
 	{
 		engineColl.forEach(function(engineData){
@@ -45,7 +45,7 @@ const addSearchJob = function(domainName,concept,selector) {
 						"Encountered error at doSearchJobController::addJob, error: ",
 						errorOnSave);
 				}
-				console.log("saved job "+data);
+				logger.debug("saved job "+data);
 				let id=data._id;
 				startSearcherMQ(id.toString());
 
@@ -74,12 +74,12 @@ const deleteJob = function(jobID, callback) {
 				err);
 			return callback(err, {});
 		}
-		console.log(jobID);
+		logger.debug(jobID);
 		return callback(null, {msg:'deleted'});
 	});
 };
 const updateJob = function(job, callback) {
-	console.log(job)
+	logger.debug(job)
 	docSearchJobModel.findById( job._id, function(err,data) {
 		if (err) {
 			logger.error(
@@ -87,7 +87,7 @@ const updateJob = function(job, callback) {
 				err);
 			return callback(err, {});
 		}
-		console.log(data);
+		logger.debug(data);
 		data.query=job.query
 		data.engineID=job.engineID
 		data.exactTerms=job.exactTerms
@@ -114,7 +114,7 @@ const showJob = function(callback) {
 				err);
 			return callback(err, {});
 		}
-		console.log(jobs);
+		logger.debug(jobs);
 		return callback(null, jobs);
 	});
 };
@@ -128,7 +128,7 @@ const showResults = function(id,callback) {
 				err);
 			return callback(err, {});
 		}
-		console.log(id.slice(1,id.length));
+		logger.debug(id.slice(1,id.length));
 		return callback(null, {'saved urls':searchresults.length,'content':searchresults});
 	});
 };

@@ -39,7 +39,8 @@ const intentParser= function(data)
 
 //creating the pipeline for intent parser
 let dataObj=JSON.parse(data);
-logger.debug("after parsing "+dataObj);
+logger.debug("after parsing ")
+logger.debug(dataObj);
 let dataArr=[];
 dataArr.push(dataObj);
 highland(dataArr)

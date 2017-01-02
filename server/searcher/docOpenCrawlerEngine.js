@@ -16,14 +16,14 @@ const startCrawler = function(urlDataObj) {
   .then(function(chConn) {
    logger.info('[*] Established AMQP Channel connection successfully..!');
 
-     //@TODO take the crawler MQ name from Config
-     let crawlerMQName = 'crawler';
      //making durable as false, so that .....
-     chConn.assertQueue(crawlerMQName, { durable: false })
+     chConn.assertQueue(config.OXYGEN.CRAWLER_MQ_NAME, { durable: false })
      .then(function(ok) {
        logger.debug("What is ok: ", ok);
-       logger.debug('[*] Waiting for messages on [' + crawlerMQName + '], to exit press CTRL+C ');
-       chConn.sendToQueue(crawlerMQName,new Buffer(JSON.stringify(urlDataObj) ));
+       logger.debug('[*] Waiting for messages on [' + 
+        config.OXYGEN.CRAWLER_MQ_NAME +
+        '], to exit press CTRL+C ');
+       chConn.sendToQueue(config.OXYGEN.CRAWLER_MQ_NAME,new Buffer(JSON.stringify(urlDataObj) ));
        logger.debug("msg sent to crawler .. ..  ..");
        }); //end of assertQueue
    }); //end of channelConnection

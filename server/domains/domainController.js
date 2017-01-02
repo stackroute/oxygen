@@ -2,14 +2,39 @@
 const domainNeo4jController = require('./domainNeo4jController');
 const domainMongoController = require('./domainMongoController');
 const domainMgr = require('./domainManager');
-
+const startCrawlerMQ=require('./../searcher/docOpenCrawlerEngine').startCrawler;
 const logger = require('./../../applogger');
 
 const async = require('async');
 
 const DOMAIN_NAME_MIN_LENGTH = 3;
 
+let insertUrls=function(dataToInsert){
+  console.log(dataToInsert)
+  try{
+    dataToInsert.data.concepts.forEach(function(concept){
+      concept.urls.forEach(function(url){
 
+        let msgObj={
+          domain: dataToInsert.domainName,
+          concept: concept.name,
+          url:url
+
+        };
+        console.log(msgObj)
+        startCrawlerMQ(msgObj);
+
+
+      })
+    })
+    return {msg:"manually added urls successfully "}
+  }
+  catch(err)
+  {
+
+    return {msg:"error while manually adding",err:err}
+  }
+}
 let fetchDomainCardDetails = function(domain) {
   logger.debug("Received request for retriving domain details ", domain);
   //Save to Mongo DB
@@ -18,27 +43,21 @@ let fetchDomainCardDetails = function(domain) {
   let promise = new Promise(function(resolve, reject) {
 
 
-    if (!domain ||
-      domain.length <= DOMAIN_NAME_MIN_LENGTH) {
-      reject({
-        error: "Invalid domain name..!"
-      });
-  }
 
-  async.waterfall([
-    function(callback) {
-      logger.debug("inside the waterfall "+domain)
-      domainNeo4jController.getDomainCardDetailsCallback(domain,
-        callback);
-    }
-    ],
-    function(err, domainObjDetails) {
-      if (err) {
-        reject(err);
+    async.waterfall([
+      function(callback) {
+        logger.debug("inside the waterfall "+domain)
+        domainNeo4jController.getDomainCardDetailsCallback(domain,
+          callback);
       }
-      resolve(domainObjDetails);
+      ],
+      function(err, domainObjDetails) {
+        if (err) {
+          reject(err);
+        }
+        resolve(domainObjDetails);
       }); //end of async.waterfall
-});
+  });
 
   return promise;
 }
@@ -203,35 +222,30 @@ let getDomain = function(domainName) {
 
   let promise = new Promise(function(resolve, reject) {
 
-    if (!domainName ||
-      domainName.length <= DOMAIN_NAME_MIN_LENGTH) {
-      reject({
-        error: "Invalid domain name..!"
-      });
-  }
 
-  async.waterfall([function(callback) {
-    domainMongoController.checkDomainCallback(domainName,
-      callback);
-  },
-  function(checkedDomain, callback) {
 
-    domainNeo4jController.getDomainConceptCallback(checkedDomain.name,
-      callback)
-  },
-  function(checkedDomainWithConcepts, callback) {
+    async.waterfall([function(callback) {
+      domainMongoController.checkDomainCallback(domainName,
+        callback);
+    },
+    function(checkedDomain, callback) {
 
-    domainNeo4jController.getDomainIntentCallback(checkedDomainWithConcepts,
-      callback)
-  }
-  ],
-  function(err, retrivedDomainConceptsAndIntents) {
-    if (err) {
-      reject(err);
+      domainNeo4jController.getDomainConceptCallback(checkedDomain.name,
+        callback)
+    },
+    function(checkedDomainWithConcepts, callback) {
+
+      domainNeo4jController.getDomainIntentCallback(checkedDomainWithConcepts,
+        callback)
     }
-    resolve(retrivedDomainConceptsAndIntents);
+    ],
+    function(err, retrivedDomainConceptsAndIntents) {
+      if (err) {
+        reject(err);
+      }
+      resolve(retrivedDomainConceptsAndIntents);
       }); //end of async.waterfall
-});
+  });
   return promise;
 }
 
@@ -339,65 +353,96 @@ let fetchWebDocuments = function(domainObj) {
   let docsDetails=[];
   let promise = new Promise(function(resolve, reject) {
 
-    if (!domainObj ||
-      domainObj.length <= DOMAIN_NAME_MIN_LENGTH) {
-      reject({
-        error: "Invalid domain name..!"
-      });
-  }
 
-  async.waterfall([
-    function(callback) {
-      logger.debug("inside the waterfall for fetching web docs"+domainObj)
-      domainNeo4jController.getWebDocumentsCallback(domainObj,
-        callback);
-    },
-    function(docs,callback) {
-      if(docs.length===0)
-      {
-       callback(null,docsDetails);
-     }
-     else{
-      for(let item in docs)
-      {
-       if (Object.prototype.hasOwnProperty.call(docs, item)) {
-         logger.debug("going to mongo ",docs.length);
-         let url=docs[item].url;
-         logger.debug("going to mongo url ",url);
-         domainMongoController.getSearchResultDocument(url)
-         .then(function(docObj) {
-          logger.debug("Successfully fetched doc details from mongo: ",
-            docObj);
-          docsDetails.push({title:docObj.title,
-                            description:docObj.description,
-                            url:docObj.url,
-                            intensity:docs[item].intensity})
-          
-          logger.debug("after each pushing",docsDetails);
-          if(docsDetails.length===docs.length)
-          {
-           callback(null,docsDetails);
-         }
-       },
-       function(err) {
-        logger.error("Encountered error in fetching doc details: ",
-          err);
-        reject(err);
-        return;
-      });
+
+    async.waterfall([
+      function(callback) {
+        logger.debug("inside the waterfall for fetching web docs"+domainObj)
+        domainNeo4jController.getWebDocumentsCallback(domainObj,
+          callback);
+      },
+      function(docs,callback) {
+        if(docs.length===0)
+        {
+         callback(null,docsDetails);
        }
+       else{
+         let abc=[];
+        for(let item in docs)
+        {
+         if (Object.prototype.hasOwnProperty.call(docs, item)) {
+           logger.debug("going to neo4J ",docs.length);
+           let url=docs[item].url;
+           logger.debug("going to neo4J ",url);
+           domainNeo4jController.getIntentforDocument({domainObj:domainObj,docs:url})
+           .then(function(intentObj) {
+            docs[item].intentObj=intentObj;
+            abc.push('hi');
+            logger.debug("url--> ",url);
+            logger.debug("after each pushing of intents*****",docs[item].intentObj);
+            if(abc.length===docs.length)
+            {
+             callback(null,docs);
+           }
+         },
+         function(err) {
+          logger.error("Encountered error in fetching doc intentObj details: ",
+            err);
+          reject(err);
+          return;
+        });
+         }
+       }
+      }
+      },
+      function(docs,callback) {
+        if(docs.length===0)
+        {
+         callback(null,docsDetails);
+       }
+       else{
+        for(let item in docs)
+        {
+         if (Object.prototype.hasOwnProperty.call(docs, item)) {
+           logger.debug("going to mongo ",docs.length);
+           let url=docs[item].url;
+           logger.debug("going to mongo url ",url);
+           domainMongoController.getSearchResultDocument(url)
+           .then(function(docObj) {
+            logger.debug("Successfully fetched doc details from mongo *****: ",
+              docObj);
+            docsDetails.push({title: docObj.title,
+              description: docObj.description,
+              url: docObj.url,
+              intensity: docs[item].intensity,
+              intentObj: docs[item].intentObj
+            })
+
+            logger.debug("after each pushing",docsDetails);
+            if(docsDetails.length===docs.length)
+            {
+             callback(null,docsDetails);
+           }
+         },
+         function(err) {
+          logger.error("Encountered error in fetching doc details: ",
+            err);
+          reject(err);
+          return;
+        });
+         }
+       }
+       logger.debug("pushing ended",docsDetails);
      }
-     logger.debug("pushing ended",docsDetails);
    }
- }
- ],
- function(err, docObjDetails) {
-  if (err) {
-    reject(err);
-  }
-  resolve(docObjDetails);
+   ],
+   function(err, docObjDetails) {
+    if (err) {
+      reject(err);
+    }
+    resolve(docObjDetails);
       }); //end of async.waterfall
-});
+  });
 
   return promise;
 }
@@ -426,6 +471,7 @@ let getAllDomain = function() {
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain:getDomain,
+  insertUrls:insertUrls,
   fetchDomainCardDetails:fetchDomainCardDetails,
   getAllDomainDetails:getAllDomainDetails,
   freshlyIndexDomain:freshlyIndexDomain,

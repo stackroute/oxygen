@@ -5,6 +5,8 @@ import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
 import {Row, Col,ScreenClassRender,Visible} from 'react-grid-system';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
@@ -13,7 +15,7 @@ import Drawer from 'material-ui/Drawer';
 const iPanel={
   minWidth:150,
   backgroundColor:"#dadada",
-  minHeight:740,
+  minHeight:4000,
   position:"fixed"
 }
 const fonts={
@@ -22,9 +24,44 @@ const fonts={
   fontFamily: "sans-serif",
   color: "#1976d2"
 }
-const suggest={
-  color:"grey",
-  textAlign:"center"
+const iconStyle={
+	iconSize: {
+
+		width: 30,
+		height: 30,
+		backgroundColor: "#a9a9a9",
+		padding: 10,
+		borderRadius: 60
+	},
+	large: {
+		width: 120,
+		height: 120,
+		padding: 30
+	},
+	leftIcon:{
+		position:"fixed",
+		left:"45%",
+		float:'left'
+	},
+	rightIcon:{
+		position:"fixed",
+		right:"33%",
+		float:'right'
+	},
+	leftIconAvg:{
+		position:"relative",
+		margin:"20 0 0 ",
+		padding:0,
+		zDepth:10,
+		float:'left'
+	},
+	rightIconAvg:{
+		position:"relative",
+		margin:"20 0 0 ",
+		padding:0,
+		zDepth:10,
+		float:'right'
+	}
 }
 const styles={
  largeIcon: {
@@ -47,14 +84,50 @@ const styleFunction = (screenClass) => {
   if (screenClass === 'sm') {return { fontSize: '28px',textAlign:"left",color:"#8aa6bd" };}
   return { fontSize: '25px',textAlign:"left",color:"#8aa6bd" };
 };
+
+const imgStyle = (screenClass) => {
+  if (screenClass === 'xl') {return { width: '500px',height:"auto" };}
+  if (screenClass === 'lg') {return { width: '400px',height:"auto"};}
+  if (screenClass === 'md') {return { width: '400px',height:"auto" };}
+  if (screenClass === 'sm') {return { width: '400px',height:"auto" };}
+  return { width: '300px',height:"auto"};
+};
+
+const divStyle = (screenClass) => {
+  if (screenClass === 'xl') {return { width: '500px',margin:"0 auto auto" };}
+  if (screenClass === 'lg') {return { width: '400px',margin:"0 auto auto" };}
+  if (screenClass === 'md') {return { width: '400px',margin:"0 auto auto" };}
+  if (screenClass === 'sm') {return { width: '400px',margin:"0 auto auto" };}
+  return { width: '300px',margin:"0 auto auto"};
+};
+
+class ShowImg extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+  }
+  render(){
+   return(<ScreenClassRender style={divStyle}>
+    <div>
+    <ScreenClassRender style={imgStyle}>
+    <img src={'./../assets/images/'+this.props.imgName} />
+    </ScreenClassRender>
+    </div>
+  </ScreenClassRender >)
+
+ }
+}
+
+
 export default class Graph extends React.Component {
   constructor(props) {
     super(props)
-    console.log(this.props)
     this.state={
-      msgCaption:"FIND YOUR SUGGESTED DOCUMENTS HERE",
+      imgSelector:"default.png",
       domainName:"",
       concepts:[],
+      conceptsOnly:[],
       intents:[],
       docs:[],
       checkedIntent:[],
@@ -66,10 +139,12 @@ export default class Graph extends React.Component {
 
   handleToggle = () => this.setState({open: !this.state.open});
 
-  getConcepts(concept)
+  getConcepts(conceptWithDocCnt)
   {
+    let sepDoc=conceptWithDocCnt.split(" - ")
+    let concept=sepDoc[0];
     let newConcepts=this.state.selectedConcept;
-    if(this.state.concepts.includes(concept))
+    if(this.state.conceptsOnly.includes(concept))
     {
       if(!newConcepts.includes(concept)){
         newConcepts.push(concept)
@@ -81,6 +156,7 @@ export default class Graph extends React.Component {
     })
     console.log("selected concept")
     console.log(newConcepts)
+
   }
 
   getCheckedIntents(event,checked)
@@ -110,6 +186,7 @@ export default class Graph extends React.Component {
     {
       selectedConcept:delConcepts
     })
+    console.log(delConcepts)
   }
   getIntentsAndConcepts()
   {
@@ -120,13 +197,21 @@ export default class Graph extends React.Component {
     .end((err, res) => {
      if(!err){
        let domainDetails=JSON.parse(res.text);
-       console.log("from the grph whole data")
+       console.log("received concepts and intent for the current domain")
        console.log(domainDetails)
+       let conOnly=[];
+       domainDetails.Concepts.map(function(conceptWithDocCnt){
+        let sepDoc=conceptWithDocCnt.split(" - ");
+        conOnly.push(sepDoc[0]);
+      })
+       console.log("extracted concepts :")
+       console.log(conOnly);
        that.setState(
        {
         domainName:domainDetails.Domain,
         concepts:domainDetails.Concepts,
-        intents:domainDetails.Intents
+        intents:domainDetails.Intents,
+        conceptsOnly:conOnly
       })
      }
    });
@@ -136,7 +221,7 @@ export default class Graph extends React.Component {
     if(this.state.selectedConcept.length===0)
     {
       this.setState({
-        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN",
+        imgSelector:"noDoc.png",
         docs:[]
       })
     }
@@ -147,7 +232,7 @@ export default class Graph extends React.Component {
         reqIntents:this.state.checkedIntent,
         reqConcepts:this.state.selectedConcept
       }
-
+      reqObj.allIntents=this.state.intents;
       if(reqObj.reqIntents.length===0)
       {
         reqObj.reqIntents=[];
@@ -155,7 +240,7 @@ export default class Graph extends React.Component {
       this.setState({
         docs:[]
       })
-      console.log("sending the data")
+      console.log("sending the data to fetch documents")
       console.log(reqObj)
       let url =`/domain/documents/`+reqObj.domainName;
       Request
@@ -168,11 +253,15 @@ export default class Graph extends React.Component {
   }
   else {
     let response=JSON.parse(res.text);
-    console.log("Response on documents show: ",response);
+    console.log("Response on documents to show: ",response);
+    response.sort(function(a, b) {
+      return Number(b.intensity) - Number(a.intensity)
+    })
+
     if(typeof response==="undefined" || response.length===0 )
     {
       this.setState({
-        msgCaption:"SORRY NO SUGGESTED DOCUMENTS TRY AGAIN"
+        imgSelector:"noDoc.png"
       })
     }
     this.setState({
@@ -205,13 +294,16 @@ export default class Graph extends React.Component {
  render()
  {
    let list=[];
-   let prevFlag=false;
-   let nextFlag=false;
+   let prevFlag;
+   let nextFlag;
    let dList=this.state.docs;
+   let docsPerImg=2;
    if(dList.length>0)
    {
-     let pages=Math.ceil(dList.length/6);
+     let pages=Math.ceil(dList.length/docsPerImg);
+     console.log('pages '+pages);
      let pageNow=this.state.pageNum;
+     console.log('pageNow '+pageNow);
      if(pages===pageNow)
      {
        nextFlag=true;
@@ -223,26 +315,30 @@ export default class Graph extends React.Component {
      if(pages===1 || pages===pageNow)
      {
        list=[];
-       for(let i=6*(pageNow-1);i<this.state.docs.length;i+=1)
+      console.log(list);
+       for(let i=docsPerImg*(pageNow-1);i<this.state.docs.length;i+=1)
        {
          list.push(this.state.docs[i]);
        }
+       console.log('printing list in if '+list);
      }
      else {
        list=[];
-       let foo=6*(pageNow-1);
-       for(let i=foo;i<(foo+6);i+=1)
+       let foo=docsPerImg*(pageNow-1);
+       for(let i=foo;i<(foo+docsPerImg);i+=1)
        {
          list.push(this.state.docs[i]);
        }
+      console.log('printing list in else'+list);
      }
    }
    return(
      <div style={fonts}>
      <Row style={{margin:0}}>
-     <Visible  lg xl>
+     <Visible lg xl>
      <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
-     <SelectPanel intents={this.state.intents} getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+     <SelectPanel intents={this.state.intents}
+     getCheckedIntent={this.getCheckedIntents.bind(this)}/>
      </Col>
      <Col sm={12} xs={12} md={10} lg={10} xl={10} style={{maxWidth:2000,marginLeft:"16.5%"}}>
      <Row>
@@ -261,7 +357,7 @@ export default class Graph extends React.Component {
      getConcept={this.getConcepts.bind(this)}/>
      <Row>
      <Col md={12} lg={12} xl={12}>
-     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
      <SelectedConcepts conceptChips={this.state.selectedConcept}
      deleteConcept={this.deleteConcepts.bind(this)} />}
      </Col>
@@ -270,18 +366,27 @@ export default class Graph extends React.Component {
      </Row>
      <br/><br/>
      <Row>
-     <Col md={12} lg={12} xl={12}>
-     {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:<div>
-     {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
-   </div>
-   }
-   </Col>
+       <Col md={12} lg={12} xl={12}>
+       {list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
+       {list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+       <br/>
+       <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+       iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+       <NavigationArrowBack style={iconStyle.large} color={"white"} />
+       </IconButton>
+       <IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+       iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+       <NavigationArrowForward style={iconStyle.large} color={"white"} />
+       </IconButton>
+     </div>
+     }
+     </Col>
    </Row>
    </Col>
    </Visible>
 
 
-   <Visible  style={{padding:0}} md sm xs>
+   <Visible style={{padding:0}} md sm xs>
 
    <Drawer open={this.state.open}
    onRequestChange={this.handleToggle}
@@ -314,7 +419,7 @@ export default class Graph extends React.Component {
    getConcept={this.getConcepts.bind(this)}/>
    <Row>
    <Col sm={12} xs={12} md={12}>
-   {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>SELECT THE CONCEPTS</h4>:
+   {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
    <SelectedConcepts conceptChips={this.state.selectedConcept}
    deleteConcept={this.deleteConcepts.bind(this)} />}
    </Col>
@@ -323,14 +428,22 @@ export default class Graph extends React.Component {
    </Row>
    <br/><br/>
    <Row>
-   <Col sm={12} xs={12} md={12}>
-   {this.state.docs.length===0?<h2 style={suggest}>{this.state.msgCaption}</h2>:<div>
-   {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
-   <br/>
+     <Col sm={12} xs={12} md={12}>
+      {list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
+      {list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+      <br/>
+      <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+      iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+      <NavigationArrowBack style={iconStyle.large} color={"white"} />
+      </IconButton>
+      <IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+      iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+      <NavigationArrowForward style={iconStyle.large} color={"white"} />
+      </IconButton>
 
- </div>
- }
- </Col>
+    </div>
+    }
+    </Col>
  </Row>
  </Col>
  </Visible>
