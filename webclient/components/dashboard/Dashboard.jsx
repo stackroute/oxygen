@@ -42,25 +42,25 @@ const iconStyle={
 	leftIcon:{
 		position:"fixed",
 		top:"45%",
-		left:"3%",
+		left:30,
 		float:'left'
 	},
 	rightIcon:{
 		position:"fixed",
 		top:"45%",
-		right:"3%",
+		right:30,
 		float:'right'
 	},
 	leftIconAvg:{
 		position:"relative",
-		margin:"20 0 0 ",
+		margin:"20 0 0 30 ",
 		padding:0,
 		zDepth:10,
 		float:'left'
 	},
 	rightIconAvg:{
 		position:"relative",
-		margin:"20 0 0 ",
+		margin:"20 30 0 0",
 		padding:0,
 		zDepth:10,
 		float:'right'

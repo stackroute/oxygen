@@ -39,25 +39,25 @@ const iconStyle={
 		padding: 30
 	},
 	leftIcon:{
-		position:"fixed",
-		left:"45%",
+		position:"relative",
+		marginLeft:"4%",
 		float:'left'
 	},
 	rightIcon:{
-		position:"fixed",
-		right:"33%",
+		position:"relative",
+		marginRight:"5%",
 		float:'right'
 	},
 	leftIconAvg:{
 		position:"relative",
-		margin:"20 0 0 ",
+		margin:"10 0 0 ",
 		padding:0,
 		zDepth:10,
 		float:'left'
 	},
 	rightIconAvg:{
 		position:"relative",
-		margin:"20 0 0 ",
+		margin:"10 0 0 ",
 		padding:0,
 		zDepth:10,
 		float:'right'
@@ -367,13 +367,14 @@ export default class Graph extends React.Component {
       </Row>
       <br/><br/>
       <Row>
-      <Col md={12} lg={12} xl={12}>
+      <Col md={12} lg={12} xl={12} style={{marginTop:"-20px"}}>
       {
         list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
         {
           list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})
         }
-        <br/>
+
+        <Col md={12} lg={12} xl={12}>
         <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
         iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
         <NavigationArrowBack style={iconStyle.large} color={"white"} />
@@ -382,11 +383,13 @@ export default class Graph extends React.Component {
         iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
         <NavigationArrowForward style={iconStyle.large} color={"white"} />
         </IconButton>
+        </Col>
         </div>
       }
       </Col>
       </Row>
       </Col>
+
       </Visible>
       <Visible style={{padding:0}} md sm xs>
 
@@ -394,8 +397,12 @@ export default class Graph extends React.Component {
       onRequestChange={this.handleToggle}
       docked={false}
       >
-      <MenuItem><SelectPanel intents={this.state.intents}
-      <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
+
+      <MenuItem><SelectPanel intents={this.state.intents}      
+      getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
+      </Drawer>
+
+      <Col sm={12} xs={12} md={12} style={{maxWidth:2000}}>
       <Row>
       <Col md={10} sm={10} xs={10}>
       <ScreenClassRender style={styleFunction}>
@@ -427,13 +434,13 @@ export default class Graph extends React.Component {
         </Row>
         <br/><br/>
         <Row>
-        <Col sm={12} xs={12} md={12}>
+        <Col sm={12} xs={12} md={12} style={{marginTop:"-20px"}}>
         {
           list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
           {
             list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})
           }
-          <br/>
+          <Col md={12} lg={12} xl={12}>
           <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
           iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
           <NavigationArrowBack style={iconStyle.large} color={"white"} />
@@ -442,6 +449,7 @@ export default class Graph extends React.Component {
           iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
           <NavigationArrowForward style={iconStyle.large} color={"white"} />
           </IconButton>
+          </Col>
 
           </div>
         }
