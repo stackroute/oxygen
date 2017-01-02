@@ -1,7 +1,11 @@
 import React from 'react';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardText,CardMedia,CardTitle} from 'material-ui/Card';
 import {Row, Col,Visible,ScreenClassRender} from 'react-grid-system';
 import Paper from 'material-ui/Paper';
+
+// <CardMedia
+//       overlay={<CardTitle title="RATING" subtitle={this.props.webDoc.intensity} />} />
+
 
 const styleFunction = (screenClass) => {
   if (screenClass === 'xl') {return {fontSize:18,color:"#1976d2"};}
@@ -40,11 +44,14 @@ export default class DocResultCard extends React.Component {
       titleStyle={{"fontSize":"18pt",padding:"16px 16px 0",color:'grey'}}
       title={this.props.webDoc.title}
       />
+      
+
       <CardText style={{textAlign: "left",padding:"0px 16px"}}>
       <p style={{color:"gray"}}><b>Description :
       </b>{this.props.webDoc.description}
       </p>
-      <Visible sm xs>
+<Visible sm xs>
+      
       <h2 style={{padding:"15px 0",textAlign:"center"}}><b style={{color:"grey"}}>RATING :
       </b>{this.props.webDoc.intensity}</h2>
       </Visible>

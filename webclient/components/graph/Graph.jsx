@@ -299,7 +299,7 @@ export default class Graph extends React.Component {
      <Col lg={12} md={12} sm={12} xs={12}>
      <ScreenClassRender style={styleFunction}>
      <h1>
-     {this.state.domainName.toUpperCase()}
+     { this.state.domainName.toUpperCase() }
      </h1>
      </ScreenClassRender>
      </Col>
@@ -311,87 +311,97 @@ export default class Graph extends React.Component {
      getConcept={this.getConcepts.bind(this)}/>
      <Row>
      <Col md={12} lg={12} xl={12}>
-     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
-     <SelectedConcepts conceptChips={this.state.selectedConcept}
-     deleteConcept={this.deleteConcepts.bind(this)} />}
-     </Col>
-     </Row>
-     </Col>
-     </Row>
-     <br/><br/>
-     <Row>
-     <Col md={12} lg={12} xl={12}>
-     {this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
-     {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
-     </div>
-   }
-   </Col>
-   </Row>
-   </Col>
-   </Visible>
+     {
+      this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
+      <SelectedConcepts conceptChips={this.state.selectedConcept}
+      deleteConcept={this.deleteConcepts.bind(this)} />
+    }
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    <br/><br/>
+    <Row>
+    <Col md={12} lg={12} xl={12}>
+    {
+      this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
+      {
+        this.state.docs.map((doc,i)=>{
+          return <DocResultCard key={i} webDoc={doc}/>
+        })
+      }
+      </div>
+    }
+    </Col>
+    </Row>
+    </Col>
+    </Visible>
 
 
-   <Visible style={{padding:0}} md sm xs>
+    <Visible style={{padding:0}} md sm xs>
 
-   <Drawer open={this.state.open}
-   onRequestChange={this.handleToggle}
-   docked={false}
-   >
-   <MenuItem><SelectPanel intents={this.state.intents}
+    <Drawer open={this.state.open}
+    onRequestChange={this.handleToggle}
+    docked={false}
+    >
+    <MenuItem><SelectPanel intents={this.state.intents}
 
-   getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
-   </Drawer>
+    getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
+    </Drawer>
 
-   <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
-   <Row>
-   <Col md={10} sm={10} xs={10}>
-   <ScreenClassRender style={styleFunction}>
-   <h1>
-   {this.state.domainName.toUpperCase()}
-   </h1>
-   </ScreenClassRender>
-   </Col>
-   <Col md={2} sm={2} xs={2}>
-   <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
-   <NavigationMenu style={styles.large} color={"white"} />
-   </IconButton>
-   </Col>
-   </Row>
-   <Row>
-   <Col sm={12} xs={12} md={12}>
-   <AutoCompleteSearchBox concepts={this.state.concepts}
-   searchDocument={this.searchDocuments.bind(this)}
-   getConcept={this.getConcepts.bind(this)}/>
-   <Row>
-   <Col sm={12} xs={12} md={12}>
-   {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
-   <SelectedConcepts conceptChips={this.state.selectedConcept}
-   deleteConcept={this.deleteConcepts.bind(this)} />}
-   </Col>
-   </Row>
-   </Col>
-   </Row>
-   <br/><br/>
-   <Row>
-   <Col sm={12} xs={12} md={12}>
-   {this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
-   {this.state.docs.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
-   <br/>
-
-   </div>
- }
- </Col>
- </Row>
- </Col>
- </Visible>
- </Row>
- </div>
- );
+    <Col sm={12} xs={12} md={12}style={{maxWidth:2000}}>
+    <Row>
+    <Col md={10} sm={10} xs={10}>
+    <ScreenClassRender style={styleFunction}>
+    <h1>
+    {this.state.domainName.toUpperCase()}
+    </h1>
+    </ScreenClassRender>
+    </Col>
+    <Col md={2} sm={2} xs={2}>
+    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
+    <NavigationMenu style={styles.large} color={"white"} />
+    </IconButton>
+    </Col>
+    </Row>
+    <Row>
+    <Col sm={12} xs={12} md={12}>
+    <AutoCompleteSearchBox concepts={this.state.concepts}
+    searchDocument={this.searchDocuments.bind(this)}
+    getConcept={this.getConcepts.bind(this)}/>
+    <Row>
+    <Col sm={12} xs={12} md={12}>
+    {
+      this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
+      <SelectedConcepts conceptChips={this.state.selectedConcept}
+      deleteConcept={this.deleteConcepts.bind(this)} />
+    }
+    </Col>
+    </Row>
+    </Col>
+    </Row>
+    <br/><br/>
+    <Row>
+    <Col sm={12} xs={12} md={12}>
+    {
+      this.state.docs.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
+      {
+        this.state.docs.map((doc,i)=>{
+          return <DocResultCard key={i} webDoc={doc}/>
+        })
+      }
+      <br/>
+      </div>
+    }
+    </Col>
+    </Row>
+    </Col>
+    </Visible>
+    </Row>
+    </div>
+    );
  }
 }
-
-
-
 Graph.propTypes = {
   params: React.PropTypes.object
 }

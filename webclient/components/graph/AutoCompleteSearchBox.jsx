@@ -33,7 +33,7 @@ export default class AutoCompleteSearchBox extends React.Component {
   {
     let sepDoc=key.split(" - ")
     if(searchText.length>=3 && searchText!==''){
-      return (sepDoc[0].indexOf(searchText) !== -1)
+      return (sepDoc[0].toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
     }
     return false;
   }
