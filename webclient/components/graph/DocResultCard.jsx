@@ -2,6 +2,7 @@ import React from 'react';
 import {Card, CardHeader, CardText,CardMedia,CardTitle} from 'material-ui/Card';
 import {Row, Col,Visible,ScreenClassRender} from 'react-grid-system';
 import Paper from 'material-ui/Paper';
+import Chip from 'material-ui/Chip';
 
 // <CardMedia
 //       overlay={<CardTitle title="RATING" subtitle={this.props.webDoc.intensity} />} />
@@ -34,6 +35,7 @@ export default class DocResultCard extends React.Component {
 
   }
   render() {
+
     return (
       <Paper zDepth={4} style={layout} rounded={false}>
       <Row>
@@ -63,11 +65,23 @@ export default class DocResultCard extends React.Component {
       </a>
       </ScreenClassRender>
       </p>
+      <Row>
+      {this.props.webDoc.intentObj.map((item,i) =>{
+
+        return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
+          <Chip
+            style={{margin:4}}
+          >
+            {item.intent} : {item.count}
+          </Chip>
+          </Col>);
+      })}
+    </Row>
       </CardText>
       </Card>
       </Col>
       <Visible lg xl md>
-      <Col lg={2} xl={2} md={2} 
+      <Col lg={2} xl={2} md={2}
       style={{paddingLeft:0,paddingBottom:15,backgroundColor:"#dadada",borderRadius:10}}>
       <h1 style={{padding:"15px 0"}}><b style={{color:"grey"}}>RATING
       </b><br/>{this.props.webDoc.intensity}</h1>

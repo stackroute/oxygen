@@ -119,22 +119,20 @@ let getDomainConcept = function(domainName) {
 
     let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
     query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
-    query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) '
-    query+= 'match(w:'+graphConsts.NODE_WEBDOCUMENT+')'
-    query+= 'match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) '
-    query+='RETURN c.name,count(w)';
+    query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) RETURN c';
     let params = {
       domainName: domainName
     };
     let concepts=[];
     session.run(query, params)
     .then(function(result) {
-      result.records.forEach(function(record) {        
-        concepts.push(record._fields[0]+" - ( "+record._fields[1]+" ) Documents");
+      result.records.forEach(function(record) {
+        record._fields.forEach(function(fields){
+          concepts.push(fields.properties.name);
+        });
+
       });
       session.close();
-      logger.debug("from fetching cocepts and no of doc");
-      logger.debug(concepts);
       resolve({Domain:domainName,Concepts:concepts});
     })
     .catch(function(err) {
@@ -303,6 +301,67 @@ let getDomainCardDetails = function(domainObj) {
   return promise;
 }
 
+let getIntentforDocument = function(domain) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to retrive "+
+      "the intent relationship: ", domain.domainObj.domainName);
+    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd),{encrypted:false}
+      );
+
+    let session = driver.session();
+
+    logger.debug("obtained connection with neo4j");
+    let query='';
+    let str=JSON.stringify(domain.domainObj.allIntents);
+
+      query += 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+      query += 'MATCH(c:'+graphConsts.NODE_CONCEPT+')'
+      query += 'MATCH(d)<-[r1:'+graphConsts.REL_CONCEPT_OF+']-(c)'
+      query += 'MATCH(c)<-[r]-(w:'+graphConsts.NODE_WEBDOCUMENT+'{name:{docName}})';
+      query +=' where type(r) in '+str;
+      query +='return type(r),count(r)';
+
+    let params = {
+      domainName: domain.domainObj.domainName,
+      docName: domain.docs
+    };
+
+    let intents=[];
+    session.run(query, params)
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        logger.debug("Result from neo4j: ", record);
+        let i=0;
+        let obj={};
+        record._fields.forEach(function(fields){
+          i+=1;
+          if(i===1)
+          {
+            obj.intent=fields;
+          }
+          else
+          {
+            obj.count=Number(fields);
+            intents.push(obj);
+          }
+        });
+
+      });
+      session.close();
+      resolve(intents);
+    })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+  });
+
+  return promise;
+}
+
 let getWebDocuments = function(domainObj) {
   let promise = new Promise(function(resolve, reject) {
 
@@ -340,7 +399,7 @@ let getWebDocuments = function(domainObj) {
     let params = {
       domainName: domainObj.domainName
     };
-    logger.debug("@@@@@@@@@ "+query);
+    logger.debug("query "+query);
 
     let docs=[];
     session.run(query, params)
@@ -435,5 +494,6 @@ module.exports = {
   getDomainCardDetailsCallback: getDomainCardDetailsCallback,
   getDomainCardDetails: getDomainCardDetails,
   getWebDocumentsCallback: getWebDocumentsCallback,
-  getWebDocuments: getWebDocuments
+  getWebDocuments: getWebDocuments,
+  getIntentforDocument: getIntentforDocument
 }
