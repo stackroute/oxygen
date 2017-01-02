@@ -38,31 +38,31 @@ const iconStyle={
 		height: 120,
 		padding: 30
 	},
-	leftIcon: {
-		position: 'fixed',
-		top: '45%',
-		left: '3%',
-		float: 'left'
+	leftIcon:{
+		position:"fixed",
+		top:"45%",
+		left:30,
+		float:'left'
 	},
-	rightIcon: {
-		position: 'fixed',
-		top: '45%',
-		right: '3%',
-		float: 'right'
+	rightIcon:{
+		position:"fixed",
+		top:"45%",
+		right:30,
+		float:'right'
 	},
-	leftIconAvg: {
-		position: 'relative',
-		margin: '20 0 0 ',
-		padding: 0,
-		zDepth: 10,
-		float: 'left'
+	leftIconAvg:{
+		position:"relative",
+		margin:"20 0 0 30 ",
+		padding:0,
+		zDepth:10,
+		float:'left'
 	},
-	rightIconAvg: {
-		position: 'relative',
-		margin: '20 0 0 ',
-		padding: 0,
-		zDepth: 10,
-		float: 'right'
+	rightIconAvg:{
+		position:"relative",
+		margin:"20 30 0 0",
+		padding:0,
+		zDepth:10,
+		float:'right'
 	}
 }
 const fonts={
