@@ -57903,6 +57903,37 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var imgStyle = function imgStyle(screenClass) {
+		if (screenClass === 'xl') {
+			return { width: '700px', height: "auto" };
+		}
+		if (screenClass === 'lg') {
+			return { width: '600px', height: "auto" };
+		}
+		if (screenClass === 'md') {
+			return { width: '600px', height: "auto" };
+		}
+		if (screenClass === 'sm') {
+			return { width: '600px', height: "auto" };
+		}
+		return { width: '300px', height: "auto" };
+	};
+	var divStyle = function divStyle(screenClass) {
+		if (screenClass === 'xl') {
+			return { width: '700px', margin: "5% auto auto" };
+		}
+		if (screenClass === 'lg') {
+			return { width: '600px', margin: "5% auto auto" };
+		}
+		if (screenClass === 'md') {
+			return { width: '600px', margin: "5% auto auto" };
+		}
+		if (screenClass === 'sm') {
+			return { width: '600px', margin: "5% auto auto" };
+		}
+		return { width: '300px', margin: "6% auto auto" };
+	};
+
 	var iconStyle = {
 		iconSize: {
 			width: 30,
@@ -57944,10 +57975,11 @@
 		}
 	};
 	var fonts = {
-		margin: '0px auto',
-		textAlign: 'center',
-		fontFamily: 'sans-serif',
-		color: '#1976d2 '
+
+		textAlign: "center",
+		fontFamily: "sans-serif",
+		color: "#1976d2 "
+
 	};
 	var style = {
 		refresh: {
@@ -57955,6 +57987,22 @@
 			display: 'inline-block',
 			position: 'relative'
 		}
+	};
+
+	var NoContent = function NoContent() {
+		return _react2.default.createElement(
+			_reactGridSystem.ScreenClassRender,
+			{ style: divStyle },
+			_react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_reactGridSystem.ScreenClassRender,
+					{ style: imgStyle },
+					_react2.default.createElement('img', { src: './../assets/images/sry.png' })
+				)
+			)
+		);
 	};
 
 	var Dashboard = function (_React$Component) {
@@ -58056,7 +58104,7 @@
 						{ md: 12, sm: 12, xs: 12, style: { marginBotton: 20 } },
 						_react2.default.createElement(
 							_reactGridSystem.Col,
-							{ md: 4, sm: 4, xs: 4, style: { float: 'left' } },
+							{ md: 4, sm: 4, xs: 4, style: { float: "left" } },
 							_react2.default.createElement(
 								_IconButton2.default,
 								{ style: iconStyle.leftIconAvg, label: 'prev', disabled: prevFlag, 'data-id': 'prev',
@@ -58066,7 +58114,7 @@
 						),
 						_react2.default.createElement(
 							_reactGridSystem.Col,
-							{ md: 4, sm: 4, xs: 4, style: { float: 'right' } },
+							{ md: 4, sm: 4, xs: 4, style: { float: "right" } },
 							_react2.default.createElement(
 								_IconButton2.default,
 								{ style: iconStyle.rightIconAvg, label: 'next', disabled: nextFlag, 'data-id': 'next',
@@ -58076,8 +58124,8 @@
 						)
 					);
 				};
-				var list = [];
 
+				var list = [];
 				var dList = this.state.domainList;
 				if (dList.length > 0) {
 					var pages = Math.ceil(dList.length / 6);
@@ -58104,17 +58152,7 @@
 				return _react2.default.createElement(
 					'div',
 					{ style: fonts },
-					_react2.default.createElement(
-						'h1',
-						null,
-						'Our Domains'
-					),
-					_react2.default.createElement(
-						_reactGridSystem.Visible,
-						{ md: true, sm: true, xs: true },
-						smallNav
-					),
-					this.state.loading === 'loading' ? _react2.default.createElement(_RefreshIndicator2.default, {
+					this.state.loading === "loading" ? _react2.default.createElement(_RefreshIndicator2.default, {
 						size: 70,
 						left: 10,
 						top: 0,
@@ -58126,10 +58164,17 @@
 						list.length !== 0 ? _react2.default.createElement(
 							'div',
 							null,
+							_react2.default.createElement('br', null),
+							_react2.default.createElement(
+								'h1',
+								null,
+								'OUR DOMAINS'
+							),
 							_react2.default.createElement(
 								_reactGridSystem.Container,
 								null,
 								list.map(function (item, i) {
+
 									return _react2.default.createElement(
 										_reactGridSystem.Col,
 										{ lg: 4, md: 6, sm: 6, xs: 12, key: i },
@@ -58145,13 +58190,13 @@
 									_IconButton2.default,
 									{ style: iconStyle.leftIcon, label: 'prev', disabled: prevFlag, 'data-id': 'prev',
 										iconStyle: iconStyle.iconSize, onClick: this.onPageClick.bind(this) },
-									_react2.default.createElement(_arrowBack2.default, { style: iconStyle.large, color: 'white' })
+									_react2.default.createElement(_arrowBack2.default, { style: iconStyle.large, color: "white" })
 								),
 								_react2.default.createElement(
 									_IconButton2.default,
 									{ style: iconStyle.rightIcon, label: 'next', disabled: nextFlag, 'data-id': 'next',
 										iconStyle: iconStyle.iconSize, onClick: this.onPageClick.bind(this) },
-									_react2.default.createElement(_arrowForward2.default, { style: iconStyle.large, color: 'white' })
+									_react2.default.createElement(_arrowForward2.default, { style: iconStyle.large, color: "white" })
 								)
 							),
 							_react2.default.createElement(
@@ -58159,14 +58204,10 @@
 								{ md: true, sm: true, xs: true },
 								smallNav
 							)
-						) : _react2.default.createElement(
-							'h1',
-							null,
-							'NO DOMAINS AVAILABLE'
-						)
+						) : _react2.default.createElement(NoContent, null)
 					),
 					_react2.default.createElement(_AddDomain2.default, {
-						addDomain: this.addDomain.bind(this), style: { color: '#1976d2 ' } }),
+						addDomain: this.addDomain.bind(this), style: { color: "#1976d2 " } }),
 					_react2.default.createElement(_Notification2.default, null)
 				);
 			}
@@ -70745,6 +70786,14 @@
 
 	var _menu2 = _interopRequireDefault(_menu);
 
+	var _arrowBack = __webpack_require__(634);
+
+	var _arrowBack2 = _interopRequireDefault(_arrowBack);
+
+	var _arrowForward = __webpack_require__(635);
+
+	var _arrowForward2 = _interopRequireDefault(_arrowForward);
+
 	var _IconButton = __webpack_require__(351);
 
 	var _IconButton2 = _interopRequireDefault(_IconButton);
@@ -70781,9 +70830,44 @@
 	  fontFamily: 'sans-serif',
 	  color: '#1976d2'
 	};
-	var suggest = {
-	  color: 'grey',
-	  textAlign: 'center'
+	var iconStyle = {
+	  iconSize: {
+
+	    width: 30,
+	    height: 30,
+	    backgroundColor: '#a9a9a9',
+	    padding: 10,
+	    borderRadius: 60
+	  },
+	  large: {
+	    width: 120,
+	    height: 120,
+	    padding: 30
+	  },
+	  leftIcon: {
+	    position: 'fixed',
+	    left: '45%',
+	    float: 'left'
+	  },
+	  rightIcon: {
+	    position: 'fixed',
+	    right: '33%',
+	    float: 'right'
+	  },
+	  leftIconAvg: {
+	    position: 'relative',
+	    margin: '20 0 0 ',
+	    padding: 0,
+	    zDepth: 10,
+	    float: 'left'
+	  },
+	  rightIconAvg: {
+	    position: 'relative',
+	    margin: '20 0 0 ',
+	    padding: 0,
+	    zDepth: 10,
+	    float: 'right'
+	  }
 	};
 	var styles = {
 	  largeIcon: {
@@ -70815,37 +70899,103 @@
 	  return { fontSize: '25px', textAlign: 'left', color: '#8aa6bd' };
 	};
 
-	var Graph = function (_React$Component) {
-	  _inherits(Graph, _React$Component);
+	var imgStyle = function imgStyle(screenClass) {
+	  if (screenClass === 'xl') {
+	    return { width: '500px', height: 'auto' };
+	  }
+	  if (screenClass === 'lg') {
+	    return { width: '400px', height: 'auto' };
+	  }
+	  if (screenClass === 'md') {
+	    return { width: '400px', height: 'auto' };
+	  }
+	  if (screenClass === 'sm') {
+	    return { width: '400px', height: 'auto' };
+	  }
+	  return { width: '300px', height: 'auto' };
+	};
+
+	var divStyle = function divStyle(screenClass) {
+	  if (screenClass === 'xl') {
+	    return { width: '500px', margin: '0 auto auto' };
+	  }
+	  if (screenClass === 'lg') {
+	    return { width: '400px', margin: '0 auto auto' };
+	  }
+	  if (screenClass === 'md') {
+	    return { width: '400px', margin: '0 auto auto' };
+	  }
+	  if (screenClass === 'sm') {
+	    return { width: '400px', margin: '0 auto auto' };
+	  }
+	  return { width: '300px', margin: '0 auto auto' };
+	};
+
+	var ShowImg = function (_React$Component) {
+	  _inherits(ShowImg, _React$Component);
+
+	  function ShowImg(props) {
+	    _classCallCheck(this, ShowImg);
+
+	    return _possibleConstructorReturn(this, (ShowImg.__proto__ || Object.getPrototypeOf(ShowImg)).call(this, props));
+	  }
+
+	  _createClass(ShowImg, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        _reactGridSystem.ScreenClassRender,
+	        { style: divStyle },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            _reactGridSystem.ScreenClassRender,
+	            { style: imgStyle },
+	            _react2.default.createElement('img', { src: './../assets/images/' + this.props.imgName })
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return ShowImg;
+	}(_react2.default.Component);
+
+	var Graph = function (_React$Component2) {
+	  _inherits(Graph, _React$Component2);
 
 	  function Graph(props) {
 	    _classCallCheck(this, Graph);
 
-	    // console.log(this.props)
-	    var _this = _possibleConstructorReturn(this, (Graph.__proto__ || Object.getPrototypeOf(Graph)).call(this, props));
+	    var _this2 = _possibleConstructorReturn(this, (Graph.__proto__ || Object.getPrototypeOf(Graph)).call(this, props));
 
-	    _this.handleToggle = function () {
-	      return _this.setState({ open: !_this.state.open });
+	    _this2.handleToggle = function () {
+	      return _this2.setState({ open: !_this2.state.open });
 	    };
 
-	    _this.state = {
-	      msgCaption: 'FIND YOUR SUGGESTED DOCUMENTS HERE',
+	    _this2.state = {
+	      imgSelector: 'default.png',
 	      domainName: '',
 	      concepts: [],
+	      conceptsOnly: [],
 	      intents: [],
 	      docs: [],
 	      checkedIntent: [],
 	      selectedConcept: [],
-	      open: false
+	      open: false,
+	      pageNum: 1
 	    };
-	    return _this;
+	    return _this2;
 	  }
 
 	  _createClass(Graph, [{
 	    key: 'getConcepts',
-	    value: function getConcepts(concept) {
+	    value: function getConcepts(conceptWithDocCnt) {
+	      var sepDoc = conceptWithDocCnt.split(' - ');
+	      var concept = sepDoc[0];
 	      var newConcepts = this.state.selectedConcept;
-	      if (this.state.concepts.includes(concept)) {
+	      if (this.state.conceptsOnly.includes(concept)) {
 	        if (!newConcepts.includes(concept)) {
 	          newConcepts.push(concept);
 	        }
@@ -70882,6 +71032,7 @@
 	      this.setState({
 	        selectedConcept: delConcepts
 	      });
+	      // console.log(delConcepts)
 	    }
 	  }, {
 	    key: 'getIntentsAndConcepts',
@@ -70890,25 +71041,35 @@
 	      var that = this;
 	      _superagent2.default.get(url).end(function (err, res) {
 	        if (!err) {
-	          var domainDetails = JSON.parse(res.text);
-	          // console.log('from the grph whole data')
-	          // console.log(domainDetails)
-	          that.setState({
-	            domainName: domainDetails.Domain,
-	            concepts: domainDetails.Concepts,
-	            intents: domainDetails.Intents
-	          });
+	          (function () {
+	            var domainDetails = JSON.parse(res.text);
+	            // console.log('received concepts and intent for the current domain')
+	            // console.log(domainDetails)
+	            var conOnly = [];
+	            domainDetails.Concepts.map(function (conceptWithDocCnt) {
+	              var sepDoc = conceptWithDocCnt.split(' - ');
+	              conOnly.push(sepDoc[0]);
+	            });
+	            // console.log('extracted concepts :')
+	            // console.log(conOnly);
+	            that.setState({
+	              domainName: domainDetails.Domain,
+	              concepts: domainDetails.Concepts,
+	              intents: domainDetails.Intents,
+	              conceptsOnly: conOnly
+	            });
+	          })();
 	        }
 	      });
 	    }
 	  }, {
 	    key: 'searchDocuments',
 	    value: function searchDocuments() {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      if (this.state.selectedConcept.length === 0) {
 	        this.setState({
-	          msgCaption: 'SORRY NO SUGGESTED DOCUMENTS TRY AGAIN',
+	          imgSelector: 'noDoc.png',
 	          docs: []
 	        });
 	      } else {
@@ -70917,14 +71078,14 @@
 	          reqIntents: this.state.checkedIntent,
 	          reqConcepts: this.state.selectedConcept
 	        };
-
+	        reqObj.allIntents = this.state.intents;
 	        if (reqObj.reqIntents.length === 0) {
 	          reqObj.reqIntents = [];
 	        }
 	        this.setState({
 	          docs: []
 	        });
-	        // console.log('sending the data')
+	        // console.log('sending the data to fetch documents')
 	        // console.log(reqObj)
 	        var url = '/domain/documents/' + reqObj.domainName;
 	        _superagent2.default.post(url).send(reqObj).end(function (err, res) {
@@ -70933,16 +71094,16 @@
 	            // console.log(err)
 	          } else {
 	            var response = JSON.parse(res.text);
-	            // console.log('Response on documents show: ',response);
+	            // console.log('Response on documents to show: ',response);
 	            response.sort(function (a, b) {
-	              return a.intensity - b.intensity;
+	              return Number(b.intensity) - Number(a.intensity);
 	            });
 	            if (typeof response === 'undefined' || response.length === 0) {
-	              _this2.setState({
-	                msgCaption: 'SORRY NO SUGGESTED DOCUMENTS TRY AGAIN'
+	              _this3.setState({
+	                imgSelector: 'noDoc.png'
 	              });
 	            }
-	            _this2.setState({
+	            _this3.setState({
 	              docs: response
 	            });
 	          }
@@ -70954,57 +71115,53 @@
 	    value: function componentDidMount() {
 	      this.getIntentsAndConcepts();
 	    }
-	    // onPageClick(e)
-	    // {
-	    //   let page=this.state.pageNum;
-	    //   if(e.currentTarget.dataset.id==='prev')
-	    //   {
-	    //     page-=1;
-	    //     this.setState({pageNum:page});
-	    //   }
-	    //   else
-	    //   {
-	    //     page+=1;
-	    //     this.setState({pageNum:page});
-	    //   }
-	    // }
-
+	  }, {
+	    key: 'onPageClick',
+	    value: function onPageClick(e) {
+	      var page = this.state.pageNum;
+	      if (e.currentTarget.dataset.id === 'prev') {
+	        page -= 1;
+	        this.setState({ pageNum: page });
+	      } else {
+	        page += 1;
+	        this.setState({ pageNum: page });
+	      }
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      // let list=[];
-	      // let prevFlag;
-	      // let nextFlag;
-	      // let dList=this.state.docs;
-	      // if(dList.length>0)
-	      // {
-	      //   let pages=Math.ceil(dList.length/6);
-	      //   let pageNow=this.state.pageNum;
-	      //   if(pages===pageNow)
-	      //   {
-	      //     nextFlag=true;
-	      //   }
-	      //   if(this.state.pageNum===1)
-	      //   {
-	      //     prevFlag=true;
-	      //   }
-	      //   if(pages===1 || pages===pageNow)
-	      //   {
-	      //     list=[];
-	      //     for(let i=6*(pageNow-1);i<this.state.docs.length;i+=1)
-	      //     {
-	      //       list.push(this.state.docs[i]);
-	      //     }
-	      //   }
-	      //   else {
-	      //     list=[];
-	      //     let foo=6*(pageNow-1);
-	      //     for(let i=foo;i<(foo+6);i+=1)
-	      //     {
-	      //       list.push(this.state.docs[i]);
-	      //     }
-	      //   }
-	      // }
+	      var list = [];
+	      var prevFlag = void 0;
+	      var nextFlag = void 0;
+	      var dList = this.state.docs;
+	      var docsPerImg = 2;
+	      if (dList.length > 0) {
+	        var pages = Math.ceil(dList.length / docsPerImg);
+	        // console.log('pages '+pages);
+	        var pageNow = this.state.pageNum;
+	        // console.log('pageNow '+pageNow);
+	        if (pages === pageNow) {
+	          nextFlag = true;
+	        }
+	        if (this.state.pageNum === 1) {
+	          prevFlag = true;
+	        }
+	        if (pages === 1 || pages === pageNow) {
+	          list = [];
+	          // console.log(list);
+	          for (var i = docsPerImg * (pageNow - 1); i < this.state.docs.length; i += 1) {
+	            list.push(this.state.docs[i]);
+	          }
+	          // console.log('printing list in if '+list);
+	        } else {
+	          list = [];
+	          var foo = docsPerImg * (pageNow - 1);
+	          for (var _i = foo; _i < foo + docsPerImg; _i += 1) {
+	            list.push(this.state.docs[_i]);
+	          }
+	          // console.log('printing list in else'+list);
+	        }
+	      }
 	      return _react2.default.createElement(
 	        'div',
 	        { style: fonts },
@@ -71059,7 +71216,7 @@
 	                      this.state.selectedConcept.length === 0 ? _react2.default.createElement(
 	                        'h4',
 	                        { style: { color: '#8aa6bd' } },
-	                        'SELECT THE CONCEPTS'
+	                        'PLEASE SELECT CONCEPTS'
 	                      ) : _react2.default.createElement(_SelectedConcepts2.default, { conceptChips: this.state.selectedConcept,
 	                        deleteConcept: this.deleteConcepts.bind(this) })
 	                    )
@@ -71074,18 +71231,26 @@
 	                _react2.default.createElement(
 	                  _reactGridSystem.Col,
 	                  { md: 12, lg: 12, xl: 12 },
-	                  this.state.docs.length === 0 ? _react2.default.createElement(
-	                    'h2',
-	                    { style: suggest },
-	                    this.state.msgCaption
-	                  ) : _react2.default.createElement(
+	                  list.length === 0 ? _react2.default.createElement(ShowImg, { imgName: this.state.imgSelector }) : _react2.default.createElement(
 	                    'div',
 	                    null,
-	                    this.state.docs.map(function (doc, i) {
+	                    list.map(function (doc, i) {
 	                      return _react2.default.createElement(_DocResultCard2.default, { key: i, webDoc: doc });
-	                    })
-	                  ),
-	                  ';'
+	                    }),
+	                    _react2.default.createElement('br', null),
+	                    _react2.default.createElement(
+	                      _IconButton2.default,
+	                      { style: iconStyle.leftIcon, label: 'prev', disabled: prevFlag, 'data-id': 'prev',
+	                        iconStyle: iconStyle.iconSize, onClick: this.onPageClick.bind(this) },
+	                      _react2.default.createElement(_arrowBack2.default, { style: iconStyle.large, color: 'white' })
+	                    ),
+	                    _react2.default.createElement(
+	                      _IconButton2.default,
+	                      { style: iconStyle.rightIcon, label: 'next', disabled: nextFlag, 'data-id': 'next',
+	                        iconStyle: iconStyle.iconSize, onClick: this.onPageClick.bind(this) },
+	                      _react2.default.createElement(_arrowForward2.default, { style: iconStyle.large, color: 'white' })
+	                    )
+	                  )
 	                )
 	              )
 	            )
@@ -71154,7 +71319,7 @@
 	                      this.state.selectedConcept.length === 0 ? _react2.default.createElement(
 	                        'h4',
 	                        { style: { color: '#8aa6bd' } },
-	                        'SELECT THE CONCEPTS'
+	                        'PLEASE SELECT CONCEPTS'
 	                      ) : _react2.default.createElement(_SelectedConcepts2.default, { conceptChips: this.state.selectedConcept,
 	                        deleteConcept: this.deleteConcepts.bind(this) })
 	                    )
@@ -71169,17 +71334,25 @@
 	                _react2.default.createElement(
 	                  _reactGridSystem.Col,
 	                  { sm: 12, xs: 12, md: 12 },
-	                  this.state.docs.length === 0 ? _react2.default.createElement(
-	                    'h2',
-	                    { style: suggest },
-	                    this.state.msgCaption
-	                  ) : _react2.default.createElement(
+	                  list.length === 0 ? _react2.default.createElement(ShowImg, { imgName: this.state.imgSelector }) : _react2.default.createElement(
 	                    'div',
 	                    null,
-	                    this.state.docs.map(function (doc, i) {
+	                    list.map(function (doc, i) {
 	                      return _react2.default.createElement(_DocResultCard2.default, { key: i, webDoc: doc });
 	                    }),
-	                    _react2.default.createElement('br', null)
+	                    _react2.default.createElement('br', null),
+	                    _react2.default.createElement(
+	                      _IconButton2.default,
+	                      { style: iconStyle.leftIcon, label: 'prev', disabled: prevFlag, 'data-id': 'prev',
+	                        iconStyle: iconStyle.iconSize, onClick: this.onPageClick.bind(this) },
+	                      _react2.default.createElement(_arrowBack2.default, { style: iconStyle.large, color: 'white' })
+	                    ),
+	                    _react2.default.createElement(
+	                      _IconButton2.default,
+	                      { style: iconStyle.rightIcon, label: 'next', disabled: nextFlag, 'data-id': 'next',
+	                        iconStyle: iconStyle.iconSize, onClick: this.onPageClick.bind(this) },
+	                      _react2.default.createElement(_arrowForward2.default, { style: iconStyle.large, color: 'white' })
+	                    )
 	                  )
 	                )
 	              )
@@ -71262,10 +71435,40 @@
 	  function AutoCompleteSearchBox(props) {
 	    _classCallCheck(this, AutoCompleteSearchBox);
 
-	    return _possibleConstructorReturn(this, (AutoCompleteSearchBox.__proto__ || Object.getPrototypeOf(AutoCompleteSearchBox)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (AutoCompleteSearchBox.__proto__ || Object.getPrototypeOf(AutoCompleteSearchBox)).call(this, props));
+
+	    _this.filterFunc = _this.filterFunc.bind(_this);
+	    _this.state = {
+	      searchText: ''
+	    };
+	    return _this;
 	  }
 
 	  _createClass(AutoCompleteSearchBox, [{
+	    key: 'filterFunc',
+	    value: function filterFunc(searchText, key) {
+	      var sepDoc = key.split(" - ");
+	      if (searchText.length >= 3 && searchText !== '') {
+	        return sepDoc[0].indexOf(searchText) !== -1;
+	      }
+	      return false;
+	    }
+	  }, {
+	    key: 'handleUpdateInput',
+	    value: function handleUpdateInput(concept) {
+	      this.setState({
+	        searchText: concept
+	      });
+	    }
+	  }, {
+	    key: 'getConcept',
+	    value: function getConcept(concept) {
+	      this.setState({
+	        searchText: ''
+	      });
+	      this.props.getConcept(concept);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -71279,13 +71482,15 @@
 	            { style: { padding: "0 20px" } },
 	            _react2.default.createElement(
 	              _reactGridSystem.Col,
-	              { xs: 10, sm: 10, md: 10, lg: 10, xl: 10 },
+	              { xs: 10, sm: 10, md: 10, lg: 10, xl: 10, style: { paddingTop: 10 } },
 	              _react2.default.createElement(_AutoComplete2.default, {
-	                floatingLabelText: 'Search',
-	                filter: _AutoComplete2.default.fuzzyFilter,
+	                hintText: 'What do you want to search..??',
+	                filter: this.filterFunc,
 	                dataSource: this.props.concepts,
 	                fullWidth: true,
-	                onNewRequest: this.props.getConcept,
+	                searchText: this.state.searchText,
+	                onUpdateInput: this.handleUpdateInput.bind(this),
+	                onNewRequest: this.getConcept.bind(this),
 	                maxSearchResults: 5
 	              })
 	            ),
@@ -73094,6 +73299,10 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
+	var _Chip = __webpack_require__(518);
+
+	var _Chip2 = _interopRequireDefault(_Chip);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -73142,6 +73351,7 @@
 	  _createClass(DocResultCard, [{
 	    key: 'render',
 	    value: function render() {
+
 	      return _react2.default.createElement(
 	        _Paper2.default,
 	        { zDepth: 4, style: layout, rounded: false },
@@ -73203,6 +73413,26 @@
 	                      this.props.webDoc.url
 	                    )
 	                  )
+	                ),
+	                _react2.default.createElement(
+	                  _reactGridSystem.Row,
+	                  null,
+	                  this.props.webDoc.intentObj.map(function (item, i) {
+
+	                    return _react2.default.createElement(
+	                      _reactGridSystem.Col,
+	                      { lg: 4, md: 6, sm: 6, xs: 12, key: i },
+	                      _react2.default.createElement(
+	                        _Chip2.default,
+	                        {
+	                          style: { margin: 4 }
+	                        },
+	                        item.intent,
+	                        ' : ',
+	                        item.count
+	                      )
+	                    );
+	                  })
 	                )
 	              )
 	            )
@@ -73213,13 +73443,13 @@
 	            _react2.default.createElement(
 	              _reactGridSystem.Col,
 	              { lg: 2, xl: 2, md: 2,
-	                style: { paddingLeft: 0, paddingBottom: 15, backgroundColor: '#dadada', borderRadius: 10 } },
+	                style: { paddingLeft: 0, paddingBottom: 15, backgroundColor: "#dadada", borderRadius: 10 } },
 	              _react2.default.createElement(
 	                'h1',
-	                { style: { padding: '15px 0' } },
+	                { style: { padding: "15px 0" } },
 	                _react2.default.createElement(
 	                  'b',
-	                  { style: { color: 'grey' } },
+	                  { style: { color: "grey" } },
 	                  'RATING'
 	                ),
 	                _react2.default.createElement('br', null),

@@ -19,16 +19,16 @@ const iPanel = {
 };
 const fonts = {
   margin: 0,
-  textAlign: "center",
-  fontFamily: "sans-serif",
-  color: "#1976d2"
-}
-const iconStyle={
+  textAlign: 'center',
+  fontFamily: 'sans-serif',
+  color: '#1976d2'
+};
+const iconStyle = {
 	iconSize: {
 
 		width: 30,
 		height: 30,
-		backgroundColor: "#a9a9a9",
+		backgroundColor: '#a9a9a9',
 		padding: 10,
 		borderRadius: 60
 	},
@@ -37,32 +37,32 @@ const iconStyle={
 		height: 120,
 		padding: 30
 	},
-	leftIcon:{
-		position:"fixed",
-		left:"45%",
-		float:'left'
+	leftIcon: {
+		position: 'fixed',
+		left: '45%',
+		float: 'left'
 	},
-	rightIcon:{
-		position:"fixed",
-		right:"33%",
-		float:'right'
+	rightIcon: {
+		position: 'fixed',
+		right: '33%',
+		float: 'right'
 	},
-	leftIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'left'
+	leftIconAvg: {
+		position: 'relative',
+		margin: '20 0 0 ',
+		padding: 0,
+		zDepth: 10,
+		float: 'left'
 	},
-	rightIconAvg:{
-		position:"relative",
-		margin:"20 0 0 ",
-		padding:0,
-		zDepth:10,
-		float:'right'
+	rightIconAvg: {
+		position: 'relative',
+		margin: '20 0 0 ',
+		padding: 0,
+		zDepth: 10,
+		float: 'right'
 	}
-}
-const styles={
+};
+const styles = {
  largeIcon: {
   width: 28,
   height: 28,
@@ -85,64 +85,58 @@ const styleFunction = (screenClass) => {
 };
 
 const imgStyle = (screenClass) => {
-  if (screenClass === 'xl') {return { width: '500px',height:"auto" };}
-  if (screenClass === 'lg') {return { width: '400px',height:"auto"};}
-  if (screenClass === 'md') {return { width: '400px',height:"auto" };}
-  if (screenClass === 'sm') {return { width: '400px',height:"auto" };}
-  return { width: '300px',height:"auto"};
+  if (screenClass === 'xl') {return { width: '500px', height: 'auto' };}
+  if (screenClass === 'lg') {return { width: '400px', height: 'auto'};}
+  if (screenClass === 'md') {return { width: '400px', height: 'auto' };}
+  if (screenClass === 'sm') {return { width: '400px', height: 'auto' };}
+  return { width: '300px', height: 'auto'};
 };
 
 const divStyle = (screenClass) => {
-  if (screenClass === 'xl') {return { width: '500px',margin:"0 auto auto" };}
-  if (screenClass === 'lg') {return { width: '400px',margin:"0 auto auto" };}
-  if (screenClass === 'md') {return { width: '400px',margin:"0 auto auto" };}
-  if (screenClass === 'sm') {return { width: '400px',margin:"0 auto auto" };}
-  return { width: '300px',margin:"0 auto auto"};
+  if (screenClass === 'xl') {return { width: '500px', margin: '0 auto auto' };}
+  if (screenClass === 'lg') {return { width: '400px', margin: '0 auto auto' };}
+  if (screenClass === 'md') {return { width: '400px', margin: '0 auto auto' };}
+  if (screenClass === 'sm') {return { width: '400px', margin: '0 auto auto' };}
+  return { width: '300px', margin: '0 auto auto'};
 };
 
 class ShowImg extends React.Component {
 
   constructor(props) {
-    super(props)
-
+    super(props);
   }
-  render(){
+  render() {
    return(<ScreenClassRender style={divStyle}>
     <div>
     <ScreenClassRender style={imgStyle}>
-    <img src={'./../assets/images/'+this.props.imgName} />
+    <img src = {'./../assets/images/' + this.props.imgName} />
     </ScreenClassRender>
     </div>
-  </ScreenClassRender >)
-
+  </ScreenClassRender >);
  }
 }
-
-
 export default class Graph extends React.Component {
   constructor(props) {
-    super(props)
-    this.state={
-      imgSelector:"default.png",
-      domainName:"",
-      concepts:[],
-      conceptsOnly:[],
-      intents:[],
-      docs:[],
-      checkedIntent:[],
-      selectedConcept:[],
-      open:false,
-      pageNum:1
-    }
+    super(props);
+    this.state = {
+      imgSelector: 'default.png',
+      domainName: '',
+      concepts: [],
+      conceptsOnly: [],
+      intents: [],
+      docs: [],
+      checkedIntent: [],
+      selectedConcept: [],
+      open: false,
+      pageNum: 1
+    };
   }
-
   handleToggle = () => this.setState({open: !this.state.open});
-
   getConcepts(conceptWithDocCnt)
   {
-    let sepDoc=conceptWithDocCnt.split(" - ")
-    let concept=sepDoc[0];
-    let newConcepts=this.state.selectedConcept;
+    let sepDoc = conceptWithDocCnt.split(' - ');
+    let concept = sepDoc[0];
+    let newConcepts = this.state.selectedConcept;
     if(this.state.conceptsOnly.includes(concept))
     {
       if(!newConcepts.includes(concept)) {
@@ -155,10 +149,6 @@ export default class Graph extends React.Component {
     });
     // console.log('selected concept')
     // console.log(newConcepts)
-      selectedConcept:newConcepts
-    })
-    console.log("selected concept")
-    console.log(newConcepts)
   }
 
   getCheckedIntents(event, checked)
@@ -183,9 +173,9 @@ export default class Graph extends React.Component {
    });
     this.setState(
     {
-      selectedConcept:delConcepts
-    })
-    console.log(delConcepts)
+      selectedConcept: delConcepts
+    });
+    // console.log(delConcepts)
   }
   getIntentsAndConcepts()
   {
@@ -194,24 +184,24 @@ export default class Graph extends React.Component {
     Request
     .get(url)
     .end((err, res) => {
-     if(!err){
-       let domainDetails=JSON.parse(res.text);
-       console.log("received concepts and intent for the current domain")
-       console.log(domainDetails)
-       let conOnly=[];
-       domainDetails.Concepts.map(function(conceptWithDocCnt){
-        let sepDoc=conceptWithDocCnt.split(" - ");
+     if(!err) {
+       let domainDetails = JSON.parse(res.text);
+       // console.log('received concepts and intent for the current domain')
+       // console.log(domainDetails)
+       let conOnly = [];
+       domainDetails.Concepts.map(function(conceptWithDocCnt) {
+        let sepDoc = conceptWithDocCnt.split(' - ');
         conOnly.push(sepDoc[0]);
-      })
-       console.log("extracted concepts :")
-       console.log(conOnly);
+      });
+       // console.log('extracted concepts :')
+       // console.log(conOnly);
        that.setState(
        {
-        domainName:domainDetails.Domain,
-        concepts:domainDetails.Concepts,
-        intents:domainDetails.Intents,
-        conceptsOnly:conOnly
-      })
+        domainName: domainDetails.Domain,
+        concepts: domainDetails.Concepts,
+        intents: domainDetails.Intents,
+        conceptsOnly: conOnly
+      });
      }
    });
   }
@@ -220,27 +210,27 @@ export default class Graph extends React.Component {
     if(this.state.selectedConcept.length === 0)
     {
       this.setState({
-        imgSelector:"noDoc.png",
-        docs:[]
-      })
+        imgSelector: 'noDoc.png',
+        docs: []
+      });
     }
     else{
-      let reqObj={
-        domainName:this.state.domainName,
-        reqIntents:this.state.checkedIntent,
-        reqConcepts:this.state.selectedConcept
-      }
-      reqObj.allIntents=this.state.intents;
-      if(reqObj.reqIntents.length===0)
+      let reqObj = {
+        domainName: this.state.domainName,
+        reqIntents: this.state.checkedIntent,
+        reqConcepts: this.state.selectedConcept
+      };
+      reqObj.allIntents = this.state.intents;
+      if(reqObj.reqIntents.length === 0)
       {
         reqObj.reqIntents = [];
       }
       this.setState({
-        docs:[]
-      })
-      console.log("sending the data to fetch documents")
-      console.log(reqObj)
-      let url =`/domain/documents/`+reqObj.domainName;
+        docs: []
+      });
+      // console.log('sending the data to fetch documents')
+      // console.log(reqObj)
+      let url = `/domain/documents/`+reqObj.domainName;
       Request
       .post(url)
       .send(reqObj)
@@ -250,15 +240,16 @@ export default class Graph extends React.Component {
  // console.log(err)
   }
   else {
-    let response=JSON.parse(res.text);
-    console.log("Response on documents to show: ",response);
+    let response = JSON.parse(res.text);
+    // console.log('Response on documents to show: ',response);
     response.sort(function(a, b) {
-      return Number(b.intensity) - Number(a.intensity)
-    })
+      return (Number(b.intensity) - Number(a.intensity));
+    });
+    if(typeof response === 'undefined' || response.length === 0)
     {
       this.setState({
-        imgSelector:"noDoc.png"
-      })
+        imgSelector: 'noDoc.png'
+      });
     }
     this.setState({
       docs: response
@@ -273,57 +264,57 @@ export default class Graph extends React.Component {
  }
  onPageClick(e)
  {
-   let page=this.state.pageNum;
-   if(e.currentTarget.dataset.id==="prev")
+   let page = this.state.pageNum;
+   if(e.currentTarget.dataset.id === 'prev')
    {
-     page-=1;
-     this.setState({pageNum:page});
+     page -= 1;
+     this.setState({pageNum: page});
    }
    else
    {
-     page+=1;
-     this.setState({pageNum:page});
+     page += 1;
+     this.setState({pageNum: page});
    }
  }
  render()
  {
-   let list=[];
+   let list = [];
    let prevFlag;
    let nextFlag;
-   let dList=this.state.docs;
-   let docsPerImg=2;
-   if(dList.length>0)
+   let dList = this.state.docs;
+   let docsPerImg = 2;
+   if(dList.length > 0)
    {
-     let pages=Math.ceil(dList.length/docsPerImg);
-     console.log('pages '+pages);
-     let pageNow=this.state.pageNum;
-     console.log('pageNow '+pageNow);
-     if(pages===pageNow)
+     let pages = Math.ceil(dList.length / docsPerImg);
+     // console.log('pages '+pages);
+     let pageNow = this.state.pageNum;
+     // console.log('pageNow '+pageNow);
+     if(pages === pageNow)
      {
-       nextFlag=true;
+       nextFlag = true;
      }
-     if(this.state.pageNum===1)
+     if(this.state.pageNum === 1)
      {
-       prevFlag=true;
+       prevFlag = true;
      }
-     if(pages===1 || pages===pageNow)
+     if(pages === 1 || pages === pageNow)
      {
-       list=[];
-      console.log(list);
-       for(let i=docsPerImg*(pageNow-1);i<this.state.docs.length;i+=1)
+       list = [];
+      // console.log(list);
+       for(let i = docsPerImg * (pageNow - 1); i < this.state.docs.length; i += 1)
        {
          list.push(this.state.docs[i]);
        }
-       console.log('printing list in if '+list);
+       // console.log('printing list in if '+list);
      }
      else {
-       list=[];
-       let foo=docsPerImg*(pageNow-1);
-       for(let i=foo;i<(foo+docsPerImg);i+=1)
+       list = [];
+       let foo = docsPerImg * (pageNow - 1);
+       for(let i = foo; i < (foo + docsPerImg); i += 1)
        {
          list.push(this.state.docs[i]);
        }
-      console.log('printing list in else'+list);
+      // console.log('printing list in else'+list);
      }
    }
    return(
@@ -352,7 +343,8 @@ export default class Graph extends React.Component {
      getConcept={this.getConcepts.bind(this)}/>
      <Row>
      <Col md={12} lg={12} xl={12}>
-     {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
+     {this.state.selectedConcept.length === 0 ?
+      <h4 style={{color: '#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4> :
      <SelectedConcepts conceptChips={this.state.selectedConcept}
      deleteConcept={this.deleteConcepts.bind(this)} />}
      </Col>
@@ -362,16 +354,16 @@ export default class Graph extends React.Component {
      <br/><br/>
      <Row>
        <Col md={12} lg={12} xl={12}>
-       {list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
-       {list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+       {list.length === 0 ? <ShowImg imgName = {this.state.imgSelector} /> : <div>
+       {list.map((doc, i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
        <br/>
-       <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+       <IconButton style={iconStyle.leftIcon} label='prev' disabled={prevFlag} data-id='prev'
        iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-       <NavigationArrowBack style={iconStyle.large} color={"white"} />
+       <NavigationArrowBack style={iconStyle.large} color={'white'} />
        </IconButton>
-       <IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+       <IconButton style={iconStyle.rightIcon} label='next' disabled={nextFlag} data-id='next'
        iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-       <NavigationArrowForward style={iconStyle.large} color={"white"} />
+       <NavigationArrowForward style={iconStyle.large} color={'white'} />
        </IconButton>
      </div>
      }
@@ -414,7 +406,8 @@ export default class Graph extends React.Component {
    getConcept={this.getConcepts.bind(this)}/>
    <Row>
    <Col sm={12} xs={12} md={12}>
-   {this.state.selectedConcept.length===0?<h4 style={{color:"#8aa6bd"}}>PLEASE SELECT CONCEPTS</h4>:
+   {this.state.selectedConcept.length === 0 ?
+    <h4 style={{color: '#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
    <SelectedConcepts conceptChips={this.state.selectedConcept}
    deleteConcept={this.deleteConcepts.bind(this)} />}
    </Col>
@@ -423,17 +416,18 @@ export default class Graph extends React.Component {
    </Row>
    <br/><br/>
    <Row>
-     <Col sm={12} xs={12} md={12}>
-      {list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
-      {list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})}
+     <Col sm = {12} xs = {12} md = {12}>
+      {list.length === 0 ?
+        <ShowImg imgName = {this.state.imgSelector} />:<div>
+      {list.map((doc, i) => {return <DocResultCard key={i} webDoc={doc}/>})}
       <br/>
-      <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+      <IconButton style={iconStyle.leftIcon} label='prev' disabled={prevFlag} data-id='prev'
       iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-      <NavigationArrowBack style={iconStyle.large} color={"white"} />
+      <NavigationArrowBack style={iconStyle.large} color={'white'} />
       </IconButton>
-      <IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+      <IconButton style={iconStyle.rightIcon} label='next' disabled={nextFlag} data-id='next'
       iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-      <NavigationArrowForward style={iconStyle.large} color={"white"} />
+      <NavigationArrowForward style={iconStyle.large} color={'white'} />
       </IconButton>
 
     </div>
