@@ -248,7 +248,7 @@ for (let i = 0; i < this.props.item.concepts.length; i++ ) {
 			<Card style = {styles.cardRound}>
 			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
 			<CardMedia style = {{height: '280px', borderRadius: '2%',
-			width: '100%', backgroundColor: this.state.conceptColor,marginBotton:15}}
+			width: '100%', backgroundColor: this.state.conceptColor,marginBottom:25}}
 			overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
 			style = {styles.padd}/>}>
 			<img src = {this.props.item.domainImgURL} style = {roundImg}/>
@@ -280,7 +280,7 @@ for (let i = 0; i < this.props.item.concepts.length; i++ ) {
 			</Chip>
 			</Col>
 			</Row>
-			<Row style = {{paddingLeft: 45, paddingBottom: 10}}>
+			<Row style = {{paddingLeft: 45}}>
 			<Col sm={6}>
 			<Chip backgroundColor={'grey'}
 			labelStyle={styles.cardLabel}
@@ -297,7 +297,7 @@ for (let i = 0; i < this.props.item.concepts.length; i++ ) {
 			</Visible>
 			<Visible xs>
 			<Container>
-			<Row style = {{marginLeft: '-5px', padding: '0 15px 20px'}}>
+			<Row style = {{marginLeft: '-5px', padding: '0 15px'}}>
 			<Col xs={4} style={{paddingLeft: 0}}>
 			<Chip
 			labelStyle={xsChip.cardLabel}

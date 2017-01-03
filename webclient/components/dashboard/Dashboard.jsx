@@ -10,20 +10,28 @@ import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forwa
 import IconButton from 'material-ui/IconButton';
 import {ScreenClassRender} from 'react-grid-system';
 
-const imgStyle = (screenClass) => {
-	if (screenClass === 'xl') {return { width: '700px',height:"auto" };}
-	if (screenClass === 'lg') {return { width: '600px',height:"auto"};}
-	if (screenClass === 'md') {return { width: '600px',height:"auto" };}
-	if (screenClass === 'sm') {return { width: '600px',height:"auto" };}
-	return { width: '300px',height:"auto"};
+const errStyle = (screenClass) => {
+	if (screenClass === 'xl') {return { width:700,margin: "20% auto 5%",textAlign:"left" };}
+	if (screenClass === 'lg') {return { width:700,margin: "20% auto 5%",textAlign:"left"};}
+	if (screenClass === 'md') {return { width:700,margin: "20% auto 5%",textAlign:"left" };}
+	if (screenClass === 'sm') {return { width:700,margin: "20% auto 5%",textAlign:"left" };}
+	return { width:300,margin: "20% auto 5%",textAlign:"left" };
 };
-const divStyle = (screenClass) => {
-	if (screenClass === 'xl') {return { width: '700px',margin:"5% auto auto" };}
-	if (screenClass === 'lg') {return { width: '600px',margin:"5% auto auto"};}
-	if (screenClass === 'md') {return { width: '600px',margin:"5% auto auto" };}
-	if (screenClass === 'sm') {return { width: '600px',margin:"5% auto auto" };}
-	return { width: '300px',margin:"6% auto auto"};
-};
+
+// const imgStyle = (screenClass) => {
+// 	if (screenClass === 'xl') {return { width: '700px',height:"auto" };}
+// 	if (screenClass === 'lg') {return { width: '600px',height:"auto"};}
+// 	if (screenClass === 'md') {return { width: '600px',height:"auto" };}
+// 	if (screenClass === 'sm') {return { width: '600px',height:"auto" };}
+// 	return { width: '300px',height:"auto"};
+// };
+// const divStyle = (screenClass) => {
+// 	if (screenClass === 'xl') {return { width: '700px',margin:"5% auto auto" };}
+// 	if (screenClass === 'lg') {return { width: '600px',margin:"5% auto auto"};}
+// 	if (screenClass === 'md') {return { width: '600px',margin:"5% auto auto" };}
+// 	if (screenClass === 'sm') {return { width: '600px',margin:"5% auto auto" };}
+// 	return { width: '300px',margin:"6% auto auto"};
+// };
 
 const iconStyle={
 	iconSize: {
@@ -80,17 +88,17 @@ const style = {
 	}
 };
 
-const NoContent=()=>{
-	return(
-		<ScreenClassRender style={divStyle}>
-		<div>
-		<ScreenClassRender style={imgStyle}>
-		<img src='./../assets/images/sry.png' />
-		</ScreenClassRender>
-		</div>
-		</ScreenClassRender>
-		);
-}
+// const NoContent=()=>{
+// 	return(
+// 		<ScreenClassRender style={divStyle}>
+// 		<div>
+// 		<ScreenClassRender style={imgStyle}>
+// 		<img src='./../assets/images/sry.png' />
+// 		</ScreenClassRender>
+// 		</div>
+// 		</ScreenClassRender>
+// 		);
+// }  <NoContent />
 
 
 
@@ -293,7 +301,14 @@ export default class Dashboard extends React.Component {
 						<Visible md sm xs>
 						{smallNav}
 						</Visible>
-						</div>:<NoContent />
+						
+						</div>:
+						<ScreenClassRender style={errStyle}>
+						<div style={errStyle} >
+						<h1 >It seems you have not yet created any domain
+						<br/><a>Create a new domain</a></h1>
+						</div>
+						</ScreenClassRender>
 					}
 					</div>
 				}
