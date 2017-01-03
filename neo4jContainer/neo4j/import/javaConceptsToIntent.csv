@@ -102,3 +102,6 @@ JAVA:INT:96,text book,JAVA:INT:94,term,intent,IndicatorOf,5
 JAVA:INT:97,reference book,JAVA:INT:94,term,intent,IndicatorOf,6
 JAVA:INT:98,implication,JAVA:INT:94,term,intent,IndicatorOf,7
 JAVA:INT:99,work book,JAVA:INT:94,term,intent,CounterIndicatorOf,6
+JAVA:INT:100,getting started,JAVA:INT:10,term,intent,IndicatorOf,8
+JAVA:INT:101,trouble shooting,JAVA:INT:6,term,intent,IndicatorOf,8
+JAVA:INT:102,basics,JAVA:INT:2,term,intent,IndicatorOf,8

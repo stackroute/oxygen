@@ -38,39 +38,39 @@ const iconStyle={
 		height: 120,
 		padding: 30
 	},
-	leftIcon: {
-		position: 'fixed',
-		top: '45%',
-		left: '3%',
-		float: 'left'
+	leftIcon:{
+		position:"fixed",
+		top:"45%",
+		left:30,
+		float:'left'
 	},
-	rightIcon: {
-		position: 'fixed',
-		top: '45%',
-		right: '3%',
-		float: 'right'
+	rightIcon:{
+		position:"fixed",
+		top:"45%",
+		right:30,
+		float:'right'
 	},
-	leftIconAvg: {
-		position: 'relative',
-		margin: '20 0 0 ',
-		padding: 0,
-		zDepth: 10,
-		float: 'left'
+	leftIconAvg:{
+		position:"relative",
+		margin:"20 0 0 30 ",
+		padding:0,
+		zDepth:10,
+		float:'left'
 	},
-	rightIconAvg: {
-		position: 'relative',
-		margin: '20 0 0 ',
-		padding: 0,
-		zDepth: 10,
-		float: 'right'
+	rightIconAvg:{
+		position:"relative",
+		margin:"20 30 0 0",
+		padding:0,
+		zDepth:10,
+		float:'right'
 	}
 }
 const fonts={
-	
+
 	textAlign: "center",
 	fontFamily: "sans-serif",
 	color: "#1976d2 "
-	
+
 }
 const style = {
 	refresh: {
@@ -83,12 +83,12 @@ const style = {
 const NoContent=()=>{
 	return(
 		<ScreenClassRender style={divStyle}>
-		<div>		
+		<div>
 		<ScreenClassRender style={imgStyle}>
 		<img src='./../assets/images/sry.png' />
-		</ScreenClassRender>		
+		</ScreenClassRender>
 		</div>
-		</ScreenClassRender >
+		</ScreenClassRender>
 		);
 }
 
@@ -227,7 +227,7 @@ export default class Dashboard extends React.Component {
 						list.push(this.state.domainList[i]);
 					}
 				}
-				else 
+				else
 				{
 					list=[];
 					let foo=6*(pageNow-1);
@@ -238,7 +238,7 @@ export default class Dashboard extends React.Component {
 				}
 			}
 			return (
-				<div style={fonts}>				
+				<div style={fonts}>
 				{
 					this.state.loading==="loading"?<RefreshIndicator
 					size={70}
@@ -246,7 +246,7 @@ export default class Dashboard extends React.Component {
 					top={0}
 					status={this.state.loading}
 					style={style.refresh}
-					/>:<div>					
+					/>:<div>
 					{
 						list.length!==0?<div>
 						<br/>
