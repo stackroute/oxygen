@@ -8,7 +8,7 @@ const graphConsts = require('./../common/graphConstants');
 let indexNewDomain = function(newDomainObj) {
   let promise = new Promise(function(resolve, reject) {
 
-    logger.debug("Now proceeding to index new domain: ", newDomainObj);
+   logger.debug("Now proceeding to index new domain: ", newDomainObj);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
       );
