@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreHorzIcon from 'material-ui/svg-icons/navigation/more-horiz';
-import {Card, CardTitle, CardMedia, CardText} from 'material-ui/Card';
+import {Card, CardTitle, CardMedia} from 'material-ui/Card';
 import {Container, Row, Col, Visible} from 'react-grid-system';
 import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
@@ -15,23 +15,23 @@ import {blue300, lime800, lightGreen500} from 'material-ui/styles/colors';
 import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 import Snackbar from 'material-ui/Snackbar';
 
-const info = {
-	paddingLeft: 0,
-	paddingTop: 3
-};
-const iconStyles = {
-	width: '28px',
-	height: '28px',
-	marginTop: 5,
-	marginLeft: 3
-};
-const iconStyles1 = {
-	width: '28px',
-	height: '28px',
-	marginTop: '5px',
-	paddingLeft: 0,
-	float: 'left'
-};
+// const info = {
+// 	paddingLeft: 0,
+// 	paddingTop: 3
+// };
+// const iconStyles = {
+// 	width: '28px',
+// 	height: '28px',
+// 	marginTop: 5,
+// 	marginLeft: 3
+// };
+// const iconStyles1 = {
+// 	width: '28px',
+// 	height: '28px',
+// 	marginTop: '5px',
+// 	paddingLeft: 0,
+// 	float: 'left'
+// };
 const roundImg = {
 	borderRadius: '50%',
 	minWidth: '0%',
@@ -84,100 +84,106 @@ const xsChip = {
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {canSubmit: false, conceptColor: '', intentColor: '', docsColor: '', open: false, openDialog: false};
-	}
-
-	handleRefresh() {
-		this.props.freshlyIndex(this.props.item.name);
-	}
-	handleOpen = () => {
-	this.setState({openDialog: true});
-};
-
-handleClose = () => {
-	this.setState({openDialog: false});
-};
-	handleTouchTap = () => {
-		this.setState({
-			open: true
-		});
-	};
-	handleRequestClose = () => {
-		this.setState({
-			open: false
-		});
-	};
-	componentWillMount()
-	{
-		if(this.props.item.docs === 0)
-		{
-			this.setState({docsColor: blue300});
-		}
-		else if(this.props.item.docs < 11)
-		{
-			this.setState({docsColor: lime800});
-		}
-		else {
-			this.setState({docsColor: lightGreen500});
+		this.state = {
+			canSubmit: false,
+			conceptColor: '',
+			intentColor: '',
+			docsColor: '',
+			open: false,
+			openDialog: false};
 		}
 
-		if(this.props.item.intents.length === 0)
+		handleRefresh() {
+			this.props.freshlyIndex(this.props.item.name);
+		}
+		handleOpen = () => {
+			this.setState({openDialog: true});
+		};
+
+		handleClose = () => {
+			this.setState({openDialog: false});
+		};
+		handleTouchTap = () => {
+			this.setState({
+				open: true
+			});
+		};
+		handleRequestClose = () => {
+			this.setState({
+				open: false
+			});
+		};
+		componentWillMount()
 		{
-			this.setState({intentColor: blue300});
-		}
-		else if(this.props.item.intents.length < 11)
-		{
-			this.setState({intentColor: lime800});
-		}
-		else {
-			this.setState({intentColor: lightGreen500});
-		}
+			if(this.props.item.docs === 0)
+			{
+				this.setState({docsColor: blue300});
+			}
+			else if(this.props.item.docs < 11)
+			{
+				this.setState({docsColor: lime800});
+			}
+			else {
+				this.setState({docsColor: lightGreen500});
+			}
+
+			if(this.props.item.intents.length === 0)
+			{
+				this.setState({intentColor: blue300});
+			}
+			else if(this.props.item.intents.length < 11)
+			{
+				this.setState({intentColor: lime800});
+			}
+			else {
+				this.setState({intentColor: lightGreen500});
+			}
 
 
-		if(this.props.item.concepts.length < 5)
+			if(this.props.item.concepts.length < 5)
+			{
+				this.setState({conceptColor: blue300});
+			}
+			else if(this.props.item.concepts < 15)
+			{
+				this.setState({conceptColor: lime800});
+			}
+			else {
+				this.setState({conceptColor: lightGreen500});
+			}
+		}
+		render()
 		{
-			this.setState({conceptColor: blue300});
-		}
-		else if(this.props.item.concepts < 15)
-		{
-			this.setState({conceptColor: lime800});
-		}
-		else {
-			this.setState({conceptColor: lightGreen500});
-		}
-	}
-	render()
-	{
-		const actions = [
-	<FlatButton
-		label="Cancel"
-		secondary={true}
-		onTouchTap={this.handleClose}
-	/>,
-	<FlatButton
-		label="Confirm"
-		primary={true}
-		keyboardFocused={true}
-		onClick={this.handleRefresh.bind(this)}
-		onTouchTap={this.handleClose}
-	/>,
-];
-		return(
-			<div>
-			<Snackbar
-			open={this.state.open}
-			message={this.props.item.description}
-			autoHideDuration={6000}
-			onRequestClose={this.handleRequestClose}
+			const actions = [
+			<FlatButton
+			label="Cancel"
+			secondary={true}
+			onTouchTap={this.handleClose}
+			/>,
+			<FlatButton
+			label="Confirm"
+			primary={true}
+			keyboardFocused={true}
+			onClick={this.handleRefresh.bind(this)}
+			onTouchTap={this.handleClose}
 			/>
-			<Card style = {styles.cardRound}>
-			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
-			<CardMedia style = {{height: '280px', borderRadius: '2%',
-			width: '100%', backgroundColor: this.state.conceptColor,marginBotton:15}}
-			overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
-			style = {styles.padd}/>}>
-			<img src = {this.props.item.domainImgURL} style = {roundImg}/>
-		 </CardMedia>
+			];
+			return(
+				<div>
+				<Snackbar
+				open={this.state.open}
+				message={this.props.item.description}
+				autoHideDuration={6000}
+				onRequestClose={this.handleRequestClose}
+				/>
+				<Card style = {styles.cardRound}>
+				<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
+				<CardMedia style = {{height: '280px', borderRadius: '2%',
+				width: '100%', backgroundColor: this.state.conceptColor,marginBottom:25}}
+				overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
+				style = {styles.padd}/>}>
+				<img src = {this.props.item.domainImgURL} style = {roundImg}/>
+				</CardMedia>
 			{/* </Link>
 			<CardText style = {styles.colorCode}>
 			<Row style = {{margin: 'auto 0px'}}>
@@ -197,124 +203,133 @@ handleClose = () => {
 			</Col>
 			</Row>
 			</CardText>
-			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}> */}
-			<Row style={{margin: 'auto 0px'}}>
-			<Visible sm md lg xl>
-			<Row style={{paddingLeft: 45}}>
-			<Col sm={6}>
-			<Chip backgroundColor = {'grey'} labelStyle = {styles.cardLabel}
-			style = {styles.chip}>Concepts Available:</Chip>
-			</Col>
-			<Col sm={3} style={{paddingLeft: 58}}>
-			<Chip backgroundColor = {this.state.conceptColor}
-			labelStyle = {styles.cardLabel} style = {styles.chip}>
-			{this.props.item.concepts.length}
-			</Chip>
-			</Col>
-			</Row>
-			<Row style = {{paddingLeft: 45}}>
-			<Col sm={6}>
-			<Chip backgroundColor = {'grey'}
-			labelStyle = {styles.cardLabel}
-			style = {styles.chip}>Intents Available : </Chip>
-			</Col>
-			<Col sm={3} style={{paddingLeft: 58}}>
-			<Chip backgroundColor = {this.state.intentColor}
-			labelStyle = {styles.cardLabel} style = {styles.chip}>
-			{this.props.item.intents.length}
-			</Chip>
-			</Col>
-			</Row>
-			<Row style = {{paddingLeft: 45, paddingBottom: 10}}>
-			<Col sm={6}>
-			<Chip backgroundColor={'grey'}
-			labelStyle={styles.cardLabel}
-			style={styles.chip}>Documents Available:</Chip>
-			</Col>
-			<Col sm={3}style={{paddingLeft: 58}}>
-			<Chip backgroundColor={this.state.docsColor}
-			labelStyle = {styles.cardLabel}
-			style = {styles.chip}>
-			{this.props.item.docs}
-			</Chip>
-			</Col>
-			</Row>
-			</Visible>
-			<Visible xs>
-			<Container>
-			<Row style = {{marginLeft: '-5px', padding: '0 15px 20px'}}>
-			<Col xs={4} style={{paddingLeft: 0}}>
-			<Chip
-			labelStyle={xsChip.cardLabel}
-			style = {xsChip.chip}
-			backgroundColor={this.state.conceptColor}
-			>
-			<Avatar size={32} color = 'white' backgroundColor='grey'>
-			C
-			</Avatar>
-			{this.props.item.concepts.length}
-			</Chip>
-			</Col>
-			<Col xs={4} style={{paddingLeft: 0}}>
-			<Chip
-			labelStyle={xsChip.cardLabel}
-			style={xsChip.chip}
-			backgroundColor={this.state.intentColor}
-			>
-			<Avatar size={32} color='white' backgroundColor='grey'>
-			I
-			</Avatar>
-			{this.props.item.intents.length}
-			</Chip>
-			</Col>
-			<Col xs={4} style={{paddingLeft: 0}}>
-			<Chip
-			labelStyle={xsChip.cardLabel}
-			style={xsChip.chip}
-			backgroundColor={this.state.docsColor}
-			>
-			<Avatar size={32} color='white' backgroundColor='grey'>
-			D
-			</Avatar>
-			{this.props.item.docs}
-			</Chip>
-			</Col>
-			</Row>
-			</Container>
-			</Visible>
-			</Row>
-			</Link>
-			<Row>
-				{/* <Col lg={9} md={9} sm={9} xs={9} style={{paddingRight:0,marginRight:0,marginTop:0,paddingTop:0}}>
+		<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}> */}
+		<Row style={{margin: 'auto 0px'}}>
+		<Visible sm md lg xl>
+		<Row style={{paddingLeft: 45}}>
+		<Col sm={6}>
+		<Chip backgroundColor = {'grey'} labelStyle = {styles.cardLabel}
+		style = {styles.chip}>Concepts Available:</Chip>
+		</Col>
+		<Col sm={3} style={{paddingLeft: 58}}>
+		<Chip backgroundColor = {this.state.conceptColor}
+		labelStyle = {styles.cardLabel} style = {styles.chip}>
+		{this.props.item.concepts.length}
+		</Chip>
+		</Col>
+		</Row>
+		<Row style = {{paddingLeft: 45}}>
+		<Col sm={6}>
+		<Chip backgroundColor = {'grey'}
+		labelStyle = {styles.cardLabel}
+		style = {styles.chip}>Intents Available : </Chip>
+		</Col>
+		<Col sm={3} style={{paddingLeft: 58}}>
+		<Chip backgroundColor = {this.state.intentColor}
+		labelStyle = {styles.cardLabel} style = {styles.chip}>
+		{this.props.item.intents.length}
+		</Chip>
+		</Col>
+		</Row>
+		<Row style = {{paddingLeft: 45}}>
+		<Col sm={6}>
+		<Chip backgroundColor={'grey'}
+		labelStyle={styles.cardLabel}
+		style={styles.chip}>Documents Available:</Chip>
+		</Col>
+		<Col sm={3}style={{paddingLeft: 58}}>
+		<Chip backgroundColor={this.state.docsColor}
+		labelStyle = {styles.cardLabel}
+		style = {styles.chip}>
+		{this.props.item.docs}
+		</Chip>
+		</Col>
+		</Row>
+		</Visible>
+		<Visible xs>
+		<Container>
+		<Row style = {{marginLeft: '-5px', padding: '0 15px'}}>
+		<Col xs={4} style={{paddingLeft: 0}}>
+		<Chip
+		labelStyle={xsChip.cardLabel}
+		style = {xsChip.chip}
+		backgroundColor={this.state.conceptColor}
+		>
+		<Avatar size={32} color = 'white' backgroundColor='grey'>
+		C
+		</Avatar>
+		{this.props.item.concepts.length}
+		</Chip>
+		</Col>
+		<Col xs={4} style={{paddingLeft: 0}}>
+		<Chip
+		labelStyle={xsChip.cardLabel}
+		style={xsChip.chip}
+		backgroundColor={this.state.intentColor}
+		>
+		<Avatar size={32} color='white' backgroundColor='grey'>
+		I
+		</Avatar>
+		{this.props.item.intents.length}
+		</Chip>
+		</Col>
+		<Col xs={4} style={{paddingLeft: 0}}>
+		<Chip
+		labelStyle={xsChip.cardLabel}
+		style={xsChip.chip}
+		backgroundColor={this.state.docsColor}
+		>
+		<Avatar size={32} color='white' backgroundColor='grey'>
+		D
+		</Avatar>
+		{this.props.item.docs}
+		</Chip>
+		</Col>
+		</Row>
+		</Container>
+		</Visible>
+		</Row>
+		</Link>
+		<Row>
+				{/* <Col lg={9} md={9} sm={9} xs={9} 
+				style={{paddingRight:0,marginRight:0,marginTop:0,paddingTop:0}}>
 					<h3 style={{float:'right',color:'grey'}}>More </h3>
 				</Col> */}
-		   <Col lg={12} md={12} sm={12} xs={12} style={{paddingLeft:0,marginLeft:0,marginTop:0,paddingTop:0,}}>
+				<Col lg={12} md={12} sm={12} xs={12} 
+				style={{paddingLeft:0,marginLeft:0,marginTop:0,paddingTop:0}}>
 				<IconMenu
-					iconButtonElement={<IconButton style={{paddingBottom:0}}><MoreHorzIcon style={{color:'grey'}}/></IconButton>}
+				iconButtonElement={<IconButton 
+					style={{paddingBottom:0}}>
+					<MoreHorzIcon 
+					style={{color:'grey'}}/></IconButton>}
 					anchorOrigin={{horizontal: 'left', vertical: 'top'}}
 					targetOrigin={{horizontal: 'left', vertical: 'top'}}
 					style={{float:'right'}}
 					>
-						<MenuItem primaryText="Information" leftIcon={<ActionInfo/>} onTouchTap = {this.handleTouchTap}/>
-						<MenuItem primaryText="ReIndex" leftIcon={<NavigationRefresh/>}	onTouchTap={this.handleOpen}/>
+					<MenuItem primaryText="Information" 
+					leftIcon={<ActionInfo/>} 
+					onTouchTap = {this.handleTouchTap}/>
+					<MenuItem primaryText="ReIndex" 
+					leftIcon={<NavigationRefresh/>}	
+					onTouchTap={this.handleOpen}/>
 					</IconMenu>
-			</Col>
-			</Row>
-			</Card>
-			<Dialog
-				title="Do you want to Re Index .. ?"
-				titleStyle={{color:'grey'}}
-				actions={actions}
-				modal={false}
-				open={this.state.openDialog}
-				onRequestClose={this.handleClose}
-				bodyStyle={{color:'grey'}}
-				>
+					</Col>
+					</Row>
+					</Card>
+					<Dialog
+					title="Do you want to Re Index .. ?"
+					titleStyle={{color:'grey'}}
+					actions={actions}
+					modal={false}
+					open={this.state.openDialog}
+					onRequestClose={this.handleClose}
+					bodyStyle={{color:'grey'}}
+					>
 					Click confirm to start a fresh Indexing of documents .
-     </Dialog>
-			</div>
-			);
-	}
+					</Dialog>
+					</div>
+					);
+}
 }
 DomainShow.propTypes = {
 	item: React.PropTypes.object,
