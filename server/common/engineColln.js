@@ -13,6 +13,7 @@ module.exports = {
     "AIzaSyBb4sbJNrnGmPmHiwEOxtF_ZEbcRBzNr60",
     "AIzaSyAkZ_luP7pNchE_V2EMeiw2AwE7kKmbQVY",
     "AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U"]
+
 }
 
 
