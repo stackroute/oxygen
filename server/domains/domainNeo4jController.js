@@ -11,7 +11,7 @@ let indexNewDomain = function(newDomainObj) {
     logger.debug("Now proceeding to index new domain: ", newDomainObj);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
-    );
+      );
 
     let session = driver.session();
 
@@ -23,20 +23,20 @@ let indexNewDomain = function(newDomainObj) {
     };
 
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          logger.debug("Result from neo4j: ", record);
-        });
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        logger.debug("Result from neo4j: ", record);
+      });
 
         // Completed!
         session.close();
         resolve(newDomainObj);
       })
-      .catch(function(err) {
-        logger.error("Error in neo4j query: ", err, ' query is: ',
-          query);
-        reject(err);
-      });
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
   return promise;
@@ -48,7 +48,7 @@ let getAllDomainConcept = function(domainNameColln) {
     logger.debug("Now proceeding to retrive the concepts for all domains: ");
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
-    );
+      );
 
     let session = driver.session();
 
@@ -67,30 +67,30 @@ let getAllDomainConcept = function(domainNameColln) {
 
 
       session.run(query, params)
-        .then(function(result) {
-          result.records.forEach(function(record) {
+      .then(function(result) {
+        result.records.forEach(function(record) {
 
-            let obj = {
-              Domain: "",
-              noOfConcepts: 0
-            }
-            record._fields.forEach(function(field) {
-              if (typeof field.low === 'undefined') {
-                obj.Domain = field.properties.name;
-              } else {
-                obj.noOfConcepts = field.low
-              }
-            });
-            data.push(obj);
-          });
-          if (data.length === domainNameColln.length) {
-            resolve(data);
+          let obj = {
+            Domain: "",
+            noOfConcepts: 0
           }
-        }).catch(function(err) {
-          logger.error("Error in neo4j query: ", err, ' query is: ',
-            query);
-          reject(err);
+          record._fields.forEach(function(field) {
+            if (typeof field.low === 'undefined') {
+              obj.Domain = field.properties.name;
+            } else {
+              obj.noOfConcepts = field.low
+            }
+          });
+          data.push(obj);
         });
+        if (data.length === domainNameColln.length) {
+          resolve(data);
+        }
+      }).catch(function(err) {
+        logger.error("Error in neo4j query: ", err, ' query is: ',
+          query);
+        reject(err);
+      });
 
     })
 
@@ -108,7 +108,7 @@ let getDomainConcept = function(domainName) {
     logger.debug("Now proceeding to retrive the concepts for domain name: ", domainName);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
-    );
+      );
 
     let session = driver.session();
 
@@ -122,25 +122,68 @@ let getDomainConcept = function(domainName) {
     };
     let concepts = [];
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          record._fields.forEach(function(fields) {
-            concepts.push(fields.properties.name);
-          });
-
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        record._fields.forEach(function(fields) {
+          concepts.push(fields.properties.name);
         });
-        session.close();
-        resolve({ Domain: domainName, Concepts: concepts });
-      })
-      .catch(function(err) {
-        logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
-          query);
-        reject(err);
+
       });
+      session.close();
+      resolve({ Domain: domainName, Concepts: concepts });
+    })
+    .catch(function(err) {
+      logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
   return promise;
 }
+
+
+let getDomainConceptWithDoc = function(domainName) {
+  let promise = new Promise(function(resolve, reject) {
+
+    logger.debug("Now proceeding to retrive the concepts for domain name: ", domainName);
+    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
+      );
+
+    let session = driver.session();
+
+    logger.debug("obtained connection with neo4j");
+    let query = 'MATCH (d:'+graphConsts.NODE_DOMAIN+'{name:{domainName}})'
+    query+= 'match(c:'+graphConsts.NODE_CONCEPT+')'
+    query+= 'match(d)<-[r:'+graphConsts.REL_CONCEPT_OF+']-(c) '
+    query+= 'match(w:'+graphConsts.NODE_WEBDOCUMENT+')'
+    query+= 'match(c)<-[r1:'+graphConsts.REL_HAS_EXPLANATION_OF+']-(w) '
+    query+='RETURN c.name,count(w)';
+    let params = {
+      domainName: domainName
+    };
+    let conceptsWithDoc=[];
+    session.run(query, params)
+    .then(function(result) {
+      result.records.forEach(function(record) { 
+        conceptsWithDoc.push(record._fields[0]+" - ( "+record._fields[1]+" ) Documents");
+      });
+      session.close();
+      logger.debug({Domain:domainName,ConceptsWithDoc:conceptsWithDoc})
+      resolve({Domain:domainName,ConceptsWithDoc:conceptsWithDoc});
+    })
+    .catch(function(err) {
+      logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+
+  });
+
+  return promise;
+}
+
 
 let getDomainIntent = function(domain) {
   let promise = new Promise(function(resolve, reject) {
@@ -148,7 +191,7 @@ let getDomainIntent = function(domain) {
     logger.debug("Now proceeding to retrive the intent for domain name: ", domain.Domain);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
-    );
+      );
 
     let session = driver.session();
 
@@ -162,22 +205,23 @@ let getDomainIntent = function(domain) {
     };
     let intents = [];
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          record._fields.forEach(function(fields) {
-            intents.push(fields.properties.name);
-          });
-
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        record._fields.forEach(function(fields) {
+          intents.push(fields.properties.name);
         });
-        session.close();
-        domain.Intents = intents;
-        resolve(domain);
-      })
-      .catch(function(err) {
-        logger.error("Error in neo4j query: ", err, ' query is: ',
-          query);
-        reject(err);
+
       });
+      session.close();
+      domain.Intents = intents;
+      logger.debug(domain);
+      resolve(domain);
+    })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
   return promise;
@@ -188,7 +232,7 @@ let getDomainCardDetails = function(domainObj) {
     logger.debug(" in domain card going for getting concepts for : ", domainObj);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
-    );
+      );
 
     let session = driver.session();
 
@@ -202,8 +246,8 @@ let getDomainCardDetails = function(domainObj) {
     };
     let concepts = [];
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
+    .then(function(result) {
+      result.records.forEach(function(record) {
           //logger.debug("Result from neo4j: ", record);
           record._fields.forEach(function(fields) {
             logger.debug("domain Concept :", fields.properties.name);
@@ -224,8 +268,8 @@ let getDomainCardDetails = function(domainObj) {
         let documents = 0;
         let session1 = driver.session();
         session1.run(query1, params1)
-          .then(function(outerResults) {
-            outerResults.records.forEach(function(record) {
+        .then(function(outerResults) {
+          outerResults.records.forEach(function(record) {
               //logger.debug("Result from neo4j: ", record);
               record._fields.forEach(function(fields) {
                 intent = fields.properties.name;
@@ -248,26 +292,26 @@ let getDomainCardDetails = function(domainObj) {
             };
             let session2 = driver.session();
             session2.run(query2, params2)
-              .then(function(results) {
-                if (results.records.length === 0) {
-                  resolve({ concepts: concepts, intents: intents, docs: documents });
-                } else {
-                  results.records.forEach(function(records) {
-                    records._fields.forEach(function(field) {
-                      logger.debug('document is' + field.properties.name);
-                      documents += 1;
-                      logger.debug('Number is ++++++++++++++++^^^^^##### ' + documents);
-                    });
-                    logger.debug('Number is  ' + documents);
+            .then(function(results) {
+              if (results.records.length === 0) {
+                resolve({ concepts: concepts, intents: intents, docs: documents });
+              } else {
+                results.records.forEach(function(records) {
+                  records._fields.forEach(function(field) {
+                    logger.debug('document is' + field.properties.name);
+                    documents += 1;
+                    logger.debug('Number is ++++++++++++++++^^^^^##### ' + documents);
                   });
-                  resolve({ concepts: concepts, intents: intents, docs: documents });
-                }
-                session2.close();
+                  logger.debug('Number is  ' + documents);
+                });
+                resolve({ concepts: concepts, intents: intents, docs: documents });
+              }
+              session2.close();
 
-              })
-              .catch(function(err) {
-                logger.error("Error in neo4j query: ", err, ' query is: ',
-                  query2);
+            })
+            .catch(function(err) {
+              logger.error("Error in neo4j query: ", err, ' query is: ',
+                query2);
 
                 //  reject(err);
               });
@@ -275,24 +319,24 @@ let getDomainCardDetails = function(domainObj) {
             session1.close();
 
           })
-          .catch(function(err) {
-            logger.error("Error in neo4j query: ", err, ' query is: ',
-              query1);
-            reject(err);
-          });
+        .catch(function(err) {
+          logger.error("Error in neo4j query: ", err, ' query is: ',
+            query1);
+          reject(err);
+        });
 
         // Completed!
         session.close();
         //resolve({Domain:domainName,Concepts:concepts});
       })
-      .catch(function(err) {
-        logger.error("Error in neo4j query: ", err, ' query is: ',
-          query);
-        reject(err);
-      });
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
-  return promise;
+return promise;
 }
 
 let getIntentforDocument = function(domain) {
@@ -302,13 +346,14 @@ let getIntentforDocument = function(domain) {
       "the intent relationship: ", domain.domainObj.domainName);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
-    );
+      );
 
     let session = driver.session();
 
     logger.debug("obtained connection with neo4j");
     let query = '';
     let str = JSON.stringify(domain.domainObj.allIntents);
+
 
     query += 'MATCH (d:' + graphConsts.NODE_DOMAIN + '{name:{domainName}})'
     query += 'MATCH(c:' + graphConsts.NODE_CONCEPT + ')'
@@ -324,30 +369,30 @@ let getIntentforDocument = function(domain) {
 
     let intents = [];
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          logger.debug("Result from neo4j: ", record);
-          let i = 0;
-          let obj = {};
-          record._fields.forEach(function(fields) {
-            i += 1;
-            if (i === 1) {
-              obj.intent = fields;
-            } else {
-              obj.count = Number(fields);
-              intents.push(obj);
-            }
-          });
-
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        logger.debug("Result from neo4j: ", record);
+        let i = 0;
+        let obj = {};
+        record._fields.forEach(function(fields) {
+          i += 1;
+          if (i === 1) {
+            obj.intent = fields;
+          } else {
+            obj.count = Number(fields);
+            intents.push(obj);
+          }
         });
-        session.close();
-        resolve(intents);
-      })
-      .catch(function(err) {
-        logger.error("Error in neo4j query: ", err, ' query is: ',
-          query);
-        reject(err);
+
       });
+      session.close();
+      resolve(intents);
+    })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
   return promise;
@@ -360,7 +405,7 @@ let getWebDocuments = function(domainObj) {
       "the web Documents for domain name: ", domainObj.domainName);
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
       neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), { encrypted: false }
-    );
+      );
 
     let session = driver.session();
 
@@ -390,30 +435,30 @@ let getWebDocuments = function(domainObj) {
     logger.debug("query " + query);
     let docs = [];
     session.run(query, params)
-      .then(function(result) {
-        result.records.forEach(function(record) {
-          logger.debug("Result from neo4j: ", record);
-          let i = 0;
-          let obj = {};
-          record._fields.forEach(function(fields) {
-            i += 1;
-            if (i === 1) {
-              obj.url = fields;
-            } else {
-              obj.intensity = Number(fields);
-              docs.push(obj);
-            }
-          });
-
+    .then(function(result) {
+      result.records.forEach(function(record) {
+        logger.debug("Result from neo4j: ", record);
+        let i = 0;
+        let obj = {};
+        record._fields.forEach(function(fields) {
+          i += 1;
+          if (i === 1) {
+            obj.url = fields;
+          } else {
+            obj.intensity = Number(fields);
+            docs.push(obj);
+          }
         });
-        session.close();
-        resolve(docs);
-      })
-      .catch(function(err) {
-        logger.error("Error in neo4j query: ", err, ' query is: ',
-          query);
-        reject(err);
+
       });
+      session.close();
+      resolve(docs);
+    })
+    .catch(function(err) {
+      logger.error("Error in neo4j query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
   });
 
   return promise;
@@ -428,6 +473,13 @@ let indexNewDomainCallBack = function(newDomainObj, callback) {
 }
 let getDomainConceptCallback = function(domainName, callback) {
   getDomainConcept(domainName).then(function(retrievedDomainConcept) {
+    callback(null, retrievedDomainConcept);
+  }, function(err) {
+    callback(err, null);
+  });
+}
+let getDomainConceptWithDocCallback = function(domainName, callback) {
+  getDomainConceptWithDoc(domainName).then(function(retrievedDomainConcept) {
     callback(null, retrievedDomainConcept);
   }, function(err) {
     callback(err, null);
@@ -469,10 +521,12 @@ let getWebDocumentsCallback = function(domainObj, callback) {
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept: getDomainConcept,
+  getDomainConceptWithDoc: getDomainConceptWithDoc,
   getDomainIntent: getDomainIntent,
   getAllDomainConcept: getAllDomainConcept,
   indexNewDomainCallBack: indexNewDomainCallBack,
   getDomainConceptCallback: getDomainConceptCallback,
+  getDomainConceptWithDocCallback: getDomainConceptWithDocCallback,
   getDomainIntentCallback: getDomainIntentCallback,
   getAllDomainConceptCallback: getAllDomainConceptCallback,
   getDomainCardDetailsCallback: getDomainCardDetailsCallback,
