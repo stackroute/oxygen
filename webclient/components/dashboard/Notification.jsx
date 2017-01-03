@@ -1,4 +1,4 @@
-
+/*eslint no-undef: 0*/
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 export default class Notification extends React.Component {
