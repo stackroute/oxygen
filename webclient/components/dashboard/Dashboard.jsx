@@ -182,6 +182,20 @@ export default class Dashboard extends React.Component {
 			});
 		}
 
+		addDocument(doc)
+		{
+			let url = `/domain/`+doc.domainName+`/crawl` ;
+			Request
+			.post(url)
+			.send(doc.docs)
+			.end((err, res) => {
+				if(err) {
+					this.setState({errmsg: res.body});
+				}
+				console.log(res);
+			});
+		}
+
 
 		render() {
 			let prevFlag=false;
@@ -257,7 +271,9 @@ export default class Dashboard extends React.Component {
 
 								return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
 									<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
-									index={i} key={i} indexs={i} ref="show" item={item}/>
+									index={i} key={i} indexs={i} ref="show" item={item}
+                  addDocument={this.addDocument.bind(this)}
+								/>
 									</Col>);
 							})
 						}

@@ -6,15 +6,26 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
 import MoreHorzIcon from 'material-ui/svg-icons/navigation/more-horiz';
-import {Card, CardTitle, CardMedia, CardText} from 'material-ui/Card';
+import {Card, CardTitle, CardMedia} from 'material-ui/Card';
 import {Container, Row, Col, Visible} from 'react-grid-system';
 import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import ActionAddBox from 'material-ui/svg-icons/content/add-box';
 import {blue300, lime800, lightGreen500} from 'material-ui/styles/colors';
 import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 import Snackbar from 'material-ui/Snackbar';
+import Divider from 'material-ui/Divider';
+import Formsy from 'formsy-react';
+import FormsyText from 'formsy-material-ui/lib/FormsyText';
+import FormsySelect from 'formsy-material-ui/lib/FormsySelect';
 
+const docFont = {
+  fontSize: '15px',
+	marginRight: '20px',
+	width: '90%'
+};
 const info = {
 	paddingLeft: 0,
 	paddingTop: 3
@@ -84,7 +95,13 @@ const xsChip = {
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {canSubmit: false, conceptColor: '', intentColor: '', docsColor: '', open: false, openDialog: false};
+		this.state = {canSubmit: false, conceptColor: '', intentColor: '', docsColor: '', open: false,
+		        openDialog: false,openDialogDocs: false ,value: 'select',
+						canSubmit: false,docs: [],concept: ''};
+	}
+
+	handleChange(event,index) {
+		this.setState({concept: index});
 	}
 
 	handleRefresh() {
@@ -97,6 +114,13 @@ export default class DomainShow extends React.Component {
 handleClose = () => {
 	this.setState({openDialog: false});
 };
+handleOpenDocs = () => {
+this.setState({openDialogDocs: true, url: 0,canSubmit: false});
+};
+
+handleCloseDocs = () => {
+this.setState({openDialogDocs: false});
+};
 	handleTouchTap = () => {
 		this.setState({
 			open: true
@@ -107,8 +131,26 @@ handleClose = () => {
 			open: false
 		});
 	};
+	enableButton() {
+		this.setState(()=>({
+			canSubmit: true
+		}));
+	}
+	disableButton() {
+		this.setState(()=>({
+			canSubmit: false
+		}));
+	}
+	changeDocList(e) {
+		console.log(this.state.docs);
+		let docs=e.target.value;
+		let docArr=docs.split(',');
+		this.setState({docs:docArr});
+	}
 	componentWillMount()
 	{
+		let concept=this.props.item.concepts[0];
+		this.setState({concept: concept});
 		if(this.props.item.docs === 0)
 		{
 			this.setState({docsColor: blue300});
@@ -146,6 +188,18 @@ handleClose = () => {
 			this.setState({conceptColor: lightGreen500});
 		}
 	}
+	handleSubmit() {
+
+		let docs=
+		{
+    "concepts":[ {
+        "name":this.state.concept,
+        "urls":this.state.docs
+                }
+        ]
+   }
+	  this.props.addDocument({domainName:this.props.item.name,docs:docs});
+	}
 	render()
 	{
 		const actions = [
@@ -162,6 +216,27 @@ handleClose = () => {
 		onTouchTap={this.handleClose}
 	/>,
 ];
+const actionsDocs = [
+	<FlatButton
+		label="Cancel"
+		secondary={true}
+		onTouchTap={this.handleCloseDocs}
+	/>,
+	<FlatButton
+		label="Submit"
+		primary={true}
+		keyboardFocused={true}
+		onTouchTap={this.handleCloseDocs}
+		disabled={!this.state.canSubmit}
+    onClick={this.handleSubmit.bind(this)}
+	/>,
+];
+let UrlError= 'please enter a URL';
+const items = [];
+
+for (let i = 0; i < this.props.item.concepts.length; i++ ) {
+  items.push(<MenuItem value={this.props.item.concepts[i]} key={i} primaryText={this.props.item.concepts[i]} />);
+}
 		return(
 			<div>
 			<Snackbar
@@ -178,26 +253,6 @@ handleClose = () => {
 			style = {styles.padd}/>}>
 			<img src = {this.props.item.domainImgURL} style = {roundImg}/>
 		 </CardMedia>
-			{/* </Link>
-			<CardText style = {styles.colorCode}>
-			<Row style = {{margin: 'auto 0px'}}>
-			<Col xs={2} sm={2} >
-			<IconButton iconStyle = {iconStyles} onTouchTap = {this.handleTouchTap}>
-			<ActionInfo />
-			</IconButton>
-			</Col>
-			<Col xs={8} sm={8} >
-			<h2 style={info}>Domain Information</h2>
-			</Col>
-			<Col xs={2} sm={2} >
-			<IconButton iconStyle={iconStyles1} style={{paddingLeft: 0}}
-			onClick={this.handleRefresh.bind(this)}>
-			<NavigationRefresh/>
-			</IconButton>
-			</Col>
-			</Row>
-			</CardText>
-			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}> */}
 			<Row style={{margin: 'auto 0px'}}>
 			<Visible sm md lg xl>
 			<Row style={{paddingLeft: 45}}>
@@ -285,9 +340,6 @@ handleClose = () => {
 			</Row>
 			</Link>
 			<Row>
-				{/* <Col lg={9} md={9} sm={9} xs={9} style={{paddingRight:0,marginRight:0,marginTop:0,paddingTop:0}}>
-					<h3 style={{float:'right',color:'grey'}}>More </h3>
-				</Col> */}
 		   <Col lg={12} md={12} sm={12} xs={12} style={{paddingLeft:0,marginLeft:0,marginTop:0,paddingTop:0,}}>
 				<IconMenu
 					iconButtonElement={<IconButton style={{paddingBottom:0}}><MoreHorzIcon style={{color:'grey'}}/></IconButton>}
@@ -296,6 +348,7 @@ handleClose = () => {
 					style={{float:'right'}}
 					>
 						<MenuItem primaryText="Information" leftIcon={<ActionInfo/>} onTouchTap = {this.handleTouchTap}/>
+						<MenuItem primaryText="Add Documents" leftIcon={<ActionAddBox/>} onTouchTap = {this.handleOpenDocs}/>
 						<MenuItem primaryText="ReIndex" leftIcon={<NavigationRefresh/>}	onTouchTap={this.handleOpen}/>
 					</IconMenu>
 			</Col>
@@ -312,6 +365,61 @@ handleClose = () => {
 				>
 					Click confirm to start a fresh Indexing of documents .
      </Dialog>
+		 <Dialog
+			 title="Add documents for a concept"
+			 titleStyle={{  color: "#858586",
+			   fontSize: 30,
+			   backgroundColor: "#c7c7c7"}}
+			 actions={actionsDocs}
+			 modal={false}
+			 open={this.state.openDialogDocs}
+			 onRequestClose={this.handleCloseDocs}
+			 autoScrollBodyContent={true}
+			 >
+
+				<Formsy.Form
+				ref="form"
+				style={{"paddingBottom": '10px'}}
+				onValid={this.enableButton.bind(this)}
+				onInvalid={this.disableButton.bind(this)}
+				onValidSubmit={this.handleSubmit.bind(this)}
+				>
+					<Col lg={6} md={6} sm={6} xs={6}><h3 style={{paddingTop: 15,color: 'grey'}}>Select Concept</h3></Col>
+					<Col lg={6} md={6} sm={6} xs={6}>
+						{/* <DropDownMenu maxHeight={300} value={this.state.value}
+						onChange={this.handleChange.bind(this)}>
+
+					</DropDownMenu> */}
+					<FormsySelect
+						name="frequency"
+						required
+						floatingLabelText="Selected Concept"
+
+						value= {this.state.concept}
+						onChange={this.handleChange.bind(this)}
+						>
+             {items}
+						</FormsySelect>
+				</Col>
+				<Divider />
+				<Row><Col lg={12} md={12} sm={12} xs={12}><h3 style={{paddingLeft: 15,color: 'grey'}}>Add Documents :</h3></Col></Row>
+
+			<Row>
+			<Col lg={12} md={12} sm={12} xs={12}><FormsyText
+			type= 'text'
+			required
+		  multiLine={true}
+			//validationError= {UrlError}
+			updateImmediately
+			hintText= 'add document..'
+			name= 'add Doc'
+			style={docFont}
+			fullWidth={true}
+			onChange={this.changeDocList.bind(this)}
+			/></Col>
+			</Row>
+		</Formsy.Form>
+			 </Dialog>
 			</div>
 			);
 	}
