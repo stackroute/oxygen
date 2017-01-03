@@ -167,7 +167,7 @@ let getDomainConceptWithDoc = function(domainName) {
     session.run(query, params)
     .then(function(result) {
       result.records.forEach(function(record) { 
-        conceptsWithDoc.push(record._fields[0]+" - ( "+record._fields[1]+" ) Documents");
+        conceptsWithDoc.push(record._fields[0]+" ("+record._fields[1]+" Docs)");
       });
       session.close();
       logger.debug({Domain:domainName,ConceptsWithDoc:conceptsWithDoc})
