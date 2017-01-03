@@ -2,6 +2,11 @@ import React from 'react';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MoreHorzIcon from 'material-ui/svg-icons/navigation/more-horiz';
 import {Card, CardTitle, CardMedia, CardText} from 'material-ui/Card';
 import {Container, Row, Col, Visible} from 'react-grid-system';
 import {Link} from 'react-router';
@@ -79,12 +84,19 @@ const xsChip = {
 export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {canSubmit: false, conceptColor: '', intentColor: '', docsColor: '', open: false};
+		this.state = {canSubmit: false, conceptColor: '', intentColor: '', docsColor: '', open: false, openDialog: false};
 	}
 
 	handleRefresh() {
 		this.props.freshlyIndex(this.props.item.name);
 	}
+	handleOpen = () => {
+	this.setState({openDialog: true});
+};
+
+handleClose = () => {
+	this.setState({openDialog: false});
+};
 	handleTouchTap = () => {
 		this.setState({
 			open: true
@@ -136,6 +148,20 @@ export default class DomainShow extends React.Component {
 	}
 	render()
 	{
+		const actions = [
+	<FlatButton
+		label="Cancel"
+		secondary={true}
+		onTouchTap={this.handleClose}
+	/>,
+	<FlatButton
+		label="Confirm"
+		primary={true}
+		keyboardFocused={true}
+		onClick={this.handleRefresh.bind(this)}
+		onTouchTap={this.handleClose}
+	/>,
+];
 		return(
 			<div>
 			<Snackbar
@@ -147,12 +173,12 @@ export default class DomainShow extends React.Component {
 			<Card style = {styles.cardRound}>
 			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
 			<CardMedia style = {{height: '280px', borderRadius: '2%',
-			width: '100%', backgroundColor: this.state.conceptColor}}
+			width: '100%', backgroundColor: this.state.conceptColor,marginBotton:15}}
 			overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
 			style = {styles.padd}/>}>
 			<img src = {this.props.item.domainImgURL} style = {roundImg}/>
-			</CardMedia>
-			</Link>
+		 </CardMedia>
+			{/* </Link>
 			<CardText style = {styles.colorCode}>
 			<Row style = {{margin: 'auto 0px'}}>
 			<Col xs={2} sm={2} >
@@ -171,7 +197,7 @@ export default class DomainShow extends React.Component {
 			</Col>
 			</Row>
 			</CardText>
-			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
+			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}> */}
 			<Row style={{margin: 'auto 0px'}}>
 			<Visible sm md lg xl>
 			<Row style={{paddingLeft: 45}}>
@@ -258,7 +284,34 @@ export default class DomainShow extends React.Component {
 			</Visible>
 			</Row>
 			</Link>
+			<Row>
+				{/* <Col lg={9} md={9} sm={9} xs={9} style={{paddingRight:0,marginRight:0,marginTop:0,paddingTop:0}}>
+					<h3 style={{float:'right',color:'grey'}}>More </h3>
+				</Col> */}
+		   <Col lg={12} md={12} sm={12} xs={12} style={{paddingLeft:0,marginLeft:0,marginTop:0,paddingTop:0,}}>
+				<IconMenu
+					iconButtonElement={<IconButton style={{paddingBottom:0}}><MoreHorzIcon style={{color:'grey'}}/></IconButton>}
+					anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+					targetOrigin={{horizontal: 'left', vertical: 'top'}}
+					style={{float:'right'}}
+					>
+						<MenuItem primaryText="Information" leftIcon={<ActionInfo/>} onTouchTap = {this.handleTouchTap}/>
+						<MenuItem primaryText="ReIndex" leftIcon={<NavigationRefresh/>}	onTouchTap={this.handleOpen}/>
+					</IconMenu>
+			</Col>
+			</Row>
 			</Card>
+			<Dialog
+				title="Do you want to Re Index .. ?"
+				titleStyle={{color:'grey'}}
+				actions={actions}
+				modal={false}
+				open={this.state.openDialog}
+				onRequestClose={this.handleClose}
+				bodyStyle={{color:'grey'}}
+				>
+					Click confirm to start a fresh Indexing of documents .
+     </Dialog>
 			</div>
 			);
 	}

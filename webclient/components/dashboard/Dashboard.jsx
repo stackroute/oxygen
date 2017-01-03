@@ -66,11 +66,11 @@ const iconStyle={
 	}
 }
 const fonts={
-	
+
 	textAlign: "center",
 	fontFamily: "sans-serif",
 	color: "#1976d2 "
-	
+
 }
 const style = {
 	refresh: {
@@ -83,12 +83,12 @@ const style = {
 const NoContent=()=>{
 	return(
 		<ScreenClassRender style={divStyle}>
-		<div>		
+		<div>
 		<ScreenClassRender style={imgStyle}>
 		<img src='./../assets/images/sry.png' />
-		</ScreenClassRender>		
+		</ScreenClassRender>
 		</div>
-		</ScreenClassRender >
+		</ScreenClassRender>
 		);
 }
 
@@ -227,7 +227,7 @@ export default class Dashboard extends React.Component {
 						list.push(this.state.domainList[i]);
 					}
 				}
-				else 
+				else
 				{
 					list=[];
 					let foo=6*(pageNow-1);
@@ -238,7 +238,7 @@ export default class Dashboard extends React.Component {
 				}
 			}
 			return (
-				<div style={fonts}>				
+				<div style={fonts}>
 				{
 					this.state.loading==="loading"?<RefreshIndicator
 					size={70}
@@ -246,7 +246,7 @@ export default class Dashboard extends React.Component {
 					top={0}
 					status={this.state.loading}
 					style={style.refresh}
-					/>:<div>					
+					/>:<div>
 					{
 						list.length!==0?<div>
 						<br/>
