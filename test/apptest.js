@@ -34,24 +34,18 @@ describe("Make GET requests to domain along with domain name ", function() {
 });
 
 
-describe("Make post requests to domain along with domain name ", function() {
-  it("Testing for publishing a new domain it should return status", function(done) {
-    request
-      .post('/domain/java')
-      .send({
-        "name": "Java",
-        "description": "No description",
-        "domainImgURL": "no url"
-      })
-      .end(function(err, res) {
-        expect(Object.keys(res.body)).to.have.lengthOf(4);
-        done();
-        this.timeout(10000);
+// describe("Make post requests to domain along with domain name ", function() {
+//   it("Testing for publishing a new domain it should return status", function(done) {
+//     request
+//     .post('/domain/java')
+//     .send({
+//       "name": "Java",
+//       "description": "No description",
+//       "domainImgURL": "no url"
+//     }).expect(200, done);
+//   });
 
-      });
-  });
-
-});
+// });
 
 
 describe("Make GET requests to docSearchJob ", function() {
@@ -61,69 +55,69 @@ describe("Make GET requests to docSearchJob ", function() {
 });
 
 
-describe("Make POST request to add jobs ", function() {
-  it('Simple POST request test for adding job', function(done) {
-    request.post('/docsearchjob/job')
-      .send({
-        query: "react",
-        engineID: "009216953448521283757:ibz3hdutpom AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U",
-        exactTerms: "jsx",
-        results: "2",
-        siteSearch: "NONE"
-      })
-      .end(function(err, res) {
-        expect(Object.keys(res.body)).to.have.lengthOf(6);
-        done();
-      });
-  });
-});
+// describe("Make POST request to add jobs ", function() {
+//   it('Simple POST request test for adding job', function(done) {
+//     request.post('/docsearchjob/job')
+//       .send({
+//         query: "react",
+//         engineID: "009216953448521283757:ibz3hdutpom AIzaSyDY5SnIb4vsmGwteTes7VPbi_1_TFV-T1U",
+//         exactTerms: "jsx",
+//         results: "2",
+//         siteSearch: "NONE"
+//       })
+//       .end(function(err, res) {
+//         expect(Object.keys(res.body)).to.have.lengthOf(6);
+//         done();
+//       });
+//   });
+// });
 
-describe("Make GET request to show the results ", function() {
-  it('Simple GET request test for viewing all the results', function(done) {
-    request.get('/docsearchjob/show')
-      .end(function(err, res) {
-        expect('Content-Type', 'application/json; charset=utf-8', done);
-        done();
-        this.timeout(10000);
-      });
-  });
-});
+// describe("Make GET request to show the results ", function() {
+//   it('Simple GET request test for viewing all the results', function(done) {
+//     request.get('/docsearchjob/show')
+//       .end(function(err, res) {
+//         expect('Content-Type', 'application/json; charset=utf-8', done);
+//         done();
+//         this.timeout(10000);
+//       });
+//   });
+// });
 
-describe("Make GET request to show the results ", function() {
-  it('Simple GET request test for viewing the results for a particular job id', function(done) {
-    request.get('/docsearchjob/585cb4cf0384402018145166')
-      .end(function(err, res) {
-        expect('Content-Type', 'application/json; charset=utf-8', done);
-        done();
-        this.timeout(10000);
+// describe("Make GET request to show the results ", function() {
+//   it('Simple GET request test for viewing the results for a particular job id', function(done) {
+//     request.get('/docsearchjob/585cb4cf0384402018145166')
+//       .end(function(err, res) {
+//         expect('Content-Type', 'application/json; charset=utf-8', done);
+//         done();
+//         this.timeout(10000);
 
-      });
-  });
-  it('Simple GET request test for viewing the results for a wrong job id', function(done) {
-    request.get('/docsearchjob/rr585cb4cf0384402018145166')
-      .end(function(err, res) {
-        expect({
-          error: 'Something went wrong, please try later..!'
-        }, done);
-        done();
+//       });
+//   });
+//   it('Simple GET request test for viewing the results for a wrong job id', function(done) {
+//     request.get('/docsearchjob/rr585cb4cf0384402018145166')
+//       .end(function(err, res) {
+//         expect({
+//           error: 'Something went wrong, please try later..!'
+//         }, done);
+//         done();
 
 
-      });
-  });
+//       });
+//   });
 
-});
+// });
 
-describe("Make DELETE request to delete the results ", function() {
-  it('Simple DELETE request TO delete the results for a particular job id', function(done) {
-    request.get('/docsearchjob/585cb4cf0384402018145166')
-      .end(function(err, res) {
-        expect('Content-Type', 'application/json; charset=utf-8', done);
-        done();
-        this.timeout(10000);
+// describe("Make DELETE request to delete the results ", function() {
+//   it('Simple DELETE request TO delete the results for a particular job id', function(done) {
+//     request.get('/docsearchjob/585cb4cf0384402018145166')
+//       .end(function(err, res) {
+//         expect('Content-Type', 'application/json; charset=utf-8', done);
+//         done();
+//         this.timeout(10000);
 
-      });
-  });
-});
+//       });
+//   });
+// });
 
 // // describe("fetching terms from the domain", function() {
 // //   let domainObj = {
