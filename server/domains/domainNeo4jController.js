@@ -289,7 +289,7 @@ let getDomainCardDetails = function(domainObj) {
         result.records.forEach(function(record) {
           //logger.debug("Result from neo4j: ", record);
           record._fields.forEach(function(fields) {
-            logger.debug("domain Concept :", fields.properties.name);
+           // logger.debug("domain Concept :", fields.properties.name);
             concepts.push(fields.properties.name);
           });
 
@@ -348,14 +348,14 @@ let getDomainCardDetails = function(domainObj) {
                 } else {
                   results.records.forEach(function(records) {
                     records._fields.forEach(function(field) {
-                      logger.debug('document is' + field.properties
-                        .name);
+                     // logger.debug('document is' + field.properties
+                      //  .name);
                       documents += 1;
-                      logger.debug(
-                        'Number is ++++++++++++++++^^^^^##### ' +
-                        documents);
+                      // logger.debug(
+                      //   'Number is ++++++++++++++++^^^^^##### ' +
+                      //   documents);
                     });
-                    logger.debug('Number is  ' + documents);
+                    // logger.debug('Number is  ' + documents);
                   });
                   resolve({
                     concepts: concepts,
@@ -477,7 +477,7 @@ let getWebDocuments = function(domainObj) {
     let query = '';
     let str = JSON.stringify(domainObj.reqConcepts);
     let str1 = JSON.stringify(domainObj.reqIntents);
-    logger.debug("***********" + str + "     " + str1);
+   // logger.debug("***********" + str + "     " + str1);
     if (domainObj.reqIntents.length === 0) {
       query += 'MATCH (d:' + graphConsts.NODE_DOMAIN +
         '{name:{domainName}})'
@@ -499,7 +499,7 @@ let getWebDocuments = function(domainObj) {
     let params = {
       domainName: domainObj.domainName
     };
-    logger.debug("query " + query);
+    //logger.debug("query " + query);
     let docs = [];
     session.run(query, params)
       .then(function(result) {
