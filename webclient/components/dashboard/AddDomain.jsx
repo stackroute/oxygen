@@ -4,7 +4,7 @@ import Formsy from 'formsy-react';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import {Container, Row, Col,Visible} from 'react-grid-system';
+import {Container, Row, Col} from 'react-grid-system';
 import FormsyText from 'formsy-material-ui/lib/FormsyText';
 import Request from 'superagent';
 // const defaultImgURL='http://corevitality.com/'+
@@ -13,13 +13,10 @@ import Request from 'superagent';
 const defaultImgURL='./../../assets/images/bulb.png';
 const style = {
   position:'fixed',
-  bottom: '5%',
+  top: '10%',
   right:'5%'
 };
-const styleAvg = {
-  position:'relative',
-  marginBottom: '5%'
-};
+
 const tfont={
   fontSize:'15px'
 }
@@ -170,16 +167,9 @@ export default class AddDomain extends React.Component {
     });
     return (
       <div>
-      <Visible xl lg>
       <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
       <ContentAdd />
       </FloatingActionButton>
-      </Visible>
-      <Visible xs sm md>
-      <FloatingActionButton style={styleAvg} onTouchTap={this.handleOpen}>
-      <ContentAdd />
-      </FloatingActionButton>
-      </Visible>
       <Dialog
       title='Add Domain'
       titleStyle={titleDialog}
