@@ -1,0 +1,834 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"onc",
+				"onclick\tAttr"
+			],
+			[
+				"Search",
+				"SearchForm"
+			],
+			[
+				"Searc",
+				"SearchForm"
+			],
+			[
+				"mov",
+				"moviesResults"
+			],
+			[
+				"padd",
+				"padding-top"
+			],
+			[
+				"create",
+				"createWriteStream"
+			],
+			[
+				"st",
+				"style\tTag"
+			],
+			[
+				"line",
+				"lineData"
+			],
+			[
+				"head",
+				"header"
+			],
+			[
+				"g",
+				"getName"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"wid",
+				"width_100"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"onch",
+				"onchange\tAttr"
+			],
+			[
+				"font-",
+				"font-size"
+			],
+			[
+				"col",
+				"color"
+			],
+			[
+				"margin",
+				"margin-top"
+			],
+			[
+				"ba",
+				"background-image"
+			],
+			[
+				"pad",
+				"padding-left"
+			],
+			[
+				"marg",
+				"margin-top"
+			],
+			[
+				"te",
+				"text-align"
+			],
+			[
+				"padding",
+				"padding-bottom"
+			],
+			[
+				"back",
+				"background-color"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "webclient/components/graph/SelectedConcepts.jsx",
+			"settings":
+			{
+				"buffer_size": 1141,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webclient/components/graph/Graph.jsx",
+			"settings":
+			{
+				"buffer_size": 12436,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "server/crawler/crawlerModules.js",
+			"settings":
+			{
+				"buffer_size": 3197,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webclient/components/domainhomeview/SunburstView.jsx",
+			"settings":
+			{
+				"buffer_size": 393,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webclient/components/domainhomeview/Domainhomeview.jsx",
+			"settings":
+			{
+				"buffer_size": 380,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "webclient/views/App.jsx",
+			"settings":
+			{
+				"buffer_size": 1430,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "package",
+		"selected_items":
+		[
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"prett",
+				"HTMLPrettify: Set Keyboard Shortcuts"
+			],
+			[
+				"i",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"prett\n",
+				"HTMLPrettify"
+			],
+			[
+				"inde",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"html",
+				"HTMLPrettify"
+			],
+			[
+				"inst",
+				"HTMLPrettify: Set Plugin Options"
+			],
+			[
+				"",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"insta",
+				"Install Package Control"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 160.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/user/Public/oxygen",
+		"/home/user/Public/oxygen/server",
+		"/home/user/Public/oxygen/server/crawler",
+		"/home/user/Public/oxygen/webclient",
+		"/home/user/Public/oxygen/webclient/assets",
+		"/home/user/Public/oxygen/webclient/components",
+		"/home/user/Public/oxygen/webclient/components/domainhomeview",
+		"/home/user/Public/oxygen/webclient/components/graph",
+		"/home/user/Public/oxygen/webclient/views",
+		"/home/user/Public/oxygen/server"
+	],
+	"file_history":
+	[
+		"/home/user/Public/oxygen/webclient/components/graph/DocResultCard.jsx",
+		"/home/user/Public/oxygen/webclient/components/domainhomeview/index.jsx",
+		"/home/user/Public/oxygen/webclient/components/graph/index.jsx",
+		"/home/user/Public/oxygen/webclient/components/graph/Graph.jsx",
+		"/home/user/Public/oxygen/webclient/views/App.jsx",
+		"/home/user/Public/oxygen/webclient/components/dashboard/DashboardDomains.jsx",
+		"/home/user/Public/oxygen/package.json",
+		"/home/user/Public/oxygen/webclient/README.md",
+		"/home/user/Public/oxygen/webclient/index.html",
+		"/home/user/Public/oxygen/webclient/components/domainhomeview/sunburst.jsx",
+		"/home/user/Public/oxygen/gulpfile.js",
+		"/home/user/Public/oxygen/webpack.config.js",
+		"/home/user/Public/oxygen/.htmlhintrc",
+		"/home/user/Public/sunburst_demo_bk/package.json",
+		"/home/user/Public/sunburst_demo_bk/data.json",
+		"/home/user/Public/sunburst_demo_bk/data_sunburst.json",
+		"/home/user/Public/oxygen/notes/graphDB/importingConceptGraph.md",
+		"/home/user/Public/highland/promise.html",
+		"/home/user/Public/highland/promise.js",
+		"/home/user/Public/sunburst_demo/db.js",
+		"/home/user/Public/sunburst_demo/java_concepts.json",
+		"/home/user/Public/sunburst_demo/flare.json",
+		"/home/user/Public/sunburst_demo/package.json",
+		"/home/user/Public/sunburst_demo/data (copy).json",
+		"/home/user/Public/sunburst_demo/neo4j_to_json.js",
+		"/home/user/Public/sunburst_demo/node_modules/cypher.js",
+		"/home/user/Public/expressapp/app.js",
+		"/home/user/Public/react-audio-example/src/MyAudioRecorder.js",
+		"/home/user/Public/react-audio-example/src/components/Btn.js",
+		"/home/user/Public/react-audio-example/src/components/App.js",
+		"/home/user/Public/react-audio-example/src/containers/StopButton.js",
+		"/home/user/Public/react-audio-example/src/containers/StartButton.js",
+		"/home/user/Public/react-audio-example/src/containers/VolumeMeter.js",
+		"/home/user/Public/react-audio-example/src/components/MyAudioRecorder.jsx",
+		"/home/user/Public/react-audio-example/src/MyAudioRecorder.jsx",
+		"/home/user/Public/react-audio-example/src/test.js",
+		"/home/user/Public/react-audio-example/package.json",
+		"/home/user/Public/react-audio-example/src/store.js",
+		"/home/user/Public/react-audio-example/index.html",
+		"/home/user/Public/react-audio-example/src/index.js",
+		"/home/user/Public/react-audio-example/src/reducers/index.js",
+		"/home/user/Public/react-audio-example/index.js",
+		"/home/user/Public/nodejs/movie-search/src/components/SearchMovies.jsx",
+		"/home/user/Public/react-audio-example/test-recording.js",
+		"/home/user/Public/react-audio-example/webpack.config.js",
+		"/home/user/Public/react-audio-example/test.js",
+		"/home/user/Public/react-audio-example/src/test-recording.js",
+		"/home/user/Public/nodejs-docs-samples/speech/resources/speech api key-01df22a7082a.json",
+		"/home/user/Public/nodejs-docs-samples/speech/package.json",
+		"/home/user/Public/nodejs-docs-samples/speech/resources/speech api key-70093669b330.json",
+		"/home/user/Public/nodejs-docs-samples/speech/quickstart.js",
+		"/home/user/Public/nodejs-docs-samples/speech/resources/speech api key-70093669b330_bk.json",
+		"/home/user/Public/nodejs-docs-samples/speech/system-test/recognize.test.js",
+		"/home/user/Public/nodejs-docs-samples/speech/README.md",
+		"/home/user/Public/nodejs-docs-samples/speech/resources/quit.raw",
+		"/home/user/Public/closure/example_1.js",
+		"/home/user/Public/nodejs/movie-search/src/components/SearchForm.jsx",
+		"/home/user/Public/nodejs/movie-search/src/Route.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/Footer.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/Home.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/MovieList.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/MovieDetail.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/Papercomponent.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/ResultsTable.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/Header.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/App.jsx",
+		"/home/user/Public/nodejs/movie-search/webpack.config.js",
+		"/home/user/Public/nodejs/movie-search/package.json",
+		"/home/user/Public/nodejs/movie-search/index.html",
+		"/home/user/Public/nodejs/movie-search/src/components/ContactUs.jsx",
+		"/home/user/Public/nodejs/movie-search/src/components/table.jsx",
+		"/home/user/Public/nodejs/movie-search/.gitignore",
+		"/home/user/Public/my-movie-search/npm-debug.log",
+		"/home/user/Public/my-movie-search/node_modules/babel/index.js",
+		"/home/user/Public/my-movie-search/node_modules/babel/package.json",
+		"/home/user/Public/nodejs/movie-search/bower_components/react-router/examples/active-links/index.html",
+		"/home/user/Public/nodejs/movie-search/bower_components/react-router/examples/index.html",
+		"/home/user/Public/nodejs/movie-search/public/index.html",
+		"/home/user/Public/nodejs/movie-search/#public/index.html",
+		"/home/user/Public/nodejs/movie-search/bower_components/react-router/webpack.config.js",
+		"/home/user/Public/nodejs/movie-search/bower_components/react-router/examples/active-links/app.js",
+		"/home/user/Public/nodejs/movie-search/bower_components/react-router/.babelrc",
+		"/home/user/Public/nodejs/movie-search/src/App.js",
+		"/home/user/Public/nodejs/movie-search/src/index.js",
+		"/home/user/Public/nodejs/movie-search/.babelrc",
+		"/home/user/Public/nodejs/movie-search/README.md",
+		"/home/user/Public/nodejs/movie-search/npm-debug.log",
+		"/home/user/Public/nodejs/movie-search/public/favicon.ico",
+		"/home/user/Public/jsonserver/assignment",
+		"/home/user/Public/jsonserver/index.html",
+		"/home/user/Public/jsonserver/css/style.css",
+		"/home/user/Public/moviesearch/script.js",
+		"/home/user/Public/moviesearch/movieSearch.html",
+		"/home/user/Public/jsonserver/generated.json",
+		"/home/user/Public/jsonserver/jsongeneraterFbUsers",
+		"/home/user/Public/jsonserver/db.json",
+		"/home/user/Public/jsonserver/script.js",
+		"/home/user/Public/jsonserver/db-1480412417286.json",
+		"/home/user/Public/jsonserver/api",
+		"/tmp/mozilla_user0/generated.json",
+		"/home/user/Public/moviesearch/css/db.json",
+		"/home/user/Public/bootstrap/index (copy).html",
+		"/home/user/Public/moviesearch/index1.html",
+		"/home/user/Public/moviesearch/css/style.css",
+		"/home/user/Public/moviesearch/css/carousel.css",
+		"/home/user/Public/d3/multiSeriesLineData.csv",
+		"/home/user/Public/d3/csvToJson.js",
+		"/home/user/Public/d3/multiSeriesLineData.json",
+		"/home/user/Public/d3/stackbar.js",
+		"/home/user/Public/d3/csvTOJson_bk.js",
+		"/home/user/Public/d3/multiSeriesLineGraph.html",
+		"/home/user/Public/d3/stackbarData.json",
+		"/home/user/Public/d3/.gitignore",
+		"/home/user/Public/d3/highlight.min.js",
+		"/home/user/Public/jquery/index.html",
+		"/home/user/Public/bootstrap/index.html",
+		"/home/user/Public/jquery/assignment",
+		"/home/user/Public/d3/index.html",
+		"/home/user/Public/d3/bk.html",
+		"/home/user/Public/nodeApp/stackbarData.json",
+		"/home/user/Public/nodeApp/FoodFacts.csv",
+		"/home/user/Public/nodeApp/temp.csv",
+		"/home/user/Public/nodeApp/csvTOJson_bk.js",
+		"/home/user/Public/nodeApp/multiSeriesLineData.json",
+		"/home/user/Public/nodeApp/stackbar.js",
+		"/home/user/Public/nodeApp/stackbar.css",
+		"/home/user/Public/nodeApp/data.csv",
+		"/home/user/Public/nodeApp/stackbar.html"
+	],
+	"find":
+	{
+		"height": 36.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"/home/user/Public/react-audio-example",
+			"/home/user/Public/nodejs-docs-samples/speech"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"neo4j",
+			"(){\n",
+			"DocResultCard",
+			"selectedConcept",
+			"setTimeout",
+			"subconcept of",
+			"NOT",
+			"subconcept of",
+			"832",
+			"\"value\":",
+			"subconcept of",
+			"\"value\":",
+			"\"value\"",
+			"subconcept of",
+			"\"size\":1",
+			"size",
+			"},",
+			"subconcept of",
+			"instanceof",
+			"RETURN",
+			"dbConenction",
+			"fe45fbcd-1128-42ee-8632-f0c6873f59b6",
+			"start",
+			"react",
+			"Recorder",
+			"-70093669b330",
+			"/home/user/Downloads/speech api key-01df22a7082a.json",
+			"70093669b330257c3647020b6c6a0d0ea86dd048",
+			"}\n",
+			"}",
+			"++;\n",
+			"fn",
+			"tit",
+			"}",
+			"TableHeaderColumn",
+			"res",
+			"req",
+			"ReactRouter",
+			"destination",
+			"hello",
+			"583d5f4d948bee5e8b8837b1",
+			"delete",
+			"deleteUser",
+			"Company",
+			"company",
+			"value",
+			"583d5f4dc3a482290933c755",
+			"container",
+			"583d5f4dc3a482290933c755",
+			"search-re",
+			"searchResults",
+			"searchR",
+			"queryNpopulate",
+			"searchResults",
+			"search-re",
+			"delete",
+			"dele",
+			"delete",
+			"Go",
+			"go",
+			"queryNpopulate",
+			"loadUserTemplate",
+			"prev",
+			"movie",
+			"makeApiRequestWithTitle",
+			"console",
+			"makeApiRequestWithTitle",
+			"moviesArr",
+			"moviesArr\nmoviesArr",
+			"moviesArr",
+			"displayMovies",
+			"Sort",
+			"navb",
+			"wsJson",
+			"sugar",
+			"sugar_100g",
+			"                                ",
+			"count",
+			"tD",
+			"tr",
+			"region",
+			"price",
+			"date",
+			"symbol",
+			"price",
+			"parseFloat",
+			"parse",
+			"parseFloat",
+			"d.region",
+			"parseFloat",
+			"d.price",
+			"d.date",
+			"symbol",
+			"carbohydrates_100g",
+			"{\n",
+			"fat_100g",
+			"region",
+			"France",
+			"France,belgium",
+			"France",
+			"Belgium,France",
+			"Belgium",
+			"France",
+			"neder",
+			"France",
+			"United Kingdo",
+			"north",
+			"centralEurope",
+			"northEurope",
+			"southE",
+			"south",
+			"cent",
+			"cenr",
+			"countriesConsumption",
+			"multiSeriesRegions",
+			"region",
+			"Portugal,Greece",
+			"Portugal, Greece",
+			"Germany",
+			"Belgium,Germany",
+			"Belgium,Germany,Switzerland",
+			"Belgium,Germany,Switzerland,Nederlands",
+			"France,Belgium,Germany,Switzerland,Netherlands",
+			"France, Belgium, Germany, Switzerland and Netherlands",
+			"United Kingdom, Denmark, Sweden and Norway",
+			"margin",
+			"month",
+			"bumpLayer"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"children",
+			"",
+			"children",
+			"\"size\":\"1\"",
+			"\"size\"",
+			",size:1 },",
+			"size:1 },",
+			"children",
+			"search-results",
+			"search",
+			"sugars_100g",
+			"consumption",
+			"region",
+			"nutrients",
+			"consumption",
+			"parseInt",
+			"d.consumption",
+			"d.region",
+			"nutrients",
+			"col-xs",
+			".menu",
+			"myheader",
+			"<span class=\"grid_3\" ",
+			"<span class=\"grid_3\"",
+			"jpg\" class=\"grid_3\"/>",
+			"/>",
+			" class=\"grid_3\" />",
+			"",
+			"grid_3",
+			"padding_bottom_5",
+			"solo_caption",
+			"padding_bottom_10",
+			"solo_caption",
+			"%"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "webclient/components/graph/SelectedConcepts.jsx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1141,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSX/JSX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "webclient/components/graph/Graph.jsx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12436,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12235,
+								12235
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSX/JSX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 8644.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "server/crawler/crawlerModules.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3197,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2003,
+								2003
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1068.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "webclient/components/domainhomeview/SunburstView.jsx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 393,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								100,
+								100
+							],
+							[
+								285,
+								285
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSX/JSX.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "webclient/components/domainhomeview/Domainhomeview.jsx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 380,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								311,
+								311
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSX/JSX.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "webclient/views/App.jsx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1430,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23,
+								23
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSX/JSX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 118.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "oxygen.sublime-project",
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 352.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 279.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

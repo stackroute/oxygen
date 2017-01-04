@@ -1,4 +1,4 @@
-/*eslint no-undef: 0*/
+dasds/*eslint no-undef: 0*/
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 
