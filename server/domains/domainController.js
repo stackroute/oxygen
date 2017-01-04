@@ -168,6 +168,10 @@ let publishNewDomain = function(newDomainObj) {
       ],
       function(err, indexedDomainObj) {
         if (err) {
+<<<<<<< HEAD
+=======
+          logger.error("Error in publishNewDomain : ", err)
+>>>>>>> refs/remotes/origin/dev-wave-11
           reject(err);
         }
         if (indexedDomainObj) {
@@ -207,6 +211,12 @@ let publishNewDomain = function(newDomainObj) {
                   ') here.');
                 reject(indexedDomainObj)
               });
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> refs/remotes/origin/dev-wave-11
         } else {
           reject({
             error: 'Null indexed object was returned..!'

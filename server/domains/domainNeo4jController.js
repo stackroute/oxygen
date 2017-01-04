@@ -17,7 +17,6 @@ let indexNewDomain = function(newDomainObj) {
     );
 
     let session = driver.session();
-
     logger.debug("obtained connection with neo4j");
 
     let query = 'MERGE (d:' + graphConsts.NODE_DOMAIN +
@@ -191,8 +190,13 @@ let getDomainConceptWithDoc = function(domainName) {
     session.run(query, params)
       .then(function(result) {
         result.records.forEach(function(record) {
+<<<<<<< HEAD
           conceptsWithDoc.push(record._fields[0] + " - ( " + record
             ._fields[1] + " ) Documents");
+=======
+          conceptsWithDoc.push(record._fields[0] + " (" + record._fields[
+            1] + " Docs)");
+>>>>>>> refs/remotes/origin/dev-wave-11
         });
         session.close();
         logger.debug({
