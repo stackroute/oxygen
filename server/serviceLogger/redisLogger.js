@@ -19,7 +19,13 @@ const processFinished = function(data){
 	publishLog(channelName, data);
 }
 
+const updateData = function(data){
+	let channelName = 'oxygen:onServiceUpdate';
+	publishLog(channelName, data);
+}
+
 module.exports = {
   processStart: processStart,
-  processFinished: processFinished
+  processFinished: processFinished,
+	updateData: updateData
 }

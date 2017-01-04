@@ -1,4 +1,5 @@
 const parserNeo4jCtrl = require('./docIntentParserNeo4jController');
+const domainNeo4jCtrl = require('./../domains/domainNeo4jController');
 
 const logger = require('./../../applogger');
 
@@ -86,8 +87,23 @@ let conceptDocumentRelationship = function(data) {
 
 }
 
+let latestNoOfDocs= function(data) {
+domainNeo4jCtrl.getDomainCardDetails(data).then(function(result){
+logger.debug("latest No Of Docs ",
+  result.docs);
+return({domain: data , docs: result.docs});
+},
+function(err) {
+logger.error("Encountered error in getting latest no of docs",
+  err);
+return(err);
+});
+
+}
+
 module.exports = {
   fetchIntentSpecificTerms: fetchIntentSpecificTerms,
   findIntentIntensity: findIntentIntensity,
-  conceptDocumentRelationship: conceptDocumentRelationship
+  conceptDocumentRelationship: conceptDocumentRelationship,
+  latestNoOfDocs: latestNoOfDocs
 }
