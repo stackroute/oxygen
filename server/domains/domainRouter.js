@@ -16,21 +16,23 @@ router.post('/:domainName', function(req, res) {
       req.params.domainName);
 
     domainCtrl.publishNewDomain(newDomainObj)
-    .then(function(savedDomainObj) {
-      logger.debug("Successfully published new domain: ",
-        savedDomainObj.name);
-      res.send(savedDomainObj);
-      return;
-    },
-    function(err) {
-      logger.error("Encountered error in publishing a new domain: ",
-        err);
-      res.send(err);
-      return;
-    });
-
+      .then(function(savedDomainObj) {
+          logger.debug("Successfully published new domain: ",
+            savedDomainObj.name);
+          res.send(savedDomainObj);
+          return;
+        },
+        function(err) {
+          logger.error("Encountered error in publishing a new domain: ",
+            err);
+          res.status(500).send({
+            error: 'Failed to complete operation...!'
+          });
+          return;
+        });
   } catch (err) {
-    logger.error("Caught a error in posting new domain ", err);
+    logger.error("Caught a error in posting new domain ", err,
+      " stack trace ");
     res.status(500).send({
       error: "Something went wrong, please try later..!"
     });
@@ -62,17 +64,19 @@ router.post('/:domainName/crawl', function(req, res) {
 router.get('/', function(req, res) {
   try {
     domainCtrl.getAllDomainDetails().then(function(cardDetailsObj) {
-      logger.debug("Successfully retrived all details to show length----->",
-        cardDetailsObj.length);
-      res.send(cardDetailsObj);
-      return;
-    },
-    function(err) {
-      logger.error("Encountered error in retrived concept(s) of domain: ",
-        err);
-      res.send(err);
-      return;
-    })
+        logger.debug(
+          "Successfully retrived all details to show length----->",
+          cardDetailsObj.length);
+        res.send(cardDetailsObj);
+        return;
+      },
+      function(err) {
+        logger.error(
+          "Encountered error in retrived concept(s) of domain: ",
+          err);
+        res.send(err);
+        return;
+      })
 
   } catch (err) {
     logger.error("Caught a error in retrived concept(s) of domain ", err);
@@ -87,16 +91,18 @@ router.get('/', function(req, res) {
 router.get('/domains', function(req, res) {
   try {
     domainCtrl.getAllDomain().then(function(domainObj) {
-      logger.debug("Successfully retrived all details to show length----->", domainObj.length);
-      res.send(domainObj);
-      return;
-    },
-    function(err) {
-      logger.error("Encountered error in retriving  domain: ",
-        err);
-      res.send(err);
-      return;
-    })
+        logger.debug(
+          "Successfully retrived all details to show length----->",
+          domainObj.length);
+        res.send(domainObj);
+        return;
+      },
+      function(err) {
+        logger.error("Encountered error in retriving  domain: ",
+          err);
+        res.send(err);
+        return;
+      })
 
   } catch (err) {
     logger.error("Caught a error in retriving domains ", err);
@@ -114,17 +120,20 @@ router.get('/:domainName', function(req, res) {
 
     let domainName = req.params.domainName;
     domainCtrl.getDomain(domainName).then(function(domainDetails) {
-      logger.info("Successfully retrived all concepts and intents of a domain : ");
-      logger.info(domainDetails)
-      res.send(domainDetails);
-      return;
-    },
-    function(err) {
-      logger.error("Encountered error in retrived concept(s) of domain: ",
-        err);
-      res.send(err);
-      return;
-    })
+        logger.info(
+          "Successfully retrived all concepts and intents of a domain : "
+        );
+        logger.info(domainDetails)
+        res.send(domainDetails);
+        return;
+      },
+      function(err) {
+        logger.error(
+          "Encountered error in retrived concept(s) of domain: ",
+          err);
+        res.send(err);
+        return;
+      })
 
   } catch (err) {
     logger.error("Caught a error in retrived concept(s) of domain ", err);
@@ -141,16 +150,18 @@ router.post('/:domainName/index', function(req, res) {
   logger.debug("going to freshly index domain ", req.params.domainName);
   try {
     domainCtrl.freshlyIndexDomain(req.params.domainName).then(function(obj) {
-      logger.debug("Successfully indexing for all concepts  ----->", obj);
-      res.send("Successfully done");
-      return;
-    },
-    function(err) {
-      logger.error("Encountered error in retrived concept(s) of domain: ",
-        err);
-      res.send(err);
-      return;
-    })
+        logger.debug("Successfully indexing for all concepts  ----->",
+          obj);
+        res.send("Successfully done");
+        return;
+      },
+      function(err) {
+        logger.error(
+          "Encountered error in retrived concept(s) of domain: ",
+          err);
+        res.send(err);
+        return;
+      })
 
   } catch (err) {
     logger.error("Caught a error in retrived concept(s) of domain ", err);
@@ -170,17 +181,18 @@ router.post('/documents/:domainName', function(req, res) {
 
     let domainObj = req.body;
     domainCtrl.fetchWebDocuments(domainObj).then(function(webDocuments) {
-      logger.info("Successfully retrived all we documents : ");
-      logger.debug(webDocuments)
-      res.send(webDocuments);
-      return;
-    },
-    function(err) {
-      logger.error("Encountered error in retrived concept(s) of domain: ",
-        err);
-      res.send(err);
-      return;
-    })
+        logger.info("Successfully retrived all we documents : ");
+        logger.debug(webDocuments)
+        res.send(webDocuments);
+        return;
+      },
+      function(err) {
+        logger.error(
+          "Encountered error in retrived concept(s) of domain: ",
+          err);
+        res.send(err);
+        return;
+      })
 
   } catch (err) {
     logger.error("Caught a error in retrived concept(s) of domain ", err);
