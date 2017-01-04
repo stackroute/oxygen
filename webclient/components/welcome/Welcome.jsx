@@ -40,7 +40,7 @@ class Welcome extends React.Component {
       <MenuItem onTouchTap={this.handleToggle}>
       <IconButton><ActionSearch /></IconButton>
       <FlatButton label='Job' hoverColor= '#e8f1fb' labelStyle={{textAlign: 'left'}}
-      style = {{fontSize: '50px', marginTop: '4px'}}/>     
+      style = {{fontSize: '50px', marginTop: '4px'}}/>
       </MenuItem>
       </Link>
       <Link to='/dashboard'>

@@ -113,7 +113,7 @@ class ShowImg extends React.Component {
     <img src = {'./../assets/images/' + this.props.imgName} />
     </ScreenClassRender>
     </div>
-    </ScreenClassRender >);
+    </ScreenClassRender>);
  }
 }
 export default class Graph extends React.Component {
@@ -316,7 +316,7 @@ else {
        {
          list.push(this.state.docs[i]);
        }
-       
+
       // console.log('printing list in else'+list);
     }
   }
@@ -361,7 +361,7 @@ else {
       list.length===0?<ShowImg imgName={this.state.imgSelector} />:<div>
       {
         list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})
-      }    
+      }
 
       <Col md={12} lg={12} xl={12}>
       <IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
@@ -380,17 +380,17 @@ else {
     </Col>
     </Visible>
     <Visible style={{padding:0}} md sm xs>
-    
+
 
     <Drawer open={this.state.open}
     onRequestChange={this.handleToggle}
     docked={false}
     >
 
-    <MenuItem><SelectPanel intents={this.state.intents}      
+    <MenuItem><SelectPanel intents={this.state.intents}
     getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
     </Drawer>
-    
+
     <Col sm={12} xs={12} md={12} style={{maxWidth:2000}}>
     <Row>
     <Col md={10} sm={10} xs={10}>
@@ -461,5 +461,3 @@ ShowImg.propTypes = {
   imgName: React.PropTypes.string
 
 };
-
-
