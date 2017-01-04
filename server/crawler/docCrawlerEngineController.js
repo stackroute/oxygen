@@ -4,6 +4,7 @@ const logger = require('./../../applogger');
 const request = require('request');
 const cheerio = require('cheerio');
 const startIntentParser = require('./docOpenIntentParserEngine').startIntentParser;
+const datapublisher = require('../serviceLogger/redisLogger');
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const urlIndexing = function(data) {
@@ -125,6 +126,15 @@ const urlIndexing = function(data) {
       highland(dataArr)
       .pipe(highland.pipeline.apply(null, processors))
       .each(function(res) {
+        let redisCrawl={       
+          domain: dataObj.domain,        
+          actor: 'crawler',        
+          message: dataObj.url,        
+          status: 'crawling completed for the url'        
+        }        
+        datapublisher.processFinished(redisCrawl);        
+
+
         logger.debug('At consupmtion Intent : ');
         logger.debug(res);
         let intents = res.intents;
@@ -136,6 +146,14 @@ const urlIndexing = function(data) {
           obj.intent = intent;
           logger.debug('printing the msg to send to parser');
           logger.debug(obj);
+
+          let redisIntent={        
+            domain: obj.domain,        
+            actor: 'intent parser',        
+            message: obj.intent,        
+            status: 'intent parsing started for the particular intent'        
+          }        
+          datapublisher.processStart(redisIntent);
           startIntentParser(obj);
         });
       });
