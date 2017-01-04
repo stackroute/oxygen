@@ -10,12 +10,12 @@ describe("Make GET requests to domain ", function() {
 
   });
 
-  it('Testing for not defined route', function(done) {
-    request.get('/_undefined_route').expect(404, done);
-    this.timeout(10000)
+//   it('Testing for not defined route', function(done) {
+//     request.get('/_undefined_route').expect(404, done);
+//     this.timeout(10000)
 
-  });
-});
+//   });
+// });
 
 describe("Make GET requests to domain :", function() {
   it('Testing for all domains', function(done) {
@@ -25,13 +25,13 @@ describe("Make GET requests to domain :", function() {
 });
 
 
-describe("Make GET requests to domain along with domain name ", function() {
-  it('Testing for a domain which is not present', function(done) {
-    request.get('/domain/nullDomain').
-    expect({ error: 'Null domain object while retriving the domain from mongo..!' }, done);
-    this.timeout(10000);
-  });
-});
+// describe("Make GET requests to domain along with domain name ", function() {
+//   it('Testing for a domain which is not present', function(done) {
+//     request.get('/domain/nullDomain').
+//     expect({ error: 'Null domain object while retriving the domain from mongo..!' }, done);
+//     this.timeout(10000);
+//   });
+// });
 
 
 // describe("Make post requests to domain along with domain name ", function() {
@@ -48,11 +48,11 @@ describe("Make GET requests to domain along with domain name ", function() {
 // });
 
 
-describe("Make GET requests to docSearchJob ", function() {
-  it('Simple GET Request to root url', function(done) {
-    request.get('/').expect(200, done);
-  });
-});
+// describe("Make GET requests to docSearchJob ", function() {
+//   it('Simple GET Request to root url', function(done) {
+//     request.get('/').expect(200, done);
+//   });
+// });
 
 
 // describe("Make POST request to add jobs ", function() {
