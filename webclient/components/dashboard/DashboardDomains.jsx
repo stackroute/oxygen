@@ -402,7 +402,7 @@ for (let i = 0; i < this.props.item.concepts.length; i++ ) {
 						</FormsySelect>
 				</Col>
 				<Divider />
-				<Row><Col lg={12} md={12} sm={12} xs={12}><h3 style={{paddingLeft: 15,color: 'grey'}}>Add Documents :</h3></Col></Row>
+				<Row><Col lg={12} md={12} sm={12} xs={12}><h3 style={{paddingLeft: 15,color: 'grey'}}>Index Documents :</h3></Col></Row>
 
 			<Row>
 			<Col lg={12} md={12} sm={12} xs={12}><FormsyText
