@@ -1,28 +1,28 @@
-var app = require('../server/webapp.service')();
-var expect = require('chai').expect;
-var assert = require('chai').assert;
-var request = require("supertest");
-var moduleToTest = require('../server/crawler/crawlerNeo4jController').getTerms;
-request = request(app);
-describe("Make GET requests to domain ", function() {
-  it('Simple GET Request to root url', function(done) {
-    request.get('/').expect(200, done);
+// var app = require('../server/webapp.service')();
+// var expect = require('chai').expect;
+// var assert = require('chai').assert;
+// var request = require("supertest");
+// var moduleToTest = require('../server/crawler/crawlerNeo4jController').getTerms;
+// request = request(app);
+// describe("Make GET requests to domain ", function() {
+//   it('Simple GET Request to root url', function(done) {
+//     request.get('/').expect(200, done);
 
-  });
+//   });
 
-  it('Testing for not defined route', function(done) {
-    request.get('/_undefined_route').expect(404, done);
-    this.timeout(10000)
+//   it('Testing for not defined route', function(done) {
+//     request.get('/_undefined_route').expect(404, done);
+//     this.timeout(10000)
 
-  });
-});
+//   });
+// });
 
-describe("Make GET requests to domain :", function() {
-  it('Testing for all domains', function(done) {
-    request.get('/domain').expect(200, done);
-    this.timeout(10000);
-  });
-});
+// describe("Make GET requests to domain :", function() {
+//   it('Testing for all domains', function(done) {
+//     request.get('/domain').expect(200, done);
+//     this.timeout(10000);
+//   });
+// });
 
 
 // describe("Make GET requests to domain along with domain name ", function() {
