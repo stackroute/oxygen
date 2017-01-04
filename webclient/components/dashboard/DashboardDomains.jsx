@@ -386,10 +386,7 @@ for (let i = 0; i < this.props.item.concepts.length; i++ ) {
 				>
 					<Col lg={6} md={6} sm={6} xs={6}><h3 style={{paddingTop: 15,color: 'grey'}}>Select Concept</h3></Col>
 					<Col lg={6} md={6} sm={6} xs={6}>
-						{/* <DropDownMenu maxHeight={300} value={this.state.value}
-						onChange={this.handleChange.bind(this)}>
 
-					</DropDownMenu> */}
 					<FormsySelect
 						name="frequency"
 						required
