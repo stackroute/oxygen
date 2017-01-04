@@ -75,7 +75,7 @@ const urlIndexing = function(data) {
   request.get(dataObj.url, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       let page = cheerio.load(body);
-      if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined') {
+      if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined' ) {
         let meta = page('meta');
         let keys = Object.keys(meta);
         let ogType;
@@ -100,19 +100,21 @@ const urlIndexing = function(data) {
             desc = meta[key].attribs.content;
         }
       });
-        if (!ogTitle && !desc) {
+        if (ogTitle && desc) {
           dataObj.title = ogTitle;
           dataObj.description = desc;
           logger.debug(ogType);
           logger.debug(ogTitle);
           logger.debug(desc);
-        } else {
+        }
+        else {
           logger.debug('cheerio also returned null');
           dataObj.title = dataObj.concept;
           dataObj.description = 'Not Mentioned';
         }
       }
       text = page('body').text();
+      logger.debug('this is the text ' + text);
       text = text.replace(/\s+/g, ' ')
       .replace(/[^a-zA-Z ]/g, '')
       .toLowerCase();
