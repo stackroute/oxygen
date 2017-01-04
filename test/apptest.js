@@ -10,12 +10,12 @@ describe("Make GET requests to domain ", function() {
 
   });
 
-//   it('Testing for not defined route', function(done) {
-//     request.get('/_undefined_route').expect(404, done);
-//     this.timeout(10000)
+  it('Testing for not defined route', function(done) {
+    request.get('/_undefined_route').expect(404, done);
+    this.timeout(10000)
 
-//   });
-// });
+  });
+});
 
 describe("Make GET requests to domain :", function() {
   it('Testing for all domains', function(done) {
