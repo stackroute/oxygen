@@ -65,22 +65,14 @@ router.get('/', function(req, res) {
   try {
     domainCtrl.getAllDomainDetails().then(function(cardDetailsObj) {
         logger.debug(
-<<<<<<< HEAD
-          "Successfully retrived all details to show length----->",
-=======
           "Successfully retrieved all details to show length----->",
->>>>>>> refs/remotes/origin/dev-wave-11
           cardDetailsObj.length);
         res.send(cardDetailsObj);
         return;
       },
       function(err) {
         logger.error(
-<<<<<<< HEAD
-          "Encountered error in retrived concept(s) of domain: ",
-=======
           "Encountered error in retrieved concept(s) of domain: ",
->>>>>>> refs/remotes/origin/dev-wave-11
           err);
         res.send(err);
         return;
@@ -100,21 +92,13 @@ router.get('/domains', function(req, res) {
   try {
     domainCtrl.getAllDomain().then(function(domainObj) {
         logger.debug(
-<<<<<<< HEAD
-          "Successfully retrived all details to show length----->",
-=======
           "Successfully retrieved all details to show length----->",
->>>>>>> refs/remotes/origin/dev-wave-11
           domainObj.length);
         res.send(domainObj);
         return;
       },
       function(err) {
-<<<<<<< HEAD
-        logger.error("Encountered error in retriving  domain: ",
-=======
         logger.error("Encountered error in retrieving  domain: ",
->>>>>>> refs/remotes/origin/dev-wave-11
           err);
         res.send(err);
         return;
@@ -137,11 +121,7 @@ router.get('/:domainName', function(req, res) {
     let domainName = req.params.domainName;
     domainCtrl.getDomain(domainName).then(function(domainDetails) {
         logger.info(
-<<<<<<< HEAD
-          "Successfully retrived all concepts and intents of a domain : "
-=======
           "Successfully retrieved all concepts and intents of a domain : "
->>>>>>> refs/remotes/origin/dev-wave-11
         );
         logger.info(domainDetails)
         res.send(domainDetails);
@@ -149,11 +129,7 @@ router.get('/:domainName', function(req, res) {
       },
       function(err) {
         logger.error(
-<<<<<<< HEAD
-          "Encountered error in retrived concept(s) of domain: ",
-=======
           "Encountered error in retrieved concept(s) of domain: ",
->>>>>>> refs/remotes/origin/dev-wave-11
           err);
         res.send(err);
         return;
@@ -181,11 +157,7 @@ router.post('/:domainName/index', function(req, res) {
       },
       function(err) {
         logger.error(
-<<<<<<< HEAD
-          "Encountered error in retrived concept(s) of domain: ",
-=======
           "Encountered error in retrieved concept(s) of domain: ",
->>>>>>> refs/remotes/origin/dev-wave-11
           err);
         res.send(err);
         return;
@@ -209,22 +181,14 @@ router.post('/documents/:domainName', function(req, res) {
 
     let domainObj = req.body;
     domainCtrl.fetchWebDocuments(domainObj).then(function(webDocuments) {
-<<<<<<< HEAD
-        logger.info("Successfully retrived all we documents : ");
-=======
         logger.info("Successfully retrieved all we documents : ");
->>>>>>> refs/remotes/origin/dev-wave-11
         logger.debug(webDocuments)
         res.send(webDocuments);
         return;
       },
       function(err) {
         logger.error(
-<<<<<<< HEAD
-          "Encountered error in retrived concept(s) of domain: ",
-=======
           "Encountered error in retrieved concept(s) of domain: ",
->>>>>>> refs/remotes/origin/dev-wave-11
           err);
         res.send(err);
         return;

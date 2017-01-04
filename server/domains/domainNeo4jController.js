@@ -190,13 +190,8 @@ let getDomainConceptWithDoc = function(domainName) {
     session.run(query, params)
       .then(function(result) {
         result.records.forEach(function(record) {
-<<<<<<< HEAD
-          conceptsWithDoc.push(record._fields[0] + " - ( " + record
-            ._fields[1] + " ) Documents");
-=======
           conceptsWithDoc.push(record._fields[0] + " (" + record._fields[
             1] + " Docs)");
->>>>>>> refs/remotes/origin/dev-wave-11
         });
         session.close();
         logger.debug({
