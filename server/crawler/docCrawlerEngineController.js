@@ -5,6 +5,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const startIntentParser = require('./docOpenIntentParserEngine').startIntentParser;
 require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 const urlIndexing = function(data) {
   let processors = [];
   processors.push(highland.map(function(dataToFindTerms) {
@@ -25,6 +26,7 @@ const urlIndexing = function(data) {
     let processedInfo = crawlerModules.extractData(dataToProcess);
     return processedInfo;
   }));
+
   processors.push(highland.map(function(dataToIndexURL) {
     let promise = crawlerModules.indexUrl(dataToIndexURL);
     return promise;
@@ -66,6 +68,7 @@ const urlIndexing = function(data) {
         function(err) {
           return err;
         }
+
         ))));
   let dataObj = JSON.parse(data);
   let text;

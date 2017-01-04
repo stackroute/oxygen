@@ -12,28 +12,28 @@ import Request from 'superagent';
 // '-grunge-retro-style-isolated-seal-Stock-Photo.jpg'
 const defaultImgURL='./../../assets/images/bulb.png';
 const style = {
-  position:"fixed",
-  bottom: "5%",
-  right:"5%"
+  position:'fixed',
+  bottom: '5%',
+  right:'5%'
 };
 const styleAvg = {
-  position:"relative",
-  marginBottom: "5%"
+  position:'relative',
+  marginBottom: '5%'
 };
 const tfont={
-  fontSize:"15px"
+  fontSize:'15px'
 }
 const titleDialog={
-  color: "#858586",
+  color: '#858586',
   fontSize: 30,
-  backgroundColor: "#c7c7c7"
+  backgroundColor: '#c7c7c7'
 
 }
-const Label={paddingLeft:"15px",paddingTop:"20px",fontWeight:"bold",color:"grey"};
+const Label={paddingLeft:'15px',paddingTop:'20px',fontWeight:'bold',color:'grey'};
 
 const errorMessages= {
-  limitError: "Domain length can't be more than 15",
-  DuplicationError: "domain name should be unique"
+  limitError: 'Domain length can\'t be more than 15',
+  DuplicationError: 'domain name should be unique'
 } ;
 
 export default class AddDomain extends React.Component {
@@ -65,7 +65,7 @@ export default class AddDomain extends React.Component {
   }
 
   else {
-    console.log("Response on show in child: ", JSON.parse(res.text));
+    console.log('Response on show in child: ', JSON.parse(res.text));
     //let domainList1=this.state.domainList;
     let response=JSON.parse(res.text);
     if(response.length===0)
@@ -97,7 +97,7 @@ export default class AddDomain extends React.Component {
       domainImgURL:this.state.imageUrl
       //domainImgURL:'./../../assets/images/soon.png',
     };
-    if(domain.domainImgURL===""|| domain.domainImgURL.length<=5)
+    if(domain.domainImgURL===''|| domain.domainImgURL.length<=5)
     {
       domain.domainImgURL=defaultImgURL;
     }
@@ -150,11 +150,11 @@ export default class AddDomain extends React.Component {
   render() {
     const actions = [
     <FlatButton
-    label="Cancel"
+    label='Cancel'
     secondary={true}
     onTouchTap={this.handleClose} />,
     <FlatButton
-    label={'Add'} primary={true} type="submit" disabled={!this.state.canSubmit}
+    label={'Add'} primary={true} type='submit' disabled={!this.state.canSubmit}
     onTouchTap={this.handleClose} onClick={this.handleSubmit}/>
     ];
     let {wordsError, DuplicationError} = errorMessages;
@@ -164,7 +164,7 @@ export default class AddDomain extends React.Component {
       domainArr.push(domain.name);
     })
     
-    console.log("The domain arr"+domainArr);
+    console.log('The domain arr'+domainArr);
     Formsy.addValidationRule('isIn', function (values, value) {
       return domainArr.indexOf(value) < 0;
     });
@@ -181,7 +181,7 @@ export default class AddDomain extends React.Component {
       </FloatingActionButton>
       </Visible>
       <Dialog
-      title="Add Domain"
+      title='Add Domain'
       titleStyle={titleDialog}
       actions={actions}
       modal={true}
@@ -190,8 +190,8 @@ export default class AddDomain extends React.Component {
       >
       <Container>
       <Formsy.Form
-      ref="form"
-      style={{"padding": "50px 24px"}}
+      ref='form'
+      style={{'padding': '50px 24px'}}
       onValid={this.enableButton}
       onInvalid={this.disableButton}
       onValidSubmit={this.handleSubmit}
@@ -200,26 +200,26 @@ export default class AddDomain extends React.Component {
       <Col lg={3} style={Label}>DOMAIN</Col>
       <Col lg={9}>
       <FormsyText
-      type="text"
-      name="domain"
-      validations="isIn"
+      type='text'
+      name='domain'
+      validations='isIn'
       validationError={DuplicationError}
       fullWidth={true}
       updateImmediately
       required
-      hintText="Name of the Domain"
+      hintText='Name of the Domain'
       style={tfont} onChange={this.onChangeSubject.bind(this)}/></Col>
       </Row>
 
       <Row>
       <Col lg={3} style={Label}>DESCRIPTION</Col>
       <Col lg={9}><FormsyText
-      type="textarea"
-      name="description"
+      type='textarea'
+      name='description'
       validationError={wordsError}
       updateImmediately
       required
-      hintText="Some words about the Domain"
+      hintText='Some words about the Domain'
       style={tfont}
       fullWidth={true} onChange={this.onChangeDescription.bind(this)}/></Col>
       </Row>
@@ -227,11 +227,11 @@ export default class AddDomain extends React.Component {
       <Row>
       <Col lg={3} style={Label}>IMAGE URL</Col>
       <Col lg={9}><FormsyText
-      type="textarea"
-      name="imageUrl"
+      type='textarea'
+      name='imageUrl'
       validationError={wordsError}
       updateImmediately
-      hintText="Image url to be displayed"
+      hintText='Image url to be displayed'
       style={tfont}
       fullWidth={true} onChange={this.onChangeImageUrl.bind(this)}/></Col>
       </Row>
