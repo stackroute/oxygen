@@ -59,11 +59,7 @@ const intentParser = function(data) {
         status: 'intent parsing completed for the particular intent'
       }
       datapublisher.processFinished(redisIntent);
-      let latestNoOfDocs=parserModules.latestNoOfDocs(dataObj.domain);
-      let dataToSend={
-        latestNoOfDocs : latestNoOfDocs
-      }
-      datapublisher.updateData(dataToSend);
+      parserModules.latestNoOfDocs(dataObj.domain);
     });
 
 }

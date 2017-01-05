@@ -1,5 +1,6 @@
 const parserNeo4jCtrl = require('./docIntentParserNeo4jController');
 const domainNeo4jCtrl = require('./../domains/domainNeo4jController');
+const datapublisher = require('../serviceLogger/redisLogger');
 
 const logger = require('./../../applogger');
 
@@ -91,12 +92,16 @@ let latestNoOfDocs= function(data) {
 domainNeo4jCtrl.getDomainCardDetails(data).then(function(result){
 logger.debug("latest No Of Docs ",
   result.docs);
-return({domain: data , docs: result.docs});
+  let dataToSend={
+    domainName : data,
+    latestNoOfDocs : result.docs
+  }
+  datapublisher.updateData(dataToSend);
 },
 function(err) {
 logger.error("Encountered error in getting latest no of docs",
   err);
-return(err);
+//return(err);
 });
 
 }

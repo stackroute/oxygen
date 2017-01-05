@@ -69,3 +69,7 @@ handleRequestClose()
         </div>);
     }
   }
+
+  Notification.propTypes = {
+  	updateData: React.PropTypes.func
+  };

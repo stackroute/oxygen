@@ -119,16 +119,20 @@ export default class Dashboard extends React.Component {
 			.send(domain)
 			.end((err, res) => {
 				if(err) {
-					// console.log(err)
+				 console.log('*** error',err);
 				}
 				// console.log('got response '+JSON.parse(res.text).name);
 				// console.log('length after call '+this.state.domainList.length);
+			 console.log('***^^^^^^^^^^^^^^^^',res);
 				let domainList1 = this.state.domainList;
 				let response = JSON.parse(res.text);
-				let colourObj = this.colourChange(item.concepts.length,item.intents.length,item.docs);
-				response[i].conceptColor = colourObj[0];
-				response[i].intentColor = colourObj[1];
-				response[i].docsColor = colourObj[2];
+				let clen = response.concepts.length;
+				let ilen = response.intents.length;
+				let rdocs = response.docs;
+				let colourObj = this.colourChange(clen,ilen,rdocs);
+				response.conceptColor = colourObj[0];
+				response.intentColor = colourObj[1];
+				response.docsColor = colourObj[2];
 				domainList1.push(response);
 				// console.log('Response for posting new job : ', response);
 				this.setState({domainList: domainList1});
@@ -254,10 +258,9 @@ export default class Dashboard extends React.Component {
 			dList.map((item,i) =>{
 			  	console.log('item.name ',item.name);
 					console.log('obj.domain ',obj.data.domain);
-         if(item.name===obj.data.domain)
+         if(obj.data.latestNoOfDocs && obj.data.domainName === item.name)
 				 {
-				 let noOfDocs=dList[i].docs;
-				 dList[i].docs=noOfDocs+1;
+				 dList[i].docs=obj.data.latestNoOfDocs;
 				 let colourObj = this.colourChange(item.concepts.length,item.intents.length,item.docs);
 				 dList[i].conceptColor = colourObj[0];
 				 dList[i].intentColor = colourObj[1];

@@ -1,6 +1,5 @@
 const logger = require('./../../applogger');
 const intentParser = require('./docIntentParserController').intentParser;
-const datapublisher = require('../serviceLogger/redisLogger');
 const config = require('./../../config');
 // const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
