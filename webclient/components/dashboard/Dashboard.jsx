@@ -277,11 +277,11 @@ export default class Dashboard extends React.Component {
 						{
 							list.map((item,i) =>{
 
-								return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
+								return (<Col lg={4} md={4} sm={6} xs={12} key={i}>
 									<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
 									index={i} key={i} indexs={i} ref="show" item={item}
-                  addDocument={this.addDocument.bind(this)}
-								/>
+									addDocument={this.addDocument.bind(this)}
+									/>
 									</Col>);
 							})
 						}
