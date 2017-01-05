@@ -283,7 +283,7 @@ else {
    let prevFlag;
    let nextFlag;
    let dList = this.state.docs;
-   let docsPerImg = 2;
+   let docsPerImg = 5;
    if(dList.length > 0)
    {
      let pages = Math.ceil(dList.length / docsPerImg);

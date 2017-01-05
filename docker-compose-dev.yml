@@ -1,7 +1,7 @@
 version: '2'
 services:
   webapp:
-    image: oxygen/oxygen-platform:v1.0.0
+    image: oxygen/oxygen-platform:v1.0.1
     build:
       context: ./
       dockerfile: Dockerfile
