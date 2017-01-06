@@ -3,10 +3,11 @@ module.exports = {
 	NODE_TERM: 'Term',
 	NODE_INTENT: 'Intent',
 	NODE_WEBDOCUMENT: 'WebDocument',
-	NODE_CONCEPT: 'Concept',
+	NODE_CONCEPT: 'concept',
 	REL_HAS_EXPLANATION_OF: 'HasExplanationOf',
 	REL_INTENT_OF: 'IntentOf',
 	REL_CONCEPT_OF: 'ConceptOf',
 	REL_INDICATOR_OF: 'IndicatorOf',
-	REL_COUNTER_INDICATOR_OF: 'CounterIndicatorOf'
+	REL_COUNTER_INDICATOR_OF: 'CounterIndicatorOf',
+	REL_SUBCONCEPT_OF: '`subconcept of`',
 };

@@ -1,4 +1,6 @@
 import React from 'react';
+import Request from 'superagent';
+import Paper from 'material-ui/Paper';
 import ReactFauxDOM from 'react-faux-dom';
 import $ from 'jquery';
 import d3 from 'd3';
@@ -11,6 +13,28 @@ export default class SunburstView extends React.Component {
             data: {}
         }
     }
+
+    getTreeofDomain(){
+        let url = `/domain/domainhomeview/` + this.props.domainName;
+        let that = this;
+        Request
+            .get(url)
+            .end((err, res) => {
+            if(!err) {
+                let domainTree = JSON.parse(res.text);
+                console.log('domainTree: ',res.text)
+        
+                that.setState(
+                    {
+                        domainName: domainTree.Domain
+                    });
+                }
+        });
+    }
+
+  componentDidMount(){
+    this.getTreeofDomain();
+  }
 
   	drawChart() {
     
@@ -195,5 +219,5 @@ export default class SunburstView extends React.Component {
 }
 
 SunburstView.propTypes = {
-  webDoc: React.PropTypes.object
+ 
 };
