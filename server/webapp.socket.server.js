@@ -22,6 +22,8 @@ io.on('connection', function(socket) {
   redisClient.on('message', function(channel, chDataStr) {
 
     let socketEventName = 'oxygen::progressUpdate';
+    let socketEventName1 = 'oxygen::dataUpdate';
+
     let chData = JSON.parse(chDataStr);
     let socketEventData = {
       'data': chData
@@ -32,12 +34,12 @@ io.on('connection', function(socket) {
 
     //create socketEvent
     // var socketEventName = 'oxygen::progressUpdate' + '::' + chData.domainName;
-    
-   
+
+
     logger.debug('Emiting Socket event: ', socketEventName, ' data: ', socketEventData);
     socket.emit(socketEventName, socketEventData);
+    socket.emit(socketEventName1, socketEventData);
 
-   
 
   });
 
@@ -51,7 +53,3 @@ io.on('connection', function(socket) {
 });
 
 module.exports = io;
-
-
-
-

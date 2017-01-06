@@ -12,7 +12,6 @@ import {Container, Row, Col, Visible} from 'react-grid-system';
 import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionAddBox from 'material-ui/svg-icons/content/add-box';
-import {blue300, lime800, lightGreen500} from 'material-ui/styles/colors';
 import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 import Snackbar from 'material-ui/Snackbar';
 import Divider from 'material-ui/Divider';
@@ -95,10 +94,7 @@ export default class DomainShow extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {canSubmit: false,
-			conceptColor: '',
-			intentColor: '',
-			docsColor: '',
-			open: false,		 
+			open: false,
 			openDialog: false,
 			openDialogDocs: false ,
 			value: 'select',
@@ -155,44 +151,6 @@ export default class DomainShow extends React.Component {
 		}
 		componentWillMount()
 		{
-			let concept=this.props.item.concepts[0];
-			this.setState({concept: concept});
-			if(this.props.item.docs === 0)
-			{
-				this.setState({docsColor: blue300});
-			}
-			else if(this.props.item.docs < 11)
-			{
-				this.setState({docsColor: lime800});
-			}
-			else {
-				this.setState({docsColor: lightGreen500});
-			}
-
-			if(this.props.item.intents.length === 0)
-			{
-				this.setState({intentColor: blue300});
-			}
-			else if(this.props.item.intents.length < 11)
-			{
-				this.setState({intentColor: lime800});
-			}
-			else {
-				this.setState({intentColor: lightGreen500});
-			}
-
-
-			if(this.props.item.concepts.length < 5)
-			{
-				this.setState({conceptColor: blue300});
-			}
-			else if(this.props.item.concepts < 15)
-			{
-				this.setState({conceptColor: lime800});
-			}
-			else {
-				this.setState({conceptColor: lightGreen500});
-			}
 		}
 		handleSubmit() {
 
@@ -241,8 +199,8 @@ export default class DomainShow extends React.Component {
 		const items = [];
 
 		for (let i = 0; i < this.props.item.concepts.length; i+=1) {
-			items.push(<MenuItem 
-				value={this.props.item.concepts[i]} 
+			items.push(<MenuItem
+				value={this.props.item.concepts[i]}
 				key={i} primaryText={this.props.item.concepts[i]} />);
 		}
 		return(
@@ -256,7 +214,7 @@ export default class DomainShow extends React.Component {
 			<Card style = {styles.cardRound}>
 			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
 			<CardMedia style = {{height: '280px', borderRadius: '2%',
-			width: '100%', backgroundColor: this.state.conceptColor,marginBottom:25}}
+			width: '100%', backgroundColor: this.props.item.conceptColor,marginBottom:25}}
 			overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
 			style = {styles.padd}/>}>
 			<img src = {this.props.item.domainImgURL} style = {roundImg}/>
@@ -269,7 +227,7 @@ export default class DomainShow extends React.Component {
 			style = {styles.chip}>Concepts Available:</Chip>
 			</Col>
 			<Col sm={3} style={{paddingLeft: 58}}>
-			<Chip backgroundColor = {this.state.conceptColor}
+			<Chip backgroundColor = {this.props.item.conceptColor}
 			labelStyle = {styles.cardLabel} style = {styles.chip}>
 			{this.props.item.concepts.length}
 			</Chip>
@@ -282,7 +240,7 @@ export default class DomainShow extends React.Component {
 			style = {styles.chip}>Intents Available : </Chip>
 			</Col>
 			<Col sm={3} style={{paddingLeft: 58}}>
-			<Chip backgroundColor = {this.state.intentColor}
+			<Chip backgroundColor = {this.props.item.intentColor}
 			labelStyle = {styles.cardLabel} style = {styles.chip}>
 			{this.props.item.intents.length}
 			</Chip>
@@ -295,7 +253,7 @@ export default class DomainShow extends React.Component {
 			style={styles.chip}>Documents Available:</Chip>
 			</Col>
 			<Col sm={3}style={{paddingLeft: 58}}>
-			<Chip backgroundColor={this.state.docsColor}
+			<Chip backgroundColor={this.props.item.docsColor}
 			labelStyle = {styles.cardLabel}
 			style = {styles.chip}>
 			{this.props.item.docs}
@@ -310,7 +268,7 @@ export default class DomainShow extends React.Component {
 			<Chip
 			labelStyle={xsChip.cardLabel}
 			style = {xsChip.chip}
-			backgroundColor={this.state.conceptColor}
+			backgroundColor={this.props.item.conceptColor}
 			>
 			<Avatar size={32} color = 'white' backgroundColor='grey'>
 			C
@@ -322,7 +280,7 @@ export default class DomainShow extends React.Component {
 			<Chip
 			labelStyle={xsChip.cardLabel}
 			style={xsChip.chip}
-			backgroundColor={this.state.intentColor}
+			backgroundColor={this.props.item.intentColor}
 			>
 			<Avatar size={32} color='white' backgroundColor='grey'>
 			I
@@ -334,7 +292,7 @@ export default class DomainShow extends React.Component {
 			<Chip
 			labelStyle={xsChip.cardLabel}
 			style={xsChip.chip}
-			backgroundColor={this.state.docsColor}
+			backgroundColor={this.props.item.docsColor}
 			>
 			<Avatar size={32} color='white' backgroundColor='grey'>
 			D
@@ -348,10 +306,10 @@ export default class DomainShow extends React.Component {
 			</Row>
 			</Link>
 			<Row>
-			<Col lg={12} md={12} sm={12} xs={12} 
+			<Col lg={12} md={12} sm={12} xs={12}
 			style={{paddingLeft:0,marginLeft:0,marginTop:0,paddingTop:0}}>
 			<IconMenu
-			iconButtonElement={<IconButton 
+			iconButtonElement={<IconButton
 				style={{paddingBottom:0}}>
 				<MoreHorzIcon style={{color:'grey'}}/>
 				</IconButton>}
@@ -359,14 +317,14 @@ export default class DomainShow extends React.Component {
 				targetOrigin={{horizontal: 'left', vertical: 'top'}}
 				style={{float:'right'}}
 				>
-				<MenuItem primaryText="Information" 
-				leftIcon={<ActionInfo/>} 
+				<MenuItem primaryText="Information"
+				leftIcon={<ActionInfo/>}
 				onTouchTap = {this.handleTouchTap}/>
-				<MenuItem primaryText="Add Documents" 
-				leftIcon={<ActionAddBox/>} 
+				<MenuItem primaryText="Add Documents"
+				leftIcon={<ActionAddBox/>}
 				onTouchTap = {this.handleOpenDocs}/>
-				<MenuItem primaryText="ReIndex" 
-				leftIcon={<NavigationRefresh/>}	
+				<MenuItem primaryText="ReIndex"
+				leftIcon={<NavigationRefresh/>}
 				onTouchTap={this.handleOpen}/>
 				</IconMenu>
 				</Col>

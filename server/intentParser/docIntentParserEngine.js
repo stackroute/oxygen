@@ -1,6 +1,5 @@
 const logger = require('./../../applogger');
 const intentParser = require('./docIntentParserController').intentParser;
-const datapublisher = require('../serviceLogger/redisLogger');
 const config = require('./../../config');
 // const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
@@ -48,14 +47,8 @@ const startIntentParser = function() {
               intentParser(dataObj.data);
             })
 
-          .each(function() {
-            let redisIntent = {
-              //domain: dataObj.domain,
-              actor: 'intent parser',
-              // message: dataObj.intent,
-              status: 'intent parsing completed for the particular intent'
-            }
-            datapublisher.processFinished(redisIntent);
+          .each(function(data) {
+           logger.debug('consuming the data'+data)
           });
         }); //end of assertQueue
     }); //end of channelConnection

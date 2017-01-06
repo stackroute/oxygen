@@ -44,7 +44,7 @@ let redis = {
     NEO4J: neo4j,
     REDIS: redis,
     RABBITMQ: rabbitMQ,
-    NO_OF_RESULTS: 2
+    NO_OF_RESULTS: 5
   };
 
   module.exports = config;

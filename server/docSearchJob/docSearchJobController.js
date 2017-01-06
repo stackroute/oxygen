@@ -5,7 +5,7 @@ const engineModel = require('./docSearchJobEntity').engineModel;
 const searchModel = require('./../searcher/searchEntity').searchModel;
 const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
 const config = require('./../../config');
-const datapublisher = require('../serviceLogger/redisLogger');
+
 const addJob = function(jobData, callback) {
 	logger.debug(jobData)
 	let job=new docSearchJobModel(jobData);
@@ -28,7 +28,7 @@ const addSearchJob = function(domainName,concept,selector) {
 	engineModel.find(function(err,engineColl)
 	{
 		engineColl.forEach(function(engineData){
-			
+
 			let JobData={
 				query:concept,
 				engineID:engineData.engine[selector]+" "+engineData.key[selector],
@@ -37,7 +37,7 @@ const addSearchJob = function(domainName,concept,selector) {
 				siteSearch:'NONE'
 
 			}
-			
+
 			let job=new docSearchJobModel(JobData);
 			job.save(function(errorOnSave,data) {
 				if (errorOnSave) {
@@ -49,15 +49,8 @@ const addSearchJob = function(domainName,concept,selector) {
 				let id=data._id;
 				startSearcherMQ(id.toString());
 
-				// place the redis function here searcher started 
+				// place the redis function here searcher started
 				// job sent to searcher mq
-				let redisSearch={
-					domain: domainName,
-					actor: 'searcher',
-					message: concept,
-					status: 'search started'
-				}
-				datapublisher.processStart(redisSearch);
 
 			});
 

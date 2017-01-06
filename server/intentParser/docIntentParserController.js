@@ -1,6 +1,8 @@
 const highland = require('highland');
 const parserModules = require('./docParserModules');
 const logger = require('./../../applogger');
+const datapublisher = require('../serviceLogger/redisLogger');
+
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const intentParser = function(data) {
@@ -49,7 +51,15 @@ const intentParser = function(data) {
   highland(dataArr)
     .pipe(highland.pipeline.apply(null, processors))
     .each(function(result) {
-      console.log("result : ", result.intensity);
+      logger.debug("result : ", result.intensity);
+      let redisIntent = {
+        //domain: dataObj.domain,
+        actor: 'intent parser',
+        // message: dataObj.intent,
+        status: 'intent parsing completed for the particular intent'
+      }
+      datapublisher.processFinished(redisIntent);
+      parserModules.latestNoOfDocs(dataObj.domain);
     });
 
 }
