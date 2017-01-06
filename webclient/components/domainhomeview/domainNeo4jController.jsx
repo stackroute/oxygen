@@ -12,7 +12,7 @@ let getTreeOfDomain = function(data) {
 
     let query = 'MATCH p=(n:concept)<-[:'+ graphConsts.REL_SUBCONCEPT_OF +']->(m) '+ 
                 'where NOT ()<-[:'+ graphConsts.REL_SUBCONCEPT_OF +']-(n) set m.size=1' + 
-                ' WITH COLLECT(p)  AS ps CALL apoc.convert.toTree(ps) yield value RETURN value')
+                ' WITH COLLECT(p)  AS ps CALL apoc.convert.toTree(ps) yield value RETURN value'
 
     let params = {
       name: data.domain
