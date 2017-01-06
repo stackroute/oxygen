@@ -410,6 +410,7 @@ else {
     </Col>
     </Row>
     <Row>
+      <Col sm={12} xs={12} md={12}>
         <SunburstView />
       </Col>
     </Row>
