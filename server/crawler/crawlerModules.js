@@ -7,6 +7,7 @@ let termsFinder = function(data) {
   let promise = new Promise(function(resolve, reject) {
     logger.debug('Trying to get the terms...!');
     crawlerNeo4jController.getTerms(data)
+
     .then(function(dataWithTerms) {
       logger.debug("sucessfully got ALL TERMS OF THE domain");
       resolve(dataWithTerms);
@@ -15,11 +16,13 @@ let termsFinder = function(data) {
       logger.error("Encountered error in publishing a new ", err)
       reject(err);
     })
+
   })
   return promise
 }
 const extractData = function(data) {
   //filtering out the unwanted data from fetched data like stop words using library
+
   let count = 0;
   let terms = [];
   data.interestedTerms.forEach(function(item, index) {
@@ -57,7 +60,7 @@ let indexUrl = function(data) {
         reject(err);
       })
     }
-    )
+  )
   return promise
 }
 let saveWebDocument = function(data) {
@@ -94,9 +97,11 @@ let getIntents = function(data) {
         reject(err);
       })
     }
-    )
+  )
   return promise
 }
+
+
 module.exports = {
  termsFinder: termsFinder,
  indexUrl: indexUrl,

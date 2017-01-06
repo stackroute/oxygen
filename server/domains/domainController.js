@@ -27,10 +27,15 @@ let insertUrls = function(dataToInsert) {
 
       })
     })
-    return { msg: "manually added urls successfully " }
+    return {
+      msg: "manually added urls successfully "
+    }
   } catch (err) {
 
-    return { msg: "error while manually adding", err: err }
+    return {
+      msg: "error while manually adding",
+      err: err
+    }
   }
 }
 let fetchDomainCardDetails = function(domain) {
@@ -44,7 +49,7 @@ let fetchDomainCardDetails = function(domain) {
 
     async.waterfall([
       function(callback) {
-        logger.debug("inside the waterfall " + domain)
+        //  logger.debug("inside the waterfall " + domain)
         domainNeo4jController.getDomainCardDetailsCallback(domain,
           callback);
       }
@@ -155,12 +160,15 @@ let indexPublishedDomain = function(domainName) {
       callback);
   },
   function(savedDomainObj, callback) {
+    logger.debug('Got saved domain object for indexing: ',
+      savedDomainObj);
     domainNeo4jController.indexNewDomainCallBack(savedDomainObj,
       callback)
   }
   ],
   function(err, indexedDomainObj) {
     if (err) {
+      logger.error("Error in publishNewDomain : ", err)
       reject(err);
     }
     if (indexedDomainObj) {
@@ -175,7 +183,8 @@ let indexPublishedDomain = function(domainName) {
                 domainObj);
               fetchDomainCardDetails(domainObj)
               .then(function(domainObjRes) {
-                logger.debug("Successfully fetched domain card details: ",
+                logger.debug(
+                  "Successfully fetched domain card details: ",
                   domainObjRes);
                 domainObjRes.name = indexedDomainObj.name;
                 domainObjRes.description = indexedDomainObj.description;
@@ -185,7 +194,8 @@ let indexPublishedDomain = function(domainName) {
                 return;
               },
               function(fetchErr) {
-                logger.error("Encountered error in fetching domain card details: ",
+                logger.error(
+                  "Encountered error in fetching domain card details: ",
                   fetchErr);
                 reject(fetchErr);
                 return;
@@ -194,7 +204,8 @@ let indexPublishedDomain = function(domainName) {
             })
           .catch(
             function(reason) {
-              console.log('Handle rejected promise (' + reason + ') here.');
+              console.log('Handle rejected promise (' + reason +
+                ') here.');
               reject(indexedDomainObj)
             });
 
@@ -214,7 +225,8 @@ let indexPublishedDomain = function(domainName) {
 
 
 let getDomain = function(domainName) {
-  logger.debug("Received request for retriving Concept(s) in domain: ", domainName);
+  logger.debug("Received request for retriving Concept(s) in domain: ",
+    domainName);
   //Save to Mongo DB
   //Save to Neo4j
 
@@ -228,12 +240,14 @@ let getDomain = function(domainName) {
     },
     function(checkedDomain, callback) {
 
-      domainNeo4jController.getDomainConceptWithDocCallback(checkedDomain.name,
+      domainNeo4jController.getDomainConceptWithDocCallback(
+        checkedDomain.name,
         callback)
     },
     function(checkedDomainWithConcepts, callback) {
 
-      domainNeo4jController.getDomainIntentCallback(checkedDomainWithConcepts,
+      domainNeo4jController.getDomainIntentCallback(
+        checkedDomainWithConcepts,
         callback)
     }
     ],
@@ -263,49 +277,54 @@ let getAllDomainDetails = function() {
         callback(null, cardDetailsObj);
       } else {
         for (let item in domainDetailedColln) {
-          if (Object.prototype.hasOwnProperty.call(domainDetailedColln, item)) {
-            logger.debug("returned from mongo ", domainDetailedColln.length);
-            let domain = domainDetailedColln[item];
-            fetchDomainCardDetails(domain.name)
-            .then(function(domainObj) {
-              logger.debug("Successfully fetched domain card details from mongo: ",
-                domainObj);
-              domainObj.name = domain.name;
-              domainObj.description = domain.description;
-              domainObj.domainImgURL = domain.domainImgURL;
-              cardDetailsObj.push(domainObj)
-              logger.debug("after each pushing", cardDetailsObj);
-              if (cardDetailsObj.length === domainDetailedColln.length) {
-                callback(null, cardDetailsObj);
-              }
-            },
-            function(err) {
-              logger.error("Encountered error in fetching domain card details: ",
-                err);
-              reject(err);
-              return;
-            });
-          }
+          if (Object.prototype.hasOwnProperty.call(
+            domainDetailedColln, item)) {
+            logger.debug("returned from mongo ",
+              domainDetailedColln.length);
+          let domain = domainDetailedColln[item];
+          fetchDomainCardDetails(domain.name)
+          .then(function(domainObj) {
+            logger.debug(
+              "Successfully fetched domain card details from mongo: ",
+              domainObj);
+            domainObj.name = domain.name;
+            domainObj.description = domain.description;
+            domainObj.domainImgURL = domain.domainImgURL;
+            cardDetailsObj.push(domainObj)
+                     // logger.debug("after each pushing", cardDetailsObj);
+                     if (cardDetailsObj.length === domainDetailedColln
+                      .length) {
+                      callback(null, cardDetailsObj);
+                  }
+                },
+                function(err) {
+                  logger.error(
+                    "Encountered error in fetching domain card details: ",
+                    err);
+                  reject(err);
+                  return;
+                });
         }
-        logger.debug("pushing ended", cardDetailsObj);
       }
+      logger.debug("cardData populated", cardDetailsObj);
     }
-    ],
-    function(err, finalCardDetailsObj) {
-      logger.debug("inside callback", finalCardDetailsObj);
-      if (err) {
-        reject(err);
-      }
+  }
+  ],
+  function(err, finalCardDetailsObj) {
+        //logger.debug("inside callback", finalCardDetailsObj);
+        if (err) {
+          reject(err);
+        }
 
-      if (finalCardDetailsObj) {
-        logger.debug(" now sending back", finalCardDetailsObj);
-        resolve(finalCardDetailsObj);
-      } else {
-        reject({
-          error: 'all domains not fetched!'
-        });
+        if (finalCardDetailsObj) {
+          logger.debug(" now sending back card details", finalCardDetailsObj);
+          resolve(finalCardDetailsObj);
+        } else {
+          reject({
+            error: 'all domains not fetched!'
+          });
+        }
       }
-    }
     ); //end of async.waterfall
   });
   return promise;
@@ -325,7 +344,8 @@ let freshlyIndexDomain = function(domain) {
 
   async.waterfall([
     function(callback) {
-      logger.debug("inside the waterfall for freshly indexing" + domain)
+      logger.debug("inside the waterfall for freshly indexing" +
+        domain)
       domainMgr.buildDomainIndexCallBack(domain,
         callback);
     }
@@ -350,7 +370,8 @@ let fetchWebDocuments = function(domainObj) {
 
     async.waterfall([
       function(callback) {
-        logger.debug("inside the waterfall for fetching web docs" + domainObj)
+        logger.debug("inside the waterfall for fetching web docs" +
+          domainObj)
         domainNeo4jController.getWebDocumentsCallback(domainObj,
           callback);
       },
@@ -361,30 +382,35 @@ let fetchWebDocuments = function(domainObj) {
           let abc = [];
           for (let item in docs) {
             if (Object.prototype.hasOwnProperty.call(docs, item)) {
-              logger.debug("going to neo4J ", docs.length);
-              let url = docs[item].url;
-              logger.debug("going to neo4J ", url);
-              domainNeo4jController.getIntentforDocument({ domainObj: domainObj, docs: url })
-              .then(function(intentObj) {
+               // logger.debug("going to neo4J ", docs.length);
+               let url = docs[item].url;
+               logger.debug("going to neo4J ", url);
+               domainNeo4jController.getIntentforDocument({
+                domainObj: domainObj,
+                docs: url
+              })
+               .then(function(intentObj) {
                 docs[item].intentObj = intentObj;
                 abc.push('hi');
-                logger.debug("url--> ", url);
-                logger.debug("after each pushing of intents*****", docs[item].intentObj);
-                if (abc.length === docs.length) {
-                  callback(null, docs);
-                }
-              },
-              function(err) {
-                logger.error("Encountered error in fetching doc intentObj details: ",
-                  err);
-                reject(err);
-                return;
-              });
-            }
-          }
-        }
-      },
-      function(docs, callback) {
+                     // logger.debug("url--> ", url);
+                     // logger.debug("after each pushing of intents*****",
+                      //  docs[item].intentObj);
+                      if (abc.length === docs.length) {
+                        callback(null, docs);
+                      }
+                    },
+                    function(err) {
+                      logger.error(
+                        "Encountered error in fetching doc intentObj details: ",
+                        err);
+                      reject(err);
+                      return;
+                    });
+             }
+           }
+         }
+       },
+       function(docs, callback) {
         if (docs.length === 0) {
           callback(null, docsDetails);
         } else {
@@ -395,34 +421,36 @@ let fetchWebDocuments = function(domainObj) {
               logger.debug("going to mongo url ", url);
               domainMongoController.getSearchResultDocument(url)
               .then(function(docObj) {
-                logger.debug("Successfully fetched doc details from mongo *****: ",
-                  docObj);
-                docsDetails.push({
-                  title: docObj.title,
-                  description: docObj.description,
-                  url: docObj.url,
-                  intensity: docs[item].intensity,
-                  intentObj: docs[item].intentObj
-                })
+                    //  logger.debug(
+                     //   "Successfully fetched doc details from mongo *****: ",
+                    //    docObj);
+                    docsDetails.push({
+                      title: docObj.title,
+                      description: docObj.description,
+                      url: docObj.url,
+                      intensity: docs[item].intensity,
+                      intentObj: docs[item].intentObj
+                    })
 
-                logger.debug("after each pushing", docsDetails);
-                if (docsDetails.length === docs.length) {
-                  callback(null, docsDetails);
-                }
-              },
-              function(err) {
-                logger.error("Encountered error in fetching doc details: ",
-                  err);
-                reject(err);
-                return;
-              });
+                    //  logger.debug("after each pushing", docsDetails);
+                    if (docsDetails.length === docs.length) {
+                      callback(null, docsDetails);
+                    }
+                  },
+                  function(err) {
+                    logger.error(
+                      "Encountered error in fetching doc details: ",
+                      err);
+                    reject(err);
+                    return;
+                  });
             }
           }
-          logger.debug("pushing ended", docsDetails);
-        }
-      }
-      ],
-      function(err, docObjDetails) {
+           // logger.debug("pushing ended", docsDetails);
+         }
+       }
+       ],
+       function(err, docObjDetails) {
         if (err) {
           reject(err);
         }
@@ -443,7 +471,7 @@ let getAllDomain = function() {
       domainMongoController.getAllDomainsCallback(callback);
     }],
     function(err, domainColln) {
-      logger.debug("getting it")
+      logger.debug("got the domain collection",domainColln)
       if (!err) {
         resolve(domainColln)
       }

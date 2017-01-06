@@ -38,7 +38,7 @@ function welcome() {
     let msg = fs.readFileSync(motdFile, 'utf-8');
     process.stdout.write('\n' + msg + '\n');
   } else {
-    process.stdout.write('\n=========== Oxygen Crawler ===========\n');
+    process.stdout.write('\n=========== Oxygen Searcher ===========\n');
   }
 }
 
