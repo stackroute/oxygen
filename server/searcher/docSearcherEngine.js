@@ -1,6 +1,7 @@
 const logger = require('./../../applogger');
 const storeURL = require('./searchController').storeURL;
 const config = require('./../../config');
+const datapublisher = require('../serviceLogger/redisLogger');
 // const amqp = require('amqplib/callback_api');
 const amqp = require('amqplib');
 const highland = require('highland');
@@ -46,6 +47,11 @@ const startSearcher = function() {
               logger.debug("Consuming the data: ", dataObj);
               storeURL(dataObj.data);
 
+              let redisSearch={
+                actor: 'searcher',
+                status: 'search started'
+              }
+              datapublisher.processStart(redisSearch);
             });
         }); //end of assertQueue
     }); //end of channelConnection

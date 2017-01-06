@@ -155,22 +155,25 @@ let publishNewDomain = function(newDomainObj) {
       });
     }
 
-    async.waterfall([function(callback) {
-          domainMongoController.saveNewDomainCallBack(newDomainObj,
-            callback);
-        },
-        function(savedDomainObj, callback) {
-          logger.debug('Got saved domain object for indexing: ',
-            savedDomainObj);
-          domainNeo4jController.indexNewDomainCallBack(savedDomainObj,
-            callback)
-        }
-      ],
-      function(err, indexedDomainObj) {
-        if (err) {
-          reject(err);
-        }
-        if (indexedDomainObj) {
+
+  async.waterfall([function(callback) {
+    domainMongoController.saveNewDomainCallBack(newDomainObj,
+      callback);
+  },
+  function(savedDomainObj, callback) {
+    logger.debug('Got saved domain object for indexing: ',
+      savedDomainObj);
+    domainNeo4jController.indexNewDomainCallBack(savedDomainObj,
+      callback)
+  }
+  ],
+  function(err, indexedDomainObj) {
+    if (err) {
+      logger.error("Error in publishNewDomain : ", err)
+      reject(err);
+    }
+    if (indexedDomainObj) {
+
           //Kick off indexing in off-line,
           //so the API request is not blocked till indexing is complete,
           // as it may take long time to complete

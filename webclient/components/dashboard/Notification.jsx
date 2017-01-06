@@ -11,7 +11,7 @@ export default class Notification extends React.Component {
      message:{},
      open:false
    }
-   
+
  }
 
  componentDidMount() {
@@ -23,7 +23,9 @@ export default class Notification extends React.Component {
   });
 
   socket.on('oxygen::progressUpdate', this._getMessage.bind(this));
-  
+
+    socket.on('oxygen::dataUpdate', this.props.updateData.bind(this));
+
   console.log("back to will mount")
 
       socket.emit('test' , 'abc');
@@ -32,16 +34,16 @@ export default class Notification extends React.Component {
       });
 
        socket.on('oxygen::progressUpdate', this._getMessage.bind(this));
-       
+
        console.log("back to will mount")
   }
-  
+
   _getMessage(socMsg) {
       if(socMsg) {
         // var obj = JSON.parse(socMsg);
         console.log("getting the socMsg");
         console.log(socMsg);
-       
+
         this.setState({message:socMsg.data})
         console.log(this.state.message)
          this.setState({
@@ -68,3 +70,6 @@ handleRequestClose()
     }
   }
 
+  Notification.propTypes = {
+  	updateData: React.PropTypes.func
+  };
