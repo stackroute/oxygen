@@ -8,10 +8,10 @@ export default class Domainhomeview extends React.Component {
     	this.state = {domainname: props.domainname};
   	}
   	render (){
-		return <SunburstView />;
+		return <SunburstView domainName="java" />;
 	}
 }
 
 Domainhomeview.propTypes = {
-  webDoc: React.PropTypes.object
+ 
 };

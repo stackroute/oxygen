@@ -203,4 +203,27 @@ router.post('/documents/:domainName', function(req, res) {
 
 });
 
+router.get('/domainhomeview/:domainName', function(req, res) {
+  try {
+
+    let reqObj = {
+      domainName: req.params.domainName,
+      data: req.body
+    }
+    logger.debug("sending data manually ", reqObj);
+    console.log('reqObj',reqObj);
+
+    res.send(domainCtrl.getTreeOfDomain(reqObj));
+    return;
+
+
+  } catch (err) {
+    logger.error("Caught a error in posting URLs manually ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
+});
+
 module.exports = router;
