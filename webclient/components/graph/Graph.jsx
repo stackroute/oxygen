@@ -1,4 +1,5 @@
 import React from 'react';
+import DomainHomeView from'./DomainHomeView';
 import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
