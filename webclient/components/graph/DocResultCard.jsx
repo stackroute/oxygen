@@ -43,7 +43,7 @@ export default class DocResultCard extends React.Component {
       <Card style={{paddingBottom: 15}}>
       <CardHeader style = {jobcard}
       textStyle={{padding: 0, color: 'grey'}}
-      titleStyle = {{fontSize: '18pt', padding: '16px 16px 0', color: 'grey'}}
+      titleStyle = {{fontSize: '18pt', padding: '16px 16px 0', color: '#378ed4'}}
       title={this.props.webDoc.title}
       />
       <CardText style={{textAlign: "left",padding:"0px 16px"}}>
@@ -81,7 +81,7 @@ export default class DocResultCard extends React.Component {
             </Chip>
             </Col>);
         }):
-        <h3 style={{textAlign:"center",color:"#8aa6bd",marginBottom:0}}>NO INTENTS AVAILABLE</h3>
+        <h3 style={{paddingLeft:15,color:"#8aa6bd",marginBottom:0}}>No Intents Linked...!!</h3>
       }
       </Row>
       </CardText>

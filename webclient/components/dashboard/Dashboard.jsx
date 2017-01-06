@@ -7,23 +7,32 @@ import {Container, Col, Row, Visible} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
+import {blue300, lime800, lightGreen500} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import {ScreenClassRender} from 'react-grid-system';
 
-const imgStyle = (screenClass) => {
-	if (screenClass === 'xl') {return { width: '700px',height:"auto" };}
-	if (screenClass === 'lg') {return { width: '600px',height:"auto"};}
-	if (screenClass === 'md') {return { width: '600px',height:"auto" };}
-	if (screenClass === 'sm') {return { width: '600px',height:"auto" };}
-	return { width: '300px',height:"auto"};
+const errStyle = (screenClass) => {
+	if (screenClass === 'xl') {return { width:700,margin: "20% auto 5%",textAlign:"left" };}
+	if (screenClass === 'lg') {return { width:700,margin: "20% auto 5%",textAlign:"left"};}
+	if (screenClass === 'md') {return { width:700,margin: "20% auto 5%",textAlign:"left" };}
+	if (screenClass === 'sm') {return { width:700,margin: "20% auto 5%",textAlign:"left" };}
+	return { width:300,margin: "20% auto 5%",textAlign:"left" };
 };
-const divStyle = (screenClass) => {
-	if (screenClass === 'xl') {return { width: '700px',margin:"5% auto auto" };}
-	if (screenClass === 'lg') {return { width: '600px',margin:"5% auto auto"};}
-	if (screenClass === 'md') {return { width: '600px',margin:"5% auto auto" };}
-	if (screenClass === 'sm') {return { width: '600px',margin:"5% auto auto" };}
-	return { width: '300px',margin:"6% auto auto"};
-};
+
+// const imgStyle = (screenClass) => {
+// 	if (screenClass === 'xl') {return { width: '700px',height:"auto" };}
+// 	if (screenClass === 'lg') {return { width: '600px',height:"auto"};}
+// 	if (screenClass === 'md') {return { width: '600px',height:"auto" };}
+// 	if (screenClass === 'sm') {return { width: '600px',height:"auto" };}
+// 	return { width: '300px',height:"auto"};
+// };
+// const divStyle = (screenClass) => {
+// 	if (screenClass === 'xl') {return { width: '700px',margin:"5% auto auto" };}
+// 	if (screenClass === 'lg') {return { width: '600px',margin:"5% auto auto"};}
+// 	if (screenClass === 'md') {return { width: '600px',margin:"5% auto auto" };}
+// 	if (screenClass === 'sm') {return { width: '600px',margin:"5% auto auto" };}
+// 	return { width: '300px',margin:"6% auto auto"};
+// };
 
 const iconStyle={
 	iconSize: {
@@ -80,17 +89,17 @@ const style = {
 	}
 };
 
-const NoContent=()=>{
-	return(
-		<ScreenClassRender style={divStyle}>
-		<div>
-		<ScreenClassRender style={imgStyle}>
-		<img src='./../assets/images/sry.png' />
-		</ScreenClassRender>
-		</div>
-		</ScreenClassRender>
-		);
-}
+// const NoContent=()=>{
+// 	return(
+// 		<ScreenClassRender style={divStyle}>
+// 		<div>
+// 		<ScreenClassRender style={imgStyle}>
+// 		<img src='./../assets/images/sry.png' />
+// 		</ScreenClassRender>
+// 		</div>
+// 		</ScreenClassRender>
+// 		);
+// }  <NoContent />
 
 
 
@@ -110,12 +119,20 @@ export default class Dashboard extends React.Component {
 			.send(domain)
 			.end((err, res) => {
 				if(err) {
-					// console.log(err)
+				 console.log('*** error',err);
 				}
 				// console.log('got response '+JSON.parse(res.text).name);
 				// console.log('length after call '+this.state.domainList.length);
+			 console.log('***^^^^^^^^^^^^^^^^',res);
 				let domainList1 = this.state.domainList;
 				let response = JSON.parse(res.text);
+				let clen = response.concepts.length;
+				let ilen = response.intents.length;
+				let rdocs = response.docs;
+				let colourObj = this.colourChange(clen,ilen,rdocs);
+				response.conceptColor = colourObj[0];
+				response.intentColor = colourObj[1];
+				response.docsColor = colourObj[2];
 				domainList1.push(response);
 				// console.log('Response for posting new job : ', response);
 				this.setState({domainList: domainList1});
@@ -141,10 +158,60 @@ export default class Dashboard extends React.Component {
 					this.setState({domainList: [], loading: 'hide'});
 				}
 				else {
+				response.map((item,i) =>{
+		  	let colourObj = this.colourChange(item.concepts.length,item.intents.length,item.docs);
+				response[i].conceptColor = colourObj[0];
+				response[i].intentColor = colourObj[1];
+				response[i].docsColor = colourObj[2];
+				});
 					this.setState({domainList: response, loading: 'hide'});
 				}
 			}
 		});
+		}
+
+		colourChange(concepts,intents,docs)
+		{
+			let conceptColor=blue300;
+    	let intentColor=blue300;
+			let docsColor=blue300;
+			if(concepts < 11)
+			{
+				conceptColor= blue300;
+			}
+			else if(concepts < 50)
+			{
+				conceptColor= lime800;
+			}
+			else {
+				conceptColor= lightGreen500;
+			}
+
+			if(intents <2)
+			{
+				intentColor= blue300;
+			}
+			else if(intents < 11)
+			{
+				intentColor= lime800;
+			}
+			else {
+				intentColor= lightGreen500;
+			}
+
+
+			if(docs <10)
+			{
+				docsColor= blue300;
+			}
+			else if(docs < 20)
+			{
+        docsColor= lime800;
+			}
+			else {
+				docsColor= lightGreen500;
+			}
+			return ([conceptColor,intentColor,docsColor]);
 		}
 
 		componentDidMount()
@@ -179,6 +246,47 @@ export default class Dashboard extends React.Component {
 				if(err) {
 					this.setState({errmsg: res.body});
 				}
+			});
+		}
+
+		updateData(obj)
+		{
+			console.log('add the update function',obj);
+			//let domain=obj.data.domain;
+		//	let noOfDocs=obj.data.docs;
+			let dList=this.state.domainList;
+			dList.map((item,i) =>{
+			  	console.log('item.name ',item.name);
+					console.log('obj.domain ',obj.data.domain);
+         if(obj.data.latestNoOfDocs && obj.data.domainName === item.name)
+				 {
+				 dList[i].docs=obj.data.latestNoOfDocs;
+				 let colourObj = this.colourChange(item.concepts.length,item.intents.length,item.docs);
+				 dList[i].conceptColor = colourObj[0];
+				 dList[i].intentColor = colourObj[1];
+				 dList[i].docsColor = colourObj[2];
+				console.log('domain list docs********* ', dList[i].docs);
+				if(dList.length===i+1)
+				{
+			this.setState({domainList: dList});
+				}
+				 }
+			});
+
+
+		}
+
+		addDocument(doc)
+		{
+			let url = `/domain/`+doc.domainName+`/crawl` ;
+			Request
+			.post(url)
+			.send(doc.docs)
+			.end((err, res) => {
+				if(err) {
+					this.setState({errmsg: res.body});
+				}
+				console.log(res);
 			});
 		}
 
@@ -255,9 +363,11 @@ export default class Dashboard extends React.Component {
 						{
 							list.map((item,i) =>{
 
-								return (<Col lg={4} md={6} sm={6} xs={12} key={i}>
+								return (<Col lg={4} md={4} sm={6} xs={12} key={i}>
 									<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
-									index={i} key={i} indexs={i} ref="show" item={item}/>
+									index={i} key={i} indexs={i} ref="show" item={item}
+									addDocument={this.addDocument.bind(this)}
+									/>
 									</Col>);
 							})
 						}
@@ -277,13 +387,20 @@ export default class Dashboard extends React.Component {
 						<Visible md sm xs>
 						{smallNav}
 						</Visible>
-						</div>:<NoContent />
+
+						</div>:
+						<ScreenClassRender style={errStyle}>
+						<div style={errStyle} >
+						<h1 >It seems you have not yet created any domain
+						<br/><a>Create a new domain</a></h1>
+						</div>
+						</ScreenClassRender>
 					}
 					</div>
 				}
 				<AddDomain
 				addDomain={this.addDomain.bind(this)} style={{color: "#1976d2 "}}/>
-				<Notification />
+				<Notification updateData={this.updateData.bind(this)} />
 				</div>
 
 				);
