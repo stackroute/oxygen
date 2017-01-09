@@ -1,5 +1,4 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
 import SunburstView from './SunburstView';
 
 export default class Domainhomeview extends React.Component {

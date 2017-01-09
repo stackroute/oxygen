@@ -48,7 +48,7 @@ module.exports = {
         //
         // The following rules point out areas where you might have made mistakes.
         //
-        "comma-dangle": 2, // disallow or enforce trailing commas
+        "comma-dangle": 0, // disallow or enforce trailing commas
         "no-cond-assign": 2, // disallow assignment in conditional expressions
         "no-console": 1, // disallow use of console (off by default in the node environment)
         "no-constant-condition": 2, // disallow use of constant expressions in conditions
@@ -86,10 +86,10 @@ module.exports = {
         "block-scoped-var": 0, // treat var statements as if they were block scoped (off by default). 0: deep destructuring is not compatible https://github.com/eslint/eslint/issues/1863
         "complexity": 0, // specify the maximum cyclomatic complexity allowed in a program (off by default)
         "consistent-return": 2, // require return statements to either always or never specify values
-        "curly": 2, // specify curly brace conventions for all control statements
+        "curly": 0, // specify curly brace conventions for all control statements
         "default-case": 2, // require default case in switch statements (off by default)
         "dot-notation": 2, // encourages use of dot notation whenever possible
-        "eqeqeq": 2, // require the use of === and !==
+        // "eqeqeq": 2, // require the use of === and !==
         "guard-for-in": 2, // make sure for-in loops have an if statement (off by default)
         "no-alert": 2, // disallow the use of alert, confirm, and prompt
         "no-caller": 2, // disallow use of arguments.caller or arguments.callee
@@ -151,12 +151,12 @@ module.exports = {
         "no-catch-shadow": 2, // disallow the catch clause parameter name being the same as a variable in the outer scope (off by default in the node environment)
         "no-delete-var": 2, // disallow deletion of variables
         "no-label-var": 2, // disallow labels that share a name with a variable
-        "no-shadow": 2, // disallow declaration of variables already declared in the outer scope
+        // "no-shadow": 2, // disallow declaration of variables already declared in the outer scope
         "no-shadow-restricted-names": 2, // disallow shadowing of names such as arguments
-        "no-undef": 2, // disallow use of undeclared variables unless mentioned in a /*global */ block
+        // "no-undef": 2, // disallow use of undeclared variables unless mentioned in a /*global */ block
         "no-undef-init": 2, // disallow use of undefined when initializing variables
         "no-undefined": 2, // disallow use of undefined variable (off by default)
-        "no-unused-vars": 2, // disallow declaration of variables that are not used in the code
+        "no-unused-vars": 0, // disallow declaration of variables that are not used in the code
         "no-use-before-define": 2, // disallow use of variables before they are defined
 
         //
@@ -243,11 +243,11 @@ module.exports = {
         // the functionality is the same.
         //
         "max-depth": [2, 3], // specify the maximum depth that blocks can be nested (off by default)
-        "max-len": [2, 100, 2], // specify the maximum length of a line in your program (off by default)
+        "max-len": 0, // specify the maximum length of a line in your program (off by default)
         "max-params": [2, 5], // limits the number of parameters that can be used in the function declaration. (off by default)
         "max-statements": 0, // specify the maximum number of statement allowed in a function (off by default)
         "no-bitwise": 0, // disallow use of bitwise operators (off by default)
-        "no-plusplus": 2, // disallow use of unary operators, ++ and -- (off by default)
+        // "no-plusplus": 2, // disallow use of unary operators, ++ and -- (off by default)
 
         //
         // eslint-plugin-react
@@ -263,7 +263,7 @@ module.exports = {
         "react/no-did-update-set-state": 2, // Prevent usage of setState in componentDidUpdate
         "react/no-multi-comp": 0, // Prevent multiple component definition per file
         "react/no-unknown-property": 2, // Prevent usage of unknown DOM property
-        "react/prop-types": 2, // Prevent missing props validation in a React component definition
+        "react/prop-types": 0, // Prevent missing props validation in a React component definition
         "react/react-in-jsx-scope": 2, // Prevent missing React when using JSX
         "react/self-closing-comp": 2, // Prevent extra closing tags for components without children
         "react/jsx-wrap-multilines": 2, // Prevent missing parentheses around multilines JSX        

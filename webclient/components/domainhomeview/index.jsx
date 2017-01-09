@@ -1,2 +1,2 @@
-import Domainhomeview from './Domainhomeview.jsx';
+import Domainhomeview from './Domainhomeview';
 export default Domainhomeview;
