@@ -3,7 +3,7 @@ import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
-import SunburstView from '../domainhome';
+import SunburstView from './SunburstView';
 import {Row, Col, ScreenClassRender, Visible} from 'react-grid-system';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -25,44 +25,44 @@ const fonts = {
   color: '#1976d2'
 };
 const iconStyle = {
-	iconSize: {
+    iconSize: {
 
-		width: 30,
-		height: 30,
-		backgroundColor: '#a9a9a9',
-		padding: 10,
-		borderRadius: 60
-	},
-	large: {
-		width: 120,
-		height: 120,
-		padding: 30
-	},
-	leftIcon:{
-		position:'relative',
-		marginLeft:'4%',
-		float:'left'
-	},
-	rightIcon:{
-		position:'relative',
-		marginRight:'5%',
-		float:'right'
-	},
-	leftIconAvg:{
-		position:'relative',
-		margin:'10 0 0 ',
-		padding:0,
-		zDepth:10,
-		float:'left'
-	},
-	rightIconAvg:{
-		position:'relative',
-		margin:'10 0 0 ',
-		padding:0,
-		zDepth:10,
-		float:'right'
+        width: 30,
+        height: 30,
+        backgroundColor: '#a9a9a9',
+        padding: 10,
+        borderRadius: 60
+    },
+    large: {
+        width: 120,
+        height: 120,
+        padding: 30
+    },
+    leftIcon:{
+        position:'relative',
+        marginLeft:'4%',
+        float:'left'
+    },
+    rightIcon:{
+        position:'relative',
+        marginRight:'5%',
+        float:'right'
+    },
+    leftIconAvg:{
+        position:'relative',
+        margin:'10 0 0 ',
+        padding:0,
+        zDepth:10,
+        float:'left'
+    },
+    rightIconAvg:{
+        position:'relative',
+        margin:'10 0 0 ',
+        padding:0,
+        zDepth:10,
+        float:'right'
 
-	}
+    }
 };
 const styles = {
  largeIcon: {
@@ -86,39 +86,8 @@ const styleFunction = (screenClass) => {
   return { fontSize: '25px', textAlign: 'left', color: '#8aa6bd' };
 };
 
-// const imgStyle = (screenClass) => {
-//   if (screenClass === 'xl') {return { width: '500px', height: 'auto' };}
-//   if (screenClass === 'lg') {return { width: '400px', height: 'auto'};}
-//   if (screenClass === 'md') {return { width: '400px', height: 'auto' };}
-//   if (screenClass === 'sm') {return { width: '400px', height: 'auto' };}
-//   return { width: '300px', height: 'auto'};
-// };
-
-// const divStyle = (screenClass) => {
-//   if (screenClass === 'xl') {return { width: '500px', margin: '0 auto auto' };}
-//   if (screenClass === 'lg') {return { width: '400px', margin: '0 auto auto' };}
-//   if (screenClass === 'md') {return { width: '400px', margin: '0 auto auto' };}
-//   if (screenClass === 'sm') {return { width: '400px', margin: '0 auto auto' };}
-//   return { width: '300px', margin: '0 auto auto'};
-// };
-
-// class ShowImg extends React.Component {
-
-//   constructor(props) {
-//     super(props);
-//   }
-//   render() {
-//    return(<ScreenClassRender style={divStyle}>
-//     <div>
-//     <ScreenClassRender style={imgStyle}>
-//     <img src = {'./../assets/images/' + this.props.imgName} />
-//     </ScreenClassRender>
-//     </div>
-//     </ScreenClassRender>);
-//  }
-// } <ShowImg imgName={this.state.msgSelector} />
-export default class Graph extends React.Component {
-  constructor(props) {
+export default class DomainHomeView extends React.Component {
+    constructor(props) {
     super(props);
     this.state = {
       msgSelector: 'No search specified',
@@ -399,7 +368,7 @@ else {
     <Col md={10} sm={10} xs={10}>
     <ScreenClassRender style={styleFunction}>
     <h1>
-    {this.state.domainName.toUpperCase()}
+    {this.state.domainName}
     </h1>
     </ScreenClassRender>
     </Col>
@@ -411,7 +380,7 @@ else {
     </Row>
     <Row>
       <Col sm={12} xs={12} md={12}>
-        <SunburstView />
+        <SunburstView domainName={this.state.domainName} />
       </Col>
     </Row>
     <Row>
@@ -462,12 +431,7 @@ else {
       );
 }
 }
-Graph.propTypes = {
-  params: React.PropTypes.object
 
+Domainhomeview.propTypes = {
+    params: React.PropTypes.object
 };
-
-// ShowImg.propTypes = {
-//   imgName: React.PropTypes.string
-
-// };
