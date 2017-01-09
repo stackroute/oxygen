@@ -304,7 +304,7 @@ else {
    <Col lg={12} md={12} sm={12} xs={12}>
    <ScreenClassRender style = {styleFunction}>
    <h1>
-   { this.state.domainName.toUpperCase() }
+   { this.state.domainName }
    </h1>
    </ScreenClassRender>
    </Col>
@@ -379,7 +379,7 @@ else {
     </Col>
     </Row>
     <Row>
-      <Col sm={12} xs={12} md={12}>
+      <Col sm={12} xs={12} md={12} lg={12} xl={12} >
         <SunburstView domainName={this.state.domainName} />
       </Col>
     </Row>
@@ -392,7 +392,7 @@ else {
     <Col sm={12} xs={12} md={12}>
     {
       this.state.selectedConcept.length===0?
-      <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
+      <h4 style={{color:'#8aa6bd'}}>Please Select Concepts</h4>:
       <SelectedConcepts conceptChips={this.state.selectedConcept}
       deleteConcept={this.deleteConcepts.bind(this)} />}
       </Col>
