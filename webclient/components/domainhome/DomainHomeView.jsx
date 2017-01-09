@@ -432,6 +432,6 @@ else {
 }
 }
 
-Domainhomeview.propTypes = {
+DomainHomeView.propTypes = {
     params: React.PropTypes.object
 };
