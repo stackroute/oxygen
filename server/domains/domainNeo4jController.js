@@ -537,8 +537,10 @@ let getWebDocuments = function(domainObj) {
 
 let getTreeOfDomain = function(data) {
     let promise = new Promise(function(resolve, reject) {
+        let conceptTreeFile = data.domainName + '_concepts_tree.json';
+
         logger.debug("Now proceeding to get all terms of domain: ", data.domainName);
-        fs.writeFile(data.domainName + '_concepts_tree.json', '');
+        fs.writeFile(conceptTreeFile, '');
 
         let query = 'MATCH p=(n:' + graphConsts.NODE_CONCEPT + ')<-[:' + graphConsts.REL_SUBCONCEPT_OF + ']->(m) ';
         query += ' where NOT ()<-[:' + graphConsts.REL_SUBCONCEPT_OF + ']-(n) set m.size=1';
@@ -555,13 +557,15 @@ let getTreeOfDomain = function(data) {
             })
             .on('end', function(d) {
                
-                fs.writeFile(data.domainName + '_concepts_tree.json', JSON.stringify(tree), (err) => {
+                fs.writeFile(conceptTreeFile, JSON.stringify(tree), (err) => {
                     if (err)
                         reject(err);
                     else
-                        console.log('File Created: '+data.domainName + '_concepts_tree.json');
+                        console.log('File Created: '+conceptTreeFile);
                 });
-                resolve(JSON.stringify(tree));
+                //reset tree after writing to a file
+                tree = JSON.stringify(data);
+                resolve(tree);
             });
 
     });

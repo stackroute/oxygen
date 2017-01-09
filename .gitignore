@@ -42,3 +42,6 @@ dist
 
 # This folder gets created when locally docker-compose is built, hence not needed to be in repo
 neo4j
+
+# Ignore data generated for application
+.idea
