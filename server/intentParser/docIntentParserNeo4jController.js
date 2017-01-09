@@ -47,7 +47,7 @@ let fetchIndicatorTerms = function(data) {
             }
           });
 
-        });
+        }); 
 
         // Completed!
         session.close();
