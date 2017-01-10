@@ -537,9 +537,9 @@ let getWebDocuments = function (domainObj) {
 
 let getTreeOfDomain = function (data) {
     let promise = new Promise(function (resolve, reject) {
-        logger.debug("Now proceeding to get all terms of domain: ", data.domainName);
+        logger.debug("Start: tree structure of domain : ", data.domainName);
         fs.writeFile(data.domainName + '_concepts_tree.json', '');
-        var result1 = [];
+        var treeData = [];
         var tree = {
             "name": "Java Web Programming",
             "children": []
@@ -547,15 +547,15 @@ let getTreeOfDomain = function (data) {
 
         cypher('match (n:Concept) return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
             .on('data', function (result) {
-                result1.push(result);
+                treeData.push(result);
             })
             .on('end', function () {
-                console.log('all done');
-                var dataMap = result1.reduce(function (map, node) {
+                // console.log('all done');
+                var dataMap = treeData.reduce(function (map, node) {
                     map[node.conceptid] = node;
                     return map;
                 }, {});
-                result1.forEach(function (node) {
+                treeData.forEach(function (node) {
                     var parent = dataMap[node.parent];
                     node.size = 1;
                     if (parent) {
@@ -579,10 +579,8 @@ let getTreeOfDomain = function (data) {
                     }
                 });
                 resolve(p3);
-            })
-
+            });
     });
-
     return promise;
 }
 

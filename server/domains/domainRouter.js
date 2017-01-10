@@ -210,11 +210,24 @@ router.get('/domainhomeview/:domainName', function (req, res) {
             data: req.body
         };
 
-        logger.debug("sending data manually ", reqObj);
+        logger.debug("DomainHomeView: Begining to get tree structure ", reqObj);
         console.log('reqObj', reqObj);
         res.send(domainCtrl.getTreeOfDomain(reqObj));
-        logger.debug("sending data manually to test fn generator ", reqObj);
-        res.send(domainCtrl.testFnGen(reqObj));
+
+
+        domainCtrl.getTreeOfDomain(reqObj).then(function (tree) {
+                logger.info("Success: Retrieved the tree structure");
+                logger.debug(tree);
+                res.send('dsfd');
+                return;
+            },
+            function (err) {
+                logger.error(
+                    "Encountered error in retrieving tree structure of the domain concepts",
+                    err);
+                res.send(err);
+                return;
+            })
         return;
     } catch (err) {
         logger.error("Caught a error in posting URLs manually ", err);
