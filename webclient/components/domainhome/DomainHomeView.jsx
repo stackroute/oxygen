@@ -12,6 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
+import {Tabs, Tab} from 'material-ui/Tabs';
 const iPanel = {
   minWidth: 150,
   backgroundColor: '#dadada',
@@ -99,10 +100,13 @@ export default class DomainHomeView extends React.Component {
       checkedIntent: [],
       selectedConcept: [],
       open: false,
+      show:0,
       pageNum: 1
     };
   }
-  handleToggle = () => this.setState({open: !this.state.open});
+
+  //handleActive = () => this.setState({open: !this.state.open});
+  // handleToggle = () => this.setState({open: !this.state.open});
   getConcepts(conceptWithDocCnt)
   {
     let sepDoc = conceptWithDocCnt.split(' (');
@@ -304,7 +308,7 @@ else {
    <Col lg={12} md={12} sm={12} xs={12}>
    <ScreenClassRender style = {styleFunction}>
    <h1>
-   { this.state.domainName }
+   { this.state.domainName.toUpperCase() }
    </h1>
    </ScreenClassRender>
    </Col>
@@ -314,12 +318,16 @@ else {
    <AutoCompleteSearchBox concepts={this.state.concepts}
    searchDocument={this.searchDocuments.bind(this)}
    getConcept={this.getConcepts.bind(this)}/>
+   <AutoCompleteSearchBox intents={this.state.intents}
+   searchDocument={this.searchDocuments.bind(this)}
+   getCheckedIntent={this.getCheckedIntents.bind(this)}/>
    <Row>
    <Col md={12} lg={12} xl={12}>
    {
     this.state.selectedConcept.length===0?<h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
     <SelectedConcepts conceptChips={this.state.selectedConcept}
     deleteConcept={this.deleteConcepts.bind(this)} />}
+  
     </Col>
     </Row>
     </Col>
@@ -352,18 +360,7 @@ else {
     </Col>
     </Visible>
     <Visible style={{padding:0}} md sm xs>
-
-
-    <Drawer open={this.state.open}
-    onRequestChange={this.handleToggle}
-    docked={false}
-    >
-
-    <MenuItem><SelectPanel intents={this.state.intents}
-    getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
-    </Drawer>
-
-    <Col sm={12} xs={12} md={12} style={{maxWidth:2000}}>
+   <Col sm={12} xs={12} md={12} style={{maxWidth:2000}}>
     <Row>
     <Col md={10} sm={10} xs={10}>
     <ScreenClassRender style={styleFunction}>
@@ -372,18 +369,15 @@ else {
     </h1>
     </ScreenClassRender>
     </Col>
-    <Col md={2} sm={2} xs={2}>
-    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
-    <NavigationMenu style={styles.large} color={'white'} />
-    </IconButton>
-    </Col>
     </Row>
-    <Row>
-      <Col sm={12} xs={12} md={12} lg={12} xl={12} >
+    <Row style={{padding:"0 20px"}}>
+      <Col xs={7} sm={7} md={7} lg={7} xl={7} style={{marginLeft:0}} >
         <SunburstView domainName={this.state.domainName} />
       </Col>
-    </Row>
-    <Row>
+   <Col sm={5} xs={5} md={5}> 
+   <SelectPanel intents={this.state.intents}
+   getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+   <Row>
     <Col sm={12} xs={12} md={12}>
     <AutoCompleteSearchBox concepts={this.state.concepts}
     searchDocument={this.searchDocuments.bind(this)}
@@ -392,9 +386,11 @@ else {
     <Col sm={12} xs={12} md={12}>
     {
       this.state.selectedConcept.length===0?
-      <h4 style={{color:'#8aa6bd'}}>Please Select Concepts</h4>:
+      <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
       <SelectedConcepts conceptChips={this.state.selectedConcept}
       deleteConcept={this.deleteConcepts.bind(this)} />}
+      </Col>
+      </Row>
       </Col>
       </Row>
       </Col>

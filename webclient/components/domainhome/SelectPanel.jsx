@@ -1,5 +1,6 @@
 import React from 'react';
 import Checkbox from 'material-ui/Checkbox';
+import {List, ListItem} from 'material-ui/List';
 
 const styles = {
  checkbox: {
@@ -12,7 +13,7 @@ paper: {
  textAlign: 'left',
  padding: '20 0 5px '
 }
-};
+};  
 
 export default class SelectPanel extends React.Component {
   constructor(props) {
@@ -22,11 +23,7 @@ export default class SelectPanel extends React.Component {
 
   render()
   {
-    return(
-      <div style={{textAlign: 'left', paddingLeft: 25}}>
-      <h2 style={{color: 'grey'}}>INTENTS</h2>
-      {
-        this.props.intents.map((intent, i)=>{
+    let nest = this.props.intents.map((intent, i)=>{
           return (<Checkbox
             key={i}
             label={intent}
@@ -36,7 +33,19 @@ export default class SelectPanel extends React.Component {
             style={styles.checkbox}
             />);
         })
-      }
+    return(
+      <div style={{textAlign: 'left', paddingLeft: 25}}>
+        <List>
+            <ListItem
+              primaryText="Select Intent"
+              initiallyOpen={false}
+              primaryTogglesNestedList={true}
+              nestedItems={[
+                nest
+              ]}
+            />
+        </List>
+
       </div>
       );
   }
