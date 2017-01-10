@@ -212,7 +212,7 @@ export default class DomainShow extends React.Component {
 			onRequestClose={this.handleRequestClose}
 			/>
 			<Card style = {styles.cardRound}>
-			<Link to = {'/graph/' + this.props.item.name} style = {{textDecoration: 'none'}}>
+			<Link to = {'/domainhome/' + this.props.item.name} style = {{textDecoration: 'none'}}>
 			<CardMedia style = {{height: '280px', borderRadius: '2%',
 			width: '100%', backgroundColor: this.props.item.conceptColor,marginBottom:25}}
 			overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
