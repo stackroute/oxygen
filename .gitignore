@@ -46,4 +46,3 @@ neo4j
 # Ignore data generated for application
 *tree.json
 .idea
-java_concepts_tree.json

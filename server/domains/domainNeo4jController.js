@@ -578,7 +578,7 @@ let getTreeOfDomain = function (data) {
                         reject(err);
                     }
                 });
-                resolve(JSON.stringify(tree));
+                resolve(p3);
             })
 
     });
