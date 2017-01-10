@@ -4,6 +4,8 @@ import ActionSearch from 'material-ui/svg-icons/action/search';
 import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
 import {Row, Col} from 'react-grid-system';
+import TextField from 'material-ui/TextField';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 const style = {
   maxHeight: 80,
   maxWidth: 750,
@@ -50,34 +52,43 @@ export default class AutoCompleteSearchBox extends React.Component {
     })
     this.props.getConcept(concept);
   }
+  showDocs()
+  {
+    console.log(this.props.searchDocument);
+    console.log("hhhh");
+    this.props.searchDocument;
+  }
 
   render()
   {
     return(
-      <div style={{align: 'center'}}>
-      <Paper style={style} zDepth={2} rounded={false}>
+              <div>
+                                   <div style={{align: 'center'}}>
+                                  <Paper style={style} zDepth={2} rounded={false}>
 
-      <Row style={{padding:"0 20px"}}>
-      <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
+                                  <Row style={{padding:"0 20px"}}>
+                                  <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
 
-      <AutoComplete
-      hintText="What do you want to search..??"
-      filter={this.filterFunc}
-      dataSource={this.props.concepts}
-      fullWidth={true}
-      searchText={this.state.searchText}
-      onUpdateInput={this.handleUpdateInput.bind(this)}
-      onNewRequest={this.getConcept.bind(this)}
-      maxSearchResults={5}
-      />
-      </Col>
-      <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-      <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
-      <ActionSearch /></IconButton>
-      </Col>
-      </Row>
-      </Paper>
-      </div>
+                                  <AutoComplete
+                                  hintText="What you want to search"
+                                  filter={this.filterFunc}
+                                  dataSource={this.props.concepts}
+                                  fullWidth={true}
+                                  searchText={this.state.searchText}
+                                  onUpdateInput={this.handleUpdateInput.bind(this)}
+                                  onNewRequest={this.getConcept.bind(this)}
+                                  maxSearchResults={5}
+                                  />
+                                  </Col>
+                                  <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                                  <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
+                                  <ActionSearch /></IconButton>
+                                  </Col>
+                                  </Row>
+                                  </Paper>
+                                  </div>
+</div>
+                      
       );
   }
 }

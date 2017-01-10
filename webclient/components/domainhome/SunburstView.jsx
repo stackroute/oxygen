@@ -3,6 +3,8 @@ import Request from 'superagent';
 import Paper from 'material-ui/Paper';
 import ReactFauxDOM from 'react-faux-dom';
 import $ from 'jquery';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+
 import d3 from 'd3';
 
 export default class SunburstView extends React.Component {
@@ -41,8 +43,8 @@ export default class SunburstView extends React.Component {
         let th = this
         //Create the element
         const div = new ReactFauxDOM.Element('div')
-        let width = 1000;
-        let height = 450;
+        let width = 500;
+        let height = 250;
         let n=1;
         let radius = Math.min(width, height) / 2;
         let x = d3.scale.linear()
@@ -214,7 +216,8 @@ export default class SunburstView extends React.Component {
     }
 
     render() {
-        return this.drawChart()
+        return this.drawChart();
+                   
     }
 }
 
