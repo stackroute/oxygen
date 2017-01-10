@@ -48,7 +48,7 @@ export default class SunburstView extends React.Component {
         //Create the element
         const div = new ReactFauxDOM.Element('div')
         let width = 500;
-        let height = 250;
+        let height = 340;
         let n=1;
         let radius = Math.min(width, height) / 2;
         let x = d3.scale.linear()
