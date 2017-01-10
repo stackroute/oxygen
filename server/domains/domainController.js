@@ -3,6 +3,7 @@ const domainNeo4jController = require('./domainNeo4jController');
 const domainMongoController = require('./domainMongoController');
 const domainMgr = require('./domainManager');
 const startCrawlerMQ = require('./../searcher/docOpenCrawlerEngine').startCrawler;
+const startFnGen = require('./domainEngine').startDomainEngine;
 const logger = require('./../../applogger');
 
 const async = require('async');
@@ -503,6 +504,26 @@ let getTreeOfDomain = function(domain) {
     });
 
     return promise;
+}
+
+/*
+test function generation
+ */
+
+let testFnGen = function(data){
+    console.log('testFnGen: data ',data);
+    try{
+
+        startFnGen();
+        return {
+            msg: "Test function generation was successful"
+        }
+    } catch (err){
+        return {
+            msg: 'Error: test Function wasn not generated successfully',
+            err: err
+        }
+    }
 }
 
 module.exports = {

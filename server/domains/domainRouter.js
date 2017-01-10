@@ -174,7 +174,7 @@ router.post('/:domainName/index', function(req, res) {
 //get web Documents
 router.post('/documents/:domainName', function(req, res) {
   logger.debug("got request for retrieving web documents ", req.body);
-  logger.debug("Domin name ", req.body.domainName);
+  logger.debug("Domain name ", req.body.domainName);
   //res.send('success');
   try {
 
@@ -203,19 +203,16 @@ router.post('/documents/:domainName', function(req, res) {
 
 });
 
-router.get('/domainhomeview/:domainName', function(req, res) {
+router.get('/test/:testparam', function(req, res) {
   try {
 
     let reqObj = {
-      domainName: req.params.domainName,
+      param1: req.param.testparam,
       data: req.body
     }
-    logger.debug("sending data manually ", reqObj);
-    console.log('reqObj',reqObj);
-
-    res.send(domainCtrl.getTreeOfDomain(reqObj));
+    logger.debug("sending data manually to test fn generator ", reqObj);
+    res.send(domainCtrl.testFnGen(reqObj));
     return;
-
 
   } catch (err) {
     logger.error("Caught a error in posting URLs manually ", err);
@@ -225,5 +222,6 @@ router.get('/domainhomeview/:domainName', function(req, res) {
     return;
   }
 });
+
 
 module.exports = router;
