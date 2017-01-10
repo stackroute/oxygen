@@ -32,13 +32,17 @@ export default class SunburstView extends React.Component {
         });
     }
 
-  componentDidMount(){
-    this.getTreeofDomain();
-  }
+    componentDidMount(){
+        let th = this;
+        this.getTreeofDomain();
+        d3.json("./assets/data/data.json", function(error, json) {
+            th.setState({data: json});
+        });
+    }
 
   	drawChart() {
-    
-        let th = this
+        console.log('in draw chart')
+        let th = this;
         //Create the element
         const div = new ReactFauxDOM.Element('div')
         let width = 1000;
@@ -80,9 +84,7 @@ export default class SunburstView extends React.Component {
             .innerRadius(function(d) { return Math.sqrt(d.y); })
             .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
-        d3.json("./assets/data/data.json", function(error, json) {
-            th.setState({data: json});
-        });
+        
             let trail = d3.select("#sequence").append("svg:svg")
                 .attr("width", width)
                 .attr("height", 50)
@@ -210,11 +212,12 @@ export default class SunburstView extends React.Component {
             d3.select("#trail").style("visibility", "");
         }
         //DOM manipulations done, convert to React
+        console.log('hello')
         return div.toReact()
     }
 
     render() {
-        return this.drawChart()
+        return this.drawChart();
     }
 }
 
