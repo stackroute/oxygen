@@ -1,2 +1,2 @@
-import DomainHomeview from './DomainHomeview';
-export default DomainHomeview;
+import DomainHomeView from './DomainHomeView';
+export default DomainHomeView;

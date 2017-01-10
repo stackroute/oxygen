@@ -9,8 +9,8 @@ let cypher = require('cypher-stream')('bolt://localhost', 'neo4j', 'password');
 let fs = require('fs');
 
 
-let indexNewDomain = function(newDomainObj) {
-    let promise = new Promise(function(resolve, reject) {
+let indexNewDomain = function (newDomainObj) {
+    let promise = new Promise(function (resolve, reject) {
 
         logger.debug("Now proceeding to index new domain: ", newDomainObj);
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
@@ -29,8 +29,8 @@ let indexNewDomain = function(newDomainObj) {
         };
 
         session.run(query, params)
-            .then(function(result) {
-                result.records.forEach(function(record) {
+            .then(function (result) {
+                result.records.forEach(function (record) {
                     logger.debug("Result from neo4j: ", record);
                 });
 
@@ -38,7 +38,7 @@ let indexNewDomain = function(newDomainObj) {
                 session.close();
                 resolve(newDomainObj);
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
                     query);
                 reject(err);
@@ -48,8 +48,8 @@ let indexNewDomain = function(newDomainObj) {
     return promise;
 }
 
-let getAllDomainConcept = function(domainNameColln) {
-    let promise = new Promise(function(resolve, reject) {
+let getAllDomainConcept = function (domainNameColln) {
+    let promise = new Promise(function (resolve, reject) {
 
         logger.debug(
             "Now proceeding to retrive the concepts for all domains: ");
@@ -64,7 +64,7 @@ let getAllDomainConcept = function(domainNameColln) {
         logger.debug("obtained connection with neo4j");
         let data = [];
 
-        domainNameColln.forEach(function(domainName) {
+        domainNameColln.forEach(function (domainName) {
 
             let query = 'MATCH (d:' + graphConsts.NODE_DOMAIN +
                 '{name:{domainName}})'
@@ -78,14 +78,14 @@ let getAllDomainConcept = function(domainNameColln) {
 
 
             session.run(query, params)
-                .then(function(result) {
-                    result.records.forEach(function(record) {
+                .then(function (result) {
+                    result.records.forEach(function (record) {
 
                         let obj = {
                             Domain: "",
                             noOfConcepts: 0
                         }
-                        record._fields.forEach(function(field) {
+                        record._fields.forEach(function (field) {
                             if (typeof field.low === 'undefined') {
                                 obj.Domain = field.properties.name;
                             } else {
@@ -97,11 +97,11 @@ let getAllDomainConcept = function(domainNameColln) {
                     if (data.length === domainNameColln.length) {
                         resolve(data);
                     }
-                }).catch(function(err) {
-                    logger.error("Error in neo4j query: ", err, ' query is: ',
-                        query);
-                    reject(err);
-                });
+                }).catch(function (err) {
+                logger.error("Error in neo4j query: ", err, ' query is: ',
+                    query);
+                reject(err);
+            });
 
         })
 
@@ -113,8 +113,8 @@ let getAllDomainConcept = function(domainNameColln) {
 }
 
 
-let getDomainConcept = function(domainName) {
-    let promise = new Promise(function(resolve, reject) {
+let getDomainConcept = function (domainName) {
+    let promise = new Promise(function (resolve, reject) {
 
         logger.debug(
             "Now proceeding to retrive the concepts for domain name: ",
@@ -139,9 +139,9 @@ let getDomainConcept = function(domainName) {
         };
         let concepts = [];
         session.run(query, params)
-            .then(function(result) {
-                result.records.forEach(function(record) {
-                    record._fields.forEach(function(fields) {
+            .then(function (result) {
+                result.records.forEach(function (record) {
+                    record._fields.forEach(function (fields) {
                         concepts.push(fields.properties.name);
                     });
 
@@ -152,7 +152,7 @@ let getDomainConcept = function(domainName) {
                     Concepts: concepts
                 });
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
                     query);
                 reject(err);
@@ -163,8 +163,8 @@ let getDomainConcept = function(domainName) {
 }
 
 
-let getDomainConceptWithDoc = function(domainName) {
-    let promise = new Promise(function(resolve, reject) {
+let getDomainConceptWithDoc = function (domainName) {
+    let promise = new Promise(function (resolve, reject) {
 
         logger.debug(
             "Now proceeding to retrive the concepts for domain name: ",
@@ -191,10 +191,10 @@ let getDomainConceptWithDoc = function(domainName) {
         };
         let conceptsWithDoc = [];
         session.run(query, params)
-            .then(function(result) {
-                result.records.forEach(function(record) {
+            .then(function (result) {
+                result.records.forEach(function (record) {
                     conceptsWithDoc.push(record._fields[0] + " (" + record._fields[
-                        1] + " Docs)");
+                            1] + " Docs)");
                 });
                 session.close();
                 logger.debug({
@@ -206,7 +206,7 @@ let getDomainConceptWithDoc = function(domainName) {
                     ConceptsWithDoc: conceptsWithDoc
                 });
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
                     query);
                 reject(err);
@@ -218,8 +218,8 @@ let getDomainConceptWithDoc = function(domainName) {
 }
 
 
-let getDomainIntent = function(domain) {
-    let promise = new Promise(function(resolve, reject) {
+let getDomainIntent = function (domain) {
+    let promise = new Promise(function (resolve, reject) {
 
         logger.debug("Now proceeding to retrive the intent for domain name: ",
             domain.Domain);
@@ -243,9 +243,9 @@ let getDomainIntent = function(domain) {
         };
         let intents = [];
         session.run(query, params)
-            .then(function(result) {
-                result.records.forEach(function(record) {
-                    record._fields.forEach(function(fields) {
+            .then(function (result) {
+                result.records.forEach(function (record) {
+                    record._fields.forEach(function (fields) {
                         intents.push(fields.properties.name);
                     });
 
@@ -255,7 +255,7 @@ let getDomainIntent = function(domain) {
                 logger.debug(domain);
                 resolve(domain);
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
                     query);
                 reject(err);
@@ -265,8 +265,8 @@ let getDomainIntent = function(domain) {
     return promise;
 }
 
-let getDomainCardDetails = function(domainObj) {
-    let promise = new Promise(function(resolve, reject) {
+let getDomainCardDetails = function (domainObj) {
+    let promise = new Promise(function (resolve, reject) {
         logger.debug(" in domain card going for getting concepts for : ",
             domainObj);
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
@@ -289,10 +289,10 @@ let getDomainCardDetails = function(domainObj) {
         };
         let concepts = [];
         session.run(query, params)
-            .then(function(result) {
-                result.records.forEach(function(record) {
+            .then(function (result) {
+                result.records.forEach(function (record) {
                     //logger.debug("Result from neo4j: ", record);
-                    record._fields.forEach(function(fields) {
+                    record._fields.forEach(function (fields) {
                         // logger.debug("domain Concept :", fields.properties.name);
                         concepts.push(fields.properties.name);
                     });
@@ -313,10 +313,10 @@ let getDomainCardDetails = function(domainObj) {
                 let documents = 0;
                 let session1 = driver.session();
                 session1.run(query1, params1)
-                    .then(function(outerResults) {
-                        outerResults.records.forEach(function(record) {
+                    .then(function (outerResults) {
+                        outerResults.records.forEach(function (record) {
                             //logger.debug("Result from neo4j: ", record);
-                            record._fields.forEach(function(fields) {
+                            record._fields.forEach(function (fields) {
                                 intent = fields.properties.name;
                                 intents.push(intent);
                                 logger.debug(" domain intent ", fields.properties
@@ -342,7 +342,7 @@ let getDomainCardDetails = function(domainObj) {
                         };
                         let session2 = driver.session();
                         session2.run(query2, params2)
-                            .then(function(results) {
+                            .then(function (results) {
                                 if (results.records.length === 0) {
                                     resolve({
                                         concepts: concepts,
@@ -350,8 +350,8 @@ let getDomainCardDetails = function(domainObj) {
                                         docs: documents
                                     });
                                 } else {
-                                    results.records.forEach(function(records) {
-                                        records._fields.forEach(function() {
+                                    results.records.forEach(function (records) {
+                                        records._fields.forEach(function () {
                                             // logger.debug('document is' + field.properties
                                             //  .name);
                                             documents += 1;
@@ -370,7 +370,7 @@ let getDomainCardDetails = function(domainObj) {
                                 session2.close();
 
                             })
-                            .catch(function(err) {
+                            .catch(function (err) {
                                 logger.error("Error in neo4j query: ", err,
                                     ' query is: ',
                                     query2);
@@ -381,7 +381,7 @@ let getDomainCardDetails = function(domainObj) {
                         session1.close();
 
                     })
-                    .catch(function(err) {
+                    .catch(function (err) {
                         logger.error("Error in neo4j query: ", err, ' query is: ',
                             query1);
                         reject(err);
@@ -391,7 +391,7 @@ let getDomainCardDetails = function(domainObj) {
                 session.close();
                 //resolve({Domain:domainName,Concepts:concepts});
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
                     query);
                 reject(err);
@@ -401,8 +401,8 @@ let getDomainCardDetails = function(domainObj) {
     return promise;
 }
 
-let getIntentforDocument = function(domain) {
-    let promise = new Promise(function(resolve, reject) {
+let getIntentforDocument = function (domain) {
+    let promise = new Promise(function (resolve, reject) {
 
         logger.debug("Now proceeding to retrive " +
             "the intent relationship: ", domain.domainObj.domainName);
@@ -435,12 +435,12 @@ let getIntentforDocument = function(domain) {
 
         let intents = [];
         session.run(query, params)
-            .then(function(result) {
-                result.records.forEach(function(record) {
+            .then(function (result) {
+                result.records.forEach(function (record) {
                     logger.debug("Result from neo4j: ", record);
                     let i = 0;
                     let obj = {};
-                    record._fields.forEach(function(fields) {
+                    record._fields.forEach(function (fields) {
                         i += 1;
                         if (i === 1) {
                             obj.intent = fields;
@@ -454,7 +454,7 @@ let getIntentforDocument = function(domain) {
                 session.close();
                 resolve(intents);
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
                     query);
                 reject(err);
@@ -464,8 +464,8 @@ let getIntentforDocument = function(domain) {
     return promise;
 }
 
-let getWebDocuments = function(domainObj) {
-    let promise = new Promise(function(resolve, reject) {
+let getWebDocuments = function (domainObj) {
+    let promise = new Promise(function (resolve, reject) {
 
         logger.debug("Now proceeding to retrive " +
             "the web Documents for domain name: ", domainObj.domainName);
@@ -506,12 +506,12 @@ let getWebDocuments = function(domainObj) {
         //logger.debug("query " + query);
         let docs = [];
         session.run(query, params)
-            .then(function(result) {
-                result.records.forEach(function(record) {
+            .then(function (result) {
+                result.records.forEach(function (record) {
                     logger.debug("Result from neo4j: ", record);
                     let i = 0;
                     let obj = {};
-                    record._fields.forEach(function(fields) {
+                    record._fields.forEach(function (fields) {
                         i += 1;
                         if (i === 1) {
                             obj.url = fields;
@@ -525,7 +525,7 @@ let getWebDocuments = function(domainObj) {
                 session.close();
                 resolve(docs);
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
                     query);
                 reject(err);
@@ -535,96 +535,106 @@ let getWebDocuments = function(domainObj) {
     return promise;
 }
 
-let getTreeOfDomain = function(data) {
-    let promise = new Promise(function(resolve, reject) {
-        let conceptTreeFile = data.domainName + '_concepts_tree.json';
-
-        logger.debug("Now proceeding to get all terms of domain: ", data.domainName);
-        fs.writeFile(conceptTreeFile, '');
-
-        let query = 'MATCH p=(n:' + graphConsts.NODE_CONCEPT + ')<-[:' + graphConsts.REL_SUBCONCEPT_OF + ']->(m) ';
-        query += ' where NOT ()<-[:' + graphConsts.REL_SUBCONCEPT_OF + ']-(n) set m.size=1';
-        query += ' WITH COLLECT(p)  AS ps CALL apoc.convert.toTree(ps) yield value RETURN value';
-
-        console.log('query: ', query);
-        let tree = {
-            "name": data.domainName,
+let getTreeOfDomain = function (data) {
+    let promise = new Promise(function (resolve, reject) {
+        logger.debug("Start: tree structure of domain : ", data.domainName);
+        fs.writeFile(data.domainName + '_concepts_tree.json', '');
+        var treeData = [];
+        var tree = {
+            "name": "Java Web Programming",
             "children": []
         };
-        cypher(query)
-            .on('data', function(result) {
-                tree.children.push(result.value);
+
+        cypher('match (n:Concept) return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
+            .on('data', function (result) {
+                treeData.push(result);
             })
-            .on('end', function(d) {
-               
-                fs.writeFile(conceptTreeFile, JSON.stringify(tree), (err) => {
-                    if (err)
-                        reject(err);
-                    else
-                        console.log('File Created: '+conceptTreeFile);
+            .on('end', function () {
+                // console.log('all done');
+                var dataMap = treeData.reduce(function (map, node) {
+                    map[node.conceptid] = node;
+                    return map;
+                }, {});
+                treeData.forEach(function (node) {
+                    var parent = dataMap[node.parent];
+                    node.size = 1;
+                    if (parent) {
+                        (parent.children || (parent.children = []))
+                            .push(node);
+                    }
+                    else {
+                        tree.children.push(node);
+                    }
                 });
-                //reset tree after writing to a file
-                tree = JSON.stringify(data);
-                resolve(tree);
+            })
+            .on('end', function () {
+                var p3 = JSON.stringify(tree);
+                p3 = p3.replace("[", "[\n\t");
+                p3 = p3.replace(/},/g, "},\n\t");
+                p3 = p3.replace(/\\"/g, "");
+                p3 = p3.replace(/,/g, ",\n\t");
+                fs.writeFile(data.domainName + '_concepts_tree.json', p3, function (err) {
+                    if (err) {
+                        reject(err);
+                    }
+                });
+                resolve(p3);
             });
-
     });
-
     return promise;
 }
 
 
-let indexNewDomainCallBack = function(newDomainObj, callback) {
-    indexNewDomain(newDomainObj).then(function(indexedDomainObj) {
+let indexNewDomainCallBack = function (newDomainObj, callback) {
+    indexNewDomain(newDomainObj).then(function (indexedDomainObj) {
         callback(null, indexedDomainObj);
-    }, function(err) {
+    }, function (err) {
         callback(err, null);
     });
 }
-let getDomainConceptCallback = function(domainName, callback) {
-    getDomainConcept(domainName).then(function(retrievedDomainConcept) {
+let getDomainConceptCallback = function (domainName, callback) {
+    getDomainConcept(domainName).then(function (retrievedDomainConcept) {
         callback(null, retrievedDomainConcept);
-    }, function(err) {
+    }, function (err) {
         callback(err, null);
     });
 }
-let getDomainConceptWithDocCallback = function(domainName, callback) {
-    getDomainConceptWithDoc(domainName).then(function(retrievedDomainConcept) {
+let getDomainConceptWithDocCallback = function (domainName, callback) {
+    getDomainConceptWithDoc(domainName).then(function (retrievedDomainConcept) {
         callback(null, retrievedDomainConcept);
-    }, function(err) {
+    }, function (err) {
         callback(err, null);
     });
 }
-let getDomainIntentCallback = function(domainName, callback) {
-    getDomainIntent(domainName).then(function(retrievedDomainConceptsAndIntents) {
+let getDomainIntentCallback = function (domainName, callback) {
+    getDomainIntent(domainName).then(function (retrievedDomainConceptsAndIntents) {
         callback(null, retrievedDomainConceptsAndIntents);
-    }, function(err) {
+    }, function (err) {
         callback(err, null);
     });
 }
-let getAllDomainConceptCallback = function(domainNameColln, callback) {
-    getAllDomainConcept(domainNameColln).then(function(
-        retrievedAllDomainConcept) {
+let getAllDomainConceptCallback = function (domainNameColln, callback) {
+    getAllDomainConcept(domainNameColln).then(function (retrievedAllDomainConcept) {
         callback(null, retrievedAllDomainConcept);
-    }, function(err) {
+    }, function (err) {
         callback(err, null);
     });
 }
 
-let getDomainCardDetailsCallback = function(domainName, callback) {
+let getDomainCardDetailsCallback = function (domainName, callback) {
     logger.debug("from the callback : " + domainName)
-    getDomainCardDetails(domainName).then(function(retrievedDomainConcept) {
+    getDomainCardDetails(domainName).then(function (retrievedDomainConcept) {
         callback(null, retrievedDomainConcept);
-    }, function(err) {
+    }, function (err) {
         callback(err, null);
     });
 }
 
-let getWebDocumentsCallback = function(domainObj, callback) {
+let getWebDocumentsCallback = function (domainObj, callback) {
     logger.debug("from the callback : " + domainObj)
-    getWebDocuments(domainObj).then(function(retrievedDocs) {
+    getWebDocuments(domainObj).then(function (retrievedDocs) {
         callback(null, retrievedDocs);
-    }, function(err) {
+    }, function (err) {
         callback(err, null);
     });
 }
