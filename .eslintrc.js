@@ -124,7 +124,7 @@ module.exports = {
         "no-self-compare": 2, // disallow comparisons where both sides are exactly the same (off by default)
         "no-sequences": 2, // disallow use of comma operator
         "no-throw-literal": 2, // restrict what can be thrown as an exception (off by default)
-        "no-unused-expressions": 2, // disallow usage of expressions in statement position
+        "no-unused-expressions": 0, // disallow usage of expressions in statement position
         "no-void": 2, // disallow use of void operator (off by default)
         "no-warning-comments": [0, {
             "terms": ["todo", "fixme"],
@@ -132,7 +132,7 @@ module.exports = {
         }], // disallow usage of configurable warning terms in comments": 2, // e.g. TODO or FIXME (off by default)
         "no-with": 2, // disallow use of the with statement
         "radix": 2, // require use of the second argument for parseInt() (off by default)
-        "vars-on-top": 2, // requires to declare all vars on top of their containing scope (off by default)
+       // "vars-on-top": 0, // requires to declare all vars on top of their containing scope (off by default)
         "wrap-iife": 2, // require immediate function invocation to be wrapped in parentheses (off by default)
         "yoda": 2, // require or disallow Yoda conditions
 
@@ -156,7 +156,7 @@ module.exports = {
         // "no-undef": 2, // disallow use of undeclared variables unless mentioned in a /*global */ block
         "no-undef-init": 2, // disallow use of undefined when initializing variables
         "no-undefined": 2, // disallow use of undefined variable (off by default)
-        "no-unused-vars": 0, // disallow declaration of variables that are not used in the code
+        //"no-unused-vars": 0, // disallow declaration of variables that are not used in the code
         // "no-use-before-define": 2, // disallow use of variables before they are defined
 
         //
@@ -232,7 +232,7 @@ module.exports = {
         //
         // These rules are only relevant to ES6 environments and are off by default.
         //
-        "no-var": 2, // require let or const instead of var (off by default)
+      //  "no-var": 0, // require let or const instead of var (off by default)
         "generator-star-spacing": [2, "before"], // enforce the spacing around the * in generator functions (off by default)
 
         //
