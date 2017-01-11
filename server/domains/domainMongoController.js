@@ -132,6 +132,19 @@ let getDomainObj = function(domainName, callback) {
 
   return;
 }
+let deleteDomain = function(domain, callback) {
+  let query = {
+    name: domain.domainName
+  };
+
+  DomainModel.find(query).remove( function(err,removed) {
+    /*console.log("error" + err);
+    console.log("removed:" + removed);*/
+}); 
+
+    logger.debug("deleteddd", query.name);
+  return;
+}
 
 let updateDomainStatus = function(domainName, status, statusText, callback) {
   getDomainObj(domainName, function(err, domainObj) {
@@ -160,6 +173,7 @@ module.exports = {
   saveNewDomainCallBack: saveNewDomainCallBack,
   updateDomainStatus: updateDomainStatus,
   getDomainObj: getDomainObj,
-  getSearchResultDocument: getSearchResultDocuments
+  getSearchResultDocument: getSearchResultDocuments,
+  deleteDomain: deleteDomain
 
 }
