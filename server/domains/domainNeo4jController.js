@@ -541,7 +541,7 @@ let getTreeOfDomain = function(data) {
         fs.writeFile(data.domainName + '_concepts_tree.json', '');
         var treeData = [];
         var tree = {
-            "name": "Java Web Programming",
+            "name": data.domainName,
             "children": []
         };
 
@@ -565,8 +565,7 @@ let getTreeOfDomain = function(data) {
                         tree.children.push(node);
                     }
                 });
-            })
-            .on('end', function() {
+
                 var p3 = JSON.stringify(tree);
                 p3 = p3.replace("[", "[\n\t");
                 p3 = p3.replace(/},/g, "},\n\t");
@@ -682,6 +681,16 @@ let getWebDocumentsCallback = function(domainObj, callback) {
     });
 }
 
+let getTreeOfDomainCallback = function (domainObj, callback) {
+    logger.debug("from the callback : " + domainObj.domainName)
+    getTreeOfDomain(domainObj).then(function (domainTree) {
+        callback(null, domainTree);
+    }, function (err) {
+        callback(err, null);
+    });
+}
+
+
 module.exports = {
     indexNewDomain: indexNewDomain,
     getDomainConcept: getDomainConcept,
@@ -699,6 +708,8 @@ module.exports = {
     getWebDocuments: getWebDocuments,
     getIntentforDocument: getIntentforDocument,
     getTreeOfDomain: getTreeOfDomain,
-    deleteDomain: deleteDomain,
+     deleteDomain: deleteDomain,
     deleteDomainCallback: deleteDomainCallback
+     getTreeOfDomainCallback: getTreeOfDomainCallback
+
 }

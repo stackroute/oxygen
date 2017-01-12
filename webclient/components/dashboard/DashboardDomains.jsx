@@ -13,6 +13,7 @@ import {Link} from 'react-router';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionAddBox from 'material-ui/svg-icons/content/add-box';
 import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
+import Delete from 'material-ui/svg-icons/action/delete';
 import Snackbar from 'material-ui/Snackbar';
 import Divider from 'material-ui/Divider';
 import Formsy from 'formsy-react';
@@ -111,6 +112,9 @@ export default class DomainShow extends React.Component {
 		}
 		handleOpen = () => {
 			this.setState({openDialog: true});
+		};
+		handleDelete = () => {
+			console.log('Domain delete functionality')
 		};
 
 		handleClose = () => {
@@ -326,6 +330,9 @@ export default class DomainShow extends React.Component {
 				<MenuItem primaryText="ReIndex"
 				leftIcon={<NavigationRefresh/>}
 				onTouchTap={this.handleOpen}/>
+				<MenuItem primaryText="Delete"
+				leftIcon={<Delete/>}
+				onTouchTap={this.handleDelete}/>
 				</IconMenu>
 				</Col>
 				</Row>
