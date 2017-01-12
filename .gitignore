@@ -30,6 +30,7 @@ build/Release
 node_modules
 jspm_packages
 bundle.js
+neo4jContainer
 
 # Optional npm cache directory
 .npm

@@ -204,31 +204,39 @@ router.post('/documents/:domainName', function (req, res) {
 });
 
 router.get('/domainhomeview/:domainName', function (req, res) {
+    console.log('in DomainRouter')
     try {
         let reqObj = {
             domainName: req.params.domainName,
             data: req.body
-        };
+        }
         logger.debug("DomainHomeView: Begining to get tree structure ", reqObj);
-
-        domainCtrl.getTreeOfDomain(reqObj).then(function (tree) {
-                logger.info("Success: Retrieved the tree structure");
-                logger.debug(tree);
-                res.send(tree);
-                return;
-            },
-            function (err) {
-                logger.error(
-                    "Encountered error in retrieving tree structure of the domain concepts",
-                    err);
-                res.send(err);
-                return;
-            });
-    } catch (err) {
+        console.log('reqObj', reqObj);
+        res.send(domainCtrl.getTreeOfDomain(reqObj));
+        return;
+    } catch
+        (err) {
         logger.error("Caught a error in posting URLs manually ", err);
         res.status(500).send({
             error: "Error: Failed get the tree structure"
 
+        });
+    }
+});
+
+router.delete('/deletedomain/:domainName', function (req, res) {
+    try {
+        let reqObj = {
+            domainName: req.params.domainName
+        };
+        console.log(reqObj);
+        logger.debug("deletedomain:delete a domain", reqObj);
+        res.send(domainCtrl.deleteDomain(reqObj));
+        return;
+    } catch (err) {
+        logger.error("Caught a error in deleting a domain ", err);
+        res.status(500).send({
+            error: "Error: Failed to delete a domain"
         });
     }
 });

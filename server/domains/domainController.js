@@ -506,6 +506,25 @@ let getTreeOfDomain = function(domain) {
     return promise;
 }
 
+let deleteDomain =function(domain){
+    logger.debug('domain ctrl',domain);
+    logger.debug("Received request for deleting domain",domain.domainName);
+    let promise =new Promise(function(resolve,reject){
+            async.waterfall([
+                     function(callback){
+                         logger.debug("inside waterfall", domain)
+                        domainMongoController.deleteDomain(domain,callback);
+                    }
+                ],
+                function(err,tree){
+                    if(err){
+                        reject(err);
+                    }
+                });
+    });
+    return promise;
+}
+
 /*
 test function generation
  */
@@ -535,5 +554,6 @@ module.exports = {
     freshlyIndexDomain: freshlyIndexDomain,
     fetchWebDocuments: fetchWebDocuments,
     getAllDomain: getAllDomain,
-    getTreeOfDomain: getTreeOfDomain
+    getTreeOfDomain: getTreeOfDomain,
+    deleteDomain:deleteDomain
 }

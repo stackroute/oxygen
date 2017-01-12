@@ -3,6 +3,8 @@ import Request from 'superagent';
 import Paper from 'material-ui/Paper';
 import ReactFauxDOM from 'react-faux-dom';
 import $ from 'jquery';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+
 import d3 from 'd3';
 
 export default class SunburstView extends React.Component {
@@ -12,10 +14,13 @@ export default class SunburstView extends React.Component {
             chart: 'Loading...',
             data: {}
         }
+
+        this.drawChart = this.drawChart.bind(this)
+        this.fetchJsonFileData = this.fetchJsonFileData.bind(this)
     }
 
     getTreeofDomain(){
-        let url = `/domain/domainhomeview/` + this.props.domainName;
+        let url = `/domain/domainhomeview/java`;
         let that = this;
         Request
             .get(url)
@@ -32,27 +37,39 @@ export default class SunburstView extends React.Component {
         });
     }
 
-  componentDidMount(){
-    this.getTreeofDomain();
-
-  }
+    componentDidMount() {
+        this.getTreeofDomain();
+    }
+    componentWillReceiveProps(nextProps) {
+        nextProps.domainName;
+        this.fetchJsonFileData()
+    }
+    
+    fetchJsonFileData() {
+        let th = this;
+        if(this.props.domainName.length > 0) {
+            let filePath = '../'+this.props.domainName+'_concepts_tree.json'
+            console.log(filePath)
+            // d3.json(fileName, function(error, json) {
+            d3.json('./assets/data/data.json', function(error, json) {
+                th.setState({data: json});
+            });
+        }
+    }
 
   	drawChart() {
-    
+        console.log(this.props.domainName+'hello')
         let th = this;
-        console.log('state: ',th.state);
-        return;
         //Create the element
-        const div = new ReactFauxDOM.Element('div');
-        let width = 1000;
-        let height = 450;
+        const div = new ReactFauxDOM.Element('div')
+        let width = 500;
+        let height = 340;
         let n=1;
         let radius = Math.min(width, height) / 2;
         let x = d3.scale.linear()
                .range([0, 2 * Math.PI]);
         let y = d3.scale.linear().range([0, radius]);
         let color = d3.scale.category20c();
-
 
         let vis = d3.select(div).append("svg:svg")
             .attr("width", width)
@@ -223,5 +240,5 @@ export default class SunburstView extends React.Component {
 }
 
 SunburstView.propTypes = {
- 
+    
 };

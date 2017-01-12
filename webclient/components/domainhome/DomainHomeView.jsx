@@ -12,6 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import Request from 'superagent';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
+import {Tabs, Tab} from 'material-ui/Tabs';
 const iPanel = {
   minWidth: 150,
   backgroundColor: '#dadada',
@@ -88,60 +89,63 @@ const styleFunction = (screenClass) => {
 
 export default class DomainHomeView extends React.Component {
     constructor(props) {
-    super(props);
-    this.state = {
-      msgSelector: 'No search specified',
-      domainName: '',
-      concepts: [],
-      conceptsOnly: [],
-      intents: [],
-      docs: [],
-      checkedIntent: [],
-      selectedConcept: [],
-      open: false,
-      pageNum: 1
-    };
-  }
-  handleToggle = () => this.setState({open: !this.state.open});
-  getConcepts(conceptWithDocCnt)
-  {
-    let sepDoc = conceptWithDocCnt.split(' (');
-    let concept = sepDoc[0];
-    let newConcepts = this.state.selectedConcept;
-    if(this.state.conceptsOnly.includes(concept))
+        super(props);
+        this.state = {
+            msgSelector: 'No search specified',
+            domainName: '',
+            concepts: [],
+            conceptsOnly: [],
+            intents: [],
+            docs: [],
+            checkedIntent: [],
+            selectedConcept: [],
+            open: false,
+            show:0,
+            pageNum: 1
+        };
+    }
+
+    //handleActive = () => this.setState({open: !this.state.open});
+    // handleToggle = () => this.setState({open: !this.state.open});
+    getConcepts(conceptWithDocCnt)
     {
-      if(!newConcepts.includes(concept)) {
-        newConcepts.push(concept);
-      }
+        let sepDoc = conceptWithDocCnt.split(' (');
+        let concept = sepDoc[0];
+        let newConcepts = this.state.selectedConcept;
+        if(this.state.conceptsOnly.includes(concept))
+        {
+            if(!newConcepts.includes(concept)) {
+                newConcepts.push(concept);
+            }
+        }
+
+        this.setState({
+            selectedConcept: newConcepts
+        });
+        // console.log('selected concept')
+        // console.log(newConcepts)
     }
 
-    this.setState({
-      selectedConcept: newConcepts
-    });
-    // console.log('selected concept')
-    // console.log(newConcepts)
-  }
-
-  getCheckedIntents(event, checked)
-  {
-    let prevIntents = this.state.checkedIntent;
-    if(checked) {
-      prevIntents.push(event.target.value);
+    getCheckedIntents(event, checked)
+    {
+        let prevIntents = this.state.checkedIntent;
+        if(checked) {
+          prevIntents.push(event.target.value);
+        }
+        else {
+            prevIntents = prevIntents.filter(function(data) {
+                return data !== event.target.value;
+            });
+        }
+        this.setState({
+            checkedIntent: prevIntents
+        });
     }
-    else {
-      prevIntents = prevIntents.filter(function(data) {
-        return data !== event.target.value;
-      });
-    }
-    this.setState({
-      checkedIntent: prevIntents
-    });
-  }
-  deleteConcepts(data) {
-    let delConcepts = this.state.selectedConcept;
-    delConcepts = delConcepts.filter(function(concept) {
-     return concept !== data;
-   });
+    deleteConcepts(data) {
+        let delConcepts = this.state.selectedConcept;
+        delConcepts = delConcepts.filter(function(concept) {
+            return concept !== data;
+        });
     this.setState(
     {
       selectedConcept: delConcepts
@@ -150,31 +154,30 @@ export default class DomainHomeView extends React.Component {
   }
   getIntentsAndConcepts()
   {
-    let url = `/domain/` + this.props.params.domainName;
-    let that = this;
-    Request
-    .get(url)
-    .end((err, res) => {
-     if(!err) {
-       let domainDetails = JSON.parse(res.text);
-       console.log('received concepts and intent for the current domain')
-       console.log(domainDetails)
-       let conOnly = [];
-       domainDetails.ConceptsWithDoc.map(function(conceptWithDocCnt) {
-        let sepDoc = conceptWithDocCnt.split(' (');
-        conOnly.push(sepDoc[0]);
+      let url = `/domain/` + this.props.params.domainName;
+      let that = this;
+      Request
+          .get(url)
+          .end((err, res) => {
+              if(!err) {
+                  let domainDetails = JSON.parse(res.text);
+                  console.log('received concepts and intent for the current domain')
+                  console.log(domainDetails)
+                  let conOnly = [];
+                  domainDetails.ConceptsWithDoc.map(function(conceptWithDocCnt) {
+                      let sepDoc = conceptWithDocCnt.split(' (');
+                      conOnly.push(sepDoc[0]);
+                  });
+                  console.log('extracted concepts :')
+                  console.log(conOnly);
+                  that.setState({
+                      domainName: domainDetails.Domain,
+                      concepts: domainDetails.ConceptsWithDoc,
+                      intents: domainDetails.Intents,
+                      conceptsOnly: conOnly
+                  });
+              }
       });
-       console.log('extracted concepts :')
-       console.log(conOnly);
-       that.setState(
-       {
-        domainName: domainDetails.Domain,
-        concepts: domainDetails.ConceptsWithDoc,
-        intents: domainDetails.Intents,
-        conceptsOnly: conOnly
-      });
-     }
-   });
   }
   searchDocuments()
   {
@@ -231,10 +234,10 @@ else {
   }
   componentDidMount()
   {
-   this.getIntentsAndConcepts();
- }
- onPageClick(e)
- {
+    this.getIntentsAndConcepts();
+  }
+  onPageClick(e)
+  {
    let page = this.state.pageNum;
    if(e.currentTarget.dataset.id === 'prev')
    {
@@ -314,12 +317,16 @@ else {
    <AutoCompleteSearchBox concepts={this.state.concepts}
    searchDocument={this.searchDocuments.bind(this)}
    getConcept={this.getConcepts.bind(this)}/>
+   <AutoCompleteSearchBox intents={this.state.intents}
+   searchDocument={this.searchDocuments.bind(this)}
+   getCheckedIntent={this.getCheckedIntents.bind(this)}/>
    <Row>
    <Col md={12} lg={12} xl={12}>
    {
     this.state.selectedConcept.length===0?<h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
     <SelectedConcepts conceptChips={this.state.selectedConcept}
     deleteConcept={this.deleteConcepts.bind(this)} />}
+  
     </Col>
     </Row>
     </Col>
@@ -352,18 +359,7 @@ else {
     </Col>
     </Visible>
     <Visible style={{padding:0}} md sm xs>
-
-
-    <Drawer open={this.state.open}
-    onRequestChange={this.handleToggle}
-    docked={false}
-    >
-
-    <MenuItem><SelectPanel intents={this.state.intents}
-    getCheckedIntent={this.getCheckedIntents.bind(this)}/></MenuItem>
-    </Drawer>
-
-    <Col sm={12} xs={12} md={12} style={{maxWidth:2000}}>
+   <Col sm={12} xs={12} md={12} style={{maxWidth:2000}}>
     <Row>
     <Col md={10} sm={10} xs={10}>
     <ScreenClassRender style={styleFunction}>
@@ -372,18 +368,15 @@ else {
     </h1>
     </ScreenClassRender>
     </Col>
-    <Col md={2} sm={2} xs={2}>
-    <IconButton iconStyle={styles.largeIcon} onTouchTap={this.handleToggle} >
-    <NavigationMenu style={styles.large} color={'white'} />
-    </IconButton>
-    </Col>
     </Row>
-    <Row>
-      <Col sm={12} xs={12} md={12} lg={12} xl={12} >
+    <Row style={{padding:"0 20px"}}>
+      <Col xs={7} sm={7} md={7} lg={7} xl={7} style={{marginLeft:0}} >
         <SunburstView domainName={this.state.domainName} />
       </Col>
-    </Row>
-    <Row>
+   <Col sm={5} xs={5} md={5}> 
+   <SelectPanel intents={this.state.intents}
+   getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+   <Row>
     <Col sm={12} xs={12} md={12}>
     <AutoCompleteSearchBox concepts={this.state.concepts}
     searchDocument={this.searchDocuments.bind(this)}
@@ -392,9 +385,11 @@ else {
     <Col sm={12} xs={12} md={12}>
     {
       this.state.selectedConcept.length===0?
-      <h4 style={{color:'#8aa6bd'}}>Please Select Concepts</h4>:
+      <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
       <SelectedConcepts conceptChips={this.state.selectedConcept}
       deleteConcept={this.deleteConcepts.bind(this)} />}
+      </Col>
+      </Row>
       </Col>
       </Row>
       </Col>
