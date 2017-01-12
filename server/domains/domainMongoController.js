@@ -137,14 +137,21 @@ let deleteDomain = function(domain, callback) {
     name: domain.domainName
   };
 
-  DomainModel.find(query).remove( function(err,removed) {
-    /*console.log("error" + err);
-    console.log("removed:" + removed);*/
-}); 
+  DomainModel
+  .find(query)
+  .remove(function(err,removed) {
+    if(err) {
+      logger.error("Error in deleting the domain ", err);
+      callback(err, null);
+    }
+    logger.debug("Removed in mongo..!", query.name);
+    callback(null, domain);
+  }); 
 
-    logger.debug("deleteddd", query.name);
+
   return;
 }
+
 
 let updateDomainStatus = function(domainName, status, statusText, callback) {
   getDomainObj(domainName, function(err, domainObj) {

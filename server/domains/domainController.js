@@ -509,17 +509,25 @@ let getTreeOfDomain = function(domain) {
 let deleteDomain =function(domain){
     logger.debug('domain ctrl',domain);
     logger.debug("Received request for deleting domain",domain.domainName);
-    let promise =new Promise(function(resolve,reject){
+
+    let promise = new Promise(function(resolve,reject){
             async.waterfall([
                      function(callback){
-                         logger.debug("inside waterfall", domain)
+                         logger.debug("inside waterfall::mongodelete", domain)
                         domainMongoController.deleteDomain(domain,callback);
+                     },
+
+                     function(deletedDomain, callback){
+                         logger.debug("inside waterfall::neo4jdelete", deletedDomain)
+                        domainNeo4jController.deleteDomainCallback(domain, callback);
                     }
                 ],
                 function(err,tree){
                     if(err){
                         reject(err);
                     }
+
+                    resolve(domain);
                 });
     });
     return promise;
