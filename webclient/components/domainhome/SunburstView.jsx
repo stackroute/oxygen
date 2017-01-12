@@ -14,10 +14,13 @@ export default class SunburstView extends React.Component {
             chart: 'Loading...',
             data: {}
         }
+
+        this.drawChart = this.drawChart.bind(this)
+        this.fetchJsonFileData = this.fetchJsonFileData.bind(this)
     }
 
     getTreeofDomain(){
-        let url = `/domain/domainhomeview/` + this.props.domainName;
+        let url = `/domain/domainhomeview/java`;
         let that = this;
         Request
             .get(url)
@@ -34,16 +37,28 @@ export default class SunburstView extends React.Component {
         });
     }
 
-    componentDidMount(){
-        let th = this;
+    componentDidMount() {
         this.getTreeofDomain();
-        d3.json("./assets/data/data.json", function(error, json) {
-            th.setState({data: json});
-        });
+    }
+    componentWillReceiveProps(nextProps) {
+        nextProps.domainName;
+        this.fetchJsonFileData()
+    }
+    
+    fetchJsonFileData() {
+        let th = this;
+        if(this.props.domainName.length > 0) {
+            let filePath = '../'+this.props.domainName+'_concepts_tree.json'
+            console.log(filePath)
+            // d3.json(fileName, function(error, json) {
+            d3.json('./assets/data/data.json', function(error, json) {
+                th.setState({data: json});
+            });
+        }
     }
 
   	drawChart() {
-        console.log('in draw chart')
+        console.log(this.props.domainName+'hello')
         let th = this;
         //Create the element
         const div = new ReactFauxDOM.Element('div')
@@ -55,6 +70,8 @@ export default class SunburstView extends React.Component {
                .range([0, 2 * Math.PI]);
         let y = d3.scale.linear().range([0, radius]);
         let color = d3.scale.category20c();
+
+        // this.fetchJsonFileData();
 
         let vis = d3.select(div).append("svg:svg")
             .attr("width", width)
@@ -214,7 +231,6 @@ export default class SunburstView extends React.Component {
             d3.select("#trail").style("visibility", "");
         }
         //DOM manipulations done, convert to React
-        console.log('hello')
         return div.toReact()
     }
 
@@ -224,5 +240,5 @@ export default class SunburstView extends React.Component {
 }
 
 SunburstView.propTypes = {
- 
+    
 };

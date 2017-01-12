@@ -89,63 +89,63 @@ const styleFunction = (screenClass) => {
 
 export default class DomainHomeView extends React.Component {
     constructor(props) {
-    super(props);
-    this.state = {
-      msgSelector: 'No search specified',
-      domainName: '',
-      concepts: [],
-      conceptsOnly: [],
-      intents: [],
-      docs: [],
-      checkedIntent: [],
-      selectedConcept: [],
-      open: false,
-      show:0,
-      pageNum: 1
-    };
-  }
+        super(props);
+        this.state = {
+            msgSelector: 'No search specified',
+            domainName: '',
+            concepts: [],
+            conceptsOnly: [],
+            intents: [],
+            docs: [],
+            checkedIntent: [],
+            selectedConcept: [],
+            open: false,
+            show:0,
+            pageNum: 1
+        };
+    }
 
-  //handleActive = () => this.setState({open: !this.state.open});
-  // handleToggle = () => this.setState({open: !this.state.open});
-  getConcepts(conceptWithDocCnt)
-  {
-    let sepDoc = conceptWithDocCnt.split(' (');
-    let concept = sepDoc[0];
-    let newConcepts = this.state.selectedConcept;
-    if(this.state.conceptsOnly.includes(concept))
+    //handleActive = () => this.setState({open: !this.state.open});
+    // handleToggle = () => this.setState({open: !this.state.open});
+    getConcepts(conceptWithDocCnt)
     {
-      if(!newConcepts.includes(concept)) {
-        newConcepts.push(concept);
-      }
+        let sepDoc = conceptWithDocCnt.split(' (');
+        let concept = sepDoc[0];
+        let newConcepts = this.state.selectedConcept;
+        if(this.state.conceptsOnly.includes(concept))
+        {
+            if(!newConcepts.includes(concept)) {
+                newConcepts.push(concept);
+            }
+        }
+
+        this.setState({
+            selectedConcept: newConcepts
+        });
+        // console.log('selected concept')
+        // console.log(newConcepts)
     }
 
-    this.setState({
-      selectedConcept: newConcepts
-    });
-    // console.log('selected concept')
-    // console.log(newConcepts)
-  }
-
-  getCheckedIntents(event, checked)
-  {
-    let prevIntents = this.state.checkedIntent;
-    if(checked) {
-      prevIntents.push(event.target.value);
+    getCheckedIntents(event, checked)
+    {
+        let prevIntents = this.state.checkedIntent;
+        if(checked) {
+          prevIntents.push(event.target.value);
+        }
+        else {
+            prevIntents = prevIntents.filter(function(data) {
+                return data !== event.target.value;
+            });
+        }
+        this.setState({
+            checkedIntent: prevIntents
+        });
     }
-    else {
-      prevIntents = prevIntents.filter(function(data) {
-        return data !== event.target.value;
-      });
-    }
-    this.setState({
-      checkedIntent: prevIntents
-    });
-  }
-  deleteConcepts(data) {
-    let delConcepts = this.state.selectedConcept;
-    delConcepts = delConcepts.filter(function(concept) {
-     return concept !== data;
-   });
+    deleteConcepts(data) {
+        let delConcepts = this.state.selectedConcept;
+        delConcepts = delConcepts.filter(function(concept) {
+            return concept !== data;
+        });
     this.setState(
     {
       selectedConcept: delConcepts
@@ -154,31 +154,30 @@ export default class DomainHomeView extends React.Component {
   }
   getIntentsAndConcepts()
   {
-    let url = `/domain/` + this.props.params.domainName;
-    let that = this;
-    Request
-    .get(url)
-    .end((err, res) => {
-     if(!err) {
-       let domainDetails = JSON.parse(res.text);
-       console.log('received concepts and intent for the current domain')
-       console.log(domainDetails)
-       let conOnly = [];
-       domainDetails.ConceptsWithDoc.map(function(conceptWithDocCnt) {
-        let sepDoc = conceptWithDocCnt.split(' (');
-        conOnly.push(sepDoc[0]);
+      let url = `/domain/` + this.props.params.domainName;
+      let that = this;
+      Request
+          .get(url)
+          .end((err, res) => {
+              if(!err) {
+                  let domainDetails = JSON.parse(res.text);
+                  console.log('received concepts and intent for the current domain')
+                  console.log(domainDetails)
+                  let conOnly = [];
+                  domainDetails.ConceptsWithDoc.map(function(conceptWithDocCnt) {
+                      let sepDoc = conceptWithDocCnt.split(' (');
+                      conOnly.push(sepDoc[0]);
+                  });
+                  console.log('extracted concepts :')
+                  console.log(conOnly);
+                  that.setState({
+                      domainName: domainDetails.Domain,
+                      concepts: domainDetails.ConceptsWithDoc,
+                      intents: domainDetails.Intents,
+                      conceptsOnly: conOnly
+                  });
+              }
       });
-       console.log('extracted concepts :')
-       console.log(conOnly);
-       that.setState(
-       {
-        domainName: domainDetails.Domain,
-        concepts: domainDetails.ConceptsWithDoc,
-        intents: domainDetails.Intents,
-        conceptsOnly: conOnly
-      });
-     }
-   });
   }
   searchDocuments()
   {
@@ -235,10 +234,10 @@ else {
   }
   componentDidMount()
   {
-   this.getIntentsAndConcepts();
- }
- onPageClick(e)
- {
+    this.getIntentsAndConcepts();
+  }
+  onPageClick(e)
+  {
    let page = this.state.pageNum;
    if(e.currentTarget.dataset.id === 'prev')
    {
@@ -308,7 +307,7 @@ else {
    <Col lg={12} md={12} sm={12} xs={12}>
    <ScreenClassRender style = {styleFunction}>
    <h1>
-   { this.state.domainName.toUpperCase() }
+   { this.state.domainName }
    </h1>
    </ScreenClassRender>
    </Col>
