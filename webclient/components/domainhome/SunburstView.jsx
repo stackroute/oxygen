@@ -34,13 +34,16 @@ export default class SunburstView extends React.Component {
 
   componentDidMount(){
     this.getTreeofDomain();
+
   }
 
   	drawChart() {
     
-        let th = this
+        let th = this;
+        console.log('state: ',th.state);
+        return;
         //Create the element
-        const div = new ReactFauxDOM.Element('div')
+        const div = new ReactFauxDOM.Element('div');
         let width = 1000;
         let height = 450;
         let n=1;
@@ -49,6 +52,7 @@ export default class SunburstView extends React.Component {
                .range([0, 2 * Math.PI]);
         let y = d3.scale.linear().range([0, radius]);
         let color = d3.scale.category20c();
+
 
         let vis = d3.select(div).append("svg:svg")
             .attr("width", width)
@@ -80,7 +84,7 @@ export default class SunburstView extends React.Component {
             .innerRadius(function(d) { return Math.sqrt(d.y); })
             .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
-        d3.json("./assets/data/data.json", function(error, json) {
+        d3.json('./'+th.state.domainName+'_tree.json', function(error, json) {
             th.setState({data: json});
         });
             let trail = d3.select("#sequence").append("svg:svg")
@@ -214,7 +218,7 @@ export default class SunburstView extends React.Component {
     }
 
     render() {
-        return this.drawChart()
+        return  this.drawChart();
     }
 }
 

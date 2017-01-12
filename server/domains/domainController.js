@@ -488,12 +488,12 @@ let getTreeOfDomain = function(domain) {
     //Save to Mongo DB
     //Save to Neo4j
 
+
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
                      logger.debug("inside the waterfall " + domain)
-                    domainNeo4jController.getTreeOfDomain(domain,
-                        callback);
+                     domainNeo4jController.getTreeOfDomainCallback(domain,callback);
                 }
             ],
             function(err, tree) {
