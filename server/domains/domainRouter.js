@@ -211,15 +211,32 @@ router.get('/domainhomeview/:domainName', function (req, res) {
             data: req.body
     };
 
-    logger.debug("DomainHomeView: Begining to get tree structure ", reqObj);
-    console.log('reqObj', reqObj);
-    res.send(domainCtrl.getTreeOfDomain(reqObj));
-    return;
+        logger.debug("DomainHomeView: Begining to get tree structure ", reqObj);
+        console.log('reqObj', reqObj);
+        res.send(domainCtrl.getTreeOfDomain(reqObj));
+        return;
     } catch (err) {
         logger.error("Caught a error in posting URLs manually ", err);
         res.status(500).send({
             error: "Error: Failed get the tree structure"
 
+        });
+    }
+});
+
+router.delete('/deletedomain/:domainName',function(req,res){
+    try {
+        let reqObj = {
+            domainName: req.params.domainName
+        };
+        console.log(reqObj);
+        logger.debug("deletedomain:delete a domain",reqObj);
+        res.send(domainCtrl.deleteDomain(reqObj));
+        return;
+    } catch(err) {
+        logger.error("Caught a error in deleting a domain ",err);
+        res.status(500).send({
+            error: "Error: Failed to delete a domain"
         });
     }
 });
