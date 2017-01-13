@@ -3,6 +3,8 @@ const config = require('./../../config');
 const amqp = require('amqplib');
 const highland = require('highland');
 const controller = require('./docSearchController');
+const checkRecentlySearched = require('./docSearchController').checkRecentlySearched;
+const fetchPrevSearchResult = require('./docSearchController').fetchPrevSearchResult;
 
 const startSearcher = function() {
   	let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
@@ -36,30 +38,27 @@ const startSearcher = function() {
     			return dataObj;
     		})
     		.map(function(dataObj) {
-    logger.info("Entered in checkRecentlySearched function");
-    return dataObj
-    let promise = controller.checkRecentlySearched(dataObj, (err, result) => {
-        if (err) {
+			    logger.info("Entered in checkRecentlySearched function");
+			    let promise = controller.checkRecentlySearched(dataObj)
+			    return promise;
+			})
+			.flatMap(promise => highland(
+		    	promise
+		    	.then(function(result) {
+		    		if(result.isRecent) {
+		    			logger.info("Fetching the previously stored data");
+	    				let promise = controller.fetchPrevSearchResult(result)
+	    				return promise;
+	    			} else {
+	    				logger.info("Check on google with the given domain and concepts");
+	    			}
+		    	}, function(err) {
+		      		return err;
+		    	})
+		  	))
+		  	// .flatMap(promise => highland(
 
-            logger.error('Error in checking recent search', err);
-            return res.status(500).json({
-                error: 'Something went wrong, please try later..!'
-            });
-        }
-        console.log(result)
-            //  SUCCESS
-        return res.json(result);
-    });
-    return promise;
-})
-
-    		.flatmap(promise => function(result) {
-    			if(result.isRecent) {
-    				let promise = controller.fetchPrevSearchResult(dataObj)
-    				return promise;
-    			}
-    		})
-
+		  	// ))
     		.each(function(promise) {
     			logger.info('Highland function ends')
     		})
