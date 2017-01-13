@@ -65,7 +65,6 @@ let getAllDomain = function() {
   })
 
   return promise;
-
 }
 
 let getSearchResultDocuments = function(url) {

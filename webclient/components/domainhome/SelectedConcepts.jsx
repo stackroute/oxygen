@@ -20,33 +20,33 @@ const styles = {
 };
 export default class SelectedConcepts extends React.Component {
 
-    constructor(props) {
+  constructor(props) {
     super(props);
     console.log('from the concept chiplets');
     console.log(props.conceptChips);
-}
-  handleRequestDelete=(data) => {
+  }
+  handleRequestDelete = (data) => {
     console.log('data to b deleted' + data);
     this.props.deleteConcept(data);
   }
-  renderChip(chipData)
-  {
-   return( <Chip
-    key={chipData}
-    backgroundColor= '#eaeaea'
-    onRequestDelete={()=>this.handleRequestDelete(chipData)}
-    style={styles.chip}
-    >
-    {chipData}
-    </Chip>)
- }
- render() {
-  return (
-    <div style={styles.wrapper}>
-    {this.props.conceptChips.map(this.renderChip,this)}      
-    </div>
+  renderChip(chipData) {
+    return( 
+      <Chip
+        key={chipData}
+        backgroundColor= '#eaeaea'
+        onRequestDelete={()=>this.handleRequestDelete(chipData)}
+        style={styles.chip}
+      >
+        {chipData}
+      </Chip>)
+  }
+  render() {
+    return (
+      <div style={styles.wrapper}>
+      {this.props.conceptChips.map(this.renderChip,this)}      
+      </div>
     );
-}
+  }
 }
 SelectedConcepts.propTypes = {
   deleteConcept:React.PropTypes.func,

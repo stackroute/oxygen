@@ -24,15 +24,19 @@ const iconSize = {
 
 export default class AutoCompleteSearchBox extends React.Component {
   constructor(props) {
-
     super(props)
     this.filterFunc=this.filterFunc.bind(this);
     this.state={
       searchText:''
     }
   }
-  filterFunc(searchText,key)
-  {
+  shouldComponentUpdate(nextProps, nextState) {
+    this.setState({searchText: nextProps.searchText});
+    this.forceUpdate();
+    return this.state.searchText!=nextProps.searchText;
+  }
+
+  filterFunc(searchText,key) {
     let sepDoc=key.split(" (")
     // if(searchText.length>=3 && searchText!==''){
     if(searchText!==''){
@@ -40,8 +44,7 @@ export default class AutoCompleteSearchBox extends React.Component {
     }
     return false;
   }
-  handleUpdateInput(concept)
-  {
+  handleUpdateInput(concept) {
     this.setState({
       searchText: concept
     })
@@ -52,44 +55,40 @@ export default class AutoCompleteSearchBox extends React.Component {
     })
     this.props.getConcept(concept);
   }
-  showDocs()
-  {
+  showDocs() {
     console.log(this.props.searchDocument);
     console.log("hhhh");
     this.props.searchDocument;
   }
 
-  render()
-  {
+  render() {
     return(
-              <div>
-                                   <div style={{align: 'center'}}>
-                                  <Paper style={style} zDepth={2} rounded={false}>
-
-                                  <Row style={{padding:"0 20px"}}>
-                                  <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
-
-                                  <AutoComplete
-                                  hintText="What you want to search"
-                                  filter={this.filterFunc}
-                                  dataSource={this.props.concepts}
-                                  fullWidth={true}
-                                  searchText={this.state.searchText}
-                                  onUpdateInput={this.handleUpdateInput.bind(this)}
-                                  onNewRequest={this.getConcept.bind(this)}
-                                  maxSearchResults={5}
-                                  />
-                                  </Col>
-                                  <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-                                  <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
-                                  <ActionSearch /></IconButton>
-                                  </Col>
-                                  </Row>
-                                  </Paper>
-                                  </div>
-</div>
-                      
-      );
+      <div>
+        <div style={{align: 'center'}}>
+          <Paper style={style} zDepth={2} rounded={false}>
+            <Row style={{padding:"0 20px"}}>
+              <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
+                <AutoComplete
+                hintText="What you want to search"
+                filter={this.filterFunc}
+                dataSource={this.props.concepts}
+                fullWidth={true}
+                searchText={this.state.searchText}
+                onUpdateInput={this.handleUpdateInput.bind(this)}
+                onNewRequest={this.getConcept.bind(this)}
+                maxSearchResults={5}
+                />
+              </Col>
+              <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
+                  <ActionSearch />
+                </IconButton>
+              </Col>
+            </Row>
+          </Paper>
+        </div>
+      </div>                
+    );
   }
 }
 AutoCompleteSearchBox.propTypes = {

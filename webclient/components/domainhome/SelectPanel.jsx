@@ -25,13 +25,13 @@ export default class SelectPanel extends React.Component {
   {
     let nest = this.props.intents.map((intent, i)=>{
           return (<Checkbox
-            key={i}
-            label={intent}
-            value={intent}
-            onCheck={this.props.getCheckedIntent}
-            labelPosition='left'
-            style={styles.checkbox}
-            />);
+                    key={i}
+                    label={intent}
+                    value={intent}
+                    onCheck={this.props.getCheckedIntent}
+                    labelPosition='left'
+                    style={styles.checkbox}
+                  />);
         })
     return(
       <div style={{textAlign: 'left', paddingLeft: 25}}>
