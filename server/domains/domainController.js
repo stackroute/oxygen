@@ -39,6 +39,7 @@ let insertUrls = function(dataToInsert) {
         }
     }
 }
+
 let fetchDomainCardDetails = function(domain) {
     logger.debug("Received request for retriving domain details ", domain);
     //Save to Mongo DB
