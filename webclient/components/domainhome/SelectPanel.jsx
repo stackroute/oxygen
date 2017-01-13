@@ -1,6 +1,7 @@
 import React from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import {List, ListItem} from 'material-ui/List';
+import SelectField from 'material-ui/SelectField';
 
 const styles = {
  checkbox: {
@@ -36,10 +37,11 @@ export default class SelectPanel extends React.Component {
     return(
       <div style={{textAlign: 'left', paddingLeft: 25}}>
         <List>
-            <ListItem
+            <ListItem 
               primaryText="Select Intent"
               initiallyOpen={false}
               primaryTogglesNestedList={true}
+
               nestedItems={[
                 nest
               ]}

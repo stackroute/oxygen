@@ -488,12 +488,12 @@ let getTreeOfDomain = function(domain) {
     //Save to Mongo DB
     //Save to Neo4j
 
+
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
                      logger.debug("inside the waterfall " + domain)
-                    domainNeo4jController.getTreeOfDomain(domain,
-                        callback);
+                     domainNeo4jController.getTreeOfDomainCallback(domain,callback);
                 }
             ],
             function(err, tree) {
@@ -503,6 +503,33 @@ let getTreeOfDomain = function(domain) {
             }); //end of async.waterfall
     });
 
+    return promise;
+}
+
+let deleteDomain =function(domain){
+    logger.debug('domain ctrl',domain);
+    logger.debug("Received request for deleting domain",domain.domainName);
+
+    let promise = new Promise(function(resolve,reject){
+            async.waterfall([
+                     function(callback){
+                         logger.debug("inside waterfall::mongodelete", domain)
+                        domainMongoController.deleteDomain(domain,callback);
+                     },
+
+                     function(deletedDomain, callback){
+                         logger.debug("inside waterfall::neo4jdelete", deletedDomain)
+                        domainNeo4jController.deleteDomainCallback(domain, callback);
+                    }
+                ],
+                function(err,tree){
+                    if(err){
+                        reject(err);
+                    }
+
+                    resolve(domain);
+                });
+    });
     return promise;
 }
 
@@ -535,5 +562,6 @@ module.exports = {
     freshlyIndexDomain: freshlyIndexDomain,
     fetchWebDocuments: fetchWebDocuments,
     getAllDomain: getAllDomain,
-    getTreeOfDomain: getTreeOfDomain
+    getTreeOfDomain: getTreeOfDomain,
+    deleteDomain:deleteDomain
 }

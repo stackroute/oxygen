@@ -95,7 +95,6 @@ export default class SunburstView extends React.Component {
                   .on("click", click)
                   .on("mouseover", mouseover);
     d3.select("#container").on("mouseleave", mouseleave);
-        
     function click(d) {
         path.transition()
             .duration(750)
@@ -216,5 +215,5 @@ export default class SunburstView extends React.Component {
 }
 
 SunburstView.propTypes = {
- 
+    
 };

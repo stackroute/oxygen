@@ -134,10 +134,21 @@ export default class DomainHomeView extends React.Component {
     if(checked) {
       prevIntents.push(event.target.value);
     }
-    else {
-      prevIntents = prevIntents.filter(function(data) {
-        return data !== event.target.value;
-      });
+
+    getCheckedIntents(event, checked)
+    {
+        let prevIntents = this.state.checkedIntent;
+        if(checked) {
+          prevIntents.push(event.target.value);
+        }
+        else {
+            prevIntents = prevIntents.filter(function(data) {
+                return data !== event.target.value;
+            });
+        }
+        this.setState({
+            checkedIntent: prevIntents
+        });
     }
     this.setState({
       checkedIntent: prevIntents
