@@ -1,5 +1,6 @@
 const logger = require('../applogger');
-const searcherEngine = require('./searcher/docSearcherEngine');
+// const searcherEngine = require('./searcher/docSearcherEngine');
+const docSearchPipeline = require('./docSearcher/docSearchPipeline');
 const config = require('../config');
 
 const mongoose = require('mongoose');
@@ -51,7 +52,8 @@ let startDocSearcherEngine = function() {
 
     logger.info("Starting doc search engine..!");
 
-    searcherEngine.startSearcher();
+    docSearchPipeline.startSearcher();
+    // searcherEngine.startSearcher();
   } catch (err) {
     logger.error("Caught error in running doc searcher engine: ", err);
   }
