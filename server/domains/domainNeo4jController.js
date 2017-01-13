@@ -708,8 +708,8 @@ module.exports = {
     getWebDocuments: getWebDocuments,
     getIntentforDocument: getIntentforDocument,
     getTreeOfDomain: getTreeOfDomain,
-     deleteDomain: deleteDomain,
-    deleteDomainCallback: deleteDomainCallback
-     getTreeOfDomainCallback: getTreeOfDomainCallback
+    deleteDomain: deleteDomain,
+    deleteDomainCallback: deleteDomainCallback,
+    getTreeOfDomainCallback: getTreeOfDomainCallback
 
 }
