@@ -1,14 +1,37 @@
 'use strict';
 const logger = require('./../../applogger');
 
+
+
 const checkRecentlySearched = function(dataObj){
+	let promise = new Promise(function(resolve, reject) {
+
+		if (err) {
+			reject(err);
+		}
+
+		resolve();
+		
+	})
 	logger.debug("inside the checkRecentlySearched method",dataObj);
-	return dataObj;
+	return promise;
+
+
 }
 
 const fetchPrevSearchResult= function(dataObj){
+	let promise = new Promise(function(resolve, reject) {
+
+		if (err) {
+			reject(err);
+		}
+
+		resolve();
+		
+	})
 	logger.debug("inside the fetchPrevSearchResult method",dataObj);
-	return dataObj;
+	return promise;
+
 }
 
 module.exports = {
