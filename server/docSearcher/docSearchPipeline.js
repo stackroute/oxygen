@@ -2,6 +2,7 @@ const logger = require('./../../applogger');
 const config = require('./../../config');
 const amqp = require('amqplib');
 const highland = require('highland');
+const controller = require('./docSearchController');
 
 const startSearcher = function() {
   	let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
@@ -34,18 +35,31 @@ const startSearcher = function() {
     			logger.debug("Got message in pipe: ", dataObj);
     			return dataObj;
     		})
-    		.map(function (dataObj) {
-    			logger.info("Entered in checkRecentlySearched function");
-    			return dataObj
-    			// let promise  = checkRecentlySearched(dataObj);
-    			// return promise;
+    		.map(function(dataObj) {
+    logger.info("Entered in checkRecentlySearched function");
+    return dataObj
+    let promise = controller.checkRecentlySearched(dataObj, (err, result) => {
+        if (err) {
+
+            logger.error('Error in checking recent search', err);
+            return res.status(500).json({
+                error: 'Something went wrong, please try later..!'
+            });
+        }
+        console.log(result)
+            //  SUCCESS
+        return res.json(result);
+    });
+    return promise;
+})
+
+    		.flatmap(promise => function(result) {
+    			if(result.isRecent) {
+    				let promise = controller.fetchPrevSearchResult(dataObj)
+    				return promise;
+    			}
     		})
-    		// .flatmap(promise => function(result) {
-    		// 	if(result.isRecent) {
-    		// 		let promise = fetchPrevSearchResult()
-    		// 		return promise;
-    		// 	}
-    		// })
+
     		.each(function(promise) {
     			logger.info('Highland function ends')
     		})
