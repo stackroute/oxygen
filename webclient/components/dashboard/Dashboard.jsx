@@ -259,6 +259,23 @@ export default class Dashboard extends React.Component {
 			});
 		}
 
+		deleteDomain(domain) {
+			let url = `/domain/deletedomain/`+domain ;
+			Request
+			.delete(url)
+			.end((err, res) => {
+				if(err) {
+					this.setState({errmsg: res.body});
+				}
+				else {
+					let domainList1 = this.state.domainList.filter(function(item) {
+						return item.name != domain;
+					})
+					this.setState({domainList: domainList1})
+				}
+			});
+		}
+
 
 		render() {
 			let prevFlag=false;
@@ -339,6 +356,7 @@ export default class Dashboard extends React.Component {
 										<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
 										index={i} key={i} indexs={i} ref="show" item={item}
 										addDocument={this.addDocument.bind(this)}
+										deleteDomain={this.deleteDomain.bind(this)}
 										/>
 										</Col>);
 								})
