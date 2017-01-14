@@ -22,8 +22,7 @@ export default class SelectPanel extends React.Component {
   }
 
 
-  render()
-  {
+  render() {
     let nest = this.props.intents.map((intent, i)=>{
           return (<Checkbox
                     key={i}

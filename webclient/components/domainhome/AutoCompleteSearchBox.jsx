@@ -30,10 +30,8 @@ export default class AutoCompleteSearchBox extends React.Component {
       searchText:''
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     this.setState({searchText: nextProps.searchText});
-    this.forceUpdate();
-    return this.state.searchText!=nextProps.searchText;
   }
 
   filterFunc(searchText,key) {

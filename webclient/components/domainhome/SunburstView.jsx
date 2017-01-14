@@ -18,7 +18,7 @@ export default class SunburstView extends React.Component {
     componentDidMount(){
         let th = this;
         this.getTreeOfDomain();
-        d3.json("./assets/data/data.json", function(error, json) {
+        d3.json("./assets/data/Java_concepts_tree.json", function(error, json) {
             th.setState({data: json});
         });
     }
