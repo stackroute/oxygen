@@ -89,7 +89,7 @@ filterFunc(searchText,key) {
                 maxSearchResults={5}
                 />
             </Col>
-             <Col xs={2} sm={2} md={2} lg={2} xl={2} style={{paddingTop:10}}>
+             <Col xs={2} sm={2} md={2} lg={2} xl={2} style={{marginBottom: 25}}>
                  <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
                        <ActionSearch />
                   </IconButton>
