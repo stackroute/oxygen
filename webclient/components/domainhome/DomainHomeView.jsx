@@ -128,28 +128,36 @@ export default class DomainHomeView extends React.Component {
   sunSelectedConcept(conceptName){
     this.setState({sunSelectedConcept: conceptName});
   }
-
-  getCheckedIntents(event, checked) {
+getCheckedIntents(conceptWithDocCnt) {
+    let sepDoc = conceptWithDocCnt.split(' (');
+    let intent = sepDoc[0];
     let prevIntents = this.state.checkedIntent;
-    if(checked) {
-      prevIntents.push(event.target.value);
+    if(this.state.conceptsOnly.includes(intent)) {
+      if(!prevIntents.includes(intent)) {
+        prevIntents.push(intent);
+      }
     }
+  // getCheckedIntents(event, checked) {
+  //   let prevIntents = this.state.checkedIntent;
+  //   if(checked) {
+  //     prevIntents.push(event.target.value);
+  //   }
 
-    getCheckedIntents(event, checked)
-    {
-        let prevIntents = this.state.checkedIntent;
-        if(checked) {
-          prevIntents.push(event.target.value);
-        }
-        else {
-            prevIntents = prevIntents.filter(function(data) {
-                return data !== event.target.value;
-            });
-        }
-        this.setState({
-            checkedIntent: prevIntents
-        });
-    }
+    // getCheckedIntents(event, checked)
+    // {
+    //     let prevIntents = this.state.checkedIntent;
+    //     if(checked) {
+    //       prevIntents.push(event.target.value);
+    //     }
+    //     else {
+    //         prevIntents = prevIntents.filter(function(data) {
+    //             return data !== event.target.value;
+    //         });
+    //     }
+    //     this.setState({
+    //         checkedIntent: prevIntents
+    //     });
+    // }
     this.setState({
       checkedIntent: prevIntents
     });
@@ -361,16 +369,14 @@ export default class DomainHomeView extends React.Component {
                   </ScreenClassRender>
                 </Col>
               </Row>
-              <Row style={{padding:"0 20px"}}>
-                <Col xs={7} sm={7} md={7} lg={7} xl={7} style={{marginLeft:0}} >
+           <Row style={{padding:"0 20px"}}>
+                <Col xs={12} sm={12} md={12} lg={12} xl={12} style={{marginLeft:0}} >
                   <SunburstView domainName={this.state.domainName}
                               sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>
                 </Col>
-                <Col sm={5} xs={5} md={5}> 
-                  <SelectPanel intents={this.state.intents}
-                    getCheckedIntent={this.getCheckedIntents.bind(this)}/>
-                    <Row>
-                      <Col sm={12} xs={12} md={12}>
+            </Row>
+             <Row>
+                 <Col sm={5} xs={5} md={5} style={{float:'left'}}>
                         <AutoCompleteSearchBox concepts={this.state.concepts}
                           searchDocument={this.searchDocuments.bind(this)}
                           getConcept={this.getConcepts.bind(this)}
@@ -385,9 +391,11 @@ export default class DomainHomeView extends React.Component {
                               }
                             </Col>
                           </Row>
-                      </Col>
-                    </Row>
-                </Col>
+                 </Col>
+                <Col sm={5} xs={5} md={5} style={{float:'right'}}> 
+                  <SelectPanel intents={this.state.intents}
+                    getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+                </Col>  
               </Row>
               <br/><br/>
               <Row>
