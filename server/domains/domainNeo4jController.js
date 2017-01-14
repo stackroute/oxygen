@@ -583,49 +583,28 @@ let getTreeOfDomain = function(data) {
 }
 
 let deleteDomain = function(domain) {
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug("inside the neo4jcontroller");
-        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL, neo4jDriver.auth.basic(config.NEO4J.user, config.NEO4J.pwd), {
-            encrypted: false
-        });
-        let session = driver.session();
-        logger.debug("obtained connection with neo4j");
-
-        let query = 'MATCH (n:' + graphConsts.NODE_DOMAIN + '{ name:{name}}) DETACH DELETE n'; 
-        let params = {
-            name: domain.domainName
-        };
-        logger.debug('Domain Name', domain);
-        logger.debug('query:',query);
-
-        session.run(query, params)
-            .then(function(result) {
-                logger.debug("result", result);
-
-                result.records.forEach(function(record){
-                    logger.debug("Result from neo4j:" ,record);
-                });
-
-                resolve(result);
-                session.close();
-            }, function(err) {
-                logger.error('Error occurred in Domain deletion ', err);
-                reject(err);
-            })
-            .catch(function(err) {
-                logger.error("Error in neo4j query:", err, 'query is:', query);
-                reject(err);
-            });
+    var neo4j = require('neo4j-driver').v1;
+    var driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "password"));
+    var session = driver.session();
+    console.log(session);
+    var params = {
+        domainName: domain.domainName
+    };
+    session.run('MATCH (n:'+ graphConsts.NODE_DOMAIN + '{name:{domainName}}) DETACH DELETE n', params)
+    .subscribe({
+        onNext: function(records) {
+            console.log(records);
+        },
+        onCompleted: function() {
+            console.log("COmpleted");
+        },
+        onError: function(err) {
+            console.log(err);
+        }
     });
-    return promise;
-
 }
 let deleteDomainCallback = function(domain, callback) {
-    deleteDomain(domain).then(function(deleteDomain1) {
-        callback(null, deleteDomain1);
-    }, function(err) {
-        callback(err, null);
-    });
+    deleteDomain(domain)
 }
 let indexNewDomainCallBack = function(newDomainObj, callback) {
     indexNewDomain(newDomainObj).then(function(indexedDomainObj) {
