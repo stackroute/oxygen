@@ -1,10 +1,11 @@
 import React from 'react';
 import Checkbox from 'material-ui/Checkbox';
-import {List, ListItem} from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import Paper from 'material-ui/Paper';
 import AutoComplete from 'material-ui/AutoComplete';
 import {Row, Col} from 'react-grid-system';
+import ActionSearch from 'material-ui/svg-icons/action/search';
+import IconButton from 'material-ui/IconButton';
 const style = {
   maxHeight: 80,
   maxWidth: 750,
@@ -14,6 +15,12 @@ const style = {
   align: 'center',
   textAlign: 'center'
 };
+const iconSize = {
+  width: 40,
+  height: 40,
+  paddingTop: 10
+};
+
 const styles = {
  checkbox: {
   marginBottom: 16
@@ -83,6 +90,11 @@ filterFunc(searchText,key) {
                 maxSearchResults={5}
                 />
             </Col>
+             <Col xs={2} sm={2} md={2} lg={2} xl={2} style={{paddingTop:10}}>
+                 <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
+                       <ActionSearch />
+                  </IconButton>
+             </Col>
         </Row>
       </Paper>
       </div>

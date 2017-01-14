@@ -3,6 +3,7 @@ import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
+import SelectedIntents from './SelectedIntents';
 import SunburstView from './SunburstView';
 import {Row, Col, ScreenClassRender, Visible} from 'react-grid-system';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
@@ -132,7 +133,7 @@ getCheckedIntents(conceptWithDocCnt) {
     let sepDoc = conceptWithDocCnt.split(' (');
     let intent = sepDoc[0];
     let prevIntents = this.state.checkedIntent;
-    if(this.state.conceptsOnly.includes(intent)) {
+    if(this.state.intents.includes(intent)) {
       if(!prevIntents.includes(intent)) {
         prevIntents.push(intent);
       }
@@ -170,6 +171,15 @@ getCheckedIntents(conceptWithDocCnt) {
     });
     this.setState({
       selectedConcept: delConcepts
+    });
+  }
+  deleteIntents(data) {
+    let delIntents = this.state.checkedIntent;
+    delIntents = delIntents.filter(function(intents) {
+     return intents !== data;
+    });
+    this.setState({
+      checkedIntent: delIntents
     });
   }
   getIntentsAndConcepts() {
@@ -300,7 +310,18 @@ getCheckedIntents(conceptWithDocCnt) {
           <Visible lg xl>
             <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
               <SelectPanel intents={this.state.intents}
+              searchDocument={this.searchDocuments.bind(this)}
                 getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+                <Row>
+                            <Col sm={12} xs={12} md={12}>
+                              {
+                                this.state.checkedIntent.length===0?
+                                <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
+                                <SelectedIntents intentChips={this.state.checkedIntent}
+                                deleteIntent={this.deleteIntents.bind(this)} />
+                              }
+                            </Col>
+                    </Row>
             </Col>
             <Col sm = {12} xs = {12} md = {10} lg = {10} xl = {10}
                 style = {{maxWidth: 2000, marginLeft: '16.5%'}}>
@@ -394,7 +415,18 @@ getCheckedIntents(conceptWithDocCnt) {
                  </Col>
                 <Col sm={5} xs={5} md={5} style={{float:'right'}}> 
                   <SelectPanel intents={this.state.intents}
+                  searchDocument={this.searchDocuments.bind(this)}
                     getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+                    <Row>
+                            <Col sm={12} xs={12} md={12}>
+                              {
+                                this.state.checkedIntent.length===0?
+                                <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
+                                <SelectedIntents intentChips={this.state.checkedIntent}
+                                deleteIntent={this.deleteIntents.bind(this)} />
+                              }
+                            </Col>
+                    </Row>
                 </Col>  
               </Row>
               <br/><br/>
