@@ -265,7 +265,7 @@ module.exports = {
         "react/no-unknown-property": 2, // Prevent usage of unknown DOM property
         "react/prop-types": 0, // Prevent missing props validation in a React component definition
         "react/react-in-jsx-scope": 2, // Prevent missing React when using JSX
-        "react/self-closing-comp": 2, // Prevent extra closing tags for components without children
+        //"react/self-closing-comp": 2, // Prevent extra closing tags for components without children
         "react/jsx-wrap-multilines": 2, // Prevent missing parentheses around multilines JSX        
     }
 }

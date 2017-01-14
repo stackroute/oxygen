@@ -60,12 +60,12 @@ export default class AutoCompleteSearchBox extends React.Component {
     console.log("hhhh");
     this.props.searchDocument;
   }
-
+  
   render() {
     return(
       <div>
         <div style={{align: 'center'}}>
-          <Paper style={style} zDepth={2} rounded={false}>
+          <Paper style={style} zDepth={3} rounded={false}>
             <Row style={{padding:"0 20px"}}>
               <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
                 <AutoComplete
