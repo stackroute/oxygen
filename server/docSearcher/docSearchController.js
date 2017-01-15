@@ -124,7 +124,40 @@ const storeURL = function (searchEngineParams) {
     return sendData;
 }
 
+const checkRecentlySearched = function(dataObj){
+    let promise = new Promise(function(resolve, reject) {
+
+        if (err) {
+            reject(err);
+        }
+
+        resolve();
+
+    })
+    logger.debug("inside the checkRecentlySearched method",dataObj);
+    return promise;
+
+
+}
+
+const fetchPrevSearchResult= function(dataObj){
+    let promise = new Promise(function(resolve, reject) {
+
+        if (err) {
+            reject(err);
+        }
+
+        resolve();
+
+    })
+    logger.debug("inside the fetchPrevSearchResult method",dataObj);
+    return promise;
+
+}
+
 module.exports = {
     storeURL: storeURL,
-    getURL: getURL
+    getURL: getURL,
+    checkRecentlySearched: checkRecentlySearched,
+    fetchPrevSearchResult: fetchPrevSearchResult
 };

@@ -2,6 +2,9 @@ const logger = require('./../../applogger');
 const config = require('./../../config');
 const amqp = require('amqplib');
 const highland = require('highland');
+const controller = require('./docSearchController');
+const checkRecentlySearched = require('./docSearchController').checkRecentlySearched;
+const fetchPrevSearchResult = require('./docSearchController').fetchPrevSearchResult;
 
 const startSearcher = function() {
   	let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
@@ -34,18 +37,28 @@ const startSearcher = function() {
     			logger.debug("Got message in pipe: ", dataObj);
     			return dataObj;
     		})
-    		.map(function (dataObj) {
-    			logger.info("Entered in checkRecentlySearched function");
-    			return dataObj
-    			// let promise  = checkRecentlySearched(dataObj);
-    			// return promise;
-    		})
-    		// .flatmap(promise => function(result) {
-    		// 	if(result.isRecent) {
-    		// 		let promise = fetchPrevSearchResult()
-    		// 		return promise;
-    		// 	}
-    		// })
+    		.map(function(dataObj) {
+			    logger.info("Entered in checkRecentlySearched function");
+			    let promise = controller.checkRecentlySearched(dataObj)
+			    return promise;
+			})
+			.flatMap(promise => highland(
+		    	promise
+		    	.then(function(result) {
+		    		if(result.isRecent) {
+		    			logger.info("Fetching the previously stored data");
+	    				let promise = controller.fetchPrevSearchResult(result)
+	    				return promise;
+	    			} else {
+	    				logger.info("Check on google with the given domain and concepts");
+	    			}
+		    	}, function(err) {
+		      		return err;
+		    	})
+		  	))
+		  	// .flatMap(promise => highland(
+
+		  	// ))
     		.each(function(promise) {
     			logger.info('Highland function ends')
     		})
