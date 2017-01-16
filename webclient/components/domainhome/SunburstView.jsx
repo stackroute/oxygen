@@ -51,7 +51,14 @@ export default class SunburstView extends React.Component {
         let y = d3.scale.linear().range([0, radius]);
         let color = d3.scale.category20c();
 
-        let vis = d3.select(div).append("svg")
+        let trail = d3.select(div).append("svg")
+                      .attr('class', 'secondDiv')
+                      .attr("width", width+500)
+                      .attr("height", 50)
+                      .attr("id", "trail");
+
+        let vis = d3.select(div)
+                    .append("svg")
                     .attr("width", width)
                     .attr("height", height)
                     .append("g")
@@ -80,11 +87,6 @@ export default class SunburstView extends React.Component {
             .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))) })
             .innerRadius(function(d) { return Math.sqrt(d.y); })
             .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
-        
-        let trail = d3.select("#sequence").append("svg")
-                      .attr("width", width)
-                      .attr("height", 50)
-                      .attr("id", "trail");
         
         let path = vis.selectAll("path")
                       .data(partition.nodes(th.state.data))
@@ -121,9 +123,9 @@ export default class SunburstView extends React.Component {
         }
 
         function mouseover(d) {
-            d3.select("#courseName")
+            d3.select(div)
                 .text(d.name);
-            d3.select("#explanation")
+            d3.select(div)
                 .style("visibility", "");
       
             let sequenceArray = getAncestors(d);
@@ -154,7 +156,7 @@ export default class SunburstView extends React.Component {
                     // d3.select(this).on("mouseover", mouseover);
                 });
 
-            d3.select("#explanation")
+            d3.select(div)
             .style("visibility", "hidden");
         }
 
@@ -169,7 +171,7 @@ export default class SunburstView extends React.Component {
         }
 
         let b = {
-            w: 90, h: 30, s: 3, t: 10
+            w: 100, h: 30, s: 3, t: 10
         };
 
         function breadcrumbPoints(d, i) {
@@ -185,6 +187,8 @@ export default class SunburstView extends React.Component {
 
         function updateBreadcrumbs(nodeArray, breadCrumColor) {
             let g = d3.select("#trail")
+                .style("position", "relative")
+                // .style('top', '-300px')
                 .selectAll("g")
                 .data(nodeArray, function(d) { return d.name + d.depth; });
 
