@@ -126,6 +126,7 @@ const storeURL = function (searchEngineParams) {
 }
 
 const checkRecentlySearched = function(dataObj){
+	
 	let promise = new Promise(function(resolve, reject) {
 		let result  = {
 			isRecent: true
