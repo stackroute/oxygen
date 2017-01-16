@@ -492,15 +492,17 @@ let getTreeOfDomain = function(domain) {
         async.waterfall([
                 function(callback) {
                      logger.debug("inside the waterfall " + domain)
-                    domainNeo4jController.getTreeOfDomain(domain,
+                    domainNeo4jController.getTreeOfDomainCallback(domain,
                         callback);
                 }
             ],
-            function(err, tree) {
-                if (err) {
-                    reject(err);
+           function(err, tree) {
+                logger.debug("got the domain collection", domain)
+                if (!err) {
+                    resolve(tree)
                 }
-            }); //end of async.waterfall
+                reject(err)
+            });//end of async.waterfall
     });
 
     return promise;

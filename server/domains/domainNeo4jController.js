@@ -536,6 +536,8 @@ let getWebDocuments = function (domainObj) {
 }
 
 let getTreeOfDomain = function (data) {
+    logger.debug('domain ctrl',data);
+    
     let promise = new Promise(function (resolve, reject) {
         logger.debug("Start: tree structure of domain : ", data.domainName);
         fs.writeFile(data.domainName + '_concepts_tree.json', '');
@@ -568,7 +570,7 @@ let getTreeOfDomain = function (data) {
                 });
             })
             .on('end', function () {
-                var p3 = JSON.stringify(tree);
+              let p3 = JSON.stringify(tree);
                 p3 = p3.replace("[", "[\n\t");
                 p3 = p3.replace(/},/g, "},\n\t");
                 p3 = p3.replace(/\\"/g, "");
@@ -579,7 +581,9 @@ let getTreeOfDomain = function (data) {
                     }
                 });
                 resolve(p3);
+               
             });
+            
     });
     return promise;
 }
@@ -592,6 +596,14 @@ let indexNewDomainCallBack = function (newDomainObj, callback) {
         callback(err, null);
     });
 }
+let getTreeOfDomainCallback = function (domain, callback) {
+    getTreeOfDomain(domain).then(function (indexedDomain) {
+        callback(null, indexedDomain);
+    }, function (err) {
+        callback(err, null);
+    });
+}
+
 let getDomainConceptCallback = function (domainName, callback) {
     getDomainConcept(domainName).then(function (retrievedDomainConcept) {
         callback(null, retrievedDomainConcept);
@@ -655,5 +667,6 @@ module.exports = {
     getWebDocumentsCallback: getWebDocumentsCallback,
     getWebDocuments: getWebDocuments,
     getIntentforDocument: getIntentforDocument,
-    getTreeOfDomain: getTreeOfDomain
+    getTreeOfDomain: getTreeOfDomain,
+    getTreeOfDomainCallback: getTreeOfDomainCallback
 }
