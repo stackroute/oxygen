@@ -26,20 +26,21 @@ const startSearcher = function() {
     			logger.info('In highland function generator')
     			chConn.consume(config.OXYGEN.SEARCHER_MQ_NAME, function(msg) {
     				logger.info('Inside Searcher_MQ consumer')
-    				const dataObj = {
-                  		data: msg.content.toString()
-                	};
-    				push(null, dataObj)
+    				// const dataObj = {
+        //           		data: msg.content.toString()
+        //         	};
+    				// push(null, dataObj)
+                    push(null, msg)
     				next();
     			}, { noAck: true });
     		})
-    		.map(function (dataObj) {
-    			logger.debug("Got message in pipe: ", dataObj);
-    			return dataObj;
-    		})
-    		.map(function(dataObj) {
+    		// .map(function (dataObj) {
+    		// 	logger.debug("Got message in pipe: ", dataObj);
+    		// 	return dataObj;
+    		// })
+    		.map(function(msg) {
 			    logger.info("Entered in checkRecentlySearched function");
-			    let promise = controller.checkRecentlySearched(dataObj)
+			    let promise = controller.checkRecentlySearched(msg)
                 logger.info(promise)
 			    return promise;
 			})

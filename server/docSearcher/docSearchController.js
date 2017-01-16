@@ -5,7 +5,7 @@ const logger = require('./../../applogger');
 const async = require('async');
 const Request = require('superagent');
 //@todo
-const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
+// const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
 const datapublisher = require('../serviceLogger/redisLogger');
 const client = require('redis').createClient();
 
@@ -101,7 +101,7 @@ const storeURL = function (searchEngineParams) {
                         description: data.description
                     };
                     //searchModel.close()
-                    startCrawlerMQ(msgObj);
+                    // startCrawlerMQ(msgObj);
 
                     let RedisSearch = {
                         domain: jobDetails.exactTerms,
@@ -126,7 +126,7 @@ const storeURL = function (searchEngineParams) {
     return sendData;
 }
 
-const checkRecentlySearched = function(dataObj){
+const checkRecentlySearched = function(msg){
 	let promise = new Promise(function(resolve, reject) {
 		let result  = {
 			id: '',
