@@ -101,12 +101,11 @@ export default class DomainHomeView extends React.Component {
       docs: [],
       checkedIntent: [],
       selectedConcept: [],
-      sunSelectedConcept: '',
+      selectedConceptText: '',
       open: false,
       show:0,
       pageNum: 1
     };
-    this.sunSelectedConcept = this.sunSelectedConcept.bind(this);
   }
 
   //handleActive = () => this.setState({open: !this.state.open});
@@ -128,7 +127,11 @@ export default class DomainHomeView extends React.Component {
 
   sunSelectedConcept(conceptName){
     this.state.selectedConcept.push(conceptName);
-    this.setState({sunSelectedConcept: conceptName});
+    this.setState({selectedConceptText: conceptName});
+  }
+  voiceInput(conceptName) {
+    this.state.selectedConcept.push(conceptName);
+    this.setState({selectedConceptText: conceptName});
   }
 getCheckedIntents(conceptWithDocCnt) {
     let sepDoc = conceptWithDocCnt.split(' (');
@@ -304,7 +307,7 @@ getCheckedIntents(conceptWithDocCnt) {
         // console.log('printing list in else'+list);
       }
     }
-    console.log(this.state.sunSelectedConcept);
+    console.log(this.state.selectedConceptText);
     return(
       <div style={fonts}>
         <Row style={{margin: 0}}>
@@ -394,39 +397,40 @@ getCheckedIntents(conceptWithDocCnt) {
            <Row style={{padding:"0 20px"}}>
                 <Col xs={12} sm={12} md={12} lg={12} xl={12} style={{marginLeft:0}} >
                   <SunburstView domainName={this.state.domainName}
-                              sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>
+                      sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>
                 </Col>
             </Row>
              <Row>
                  <Col sm={5} xs={5} md={5} style={{float:'left'}}>
-                        <AutoCompleteSearchBox concepts={this.state.concepts}
-                          searchDocument={this.searchDocuments.bind(this)}
-                          getConcept={this.getConcepts.bind(this)}
-                          searchText={this.state.sunSelectedConcept}/>
-                          <Row>
-                            <Col sm={12} xs={12} md={12}>
-                              {
-                                this.state.selectedConcept.length===0?
-                                <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
-                                <SelectedConcepts conceptChips={this.state.selectedConcept}
-                                deleteConcept={this.deleteConcepts.bind(this)} />
-                              }
-                            </Col>
-                          </Row>
+                    <AutoCompleteSearchBox concepts={this.state.concepts}
+                      searchDocument={this.searchDocuments.bind(this)}
+                      getConcept={this.getConcepts.bind(this)}
+                      searchText={this.state.selectedConceptText}
+                      voiceInput={(conceptName) => this.voiceInput(conceptName)}/>
+                      <Row>
+                        <Col sm={12} xs={12} md={12}>
+                          {
+                            this.state.selectedConcept.length===0?
+                            <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
+                            <SelectedConcepts conceptChips={this.state.selectedConcept}
+                            deleteConcept={this.deleteConcepts.bind(this)} />
+                          }
+                        </Col>
+                      </Row>
                  </Col>
                 <Col sm={5} xs={5} md={5} style={{float:'right'}}> 
                   <SelectPanel intents={this.state.intents}
                   searchDocument={this.searchDocuments.bind(this)}
                     getCheckedIntent={this.getCheckedIntents.bind(this)}/>
                     <Row>
-                            <Col sm={12} xs={12} md={12}>
-                              {
-                                this.state.checkedIntent.length===0?
-                                <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
-                                <SelectedIntents intentChips={this.state.checkedIntent}
-                                deleteIntent={this.deleteIntents.bind(this)} />
-                              }
-                            </Col>
+                      <Col sm={12} xs={12} md={12}>
+                        {
+                          this.state.checkedIntent.length===0?
+                          <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
+                          <SelectedIntents intentChips={this.state.checkedIntent}
+                          deleteIntent={this.deleteIntents.bind(this)} />
+                        }
+                      </Col>
                     </Row>
                 </Col>  
               </Row>

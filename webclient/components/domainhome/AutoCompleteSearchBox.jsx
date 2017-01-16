@@ -46,7 +46,14 @@ export default class AutoCompleteSearchBox extends React.Component {
   handleUpdateInput(concept) {
     this.setState({
       searchText: concept
-    })
+    });
+  }
+  handleVoiceUpdateInput(concept) {
+    console.log(concept);
+    this.setState({
+      searchText: concept
+    });
+    this.props.voiceInput(concept);
   }
   getConcept(concept){
     this.setState({
@@ -79,7 +86,7 @@ export default class AutoCompleteSearchBox extends React.Component {
                 />
               </Col>
               <Col xs={1} sm={1} md={1} lg={1} xl={1} style={{marginTop: 10, marginLeft: -60}}>
-                <VoiceSearch handleUpdateInput={this.handleUpdateInput.bind(this)} />
+                <VoiceSearch handleUpdateInput={this.handleVoiceUpdateInput.bind(this)} />
               </Col>
               <Col xs={2} sm={2} md={2} lg={2} xl={2} style={{marginBottom: 25}} >
                 <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
