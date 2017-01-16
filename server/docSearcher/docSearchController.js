@@ -7,6 +7,7 @@ const Request = require('superagent');
 //@todo
 const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
 const datapublisher = require('../serviceLogger/redisLogger');
+const client = require('redis').createClient();
 
 const getURL = function (searchQuery, i, callback) {
     let eng = searchQuery.engineID.split(' ');
@@ -126,11 +127,27 @@ const storeURL = function (searchEngineParams) {
 }
 
 const checkRecentlySearched = function(dataObj){
-	
 	let promise = new Promise(function(resolve, reject) {
 		let result  = {
-			isRecent: true
+			id: '',
+			isRecent: false,
+			domain: '',
+			concepts: ''
 		}
+		client.on("error", function (err) {
+		    console.log("Error " + err);
+		});
+		client.get(dataObj.data, function(err, reply) {
+			if(err) {
+				logger.error("Error while fetching the id from the redis")
+			}
+			else if(reply != null) {
+				result.isRecent = true
+			}
+		    // reply is null when the key is missing
+		    console.log(reply);
+		});
+
 		if (!result.isRecent) {
 			reject(err);
 		}
