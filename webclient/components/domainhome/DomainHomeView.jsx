@@ -1,18 +1,19 @@
 import React from 'react';
+import {Row, Col, ScreenClassRender, Visible} from 'react-grid-system';
+import Request from 'superagent';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
+import IconButton from 'material-ui/IconButton';
+import MenuItem from 'material-ui/MenuItem';
+import Drawer from 'material-ui/Drawer';
+import {Tabs, Tab} from 'material-ui/Tabs';
 import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
 import SunburstView from './SunburstView';
-import {Row, Col, ScreenClassRender, Visible} from 'react-grid-system';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
-import IconButton from 'material-ui/IconButton';
-import Request from 'superagent';
-import MenuItem from 'material-ui/MenuItem';
-import Drawer from 'material-ui/Drawer';
-import {Tabs, Tab} from 'material-ui/Tabs';
+
 const iPanel = {
   minWidth: 150,
   backgroundColor: '#dadada',
@@ -88,72 +89,65 @@ const styleFunction = (screenClass) => {
 };
 
 export default class DomainHomeView extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            msgSelector: 'No search specified',
-            domainName: '',
-            concepts: [],
-            conceptsOnly: [],
-            intents: [],
-            docs: [],
-            checkedIntent: [],
-            selectedConcept: [],
-            open: false,
-            show:0,
-            pageNum: 1
-        };
-    }
+  constructor(props) {
+      super(props);
+      this.state = {
+          msgSelector: 'No search specified',
+          domainName: '',
+          concepts: [],
+          conceptsOnly: [],
+          intents: [],
+          docs: [],
+          checkedIntent: [],
+          selectedConcept: [],
+          open: false,
+          show:0,
+          pageNum: 1
+      };
+  }
 
-    //handleActive = () => this.setState({open: !this.state.open});
-    // handleToggle = () => this.setState({open: !this.state.open});
-    getConcepts(conceptWithDocCnt)
-    {
-        let sepDoc = conceptWithDocCnt.split(' (');
-        let concept = sepDoc[0];
-        let newConcepts = this.state.selectedConcept;
-        if(this.state.conceptsOnly.includes(concept))
-        {
-            if(!newConcepts.includes(concept)) {
-                newConcepts.push(concept);
-            }
-        }
+  //handleActive = () => this.setState({open: !this.state.open});
+  // handleToggle = () => this.setState({open: !this.state.open});
+  getConcepts(conceptWithDocCnt) {
+      let sepDoc = conceptWithDocCnt.split(' (');
+      let concept = sepDoc[0];
+      let newConcepts = this.state.selectedConcept;
+      if(this.state.conceptsOnly.includes(concept)) {
+          if(!newConcepts.includes(concept)) {
+              newConcepts.push(concept);
+          }
+      }
+      this.setState({
+          selectedConcept: newConcepts
+      });
+  }
 
-        this.setState({
-            selectedConcept: newConcepts
-        });
-        // console.log('selected concept')
-        // console.log(newConcepts)
-    }
+  getCheckedIntents(event, checked) {
+      let prevIntents = this.state.checkedIntent;
+      if(checked) {
+        prevIntents.push(event.target.value);
+      }
+      else {
+          prevIntents = prevIntents.filter(function(data) {
+              return data !== event.target.value;
+          });
+      }
+      this.setState({
+          checkedIntent: prevIntents
+      });
+  }
 
-    getCheckedIntents(event, checked)
-    {
-        let prevIntents = this.state.checkedIntent;
-        if(checked) {
-          prevIntents.push(event.target.value);
-        }
-        else {
-            prevIntents = prevIntents.filter(function(data) {
-                return data !== event.target.value;
-            });
-        }
-        this.setState({
-            checkedIntent: prevIntents
-        });
-    }
-    deleteConcepts(data) {
-        let delConcepts = this.state.selectedConcept;
-        delConcepts = delConcepts.filter(function(concept) {
-            return concept !== data;
-        });
-    this.setState(
-    {
+  deleteConcepts(data) {
+      let delConcepts = this.state.selectedConcept;
+      delConcepts = delConcepts.filter(function(concept) {
+          return concept !== data;
+      });
+    this.setState({
       selectedConcept: delConcepts
     });
-    // console.log(delConcepts)
   }
-  getIntentsAndConcepts()
-  {
+
+  getIntentsAndConcepts() {
       let url = `/domain/` + this.props.params.domainName;
       let that = this;
       Request
@@ -177,12 +171,11 @@ export default class DomainHomeView extends React.Component {
                       conceptsOnly: conOnly
                   });
               }
-      });
+          });
   }
-  searchDocuments()
-  {
-    if(this.state.selectedConcept.length === 0)
-    {
+
+  searchDocuments() {
+    if(this.state.selectedConcept.length === 0) {
       this.setState({
         msgSelector: 'No documents found for specified concepts and/or intent...!',
         docs: []
@@ -195,8 +188,7 @@ export default class DomainHomeView extends React.Component {
         reqConcepts: this.state.selectedConcept
       };
       reqObj.allIntents = this.state.intents;
-      if(reqObj.reqIntents.length === 0)
-      {
+      if(reqObj.reqIntents.length === 0) {
         reqObj.reqIntents = [];
       }
       this.setState({
