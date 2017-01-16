@@ -27,15 +27,6 @@ Router.get('/:urlID', function(req, res) {
   }
 });
 
-/* test function generator */
-Router.get('/test', function(req, res) {
-
-    return res.status(200).json({
-        data: 'iam testing'
-    });
-
-});
-
 Router.get('/', function(req, res) {
 
   return res.status(200).json({
