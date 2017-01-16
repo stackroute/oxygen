@@ -5,18 +5,18 @@ const logger = require('./../../applogger');
 
 const checkRecentlySearched = function(dataObj){
 	let promise = new Promise(function(resolve, reject) {
-
-		if (err) {
+		let result  = {
+			isRecent: true
+		}
+		if (!result.isRecent) {
 			reject(err);
 		}
-
-		resolve();
+		
+		resolve(result);
 		
 	})
 	logger.debug("inside the checkRecentlySearched method",dataObj);
 	return promise;
-
-
 }
 
 const fetchPrevSearchResult= function(dataObj){

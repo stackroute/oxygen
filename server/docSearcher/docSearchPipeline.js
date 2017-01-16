@@ -40,6 +40,7 @@ const startSearcher = function() {
     		.map(function(dataObj) {
 			    logger.info("Entered in checkRecentlySearched function");
 			    let promise = controller.checkRecentlySearched(dataObj)
+                logger.info(promise)
 			    return promise;
 			})
 			.flatMap(promise => highland(
@@ -47,8 +48,8 @@ const startSearcher = function() {
 		    	.then(function(result) {
 		    		if(result.isRecent) {
 		    			logger.info("Fetching the previously stored data");
-	    				let promise = controller.fetchPrevSearchResult(result)
-	    				return promise;
+	    				let promise1 = controller.fetchPrevSearchResult(result)
+	    				return promise1;
 	    			} else {
 	    				logger.info("Check on google with the given domain and concepts");
 	    			}
@@ -56,10 +57,15 @@ const startSearcher = function() {
 		      		return err;
 		    	})
 		  	))
-		  	// .flatMap(promise => highland(
-
-		  	// ))
-    		.each(function(promise) {
+		  	.flatMap(promise => highland(
+                promise
+                .then(function(result) {
+                    return result
+                }, function(err) {
+                    return err;
+                })
+		  	))
+    		.each(function(result) {
     			logger.info('Highland function ends')
     		})
     	})
