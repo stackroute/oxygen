@@ -218,6 +218,8 @@ getCheckedIntents(conceptWithDocCnt) {
         msgSelector: 'No documents found for specified concepts and/or intent...!',
         docs: []
       });
+      let msg = new SpeechSynthesisUtterance(this.state.msgSelector);
+      window.speechSynthesis.speak(msg);
     }
     else {
       let reqObj = {
@@ -234,28 +236,33 @@ getCheckedIntents(conceptWithDocCnt) {
       });
       let url = `/domain/documents/`+reqObj.domainName;
       Request
-      .post(url)
-      .send(reqObj)
-      .end((err, res) => {
-        if(err) {
+        .post(url)
+        .send(reqObj)
+        .end((err, res) => {
+          if(err) {
          // res.send(err);
          // console.log(err)
-        }
-        else {
-          let response = JSON.parse(res.text);
-            // console.log('Response on documents to show: ',response);
-          response.sort(function(a, b) {
-            return (Number(b.intensity) - Number(a.intensity));
-          });
-          if(typeof response === 'undefined' || response.length === 0) {
+          }
+          else {
+            let response = JSON.parse(res.text);
+            console.log('Response on documents to show: ',response);
+            response.sort(function(a, b) {
+              return (Number(b.intensity) - Number(a.intensity));
+            });
+            if(typeof response === 'undefined' || response.length === 0) {
+              this.setState({
+                msgSelector: 'No documents found for specified concepts and/or intent...!'
+              });
+              let msg = new SpeechSynthesisUtterance(this.state.msgSelector);
+              window.speechSynthesis.speak(msg);
+            } else {
+              let msg = new SpeechSynthesisUtterance(response.length+' results found to your given input');
+              window.speechSynthesis.speak(msg);
+            }
             this.setState({
-              msgSelector: 'No documents found for specified concepts and/or intent...!'
+              docs: response
             });
           }
-          this.setState({
-            docs: response
-          });
-        }
       });
     }
   }
