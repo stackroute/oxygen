@@ -40,7 +40,7 @@ export default class SunburstView extends React.Component {
     drawChart() {
         console.log('in draw chart')
         let th = this;
-        //Create the element
+
         const div = new ReactFauxDOM.Element('div')
         let width = 500;
         let height = 340;
@@ -51,10 +51,10 @@ export default class SunburstView extends React.Component {
         let y = d3.scale.linear().range([0, radius]);
         let color = d3.scale.category20c();
 
-        let vis = d3.select(div).append("svg:svg")
+        let vis = d3.select(div).append("svg")
                     .attr("width", width)
                     .attr("height", height)
-                    .append("svg:g")
+                    .append("g")
                     .attr("id", "container")
                     .attr("transform", "translate(" + width/2 +","+ height/2 +")");
 
@@ -81,14 +81,14 @@ export default class SunburstView extends React.Component {
             .innerRadius(function(d) { return Math.sqrt(d.y); })
             .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
         
-        let trail = d3.select("#sequence").append("svg:svg")
+        let trail = d3.select("#sequence").append("svg")
                       .attr("width", width)
                       .attr("height", 50)
                       .attr("id", "trail");
         
         let path = vis.selectAll("path")
                       .data(partition.nodes(th.state.data))
-                      .enter().append("svg:path")
+                      .enter().append("path")
                       .attr("d", arc)
                       .attr("fill-rule", "evenodd")
                       .style("fill", function(d) { if(n==1){++n; return '#ddd';} return color(d.name);})
@@ -97,14 +97,17 @@ export default class SunburstView extends React.Component {
                       .on("mouseover", mouseover);
         d3.select("#container").on("mouseleave", mouseleave);
         function click(d) {
-            console.log('graph clicked');
+            var y = getAncestors(d);
+            // d3.selectAll("path").style("opacity", function(d) {
+            //             return y.indexOf(d) !== -1 ? 0.15 : 1
+            //         });
             path.transition()
                 .duration(750)
                 .attrTween("d", arcTween(d));
             th.props.sunSelectedConcept(d.name);
-            th.forceUpdate();
         }
         d3.select(self.frameElement).style("height", height + "px");
+
         function arcTween(d) {
             let xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
                 yd = d3.interpolate(y.domain(), [d.y, 1]),
@@ -116,10 +119,8 @@ export default class SunburstView extends React.Component {
                     : function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); return arc(d); };
             };
         }
-        // });
 
         function mouseover(d) {
-            console.log('graph hovered');
             d3.select("#courseName")
                 .text(d.name);
             d3.select("#explanation")
@@ -127,7 +128,6 @@ export default class SunburstView extends React.Component {
       
             let sequenceArray = getAncestors(d);
             let targetAttr = $(this).find('div.mouseover').prevObject.attr('style');
-            //let breadCrumColor = targetAttr.substring(targetAttr.indexOf('rgb'),targetAttr.indexOf(';'));
             let breadCrumColor = targetAttr.fill;
             updateBreadcrumbs(sequenceArray, breadCrumColor);
 

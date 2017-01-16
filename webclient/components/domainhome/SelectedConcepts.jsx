@@ -43,7 +43,7 @@ export default class SelectedConcepts extends React.Component {
   render() {
     return (
       <div style={styles.wrapper}>
-      {this.props.conceptChips.map(this.renderChip,this)}      
+        {this.props.conceptChips.map(this.renderChip, this)}      
       </div>
     );
   }

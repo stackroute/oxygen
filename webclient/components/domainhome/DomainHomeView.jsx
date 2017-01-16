@@ -127,6 +127,7 @@ export default class DomainHomeView extends React.Component {
   }
 
   sunSelectedConcept(conceptName){
+    this.state.selectedConcept.push(conceptName);
     this.setState({sunSelectedConcept: conceptName});
   }
 getCheckedIntents(conceptWithDocCnt) {
