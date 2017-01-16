@@ -37,7 +37,6 @@ export default class AutoCompleteSearchBox extends React.Component {
 
   filterFunc(searchText,key) {
     let sepDoc=key.split(" (")
-    // if(searchText.length>=3 && searchText!==''){
     if(searchText!==''){
       return (sepDoc[0].toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
     }
@@ -54,6 +53,7 @@ export default class AutoCompleteSearchBox extends React.Component {
       searchText: concept
     });
     this.props.voiceInput(concept);
+    this.props.searchDocument();
   }
   getConcept(concept){
     this.setState({

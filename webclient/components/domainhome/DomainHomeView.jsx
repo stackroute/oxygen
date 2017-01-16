@@ -317,15 +317,15 @@ getCheckedIntents(conceptWithDocCnt) {
               searchDocument={this.searchDocuments.bind(this)}
                 getCheckedIntent={this.getCheckedIntents.bind(this)}/>
                 <Row>
-                            <Col sm={12} xs={12} md={12}>
-                              {
-                                this.state.checkedIntent.length===0?
-                                <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
-                                <SelectedIntents intentChips={this.state.checkedIntent}
-                                deleteIntent={this.deleteIntents.bind(this)} />
-                              }
-                            </Col>
-                    </Row>
+                  <Col sm={12} xs={12} md={12}>
+                    {
+                      this.state.checkedIntent.length===0?
+                      <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
+                      <SelectedIntents intentChips={this.state.checkedIntent}
+                      deleteIntent={this.deleteIntents.bind(this)} />
+                    }
+                  </Col>
+                </Row>
             </Col>
             <Col sm = {12} xs = {12} md = {10} lg = {10} xl = {10}
                 style = {{maxWidth: 2000, marginLeft: '16.5%'}}>
