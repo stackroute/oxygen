@@ -130,32 +130,31 @@ const checkRecentlySearched = function(msg){
 	let promise = new Promise(function(resolve, reject) {
 		let result  = {
 			id: '',
-			isRecent: false,
-			domain: '',
-			concepts: ''
+			isRecent: false
 		}
 		client.on("error", function (err) {
-		    console.log("Error " + err);
+		    logger.error("Error in Redis:" + err);
 		});
-		client.get(dataObj.data, function(err, reply) {
+		client.get(msg, function(err, reply) {
 			if(err) {
 				logger.error("Error while fetching the id from the redis")
 			}
 			else if(reply != null) {
+                result.msg = msg
 				result.isRecent = true
 			}
 		    // reply is null when the key is missing
 		    console.log(reply);
 		});
 
-		if (!result.isRecent) {
-			reject(err);
-		}
+		// if (!result.isRecent) {
+		// 	reject(err);
+		// }
 		
 		resolve(result);
 		
 	})
-	logger.debug("inside the checkRecentlySearched method",dataObj);
+	logger.debug("inside the checkRecentlySearched method",msg);
 	return promise;
 }
 
