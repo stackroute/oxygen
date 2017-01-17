@@ -106,7 +106,7 @@ export default class SunburstView extends React.Component {
             .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
         
         let path = vis.selectAll("path")
-                      .data(partition.nodes(th.state.data))
+                      .data(partition.nodes(this.state.data))
                       .enter().append("path")
                       .attr("d", arc)
                       .attr("fill-rule", "evenodd")
@@ -114,17 +114,35 @@ export default class SunburstView extends React.Component {
                       .style("opacity", 1)
                       .on("click", click)
                       .on("mouseover", mouseover);
+        var text = vis.selectAll("text")
+                       .attr("transform", function(d) { return "rotate(" + computeTextRotation(d) + ")"; })
+                       .attr("x", function(d) { return y(d.y); })
+                       .attr("dx", "6") // margin
+                       .attr("dy", ".35em") // vertical-align
+                       .text(function(d) { return d.name; });
         d3.select("#container").on("mouseleave", mouseleave);
         function click(d) {
-            var y = getAncestors(d);
-            // d3.selectAll("path").style("opacity", function(d) {
-            //             return y.indexOf(d) !== -1 ? 0.15 : 1
-            //         });
+            console.log("inside click");
+            text.transition().attr("opacity", 0);
             path.transition()
                 .duration(750)
-                .attrTween("d", arcTween(d));
+                .attrTween("d", arcTween(d))
+                .each("end", function(e, i) {
+         // check if the animated element's data e lies within the visible angle span given in d
+         if (e.x >= d.x && e.x < (d.x + d.dx)) {
+            console.log("inside the if statement");
+           // get a selection of the associated text element
+           var arcText = d3.select(this.parentNode).select("text");
+           // fade in the text element and recalculate positions
+           arcText.transition().duration(750)
+             .attr("opacity", 1)
+             .attr("transform", function() { return "rotate(" + computeTextRotation(e) + ")" })
+             .attr("x", function(d) { return y(d.y); });
+                             }
+                         });
             th.props.sunSelectedConcept(d.name);
         }
+        
         d3.select(self.frameElement).style("height", height + "px");
 
         function arcTween(d) {
@@ -230,12 +248,28 @@ export default class SunburstView extends React.Component {
             g.exit().remove();
             d3.select("#trail").style("visibility", "");
         }
+        function computeTextRotation(d) {
+                 return (x(d.x + d.dx / 2) - Math.PI / 2) / Math.PI * 180;
+                }
         //DOM manipulations done, convert to React
         return div.toReact()
     }
 
     render() {
-        return this.drawChart();
+        return (
+                    <Card>
+                                <CardHeader
+                                title="Select concept"
+                                  actAsExpander={true}
+                                  showExpandableButton={true}
+                                />
+                                 <CardText expandable={false}>
+                            {this.drawChart()}
+                        </CardText>
+                      </Card>
+
+
+            );
     }
 }
 

@@ -402,7 +402,7 @@ getCheckedIntents(conceptWithDocCnt) {
                 </Col>
               </Row>
            <Row style={{padding:"0 20px"}}>
-                <Col xs={12} sm={12} md={12} lg={12} xl={12} style={{marginLeft:0}} >
+                <Col sm={12} md={12} lg={12} xl={12} style={{marginLeft:0}} >
                   <SunburstView domainName={this.state.domainName}
                       sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>
                 </Col>
