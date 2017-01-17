@@ -12,10 +12,11 @@ export default class SunburstView extends React.Component {
         super(props);
         this.state = {
             chart: 'Loading...',
-            data: {}
+            data: {},
+            domainName: ''
         }
     }
-    componentDidMount(){
+    componentWillMount(){
         // let th = this;
         // let promise = new Promise(function (resolve, reject) {
             // resolve(th.getTreeOfDomain());
@@ -28,6 +29,13 @@ export default class SunburstView extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let th = this;
+        console.log(nextProps.domainName+' nextProps')
+        if(nextProps.domainName.length >= 0) {
+            let promise = new Promise(function (resolve, reject) {
+                resolve(th.getTreeOfDomain());
+                // this.getTreeOfDomain();
+            })
+        }
         d3.json("./assets/data/"+nextProps.domainName+"_concepts_tree.json", function(error, json) {
             th.setState({data: json});
         });
@@ -48,7 +56,6 @@ export default class SunburstView extends React.Component {
     }
   
     drawChart() {
-        console.log('in draw chart')
         let th = this;
 
         const div = new ReactFauxDOM.Element('div')
