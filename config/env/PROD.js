@@ -12,6 +12,7 @@ let mongo = {
     pwd: process.env.MONGO_PWD || 'mongo',
     masterDB: process.env.MONGO_DB || 'oxygen'
 };
+
 //@ TODO use mongo username & password in constructing the URL if given
 mongo['mongoURL'] = ('mongodb://' + mongo.host + ':' + mongo.port + '/' + mongo.masterDB);
 
