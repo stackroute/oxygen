@@ -7,19 +7,27 @@ const Request = require('superagent');
 //@todo
 // const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
 const datapublisher = require('../serviceLogger/redisLogger');
+const engineColln = require('./../common/engineColln');
 const client = require('redis').createClient();
 
-const getURL = function (searchQuery, i, callback) {
-    let eng = searchQuery.engineID.split(' ');
-    let url = "https://www.googleapis.com/customsearch/v1?q=" + searchQuery.query + "&cx=" + eng[0] + "&key=" + eng[1] + "&start=" + i;
-    if (searchQuery.siteSearch !== 'NONE') {
-        url += "&siteSearch=" + searchQuery.siteSearch;
-    }
-    if (searchQuery.exactTerms !== 'NONE') {
-        url += "&exactTerms=" + searchQuery.exactTerms;
-    }
+const getURL = function (searchQuery, callback) {
+    let engine = engineColln.ENGINES;
+    let key = engineColln.KEYS;
+    logger.debug('Making a request in get url with searchQuery: ', searchQuery);
+    // let eng = searchQuery.engineID.split(' ');
+    let url = "https://www.googleapis.com/customsearch/v1?q=class&cx="+engine+
+                "&key="+key+"&exactTerms=java" 
+    // let url = "https://www.googleapis.com/customsearch/v1?q=" + 
+        // searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 
+        // + searchQuery.start;
+    // if (searchQuery.siteSearch !== 'NONE') {
+    //     url += "&siteSearch=" + searchQuery.siteSearch;
+    // }
+    // if (searchQuery.domain !== 'NONE') {
+    //     url += "&exactTerms=" + searchQuery.domain;
+    // }
     let searchResults = [];
-    console.log(i + " " + url + " " + searchQuery.results);
+    console.log(" " + url + " " + searchQuery.nbrOfResults);
     Request
         .get(url)
         .end(function (err, body) {
@@ -30,26 +38,27 @@ const getURL = function (searchQuery, i, callback) {
                 callback(err, null);
             } else {
                 data = JSON.parse(body.text);
+                logger.debug('Data we got from google: ',data)
             }
 
             if (typeof data !== "undefined" && Object.keys(data).length === 6) {
-                logger.debug("retrived the" + data.items.length +
-                    "document for concept" + searchQuery.query);
+                logger.debug("retrieved the" + data.items.length +
+                    "document for concept" + searchQuery.concept);
 
                 for (let k = 0; k < data.items.length; k += 1) {
 
-                    if ((i + k) <= searchQuery.results) {
+                    // if ((i + k) <= searchQuery.nbrOfResults) {
                         let searchResult = {
-                            "jobID": searchQuery._id,
-                            "query": searchQuery.query,
+                            // "jobID": searchQuery._id,
+                            "query": searchQuery.concept,
                             "title": data.items[k].title,
                             "url": data.items[k].link,
                             "description": data.items[k].snippet
                         };
                         searchResults.push(searchResult);
-                    } else {
-                        break;
-                    }
+            //         } else {
+            //             break;
+                    // }
 
                     //@todo srini will store the logs in mongo db
                 }
@@ -129,7 +138,7 @@ const storeURL = function (searchEngineParams) {
 const checkRecentlySearched = function(msg){
 	let promise = new Promise(function(resolve, reject) {
 		let result  = {
-			id: '',
+			msg: msg,
 			isRecent: false
 		}
 		client.on("error", function (err) {
@@ -140,7 +149,6 @@ const checkRecentlySearched = function(msg){
 				logger.error("Error while fetching the id from the redis")
 			}
 			else if(reply != null) {
-                result.msg = msg
 				result.isRecent = true
 			}
 		    // reply is null when the key is missing
@@ -158,17 +166,34 @@ const checkRecentlySearched = function(msg){
 	return promise;
 }
 
-const fetchPrevSearchResult= function(dataObj){
+const fetchPrevSearchResult= function(msg){
     let promise = new Promise(function(resolve, reject) {
-
-        if (err) {
-            reject(err);
+        let result  = {
+            msg: msg,
+            isRecent: false
         }
+        client.on("error", function (err) {
+            logger.error("Error in Redis:" + err);
+        });
+        client.get(msg, function(err, reply) {
+            if(err) {
+                logger.error("Error while fetching the id from the redis")
+            }
+            else if(reply != null) {
+                result.isRecent = true
+            }
+            // reply is null when the key is missing
+            console.log(reply);
+        });
 
-        resolve();
-
+        // if (!result.isRecent) {
+        //  reject(err);
+        // }
+        
+        resolve(result);
+        
     })
-    logger.debug("inside the fetchPrevSearchResult method",dataObj);
+    logger.debug("inside the checkRecentlySearched method",msg);
     return promise;
 
 }
