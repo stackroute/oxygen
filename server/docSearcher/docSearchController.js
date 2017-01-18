@@ -13,13 +13,12 @@ const client = require('redis').createClient();
 const getURL = function (searchQuery, callback) {
     let engine = engineColln.ENGINES;
     let key = engineColln.KEYS;
-    logger.debug('Making a request in get url with searchQuery: ', searchQuery);
     // let eng = searchQuery.engineID.split(' ');
-    let url = "https://www.googleapis.com/customsearch/v1?q=class&cx="+engine+
-                "&key="+key+"&exactTerms=java" 
-    // let url = "https://www.googleapis.com/customsearch/v1?q=" + 
-        // searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 
-        // + searchQuery.start;
+    // let url = "https://www.googleapis.com/customsearch/v1?q=Class&cx="+engine+
+    //             "&key="+key+"&exactTerms=Java" 
+    let url = "https://www.googleapis.com/customsearch/v1?q=" + 
+        searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 
+        + searchQuery.start + "&exactTerms=" + searchQuery.domain;
     // if (searchQuery.siteSearch !== 'NONE') {
     //     url += "&siteSearch=" + searchQuery.siteSearch;
     // }
@@ -38,12 +37,11 @@ const getURL = function (searchQuery, callback) {
                 callback(err, null);
             } else {
                 data = JSON.parse(body.text);
-                logger.debug('Data we got from google: ',data)
             }
 
             if (typeof data !== "undefined" && Object.keys(data).length === 6) {
-                logger.debug("retrieved the" + data.items.length +
-                    "document for concept" + searchQuery.concept);
+                logger.debug("retrieved the " + data.items.length +
+                    " document for concept " + searchQuery.concept);
 
                 for (let k = 0; k < data.items.length; k += 1) {
 
@@ -77,10 +75,12 @@ const storeURL = function (searchEngineParams) {
     async.waterfall([
             async.apply(getURL, searchEngineParams),
             async.asyncify(function (urlResponse) {
-                return db.model.create(contents);
+                // return db.model.create(contents);
+                return urlResponse
             }),
             function (prevResponse, next) {
-
+                logger.debug("prevResponse: ", prevResponse);
+                logger.debug("next: ", next);
             }
         ]
     );

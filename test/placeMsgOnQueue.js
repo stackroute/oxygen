@@ -27,9 +27,8 @@ function sendToQueue(qURL, qName, qMsg, callback) {
 }
 
 let msg = {
-    domain: '',
-    concept: '',
-    start: '',
-    nbrOfResults: ''
+    concept: 'Class',
+    start: '1',
+    nbrOfResults: '10'
 };
 sendToQueue(config.RABBITMQ.rabbitmqURL, config.OXYGEN.SEARCHER_MQ_NAME, msg);
