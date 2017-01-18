@@ -73,10 +73,10 @@ const storeURL = function (searchEngineParams) {
     let stack = [];
     let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
     key = key.replace(/ +/g, "_");
-    logger.debug('Key: ', key);
     async.waterfall([
             async.apply(getURL, searchEngineParams),
             async.asyncify(function (urlResponse) {
+                logger.debug("Key of storeURL: ", key)
                 client.setex(key, 600, JSON.stringify(urlResponse), function(error){
                     if(error) {
                         logger.error('Error occured while setting data in redis cache..');
@@ -85,10 +85,10 @@ const storeURL = function (searchEngineParams) {
                 return urlResponse
             }),
             function (prevResponse, next) {
-                logger.debug("prevResponse: ", prevResponse);
-                logger.debug("next: ", next);
+                logger.debug("prevResponse: ");
+                // logger.debug("next: ", next);
             }
-        ],callback);
+        ]);
 
     // let sendData = function (errs, res) {
     //     if (errs) {
@@ -140,51 +140,76 @@ const storeURL = function (searchEngineParams) {
     // return sendData;
 }
 
-const checkRecentlySearched = function(msg){
+const checkRecentlySearched = function(searchEngineParams){
+    let result  = {
+        msg: searchEngineParams,
+        isRecent: false
+    }
 	let promise = new Promise(function(resolve, reject) {
-		let result  = {
-			msg: msg,
-			isRecent: false
-		}
 		client.on("error", function (err) {
 		    logger.error("Error in Redis:" + err);
-		});
-		client.get(msg, function(err, reply) {
+		}); 
+        let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
+		key = key.replace(/ +/g, "_");
+        logger.debug("Key of checkRecent: ", key)
+        // aync.waterfall([
+        //     client.get(key, function(err, reply) {
+        //         logger.debug("Key of getRedis: ", key)
+        //         if(err) {
+        //             logger.error("Error while fetching the id from the redis")
+        //         }
+        //         else if(reply != null) {
+        //             result.isRecent = true
+        //         }
+        //         logger.debug("result1 ", result)
+        //         // reply is null when the key is missing
+        //         return result
+        //     }),
+        //     // function(result) {
+        //     //     logger.debug("result2 ", result)
+        //         resolve(result)
+        //     // }
+        // ]);
+        client.get(key, function(err, reply) {
+            logger.debug("Key of getRedis: ", key)
 			if(err) {
 				logger.error("Error while fetching the id from the redis")
 			}
 			else if(reply != null) {
 				result.isRecent = true
 			}
+            logger.debug("result1 ", result)
 		    // reply is null when the key is missing
-		    console.log(reply);
 		});
 
-		// if (!result.isRecent) {
-		// 	reject(err);
-		// }
-		
+		if (!result.isRecent) {
+			reject(err);
+		}
+        logger.debug("result2 ", result)
 		resolve(result);
-		
 	})
-	logger.debug("inside the checkRecentlySearched method",msg);
 	return promise;
 }
 
 const fetchPrevSearchResult= function(searchEngineParams){
     let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
+    key = key.replace(/ +/g, "_");
     let promise = new Promise(function(resolve, reject) {
         client.on("error", function (err) {
             logger.error("Error in Redis:" + err);
         });
-        client.get(key, function(err, cachedURLs){
+        client.get(key, function(err, cachedURLsData){
             if (err) {
                 reject(err);
             }
-            resolve(cachedURLs);
+            // let result = {
+            //     // data: searchEngineParams,
+            //     cachedURLs: cachedURLs
+            // }
+            resolve(cachedURLsData);
         });
     })
-    logger.debug("inside the fetchPrevSearchResult method",searchEngineParams);
+    // logger.debug("inside the fetchPrevSearchResult method",searchEngineParams);
     return promise;
 }
 
