@@ -47,3 +47,5 @@ neo4j
 # Ignore data generated for application
 *tree.json
 .idea
+data.json
+.gulpfile.js.swp
