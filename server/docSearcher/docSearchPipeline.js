@@ -48,9 +48,10 @@ const startSearcher = function() {
                             .then(function(result) {
                                 if (result.isRecent) {
                                     logger.info("Fetching the previously stored data");
-                                    let storedres = controller.fetchPrevSearchResult(result.id)
+                                    let storedres = controller.fetchPrevSearchResult(result.msg)
                                     return storedres;
                                 } else {
+                                    logger.info(result.msg);
                                     let google_res = controller.storeURL(result.msg)
                                     logger.info("Check on google with the given domain and concepts");
                                     return google_res;

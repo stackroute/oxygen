@@ -14,7 +14,6 @@ export default class SunburstView extends React.Component {
             chart: 'Loading...',
             data: {}
         }
-
         this.drawChart = this.drawChart.bind(this)
         this.fetchJsonFileData = this.fetchJsonFileData.bind(this)
     }
@@ -27,13 +26,10 @@ export default class SunburstView extends React.Component {
             .end((err, res) => {
             if(!err) {
                 let domainTree = JSON.parse(res.text);
-                console.log('domainTree: ',res.text)
-        
-                that.setState(
-                    {
+                that.setState({
                         domainName: domainTree.Domain
-                    });
-                }
+                });
+            }
         });
     }
 

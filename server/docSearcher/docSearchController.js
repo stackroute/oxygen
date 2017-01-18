@@ -64,72 +64,77 @@ const getURL = function (searchQuery, i, callback) {
  */
 const storeURL = function (searchEngineParams) {
     let stack = [];
-
+    let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
+    key = key.replace(/ +/g, "_");
+    logger.debug('Key: ', key);
     async.waterfall([
             async.apply(getURL, searchEngineParams),
             async.asyncify(function (urlResponse) {
-                return db.model.create(contents);
+                client.setex(key, 600, JSON.stringify(urlResponse), function(error){
+                    if(error) {
+                        logger.error('Error occured while setting data in redis cache..');
+                    }
+                });
             }),
             function (prevResponse, next) {
-
+                logger.info(prevResponse);
             }
-        ]
-    );
+        ],callback);
 
-    let sendData = function (errs, res) {
-        if (errs) {
-            logger.error("some error in google api :")
-            logger.error(errs)
-            return errs;
-        }
-        if (res.length !== 0) {
-            res.map((ele) => {
-                ele.map((data, i) => {
-                    //send.push(data);
-                    // let saveUrl=new searchModel(data);
-                    // saveUrl.save(function (saveErr,savedObj) {
-                    //  if (saveErr) {
-                    //   logger.error(saveErr);
-                    // }
-                    // else {
-                    logger.debug("sending " + i + " " + data.query);
-                    let msgObj = {
-                        domain: jobDetails.exactTerms,
-                        concept: jobDetails.query,
-                        url: data.url,
-                        title: data.title,
-                        description: data.description
-                    };
-                    //searchModel.close()
-                    // startCrawlerMQ(msgObj);
+    // let sendData = function (errs, res) {
+    //     if (errs) {
+    //         logger.error("some error in google api :")
+    //         logger.error(errs)
+    //         return errs;
+    //     }
+    //     if (res.length !== 0) {
+    //         res.map((ele) => {
+    //             ele.map((data, i) => {
+    //                 //send.push(data);
+    //                 // let saveUrl=new searchModel(data);
+    //                 // saveUrl.save(function (saveErr,savedObj) {
+    //                 //  if (saveErr) {
+    //                 //   logger.error(saveErr);
+    //                 // }
+    //                 // else {
+    //                 logger.debug("sending " + i + " " + data.query);
+    //                 let msgObj = {
+    //                     domain: jobDetails.exactTerms,
+    //                     concept: jobDetails.query,
+    //                     url: data.url,
+    //                     title: data.title,
+    //                     description: data.description
+    //                 };
+    //                 //searchModel.close()
+    //                 // startCrawlerMQ(msgObj);
 
-                    let RedisSearch = {
-                        domain: jobDetails.exactTerms,
-                        actor: 'searcher',
-                        message: jobDetails.query,
-                        status: 'search completed'
-                    }
-                    datapublisher.processFinished(RedisSearch);
-                    //ch.sendToQueue('hello', new Buffer(objId));
-                    let redisCrawl = {
-                        domain: jobDetails.exactTerms,
-                        actor: 'crawler',
-                        message: data.url,
-                        status: 'crawl started for the url'
-                    }
-                    datapublisher.processStart(redisCrawl);
-                })
-            })
-        }
-        return {msg: "done on searcher and sent msg to crawler"};
-    }
-    return sendData;
+    //                 let RedisSearch = {
+    //                     domain: jobDetails.exactTerms,
+    //                     actor: 'searcher',
+    //                     message: jobDetails.query,
+    //                     status: 'search completed'
+    //                 }
+    //                 datapublisher.processFinished(RedisSearch);
+    //                 //ch.sendToQueue('hello', new Buffer(objId));
+    //                 let redisCrawl = {
+    //                     domain: jobDetails.exactTerms,
+    //                     actor: 'crawler',
+    //                     message: data.url,
+    //                     status: 'crawl started for the url'
+    //                 }
+    //                 datapublisher.processStart(redisCrawl);
+    //             })
+    //         })
+    //     }
+    //     return {msg: "done on searcher and sent msg to crawler"};
+    // }
+    // return sendData;
 }
 
 const checkRecentlySearched = function(msg){
 	let promise = new Promise(function(resolve, reject) {
 		let result  = {
-			id: '',
+			msg: msg,
 			isRecent: false
 		}
 		client.on("error", function (err) {
@@ -140,7 +145,6 @@ const checkRecentlySearched = function(msg){
 				logger.error("Error while fetching the id from the redis")
 			}
 			else if(reply != null) {
-                result.msg = msg
 				result.isRecent = true
 			}
 		    // reply is null when the key is missing
@@ -158,19 +162,18 @@ const checkRecentlySearched = function(msg){
 	return promise;
 }
 
-const fetchPrevSearchResult= function(dataObj){
+const fetchPrevSearchResult= function(searchEngineParams){
+    let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
     let promise = new Promise(function(resolve, reject) {
-
-        if (err) {
-            reject(err);
-        }
-
-        resolve();
-
+        client.get(key, function(err, cachedURLs){
+            if (err) {
+                reject(err);
+            }
+            resolve(cachedURLs);
+        });
     })
-    logger.debug("inside the fetchPrevSearchResult method",dataObj);
+    logger.debug("inside the fetchPrevSearchResult method",searchEngineParams);
     return promise;
-
 }
 
 module.exports = {
