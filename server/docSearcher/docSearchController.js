@@ -7,19 +7,26 @@ const Request = require('superagent');
 //@todo
 // const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
 const datapublisher = require('../serviceLogger/redisLogger');
+const engineColln = require('./../common/engineColln');
 const client = require('redis').createClient();
 
-const getURL = function (searchQuery, i, callback) {
-    let eng = searchQuery.engineID.split(' ');
-    let url = "https://www.googleapis.com/customsearch/v1?q=" + searchQuery.query + "&cx=" + eng[0] + "&key=" + eng[1] + "&start=" + i;
-    if (searchQuery.siteSearch !== 'NONE') {
-        url += "&siteSearch=" + searchQuery.siteSearch;
-    }
-    if (searchQuery.exactTerms !== 'NONE') {
-        url += "&exactTerms=" + searchQuery.exactTerms;
-    }
+const getURL = function (searchQuery, callback) {
+    let engine = engineColln.ENGINES;
+    let key = engineColln.KEYS;
+    // let eng = searchQuery.engineID.split(' ');
+    // let url = "https://www.googleapis.com/customsearch/v1?q=Class&cx="+engine+
+    //             "&key="+key+"&exactTerms=Java" 
+    let url = "https://www.googleapis.com/customsearch/v1?q=" + 
+        searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 
+        + searchQuery.start + "&exactTerms=" + searchQuery.domain;
+    // if (searchQuery.siteSearch !== 'NONE') {
+    //     url += "&siteSearch=" + searchQuery.siteSearch;
+    // }
+    // if (searchQuery.domain !== 'NONE') {
+    //     url += "&exactTerms=" + searchQuery.domain;
+    // }
     let searchResults = [];
-    console.log(i + " " + url + " " + searchQuery.results);
+    console.log(" " + url + " " + searchQuery.nbrOfResults);
     Request
         .get(url)
         .end(function (err, body) {
@@ -33,23 +40,23 @@ const getURL = function (searchQuery, i, callback) {
             }
 
             if (typeof data !== "undefined" && Object.keys(data).length === 6) {
-                logger.debug("retrived the" + data.items.length +
-                    "document for concept" + searchQuery.query);
+                logger.debug("retrieved the " + data.items.length +
+                    " document for concept " + searchQuery.concept);
 
                 for (let k = 0; k < data.items.length; k += 1) {
 
-                    if ((i + k) <= searchQuery.results) {
+                    // if ((i + k) <= searchQuery.nbrOfResults) {
                         let searchResult = {
-                            "jobID": searchQuery._id,
-                            "query": searchQuery.query,
+                            // "jobID": searchQuery._id,
+                            "query": searchQuery.concept,
                             "title": data.items[k].title,
                             "url": data.items[k].link,
                             "description": data.items[k].snippet
                         };
                         searchResults.push(searchResult);
-                    } else {
-                        break;
-                    }
+            //         } else {
+            //             break;
+                    // }
 
                     //@todo srini will store the logs in mongo db
                 }
@@ -75,9 +82,11 @@ const storeURL = function (searchEngineParams) {
                         logger.error('Error occured while setting data in redis cache..');
                     }
                 });
+                return urlResponse
             }),
             function (prevResponse, next) {
-                logger.info(prevResponse);
+                logger.debug("prevResponse: ", prevResponse);
+                logger.debug("next: ", next);
             }
         ],callback);
 
@@ -165,6 +174,9 @@ const checkRecentlySearched = function(msg){
 const fetchPrevSearchResult= function(searchEngineParams){
     let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
     let promise = new Promise(function(resolve, reject) {
+        client.on("error", function (err) {
+            logger.error("Error in Redis:" + err);
+        });
         client.get(key, function(err, cachedURLs){
             if (err) {
                 reject(err);

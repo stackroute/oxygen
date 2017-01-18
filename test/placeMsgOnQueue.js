@@ -30,6 +30,6 @@ let msg = {
     domain: 'Java Web Programming',
     concept: 'Class',
     start: '1',
-    nbrOfResults: '5'
+    nbrOfResults: '10'
 };
 sendToQueue(config.RABBITMQ.rabbitmqURL, config.OXYGEN.SEARCHER_MQ_NAME, msg);
