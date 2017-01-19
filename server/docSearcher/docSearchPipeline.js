@@ -36,11 +36,10 @@ const startSearcher = function() {
                             }, { noAck: true });
                         })
                         .map(function(msg) {
-                            logger.info("Entered in checkRecentlySearched function for ", msg);
+                            logger.debug("Entered in checkRecentlySearched function for ", msg);
 
                             let promise = controller.checkRecentlySearched(msg)
                                 // let promise = controller.checkRecentlySearched(domain, concept, start, nbrOfResult);
-
                             return promise;
                         })
                         .flatMap(promise => highland(
@@ -48,11 +47,11 @@ const startSearcher = function() {
                             .then(function(result) {
                                 if (result.isRecent) {
                                     logger.info("Fetching the previously stored data");
-                                    let storedres = controller.fetchPrevSearchResult(result.id)
-                                    return storedres;
+                                    let stored_res = controller.fetchPrevSearchResult(result.msg)
+                                    return stored_res;
                                 } else {
+                                    logger.debug("Check on google with the given domain and concepts");
                                     let google_res = controller.storeURL(result.msg)
-                                    logger.info("Check on google with the given domain and concepts");
                                     return google_res;
                                 }
                             }, function(err) {
