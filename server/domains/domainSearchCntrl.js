@@ -7,12 +7,11 @@ const addSearch = function(domainName,concept,selector) {
 	logger.debug('addSearch','fetching reqdata')
 	logger.debug(domainName+" "+concept)
 	let reqData={
-		query: concept,
+		concept: concept,
 		// engineID: engineData.engine[selector]+" "+engineData.key[selector],
-		exactTerms: domainName,
-		results: config.NO_OF_RESULTS,
-		siteSearch: 'NONE'
-
+		domain: domainName,
+		start: 1,
+		results: config.NO_OF_RESULTS
 	}		
 	logger.debug('Before search queue');
 	sendToSearcherQueue(config.RABBITMQ.rabbitmqURL, config.OXYGEN.SEARCHER_MQ_NAME, reqData);
