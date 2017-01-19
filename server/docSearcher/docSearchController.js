@@ -9,6 +9,7 @@ const Request = require('superagent');
 const datapublisher = require('../serviceLogger/redisLogger');
 const engineColln = require('./../common/engineColln');
 const client = require('redis').createClient();
+const config = require('./../../config');
 
 const getURL = function (searchQuery, callback) {
     let engine = engineColln.ENGINES;
@@ -26,7 +27,6 @@ const getURL = function (searchQuery, callback) {
     //     url += "&exactTerms=" + searchQuery.domain;
     // }
     let searchResults = [];
-    console.log(" " + url + " " + searchQuery.nbrOfResults);
     Request
         .get(url)
         .end(function (err, body) {
@@ -48,6 +48,7 @@ const getURL = function (searchQuery, callback) {
                     // if ((i + k) <= searchQuery.nbrOfResults) {
                         let searchResult = {
                             // "jobID": searchQuery._id,
+                            "domain": searchQuery.domain,
                             "query": searchQuery.concept,
                             "title": data.items[k].title,
                             "url": data.items[k].link,
@@ -69,153 +70,93 @@ const getURL = function (searchQuery, callback) {
 /*
  searchEngineParams ??
  */
-const storeURL = function (searchEngineParams) {
+const getGoogleResults = function (searchEngineParams) {
     let stack = [];
-    let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
-    key = key.replace(/ +/g, "_");
-    async.waterfall([
+    let key = generateKey(searchEngineParams);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
             async.apply(getURL, searchEngineParams),
             async.asyncify(function (urlResponse) {
                 logger.debug("Key of storeURL: ", key)
-                client.setex(key, 600, JSON.stringify(urlResponse), function(error){
+                client.setex(key, config.CACHE_EXPIRY_TIME, JSON.stringify(urlResponse), function(error){
                     if(error) {
                         logger.error('Error occured while setting data in redis cache..');
                     }
                 });
-                return urlResponse
-            }),
-            function (prevResponse, next) {
-                logger.debug("prevResponse: ");
-                // logger.debug("next: ", next);
-            }
-        ]);
-
-    // let sendData = function (errs, res) {
-    //     if (errs) {
-    //         logger.error("some error in google api :")
-    //         logger.error(errs)
-    //         return errs;
-    //     }
-    //     if (res.length !== 0) {
-    //         res.map((ele) => {
-    //             ele.map((data, i) => {
-    //                 //send.push(data);
-    //                 // let saveUrl=new searchModel(data);
-    //                 // saveUrl.save(function (saveErr,savedObj) {
-    //                 //  if (saveErr) {
-    //                 //   logger.error(saveErr);
-    //                 // }
-    //                 // else {
-    //                 logger.debug("sending " + i + " " + data.query);
-    //                 let msgObj = {
-    //                     domain: jobDetails.exactTerms,
-    //                     concept: jobDetails.query,
-    //                     url: data.url,
-    //                     title: data.title,
-    //                     description: data.description
-    //                 };
-    //                 //searchModel.close()
-    //                 // startCrawlerMQ(msgObj);
-
-    //                 let RedisSearch = {
-    //                     domain: jobDetails.exactTerms,
-    //                     actor: 'searcher',
-    //                     message: jobDetails.query,
-    //                     status: 'search completed'
-    //                 }
-    //                 datapublisher.processFinished(RedisSearch);
-    //                 //ch.sendToQueue('hello', new Buffer(objId));
-    //                 let redisCrawl = {
-    //                     domain: jobDetails.exactTerms,
-    //                     actor: 'crawler',
-    //                     message: data.url,
-    //                     status: 'crawl started for the url'
-    //                 }
-    //                 datapublisher.processStart(redisCrawl);
-    //             })
-    //         })
-    //     }
-    //     return {msg: "done on searcher and sent msg to crawler"};
-    // }
-    // return sendData;
-}
-
-const checkRecentlySearched = function(searchEngineParams){
-    let result  = {
-        msg: searchEngineParams,
-        isRecent: false
-    }
-	let promise = new Promise(function(resolve, reject) {
-		client.on("error", function (err) {
-		    logger.error("Error in Redis:" + err);
-		}); 
-        let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
-		key = key.replace(/ +/g, "_");
-        logger.debug("Key of checkRecent: ", key)
-        // aync.waterfall([
-        //     client.get(key, function(err, reply) {
-        //         logger.debug("Key of getRedis: ", key)
-        //         if(err) {
-        //             logger.error("Error while fetching the id from the redis")
-        //         }
-        //         else if(reply != null) {
-        //             result.isRecent = true
-        //         }
-        //         logger.debug("result1 ", result)
-        //         // reply is null when the key is missing
-        //         return result
-        //     }),
-        //     // function(result) {
-        //     //     logger.debug("result2 ", result)
-        //         resolve(result)
-        //     // }
-        // ]);
-        client.get(key, function(err, reply) {
-            logger.debug("Key of getRedis: ", key)
-			if(err) {
-				logger.error("Error while fetching the id from the redis")
-			}
-			else if(reply != null) {
-				result.isRecent = true
-			}
-            logger.debug("result1 ", result)
-		    // reply is null when the key is missing
-		});
-
-		if (!result.isRecent) {
-			reject(err);
-		}
-        logger.debug("result2 ", result)
-		resolve(result);
-	})
-	return promise;
-}
-
-const fetchPrevSearchResult= function(searchEngineParams){
-    let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
-    key = key.replace(/ +/g, "_");
-    let promise = new Promise(function(resolve, reject) {
-        client.on("error", function (err) {
-            logger.error("Error in Redis:" + err);
-        });
-        client.get(key, function(err, cachedURLsData){
-            if (err) {
-                reject(err);
-            }
-            // let result = {
-            //     // data: searchEngineParams,
-            //     cachedURLs: cachedURLs
+                resolve(urlResponse);
+            })
+            // function (prevResponse, next) {
+            //     logger.debug("prevResponse: ", prevResponse);
+            //     // logger.debug("next: ", next);
             // }
-            resolve(cachedURLsData);
-        });
+        ]);
     })
-    // logger.debug("inside the fetchPrevSearchResult method",searchEngineParams);
     return promise;
 }
 
+const checkInRecentlySearched = function(searchEngineParams){
+    // let result  = {
+    //     msg: searchEngineParams,
+    //     isRecent: false
+    // }
+	let promise = new Promise(function(resolve, reject) {
+        let result = {
+            msg: searchEngineParams,
+            isRecent: false,
+            results: []
+        }
+		client.on("error", function (err) {
+		    logger.error("Error in Redis:" + err);
+		}); 
+
+        let key = generateKey(searchEngineParams);
+        
+        client.get(key, function(err, reply) {
+
+			if(err) {
+				logger.error("Error while fetching the id from the redis ", err);
+                reject(err);
+			}
+            else if(reply != null) {
+                result.isRecent = true
+                result.results = JSON.parse(reply);
+            }
+            resolve(result);
+		}); //end of getting key/value from redis
+	}); //end of promise
+	return promise;
+}
+
+function generateKey (searchEngineParams) {
+    let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
+    return key.replace(/ +/g, "_"); 
+}
+
+// const fetchPrevSearchResult= function(searchEngineParams){
+//     let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
+//     key = key.replace(/ +/g, "_");
+//     let promise = new Promise(function(resolve, reject) {
+//         client.on("error", function (err) {
+//             logger.error("Error in Redis:" + err);
+//         });
+//         client.get(key, function(err, cachedURLsData){
+//             if (err) {
+//                 reject(err);
+//             }
+//             // let result = {
+//             //     // data: searchEngineParams,
+//             //     cachedURLs: cachedURLs
+//             // }
+//             resolve(cachedURLsData);
+//         });
+//     })
+//     // logger.debug("inside the fetchPrevSearchResult method",searchEngineParams);
+//     return promise;
+// }
+
 module.exports = {
-    storeURL: storeURL,
+    getGoogleResults: getGoogleResults,
     getURL: getURL,
-    checkRecentlySearched: checkRecentlySearched,
-    fetchPrevSearchResult: fetchPrevSearchResult
+    checkInRecentlySearched: checkInRecentlySearched
+    // fetchPrevSearchResult: fetchPrevSearchResult
 };
