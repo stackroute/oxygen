@@ -34,7 +34,6 @@ const errorMessages= {
 } ;
 
 export default class AddDomain extends React.Component {
-
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);

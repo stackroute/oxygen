@@ -37,11 +37,11 @@ class Welcome extends React.Component {
       open={this.state.open}
       onRequestChange={(open) => this.setState({open})}>
       <Link to='/job'>
-      <MenuItem onTouchTap={this.handleToggle}>
-      <IconButton><ActionSearch /></IconButton>
-      <FlatButton label='Job' hoverColor= '#e8f1fb' labelStyle={{textAlign: 'left'}}
-      style = {{fontSize: '50px', marginTop: '4px'}}/>
-      </MenuItem>
+        <MenuItem onTouchTap={this.handleToggle}>
+          <IconButton><ActionSearch /></IconButton>
+          <FlatButton label='Job' hoverColor= '#e8f1fb' labelStyle={{textAlign: 'left'}}
+          style = {{fontSize: '50px', marginTop: '4px'}}/>
+        </MenuItem>
       </Link>
       <Link to='/dashboard'>
       <MenuItem onTouchTap={this.handleToggle}>
