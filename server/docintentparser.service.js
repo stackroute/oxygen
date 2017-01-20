@@ -1,5 +1,6 @@
 const logger = require('../applogger');
-const intentParserEngine = require('./intentParser/docIntentParserEngine');
+// const intentParserEngine = require('./intentParser/docIntentParserEngine');
+const intentParserEngine = require('./docIntentParser/docIntentParserPipeline');
 const config = require('../config');
 
 const mongoose = require('mongoose');

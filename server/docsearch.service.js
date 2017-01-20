@@ -1,11 +1,9 @@
+const mongoose = require('mongoose');
+const path = require('path');
 const logger = require('../applogger');
 // const searcherEngine = require('./searcher/docSearcherEngine');
 const docSearchPipeline = require('./docSearcher/docSearchPipeline');
 const config = require('../config');
-
-const mongoose = require('mongoose');
-
-const path = require('path');
 
 function setupMongooseConnections() {
   mongoose.connect(config.MONGO.mongoURL);
