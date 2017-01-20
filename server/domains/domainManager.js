@@ -1,6 +1,6 @@
 const domainNeo4jController = require('./domainNeo4jController');
-const docSearchJobMgr = require('../docSearchJob/docSearchJobManager');
-
+// const docSearchJobMgr = require('../docSearchJob/docSearchJobManager');
+const domainSearchMngr = require('./domainSearchMngr');
 const neo4jDriver = require('neo4j-driver').v1;
 
 const logger = require('./../../applogger');
@@ -80,7 +80,7 @@ let buildDomainIndex = function(domainName) {
     domainNeo4jController.getDomainConcept(domainName)
       .then(function(conceptsColln) {
         resolve(conceptsColln);
-        docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
+        domainSearchMngr.kickOffDomainIndexing(conceptsColln)
           .then(function(result) {
             logger.debug(result)
             resolve(conceptsColln);

@@ -7,9 +7,10 @@ const checkRecentlySearched = require('./docSearchController').checkRecentlySear
 const fetchPrevSearchResult = require('./docSearchController').fetchPrevSearchResult;
 
 const startSearcher = function() {
-    let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
 
-    amqpConn
+    highland(function(push, next){
+        let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
+        amqpConn
         .then(function(conn) {
             logger.info('[*] Connected to AMQP successfully..!');
             return conn.createChannel();
@@ -21,58 +22,66 @@ const startSearcher = function() {
                 .then(function(ok) {
                     logger.debug('[*] Waiting for messages on [' + config.OXYGEN.SEARCHER_MQ_NAME +
                         '], to exit press CTRL+C ');
+                    chConn.consume(config.OXYGEN.SEARCHER_MQ_NAME, function(msg) {
 
-                    highland(function(push, next) {
+                        //convert from buffer to a JSON object
+                        msg = JSON.parse(msg.content.toString());
 
-                            chConn.consume(config.OXYGEN.SEARCHER_MQ_NAME, function(msg) {
+                        logger.debug("[*] Got message ", msg);
 
-                                //convert from buffer to a JSON object
-                                msg = JSON.parse(msg.content.toString());
+                        push(null, msg)
+                        next();
+                    }, 
+                    { 
+                        noAck: true 
+                    });
+                });
+        });
+    })
+    .map(function(msg) {
+        logger.debug("Entered in checkRecentlySearched function for ", msg);
 
-                                logger.debug("[*] Got message ", msg);
-
-                                push(null, msg)
-                                next();
-                            }, { noAck: true });
-                        })
-                        .map(function(msg) {
-                            logger.info("Entered in checkRecentlySearched function for ", msg);
-
-                            let promise = controller.checkRecentlySearched(msg)
-                                // let promise = controller.checkRecentlySearched(domain, concept, start, nbrOfResult);
-
-                            return promise;
-                        })
-                        .flatMap(promise => highland(
-                            promise
-                            .then(function(result) {
-                                if (result.isRecent) {
-                                    logger.info("Fetching the previously stored data");
-                                    let stored_res = controller.fetchPrevSearchResult(result.msg)
-                                    return stored_res;
-                                } else {
-                                    logger.info(result.msg);
-                                    let google_res = controller.storeURL(result.msg)
-                                    logger.info("Check on google with the given domain and concepts");
-                                    return google_res;
-                                }
-                            }, function(err) {
-                                return err;
-                            })
-                        ))
-                        .flatMap(promise => highland(
-                            promise
-                            .then(function(result) {
-                                return result
-                            }, function(err) {
-                                return err;
-                            })
-                        ))
-                        .each(function(result) {
-                            logger.info('Highland function ends')
-                        })
-                })
-        })
+        let promise = controller.checkInRecentlySearched(msg)
+            // let promise = controller.checkRecentlySearched(domain, concept, start, nbrOfResult);
+        return promise;
+    })
+    .flatMap(promise => highland(
+        promise.then(
+            function(result) {
+                return result;
+            }
+            , function(err) {
+                return err;
+            })
+    ))
+    .map(function(recentSearchResult){
+        if (recentSearchResult.isRecent) {
+            logger.debug("Fetching the previously stored data");
+            // return recentSearchResult.results;
+            let prev_res = new Promise(function(resolve, reject) {
+                resolve(recentSearchResult.results)
+            })
+            return prev_res
+        } else {
+            logger.debug("Making a Google search request and storing the data in Redis");
+            return controller.getGoogleResults(recentSearchResult.msg)
+        }
+    })
+    .flatMap(promise => highland(
+        promise.then(
+            function(result) {
+                return result;
+            }
+            , function(err) {
+                return err;
+            })
+    ))
+    // .error(function(err){
+    //     logger.error("Error in search pipeline: ", err);
+    // })
+    .each(function(result) {
+        logger.info('Highland function ends', result);
+    })
 }
 
 module.exports = {

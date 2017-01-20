@@ -22,12 +22,12 @@ function sendToQueue(qURL, qName, qMsg, callback) {
             });
         }).finally(function() { conn.close(); });
     }).catch(function(err){
-      logger.error(err);
+        logger.error(err);
     });
 }
 
 let msg = {
-    domain: 'Java Web Programming',
+    domain: 'Java',
     concept: 'Class',
     start: '1',
     nbrOfResults: '10'
