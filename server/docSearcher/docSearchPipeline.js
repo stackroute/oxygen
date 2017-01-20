@@ -5,6 +5,7 @@ const highland = require('highland');
 const controller = require('./docSearchController');
 const checkRecentlySearched = require('./docSearchController').checkRecentlySearched;
 const fetchPrevSearchResult = require('./docSearchController').fetchPrevSearchResult;
+const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
 
 const startSearcher = function() {
 
@@ -80,7 +81,14 @@ const startSearcher = function() {
     //     logger.error("Error in search pipeline: ", err);
     // })
     .each(function(result) {
-        logger.info('Highland function ends', result);
+        logger.info('Highland function ends');
+        result.forEach( function(res, i) {
+            startCrawlerMQ(res);
+        });
+        // for(let a=0; a<result.length; a++) {
+        //     // logger.debug("URL: ", result[a].url)
+        //     startCrawlerMQ(result[a]);
+        // }
     })
 }
 

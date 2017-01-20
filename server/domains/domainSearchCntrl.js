@@ -11,7 +11,7 @@ const addSearch = function(domainName,concept,selector) {
 		// engineID: engineData.engine[selector]+" "+engineData.key[selector],
 		domain: domainName,
 		start: 1,
-		results: config.NO_OF_RESULTS
+		nbrOfResults: config.NO_OF_RESULTS
 	}		
 	logger.debug('Before search queue');
 	sendToSearcherQueue(config.RABBITMQ.rabbitmqURL, config.OXYGEN.SEARCHER_MQ_NAME, reqData);

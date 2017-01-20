@@ -81,6 +81,7 @@ let buildDomainIndex = function(domainName) {
       .then(function(conceptsColln) {
         resolve(conceptsColln);
         domainSearchMngr.kickOffDomainIndexing(conceptsColln)
+        // docSearchJobMgr.kickOffDomainIndexing(conceptsColln)
           .then(function(result) {
             logger.debug(result)
             resolve(conceptsColln);

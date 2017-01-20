@@ -17,7 +17,7 @@ let kickOffDomainIndexing = function(conceptsColln) {
             }
             else
             {
-              logger.debug('kick inside else');
+              logger.debug('kickoff inside else');
               selector=0;
               searchCtrl.addSearch(conceptsColln.Domain, concept,selector);
             }

@@ -15,8 +15,6 @@ const getURL = function (searchQuery, callback) {
     let engine = engineColln.ENGINES;
     let key = engineColln.KEYS;
     // let eng = searchQuery.engineID.split(' ');
-    // let url = "https://www.googleapis.com/customsearch/v1?q=Class&cx="+engine+
-    //             "&key="+key+"&exactTerms=Java" 
     let url = "https://www.googleapis.com/customsearch/v1?q=" + 
         searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 
         + searchQuery.start + "&exactTerms=" + searchQuery.domain;
@@ -49,7 +47,7 @@ const getURL = function (searchQuery, callback) {
                         let searchResult = {
                             // "jobID": searchQuery._id,
                             "domain": searchQuery.domain,
-                            "query": searchQuery.concept,
+                            "concept": searchQuery.concept,
                             "title": data.items[k].title,
                             "url": data.items[k].link,
                             "description": data.items[k].snippet
@@ -59,7 +57,6 @@ const getURL = function (searchQuery, callback) {
             //             break;
                     // }
 
-                    //@todo srini will store the logs in mongo db
                 }
                 callback(null, searchResults);
             }
@@ -85,20 +82,12 @@ const getGoogleResults = function (searchEngineParams) {
                 });
                 resolve(urlResponse);
             })
-            // function (prevResponse, next) {
-            //     logger.debug("prevResponse: ", prevResponse);
-            //     // logger.debug("next: ", next);
-            // }
         ]);
     })
     return promise;
 }
 
 const checkInRecentlySearched = function(searchEngineParams){
-    // let result  = {
-    //     msg: searchEngineParams,
-    //     isRecent: false
-    // }
 	let promise = new Promise(function(resolve, reject) {
         let result = {
             msg: searchEngineParams,
@@ -131,28 +120,6 @@ function generateKey (searchEngineParams) {
     let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
     return key.replace(/ +/g, "_"); 
 }
-
-// const fetchPrevSearchResult= function(searchEngineParams){
-//     let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
-//     key = key.replace(/ +/g, "_");
-//     let promise = new Promise(function(resolve, reject) {
-//         client.on("error", function (err) {
-//             logger.error("Error in Redis:" + err);
-//         });
-//         client.get(key, function(err, cachedURLsData){
-//             if (err) {
-//                 reject(err);
-//             }
-//             // let result = {
-//             //     // data: searchEngineParams,
-//             //     cachedURLs: cachedURLs
-//             // }
-//             resolve(cachedURLsData);
-//         });
-//     })
-//     // logger.debug("inside the fetchPrevSearchResult method",searchEngineParams);
-//     return promise;
-// }
 
 module.exports = {
     getGoogleResults: getGoogleResults,
