@@ -407,7 +407,7 @@ getCheckedIntents(conceptWithDocCnt) {
                       sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>
                 </Col>
             </Row>
-             <Row>
+             <Row style={{padding:"0 20px"}}>
                  <Col sm={5} xs={5} md={5} style={{float:'left'}}>
                     <AutoCompleteSearchBox concepts={this.state.concepts}
                       searchDocument={this.searchDocuments.bind(this)}
