@@ -55,8 +55,6 @@ const getURL = function(jobDetails, i, callback) {
         }
         callback(null, searchResults);
       }
-
-
     });
 
 }

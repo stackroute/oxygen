@@ -52,7 +52,7 @@ let getAllDomainConcept = function (domainNameColln) {
     let promise = new Promise(function (resolve, reject) {
 
         logger.debug(
-            "Now proceeding to retrive the concepts for all domains: ");
+            "Now proceeding to retrieve the concepts for all domains: ");
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
                 encrypted: false
@@ -540,7 +540,7 @@ let getTreeOfDomain = function (data) {
     
     let promise = new Promise(function (resolve, reject) {
         logger.debug("Start: tree structure of domain : ", data.domainName);
-        fs.writeFile('webclient/assets/data/'+data.domainName + '_concepts_tree.json', '');
+        fs.writeFile(data.domainName + '_concepts_tree.json', '');
         var treeData = [];
         var tree = {
             "name": "Java Web Programming",
@@ -575,20 +575,19 @@ let getTreeOfDomain = function (data) {
                 p3 = p3.replace(/},/g, "},\n\t");
                 p3 = p3.replace(/\\"/g, "");
                 p3 = p3.replace(/,/g, ",\n\t");
-                fs.writeFile('webclient/assets/data/'+data.domainName + '_concepts_tree.json', p3, function (err) {
+                fs.writeFile(data.domainName + '_concepts_tree.json', p3, function (err) {
                     if (err) {
                         reject(err);
                     }
                 });
                 resolve(p3);
-                // logger.debug(p3);
-                // logger.debug('domain ctrl',data);
+               
             });
             
     });
-    logger.debug('neo',promise);
     return promise;
 }
+
 let deleteDomain = function(domain) {
     var neo4j = require('neo4j-driver').v1;
     var driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "password"));
@@ -610,9 +609,11 @@ let deleteDomain = function(domain) {
         }
     });
 }
+
 let deleteDomainCallback = function(domain, callback) {
     deleteDomain(domain)
 }
+
 let indexNewDomainCallBack = function (newDomainObj, callback) {
     indexNewDomain(newDomainObj).then(function (indexedDomainObj) {
         callback(null, indexedDomainObj);
@@ -692,5 +693,6 @@ module.exports = {
     getWebDocuments: getWebDocuments,
     getIntentforDocument: getIntentforDocument,
     getTreeOfDomain: getTreeOfDomain,
-    getTreeOfDomainCallback: getTreeOfDomainCallback
+    getTreeOfDomainCallback: getTreeOfDomainCallback,
+    deleteDomainCallback: deleteDomainCallback
 }

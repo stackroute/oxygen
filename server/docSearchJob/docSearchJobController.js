@@ -3,7 +3,8 @@ const logger = require('./../../applogger');
 const docSearchJobModel = require('./docSearchJobEntity').docSearchJobModel;
 const engineModel = require('./docSearchJobEntity').engineModel;
 const searchModel = require('./../searcher/searchEntity').searchModel;
-const startSearcherMQ=require('./docOpenSearcherEngine').startSearcher;
+// const sendToSearcherQueue=require('./../domains/openSearcherMQ').sendToSearcherQueue;
+const startSearcherMQ = require('./docOpenSearcherEngine').startSearcher;
 const config = require('./../../config');
 
 const addJob = function(jobData, callback) {

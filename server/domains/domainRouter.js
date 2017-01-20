@@ -203,6 +203,26 @@ router.post('/documents/:domainName', function (req, res) {
 
 });
 
+// router.get('/domainhomeview/:domainName', function (req, res) {
+//     console.log('in DomainRouter')
+//     try {
+//         let reqObj = {
+//             domainName: req.params.domainName,
+//             data: req.body
+//     };
+
+//         logger.debug("DomainHomeView: Begining to get tree structure ", reqObj);
+//         console.log('reqObj', reqObj);
+//         res.send(domainCtrl.getTreeOfDomain(reqObj));
+//         return;
+//     } catch (err) {
+//         logger.error("Caught a error in posting URLs manually ", err);
+//         res.status(500).send({
+//             error: "Error: Failed get the tree structure"
+
+//         });
+//     }
+// });
 router.get('/domainhomeview/:domainName', function (req, res) {
     
     console.log('in DomainRouter')

@@ -1,12 +1,12 @@
 const parserNeo4jCtrl = require('./docIntentParserNeo4jController');
 const domainNeo4jCtrl = require('./../domains/domainNeo4jController');
 const datapublisher = require('../serviceLogger/redisLogger');
-
 const logger = require('./../../applogger');
 
 let fetchIntentSpecificTerms = function(data) {
   let promise = new Promise(
     function(resolve, reject) {
+      logger.debug('Data: ', data);
       parserNeo4jCtrl.fetchIndicatorTerms(data)
         .then(function(dataObj) {
             logger.debug("Successfully fetched indicator Terms ",
@@ -27,17 +27,12 @@ let fetchIntentSpecificTerms = function(data) {
               err);
             reject(err);
           });
-
     }); //end of promise
-
   return promise;
-
 }
 
 let findIntentIntensity = function(data) {
-
   logger.debug("All the Terms " + data.terms);
-
   let indicator = 0;
   let counter = 0;
 
@@ -45,7 +40,6 @@ let findIntentIntensity = function(data) {
   data.terms.forEach(function(term) {
     logger.debug("The prop  " + term.word + " intensity " + term.intensity);
     for (let counterItr in data.counterIndicatorTerms) {
-
       if (term.word === data.counterIndicatorTerms[counterItr].term) {
         logger.debug("This is the counter word " + term.word + " intensity " + term.intensity);
         counter += (term.intensity) * (data.counterIndicatorTerms[counterItr].weight);
@@ -69,7 +63,6 @@ let findIntentIntensity = function(data) {
 }
 
 let conceptDocumentRelationship = function(data) {
-
   let promise = new Promise(
     function(resolve, reject) {
       parserNeo4jCtrl.addIntentRelationship(data).then(function(dataObj1) {
@@ -84,25 +77,21 @@ let conceptDocumentRelationship = function(data) {
         });
     }); //end of promise
   return promise;
-
 }
 
 let latestNoOfDocs= function(data) {
-domainNeo4jCtrl.getDomainCardDetails(data).then(function(result){
-logger.debug("latest No Of Docs ",
-  result.docs);
-  let dataToSend={
-    domainName : data,
-    latestNoOfDocs : result.docs
-  }
-  datapublisher.updateData(dataToSend);
-},
-function(err) {
-logger.error("Encountered error in getting latest no of docs",
-  err);
-//return(err);
-});
-
+  domainNeo4jCtrl.getDomainCardDetails(data).then(function(result){
+    logger.debug("latest No Of Docs ", result.docs);
+    let dataToSend={
+      domainName : data,
+      latestNoOfDocs : result.docs
+    }
+    datapublisher.updateData(dataToSend);
+  },
+  function(err) {
+    logger.error("Encountered error in getting latest no of docs",err);
+    //return(err);
+  });
 }
 
 module.exports = {

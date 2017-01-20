@@ -52,11 +52,10 @@ let kickOffDomainIndexing = function(conceptsColln) {
           resolve({msg:'searcher and crawler finished their work'});
 
         },
-        function(err)
-        {
+        function(err) {
           reject({msg:'faced some internal error',error:err});
         }
-        )       
+        )     
       });   
   });
 

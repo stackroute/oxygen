@@ -70,6 +70,7 @@ let indexPublishedDomain = function(domainName) {
     //process.nextTick(function() {
     let promise = new Promise(
         function(resolve, reject) {
+
             logger.debug('Off-line initialising New Domain ', domainName);
 
             async.waterfall([
@@ -174,8 +175,6 @@ let publishNewDomain = function(newDomainObj) {
                     //Kick off indexing in off-line,
                     //so the API request is not blocked till indexing is complete,
                     // as it may take long time to complete
-
-
                     indexPublishedDomain(indexedDomainObj.name).then(
                             function(domainObj) {
                                 logger.debug("going to fetch domain card details: ",
