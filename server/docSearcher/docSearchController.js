@@ -88,7 +88,7 @@ const storeURL = function (searchEngineParams) {
                 logger.debug("prevResponse: ", prevResponse);
                 logger.debug("next: ", next);
             }
-        ],callback);
+        ]);
 
     // let sendData = function (errs, res) {
     //     if (errs) {
