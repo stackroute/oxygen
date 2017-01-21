@@ -286,6 +286,7 @@ getCheckedIntents(conceptWithDocCnt) {
     let nextFlag;
     let dList = this.state.docs;
     let docsPerImg = 5;
+    let showSunburst = null;
     if(dList.length > 0) {
       let pages = Math.ceil(dList.length / docsPerImg);
       // console.log('pages '+pages);
@@ -315,6 +316,14 @@ getCheckedIntents(conceptWithDocCnt) {
       }
     }
     console.log(this.state.selectedConceptText);
+    if(this.state.domainName.length >= 1) {
+      showSunburst =  <Row style={{padding:"0 20px"}}>
+                        <Col sm={12} md={12} lg={12} xl={12} style={{marginLeft:0}} >
+                          <SunburstView domainName={this.state.domainName}
+                              sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>
+                        </Col>
+                      </Row>
+    }
     return(
       <div style={fonts}>
         <Row style={{margin: 0}}>
@@ -340,7 +349,7 @@ getCheckedIntents(conceptWithDocCnt) {
                 <Col lg={12} md={12} sm={12} xs={12}>
                   <ScreenClassRender style = {styleFunction}>
                     <h1>
-                      { this.state.domainName.toUpperCase() }
+                      { this.state.domainName }
                     </h1>
                   </ScreenClassRender>
                 </Col>
@@ -401,13 +410,8 @@ getCheckedIntents(conceptWithDocCnt) {
                   </ScreenClassRender>
                 </Col>
               </Row>
-           <Row style={{padding:"0 20px"}}>
-                <Col sm={12} md={12} lg={12} xl={12} style={{marginLeft:0}} >
-                  <SunburstView domainName={this.state.domainName}
-                      sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>
-                </Col>
-            </Row>
-             <Row style={{padding:"0 20px"}}>
+              {showSunburst}
+              <Row style={{padding:"0 20px"}}>
                  <Col sm={5} xs={5} md={5} style={{float:'left'}}>
                     <AutoCompleteSearchBox concepts={this.state.concepts}
                       searchDocument={this.searchDocuments.bind(this)}

@@ -17,7 +17,7 @@ export default class SunburstView extends React.Component {
             expandable: false
         }
     }
-    componentWillMount(){
+    componentDidMount(){
         // let th = this;
         // let promise = new Promise(function (resolve, reject) {
             // resolve(th.getTreeOfDomain());
@@ -28,19 +28,19 @@ export default class SunburstView extends React.Component {
         // })
     }
 
-    componentWillReceiveProps(nextProps) {
-        let th = this;
-        console.log(nextProps.domainName+' nextProps')
-        if(nextProps.domainName.length >= 0) {
-            let promise = new Promise(function (resolve, reject) {
-                resolve(th.getTreeOfDomain());
-                // this.getTreeOfDomain();
-            })
-        }
-        d3.json("./assets/data/Java_concepts_tree.json", function(error, json) {
-            th.setState({data: json});
-        });
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     let th = this;
+    //     console.log(nextProps.domainName+' nextProps')
+    //     if(nextProps.domainName.length >= 0) {
+    //         let promise = new Promise(function (resolve, reject) {
+    //             resolve(th.getTreeOfDomain());
+    //             // this.getTreeOfDomain();
+    //         })
+    //     }
+    //     d3.json("./assets/data/Java_concepts_tree.json", function(error, json) {
+    //         th.setState({data: json});
+    //     });
+    // }
 
     getTreeOfDomain(){
         let url = `/domain/domainhomeview/` + this.props.domainName;
@@ -50,8 +50,10 @@ export default class SunburstView extends React.Component {
             .end((err, res) => {
                 if(!err) {
                     let domainTree = JSON.parse(res.text);
-                    console.log('domainTree: ',res.text)
-                    that.setState({ domainName: domainTree.Domain });
+                    that.setState({ 
+                      domainName: domainTree.Domain,
+                      data: domainTree
+                    });
                 }
         });
     }
