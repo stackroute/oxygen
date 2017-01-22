@@ -129,6 +129,7 @@ export default class DomainHomeView extends React.Component {
   sunSelectedConcept(conceptName){
     this.state.selectedConcept.push(conceptName);
     this.setState({selectedConceptText: conceptName});
+    this.searchDocuments();
   }
   voiceConceptInput(conceptName) {
     this.state.selectedConcept.push(conceptName);
