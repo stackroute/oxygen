@@ -547,7 +547,7 @@ let getTreeOfDomain = function (data) {
             "children": []
         };
 
-        cypher('match (n:Concept) return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
+        cypher('match (n:' + graphConsts.NODE_CONCEPT + ') return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
             .on('data', function (result) {
                 treeData.push(result);
             })
