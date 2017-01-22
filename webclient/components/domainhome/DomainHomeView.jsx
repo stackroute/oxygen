@@ -102,6 +102,7 @@ export default class DomainHomeView extends React.Component {
       checkedIntent: [],
       selectedConcept: [],
       selectedConceptText: '',
+      selectedIntentText: '',
       open: false,
       show:0,
       pageNum: 1
@@ -129,11 +130,15 @@ export default class DomainHomeView extends React.Component {
     this.state.selectedConcept.push(conceptName);
     this.setState({selectedConceptText: conceptName});
   }
-  voiceInput(conceptName) {
+  voiceConceptInput(conceptName) {
     this.state.selectedConcept.push(conceptName);
     this.setState({selectedConceptText: conceptName});
   }
-getCheckedIntents(conceptWithDocCnt) {
+  voiceIntentInput(intentName) {
+    this.state.checkedIntent.push(intentName);
+    this.setState({selectedIntentText: intentName});
+  }
+  getCheckedIntents(conceptWithDocCnt) {
     let sepDoc = conceptWithDocCnt.split(' (');
     let intent = sepDoc[0];
     let prevIntents = this.state.checkedIntent;
@@ -327,79 +332,7 @@ getCheckedIntents(conceptWithDocCnt) {
     return(
       <div style={fonts}>
         <Row style={{margin: 0}}>
-          <Visible lg xl>
-            <Col sm={12} xs={12} md={2} lg={2} xl={2} style={iPanel}>
-              <SelectPanel intents={this.state.intents}
-              searchDocument={this.searchDocuments.bind(this)}
-                getCheckedIntent={this.getCheckedIntents.bind(this)}/>
-                <Row>
-                  <Col sm={12} xs={12} md={12}>
-                    {
-                      this.state.checkedIntent.length===0?
-                      <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
-                      <SelectedIntents intentChips={this.state.checkedIntent}
-                      deleteIntent={this.deleteIntents.bind(this)} />
-                    }
-                  </Col>
-                </Row>
-            </Col>
-            <Col sm = {12} xs = {12} md = {10} lg = {10} xl = {10}
-                style = {{maxWidth: 2000, marginLeft: '16.5%'}}>
-              <Row>
-                <Col lg={12} md={12} sm={12} xs={12}>
-                  <ScreenClassRender style = {styleFunction}>
-                    <h1>
-                      { this.state.domainName }
-                    </h1>
-                  </ScreenClassRender>
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={12} xs={12} md={12} lg={12} xl={12}>
-                  <AutoCompleteSearchBox concepts={this.state.concepts}
-                    searchDocument={this.searchDocuments.bind(this)}
-                    getConcept={this.getConcepts.bind(this)}/>
-                  <AutoCompleteSearchBox intents={this.state.intents}
-                    searchDocument={this.searchDocuments.bind(this)}
-                    getCheckedIntent={this.getCheckedIntents.bind(this)}/>
-                  <Row>
-                    <Col md={12} lg={12} xl={12}>
-                      {
-                        this.state.selectedConcept.length===0?<h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
-                        <SelectedConcepts conceptChips={this.state.selectedConcept}
-                          deleteConcept={this.deleteConcepts.bind(this)} />
-                      }
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-              <br/><br/>
-              <Row>
-                <Col md={12} lg={12} xl={12} style={{marginTop:'-20px'}}>
-                  {
-                    list.length===0?
-                    <h1 style={{marginTop:'15%',color:'#8aa6bd'}}>{this.state.msgSelector}</h1>:
-                    <div>
-                      {
-                        list.map((doc,i)=>{return <DocResultCard key={i} webDoc={doc}/>})
-                      }
-                      <Col md={12} lg={12} xl={12}>
-                        <IconButton style={iconStyle.leftIcon} label='prev' disabled={prevFlag} data-id='prev'
-                          iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-                          <NavigationArrowBack style={iconStyle.large} color={'white'} />
-                        </IconButton>
-                        <IconButton style={iconStyle.rightIcon} label='next' disabled={nextFlag} data-id='next'
-                          iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-                          <NavigationArrowForward style={iconStyle.large} color={'white'} />
-                        </IconButton>
-                      </Col>
-                    </div>
-                  }
-                </Col>
-              </Row>
-            </Col>
-          </Visible>
-          <Visible style={{padding:0}} md sm xs>
+          <Visible style={{padding:0}} md sm xs lg xl>
             <Col sm={12} xs={12} md={12} style={{maxWidth:2000}}>
               <Row>
                 <Col md={10} sm={10} xs={10}>
@@ -417,12 +350,12 @@ getCheckedIntents(conceptWithDocCnt) {
                       searchDocument={this.searchDocuments.bind(this)}
                       getConcept={this.getConcepts.bind(this)}
                       searchText={this.state.selectedConceptText}
-                      voiceInput={(conceptName) => this.voiceInput(conceptName)}/>
+                      voiceConceptInput={(conceptName) => this.voiceConceptInput(conceptName)}/>
                       <Row>
                         <Col sm={12} xs={12} md={12}>
                           {
                             this.state.selectedConcept.length===0?
-                            <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT CONCEPTS</h4>:
+                            <h4 style={{color:'#8aa6bd'}}>Please Select Concepts</h4>:
                             <SelectedConcepts conceptChips={this.state.selectedConcept}
                             deleteConcept={this.deleteConcepts.bind(this)} />
                           }
@@ -431,13 +364,15 @@ getCheckedIntents(conceptWithDocCnt) {
                  </Col>
                 <Col sm={5} xs={5} md={5} style={{float:'right'}}> 
                   <SelectPanel intents={this.state.intents}
-                  searchDocument={this.searchDocuments.bind(this)}
-                    getCheckedIntent={this.getCheckedIntents.bind(this)}/>
+                    searchDocument={this.searchDocuments.bind(this)}
+                    getCheckedIntent={this.getCheckedIntents.bind(this)}
+                    searchText={this.state.checkedIntent}
+                    voiceIntentInput={(intentName) => this.voiceIntentInput(intentName)} />
                     <Row>
                       <Col sm={12} xs={12} md={12}>
                         {
                           this.state.checkedIntent.length===0?
-                          <h4 style={{color:'#8aa6bd'}}>PLEASE SELECT INTENTS</h4>:
+                          <h4 style={{color:'#8aa6bd'}}>Please Select Intents</h4>:
                           <SelectedIntents intentChips={this.state.checkedIntent}
                           deleteIntent={this.deleteIntents.bind(this)} />
                         }

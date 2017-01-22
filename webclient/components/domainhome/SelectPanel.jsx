@@ -1,4 +1,5 @@
 import React from 'react';
+import VoiceSearch from './VoiceSearch';
 import Checkbox from 'material-ui/Checkbox';
 import SelectField from 'material-ui/SelectField';
 import Paper from 'material-ui/Paper';
@@ -56,6 +57,14 @@ filterFunc(searchText,key) {
       searchText: intents
     })
   }
+  handleVoiceUpdateInput(intents) {
+    console.log(intents);
+    this.setState({
+      searchText: intents
+    });
+    this.props.voiceIntentInput(intents);
+    this.props.searchDocument();
+  }
   getCheckedIntent(intents){
     this.setState({
       searchText: ''
@@ -77,9 +86,9 @@ filterFunc(searchText,key) {
       <div style={{textAlign: 'left', paddingLeft: 25}}>
       <Paper style={style} zDepth={3} rounded={false}>
         <Row style={{padding:"0 20px"}}>
-           <Col xs={10} sm={10} md={10} lg={10} xl={10} style={{paddingTop:10}}>
-           <AutoComplete
-                hintText="what intent you want to search for"
+            <Col xs={9} sm={9} md={9} lg={9} xl={9} style={{paddingTop:10}}>
+              <AutoComplete
+                hintText="What intent you want to search for"
                 filter={this.filterFunc}
                 dataSource={this.props.intents}
                 fullWidth={true}
@@ -89,11 +98,14 @@ filterFunc(searchText,key) {
                 maxSearchResults={5}
                 />
             </Col>
-             <Col xs={2} sm={2} md={2} lg={2} xl={2} style={{marginBottom: 25}}>
+            <Col xs={1} sm={1} md={1} lg={1} xl={1} style={{marginTop: 10, marginLeft: -60}}>
+              <VoiceSearch handleUpdateInput={this.handleVoiceUpdateInput.bind(this)} />
+            </Col>
+            <Col xs={2} sm={2} md={2} lg={2} xl={2} style={{marginBottom: 25}}>
                  <IconButton iconStyle={iconSize} onClick={this.props.searchDocument}>
                        <ActionSearch />
                   </IconButton>
-             </Col>
+            </Col>
         </Row>
       </Paper>
       </div>

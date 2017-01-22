@@ -52,7 +52,7 @@ export default class AutoCompleteSearchBox extends React.Component {
     this.setState({
       searchText: concept
     });
-    this.props.voiceInput(concept);
+    this.props.voiceConceptInput(concept);
     this.props.searchDocument();
   }
   getConcept(concept){

@@ -11,7 +11,7 @@ let kickOffDomainIndexing = function(conceptsColln) {
             logger.debug("inside the domain indexing "+concept)
             if(selector!==engineCollnData.KEYS.length-1)
             {
-              logger.debug('kikkoff inside if');
+              logger.debug('kickoff inside if');
               searchCtrl.addSearch(conceptsColln.Domain, concept,selector);
               selector+=1;
             }
