@@ -5,7 +5,6 @@ const datapublisher = require('../serviceLogger/redisLogger');
 const logger = require('./../../applogger');
 
 let fetchIntentSpecificTerms = function(data) {
-
   let promise = new Promise(
     function(resolve, reject) {
       parserNeo4jCtrl.fetchIndicatorTerms(data)

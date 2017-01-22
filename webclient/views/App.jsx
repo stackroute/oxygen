@@ -8,6 +8,7 @@ import Oxygen, {Welcome} from '../components/welcome/';
 import JobResult, {Job} from '../components/job/';
 import Dashboard from '../components/dashboard/';
 import Graph from '../components/graph';
+import DomainHome from '../components/domainhome';
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 injectTapEventPlugin();
 
@@ -32,6 +33,7 @@ ReactDOM.render(
   <Route path = "/jobResult/:jobID" component = {JobResult}/>
   <Route path = "/dashboard" component = {Dashboard}/>
   <Route path = "/graph/:domainName" component = {Graph}/>
+  <Route path = "/domainhome/:domainName" component= {DomainHome} />
   </Route>
   </Router>
   </MuiThemeProvider>,

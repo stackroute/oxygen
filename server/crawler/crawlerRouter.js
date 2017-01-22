@@ -26,6 +26,7 @@ Router.get('/:urlID', function(req, res) {
     });
   }
 });
+
 Router.get('/', function(req, res) {
 
   return res.status(200).json({

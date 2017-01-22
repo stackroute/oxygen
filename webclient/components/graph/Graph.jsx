@@ -1,8 +1,10 @@
 import React from 'react';
+import DomainHomeView from'./DomainHomeView';
 import AutoCompleteSearchBox from './AutoCompleteSearchBox';
 import SelectPanel from './SelectPanel';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
+import SunburstView from '../domainhome';
 import {Row, Col, ScreenClassRender, Visible} from 'react-grid-system';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -407,6 +409,11 @@ else {
     <NavigationMenu style={styles.large} color={'white'} />
     </IconButton>
     </Col>
+    </Row>
+    <Row>
+      <Col sm={12} xs={12} md={12}>
+        <SunburstView />
+      </Col>
     </Row>
     <Row>
     <Col sm={12} xs={12} md={12}>

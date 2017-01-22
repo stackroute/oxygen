@@ -7,8 +7,10 @@ require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const intentParser = function(data) {
   let processors = [];
+  logger.debug('Test Data: ', data);
 
   processors.push(highland.map(function(dataToProcess) {
+    logger.debug('Test dataToProcess: ', dataToProcess);
     logger.debug("inside fetchIntentSpecificTerms");
     let promise = parserModules.fetchIntentSpecificTerms(dataToProcess);
     return promise;
@@ -17,10 +19,12 @@ const intentParser = function(data) {
   processors.push(highland.flatMap(promise => highland(
     promise.then(
       function(result) {
-        return result; },
+        return result; 
+      },
       function(err) {
-        return err; }
-    ))));
+        return err; 
+      })
+    )));
 
   processors.push(highland.map(function(intentIntensityData) {
     logger.debug("inside findIntentIntensity");
@@ -48,14 +52,13 @@ const intentParser = function(data) {
   logger.debug(dataObj);
   let dataArr = [];
   dataArr.push(dataObj);
+  
   highland(dataArr)
     .pipe(highland.pipeline.apply(null, processors))
     .each(function(result) {
       logger.debug("result : ", result.intensity);
       let redisIntent = {
-        //domain: dataObj.domain,
         actor: 'intent parser',
-        // message: dataObj.intent,
         status: 'intent parsing completed for the particular intent'
       }
       datapublisher.processFinished(redisIntent);

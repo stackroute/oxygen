@@ -9,7 +9,7 @@ MERGE (c:Concept {name:Line.name})
 SET c.conceptid = Line.`node id`
 SET c.context = Line.context
 SET c.desc = Line.description
-
+SET c.parent = Line.`parent node id`
 #---End of creating nodes---
 
 ## create a relationship between nodes dynamically

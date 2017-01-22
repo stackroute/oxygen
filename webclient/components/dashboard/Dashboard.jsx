@@ -138,89 +138,61 @@ export default class Dashboard extends React.Component {
 				this.setState({domainList: domainList1});
 			});
 		}
-		show()
-		{
+		show() {
 			let url = `/domain/`;
 			Request
 			.get(url)
 			.end((err, res) => {
 				if(err) {
-				// res.send(err);
-				this.setState({errmsg: res.body, loading: 'hide'});
-			}
-
-			else {
-				// console.log('Response on show: ', JSON.parse(res.text));
-				// let domainList1=this.state.domainList;
-				let response = JSON.parse(res.text);
-				if(response.length === 0)
-				{
-					this.setState({domainList: [], loading: 'hide'});
+					// res.send(err);
+					console.log('Response on show fail: ');
+					this.setState({errmsg: res.body, loading: 'hide'});
 				}
 				else {
-				response.map((item,i) =>{
-		  	let colourObj = this.colourChange(item.concepts.length,item.intents.length,item.docs);
-				response[i].conceptColor = colourObj[0];
-				response[i].intentColor = colourObj[1];
-				response[i].docsColor = colourObj[2];
-				});
-					this.setState({domainList: response, loading: 'hide'});
-				}
+					console.log('Response on show success: ', JSON.parse(res.text));
+					// let domainList1=this.state.domainList;
+					let response = JSON.parse(res.text);
+					if(response.length === 0) {
+						this.setState({domainList: [], loading: 'hide'});
+					}
+					else {
+						response.map((item,i) =>{
+					  		let colourObj = this.colourChange(item.concepts.length,item.intents.length,item.docs);
+							response[i].conceptColor = colourObj[0];
+							response[i].intentColor = colourObj[1];
+							response[i].docsColor = colourObj[2];
+						});
+							this.setState({domainList: response, loading: 'hide'});
+					}
 			}
 		});
 		}
 
-		colourChange(concepts,intents,docs)
-		{
+		colourChange(concepts,intents,docs) {
 			let conceptColor=blue300;
-    	let intentColor=blue300;
+    		let intentColor=blue300;
 			let docsColor=blue300;
-			if(concepts < 11)
-			{
-				conceptColor= blue300;
-			}
-			else if(concepts < 50)
-			{
-				conceptColor= lime800;
-			}
-			else {
-				conceptColor= lightGreen500;
-			}
+			
+			if(concepts < 11) { conceptColor= blue300; }
+			else if(concepts < 50){ conceptColor= lime800; }
+			else { conceptColor= lightGreen500; }
 
-			if(intents <2)
-			{
-				intentColor= blue300;
-			}
-			else if(intents < 11)
-			{
-				intentColor= lime800;
-			}
-			else {
-				intentColor= lightGreen500;
-			}
+			if(intents <2) { intentColor= blue300; }
+			else if(intents < 11) { intentColor= lime800; }
+			else { intentColor= lightGreen500; }
 
+			if(docs <10) { docsColor= blue300; }
+			else if(docs < 20) { docsColor= lime800; }
+			else { docsColor= lightGreen500; }
 
-			if(docs <10)
-			{
-				docsColor= blue300;
-			}
-			else if(docs < 20)
-			{
-        docsColor= lime800;
-			}
-			else {
-				docsColor= lightGreen500;
-			}
 			return ([conceptColor,intentColor,docsColor]);
 		}
 
-		componentDidMount()
-		{
+		componentDidMount() {
 			this.show();
 		}
 
-		onPageClick(e)
-		{
+		onPageClick(e) {
 			let page = this.state.pageNum;
 			if(e.currentTarget.dataset.id === 'prev')
 			{
@@ -235,8 +207,7 @@ export default class Dashboard extends React.Component {
 		}
 
 
-		freshlyIndex(domain)
-		{
+		freshlyIndex(domain) {
 			// console.log('inside Index refresh '+domain);
 			let url = `/domain/` + domain + `/index`;
 			Request
@@ -249,8 +220,7 @@ export default class Dashboard extends React.Component {
 			});
 		}
 
-		updateData(obj)
-		{
+		updateData(obj) {
 			console.log('add the update function',obj);
 			//let domain=obj.data.domain;
 		//	let noOfDocs=obj.data.docs;
@@ -276,8 +246,7 @@ export default class Dashboard extends React.Component {
 
 		}
 
-		addDocument(doc)
-		{
+		addDocument(doc) {
 			let url = `/domain/`+doc.domainName+`/crawl` ;
 			Request
 			.post(url)
@@ -287,6 +256,23 @@ export default class Dashboard extends React.Component {
 					this.setState({errmsg: res.body});
 				}
 				console.log(res);
+			});
+		}
+
+		deleteDomain(domain) {
+			let url = `/domain/deletedomain/`+domain ;
+			Request
+			.delete(url)
+			.end((err, res) => {
+				if(err) {
+					this.setState({errmsg: res.body});
+				}
+				else {
+					let domainList1 = this.state.domainList.filter(function(item) {
+						return item.name != domain;
+					})
+					this.setState({domainList: domainList1})
+				}
 			});
 		}
 
@@ -345,57 +331,61 @@ export default class Dashboard extends React.Component {
 					}
 				}
 			}
+			console.log(this.state.loading);
 			return (
 				<div style={fonts}>
 				{
-					this.state.loading==="loading"?<RefreshIndicator
-					size={70}
-					left={10}
-					top={0}
-					status={this.state.loading}
-					style={style.refresh}
-					/>:<div>
-					{
-						list.length!==0?<div>
-						<br/>
-						<h1>OUR DOMAINS</h1>
-						<Container>
+					this.state.loading==="loading"?
+						<RefreshIndicator
+							size={70}
+							left={10}
+							top={0}
+							status={this.state.loading}
+							style={style.refresh}
+							/>:
+						<div>
 						{
-							list.map((item,i) =>{
+							list.length!==0?<div>
+							<br/>
+							<h1>Our Domains</h1>
+							<Container>
+							{
+								list.map((item,i) =>{
 
-								return (<Col lg={4} md={4} sm={6} xs={12} key={i}>
-									<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
-									index={i} key={i} indexs={i} ref="show" item={item}
-									addDocument={this.addDocument.bind(this)}
-									/>
-									</Col>);
-							})
+									return (<Col lg={4} md={4} sm={6} xs={12} key={i}>
+										<DomainShow freshlyIndex={this.freshlyIndex.bind(this)}
+										index={i} key={i} indexs={i} ref="show" item={item}
+										addDocument={this.addDocument.bind(this)}
+										deleteDomain={this.deleteDomain.bind(this)}
+										/>
+										</Col>);
+								})
+							}
+							</Container>
+
+							<Visible xl lg>
+							<IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
+							iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+							<NavigationArrowBack style={iconStyle.large} color={"white"} />
+							</IconButton>
+							<IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
+							iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
+							<NavigationArrowForward style={iconStyle.large} color={"white"} />
+							</IconButton>
+							</Visible>
+
+							<Visible md sm xs>
+							{smallNav}
+							</Visible>
+
+							</div>:
+							<ScreenClassRender style={errStyle}>
+							<div style={errStyle} >
+							<h1 >It seems you have not yet created any domain
+							<br/><a>Create a new domain</a></h1>
+							</div>
+							</ScreenClassRender>
 						}
-						</Container>
-
-						<Visible xl lg>
-						<IconButton style={iconStyle.leftIcon} label="prev" disabled={prevFlag} data-id="prev"
-						iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-						<NavigationArrowBack style={iconStyle.large} color={"white"} />
-						</IconButton>
-						<IconButton style={iconStyle.rightIcon} label="next" disabled={nextFlag} data-id="next"
-						iconStyle={iconStyle.iconSize} onClick={this.onPageClick.bind(this)}>
-						<NavigationArrowForward style={iconStyle.large} color={"white"} />
-						</IconButton>
-						</Visible>
-
-						<Visible md sm xs>
-						{smallNav}
-						</Visible>
-
-						</div>:
-						<ScreenClassRender style={errStyle}>
-						<div style={errStyle} >
-						<h1 >It seems you have not yet created any domain
-						<br/><a>Create a new domain</a></h1>
-						</div>
-						</ScreenClassRender>
-					}
 					</div>
 				}
 				<AddDomain
