@@ -48,6 +48,7 @@ export default class AutoCompleteConceptSearch extends React.Component {
     });
   }
   handleVoiceUpdateInput(concept) {
+    concept = concept.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     console.log(concept);
     this.setState({
       searchText: concept

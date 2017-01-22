@@ -129,23 +129,10 @@ export default class SunburstView extends React.Component {
             text.transition().attr("opacity", 0);
             path.transition()
                 .duration(750)
-                .attrTween("d", arcTween(d))
-                .each("end", function(e, i) {
-         // check if the animated element's data e lies within the visible angle span given in d
-         if (e.x >= d.x && e.x < (d.x + d.dx)) {
-            console.log("inside the if statement");
-           // get a selection of the associated text element
-           var arcText = d3.select(this.parentNode).select("text");
-           // fade in the text element and recalculate positions
-           arcText.transition().duration(750)
-             .attr("opacity", 1)
-             .attr("transform", function() { return "rotate(" + computeTextRotation(e) + ")" })
-             .attr("x", function(d) { return y(d.y); });
-                             }
-                         });
+                .attrTween("d", arcTween(d));
+                
             th.props.sunSelectedConcept(d.name);
             th.setState({expandable: true});
-            
         }
         
         d3.select(self.frameElement).style("height", height + "px");

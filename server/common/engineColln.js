@@ -1,4 +1,4 @@
 module.exports = {
-  ENGINES: ["007705081896440677668:8luezkczozo"],
-  KEYS: ["AIzaSyC6HIi_qjUiotP80FFeKzHkvcqvqaEAAM4"]
+  ENGINES: ["012746779865868269655:jkmcwcy9jt8"],
+  KEYS: ["AIzaSyCrm7xUKB7HgJVRDdXGHZ9zbXezMmigCLI"]
 }
