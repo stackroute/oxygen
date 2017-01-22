@@ -1,6 +1,6 @@
 import React from 'react';
-import AutoCompleteSearchBox from './AutoCompleteSearchBox';
-import SelectPanel from './SelectPanel';
+import AutoCompleteConceptSearch from './AutoCompleteConceptSearch';
+import AutoCompleteIntentSearch from './AutoCompleteIntentSearch';
 import DocResultCard from './DocResultCard';
 import SelectedConcepts from './SelectedConcepts';
 import SelectedIntents from './SelectedIntents';
@@ -99,7 +99,7 @@ export default class DomainHomeView extends React.Component {
       conceptsOnly: [],
       intents: [],
       docs: [],
-      checkedIntent: [],
+      selectedIntent: [],
       selectedConcept: [],
       selectedConceptText: '',
       selectedIntentText: '',
@@ -135,13 +135,13 @@ export default class DomainHomeView extends React.Component {
     this.setState({selectedConceptText: conceptName});
   }
   voiceIntentInput(intentName) {
-    this.state.checkedIntent.push(intentName);
+    this.state.selectedIntent.push(intentName);
     this.setState({selectedIntentText: intentName});
   }
-  getCheckedIntents(conceptWithDocCnt) {
+  getIntents(conceptWithDocCnt) {
     let sepDoc = conceptWithDocCnt.split(' (');
     let intent = sepDoc[0];
-    let prevIntents = this.state.checkedIntent;
+    let prevIntents = this.state.selectedIntent;
     if(this.state.intents.includes(intent)) {
       if(!prevIntents.includes(intent)) {
         prevIntents.push(intent);
@@ -169,7 +169,7 @@ export default class DomainHomeView extends React.Component {
     //     });
     // }
     this.setState({
-      checkedIntent: prevIntents
+      selectedIntent: prevIntents
     });
   }
   
@@ -183,12 +183,12 @@ export default class DomainHomeView extends React.Component {
     });
   }
   deleteIntents(data) {
-    let delIntents = this.state.checkedIntent;
+    let delIntents = this.state.selectedIntent;
     delIntents = delIntents.filter(function(intents) {
      return intents !== data;
     });
     this.setState({
-      checkedIntent: delIntents
+      selectedIntent: delIntents
     });
   }
   getIntentsAndConcepts() {
@@ -229,7 +229,7 @@ export default class DomainHomeView extends React.Component {
     else {
       let reqObj = {
         domainName: this.state.domainName,
-        reqIntents: this.state.checkedIntent,
+        reqIntents: this.state.selectedIntent,
         reqConcepts: this.state.selectedConcept
       };
       reqObj.allIntents = this.state.intents;
@@ -346,7 +346,7 @@ export default class DomainHomeView extends React.Component {
               {showSunburst}
               <Row style={{padding:"0 20px"}}>
                  <Col sm={5} xs={5} md={5} style={{float:'left'}}>
-                    <AutoCompleteSearchBox concepts={this.state.concepts}
+                    <AutoCompleteConceptSearch concepts={this.state.concepts}
                       searchDocument={this.searchDocuments.bind(this)}
                       getConcept={this.getConcepts.bind(this)}
                       searchText={this.state.selectedConceptText}
@@ -363,17 +363,17 @@ export default class DomainHomeView extends React.Component {
                       </Row>
                  </Col>
                 <Col sm={5} xs={5} md={5} style={{float:'right'}}> 
-                  <SelectPanel intents={this.state.intents}
+                  <AutoCompleteIntentSearch intents={this.state.intents}
                     searchDocument={this.searchDocuments.bind(this)}
-                    getCheckedIntent={this.getCheckedIntents.bind(this)}
-                    searchText={this.state.checkedIntent}
+                    getIntent={this.getIntents.bind(this)}
+                    searchText={this.state.selectedIntent}
                     voiceIntentInput={(intentName) => this.voiceIntentInput(intentName)} />
                     <Row>
                       <Col sm={12} xs={12} md={12}>
                         {
-                          this.state.checkedIntent.length===0?
+                          this.state.selectedIntent.length===0?
                           <h4 style={{color:'#8aa6bd'}}>Please Select Intents</h4>:
-                          <SelectedIntents intentChips={this.state.checkedIntent}
+                          <SelectedIntents intentChips={this.state.selectedIntent}
                           deleteIntent={this.deleteIntents.bind(this)} />
                         }
                       </Col>

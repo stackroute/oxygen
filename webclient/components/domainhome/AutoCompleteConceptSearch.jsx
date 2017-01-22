@@ -23,7 +23,7 @@ const iconSize = {
 }
 
 
-export default class AutoCompleteSearchBox extends React.Component {
+export default class AutoCompleteConceptSearch extends React.Component {
   constructor(props) {
     super(props)
     this.filterFunc=this.filterFunc.bind(this);
@@ -100,7 +100,7 @@ export default class AutoCompleteSearchBox extends React.Component {
     );
   }
 }
-AutoCompleteSearchBox.propTypes = {
+AutoCompleteConceptSearch.propTypes = {
   searchDocument: React.PropTypes.func,
   getConcept: React.PropTypes.func,
   concepts: React.PropTypes.arrayOf(React.PropTypes.string)

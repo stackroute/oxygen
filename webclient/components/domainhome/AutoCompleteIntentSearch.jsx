@@ -35,7 +35,7 @@ paper: {
 }
 };  
 
-export default class SelectPanel extends React.Component {
+export default class AutoCompleteIntentSearch extends React.Component {
   constructor(props) {
     super(props)
     this.filterFunc=this.filterFunc.bind(this);
@@ -65,11 +65,11 @@ filterFunc(searchText,key) {
     this.props.voiceIntentInput(intents);
     this.props.searchDocument();
   }
-  getCheckedIntent(intents){
+  getIntent(intents){
     this.setState({
       searchText: ''
     })
-    this.props.getCheckedIntent(intents);
+    this.props.getIntent(intents);
   }
   render() {
     let nest = this.props.intents.map((intents, i)=>{
@@ -77,7 +77,7 @@ filterFunc(searchText,key) {
                     key={i}
                     label={intents}
                     value={intents}
-                    onCheck={this.props.getCheckedIntent}
+                    onCheck={this.props.getIntent}
                     labelPosition='left'
                     style={styles.checkbox}
                   />);
@@ -94,7 +94,7 @@ filterFunc(searchText,key) {
                 fullWidth={true}
                 searchText={this.state.searchText}
                 onUpdateInput={this.handleUpdateInput.bind(this)}
-                onNewRequest={this.getCheckedIntent.bind(this)}
+                onNewRequest={this.getIntent.bind(this)}
                 maxSearchResults={5}
                 />
             </Col>
@@ -113,7 +113,7 @@ filterFunc(searchText,key) {
   }
 }
 
-SelectPanel.propTypes = {
-  getCheckedIntent: React.PropTypes.func,
+AutoCompleteIntentSearch.propTypes = {
+  getIntent: React.PropTypes.func,
   intents: React.PropTypes.arrayOf(React.PropTypes.string)
 };
