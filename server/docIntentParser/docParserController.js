@@ -56,7 +56,10 @@ let findIntentIntensity = function(data) {
 
   logger.debug("after calculation of counter " + counter);
   logger.debug("after calculation of indicator " + indicator);
-  let intensity = indicator - counter;
+
+  let intensity = 0;
+  if(indicator == 0 && counter ==0) intensity = 0;
+  else intensity = (indicator/(indicator+counter)) * 100;
   data.intensity = intensity;
 
   return data;
