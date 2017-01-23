@@ -45,7 +45,7 @@ let redis = {
     REDIS: redis,
     RABBITMQ: rabbitMQ,
     NO_OF_RESULTS: 5,
-    CACHE_EXPIRY_TIME: 60
+    CACHE_EXPIRY_TIME: 120
   };
 
   module.exports = config;

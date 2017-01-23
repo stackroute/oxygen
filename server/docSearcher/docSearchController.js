@@ -109,6 +109,12 @@ const checkInRecentlySearched = function(searchEngineParams){
             else if(reply != null) {
                 result.isRecent = true
                 result.results = JSON.parse(reply);
+                client.setex(key, config.CACHE_EXPIRY_TIME, reply, function(error){
+                    logger.debug("Updating the cache expiry time");
+                    if(error) {
+                        logger.error('Error occured while setting data in redis cache..');
+                    }
+                });
             }
             resolve(result);
 		}); //end of getting key/value from redis
