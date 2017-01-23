@@ -22,7 +22,7 @@ MATCH (c:concept {name:Line.name})
 MATCH (pc:concept {conceptid:Line.`parent node id`})
 call apoc.create.relationship(c, Line.`parent relation`, {}, pc) YIELD rel
 return c, pc, rel
- 
+
 ##Create a relationship if you know the relation between nodes
 USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///food.csv" AS Line
@@ -35,7 +35,7 @@ FOREACH(ignoreme in CASE WHEN rl = "related" THEN [1] ELSE [] END | MERGE (c)-[:
 
 ##Creating a Domain and create relation between domain and concepts
 
-Match (c:Concept {context: 'FOOD'}) merge (d:Domain {name:'FOOD'}) merge (c)-[r:ConceptOf]->(d) return c,r,d
+Match (c:Concept {context: 'Food'}) merge (d:Domain {name:'Food'}) merge (c)-[r:ConceptOf]->(d) return c,r,d
 
 ##To return all the node from database
 MATCH (c:Concept)
@@ -43,4 +43,3 @@ MATCH (pc:Concept)
 MATCH (d:Domain)
 MATCH (c)-[]-(pc)
 MATCH (c)-[]-(d)
-return *

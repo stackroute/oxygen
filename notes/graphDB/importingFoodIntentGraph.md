@@ -8,7 +8,7 @@ CREATE CONSTRAINT ON (c:Term) ASSERT c.name IS UNIQUE;
 
 ### Creates all nodes from the CSV, for the mentioned node type
 USING PERIODIC COMMIT 50
-LOAD CSV WITH HEADERS FROM "file:///foodConceptsToIntent.csv" AS Line
+LOAD CSV WITH HEADERS FROM "file:///FoodConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` = 'term'
 MERGE (n:Term {name:Line.name})
@@ -17,7 +17,7 @@ return n
 
 ### Creates all nodes from the CSV, for the mentioned node type
 USING PERIODIC COMMIT 50
-LOAD CSV WITH HEADERS FROM "file:///foodConceptsToIntent.csv" AS Line
+LOAD CSV WITH HEADERS FROM "file:///FoodConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` = 'intent'
 MERGE (n:Intent {name:Line.name})
@@ -27,7 +27,7 @@ return n
 
 ### Creates all nodes from the CSV, for the mentioned node type
 USING PERIODIC COMMIT 50
-LOAD CSV WITH HEADERS FROM "file:///foodConceptsToIntent.csv" AS Line
+LOAD CSV WITH HEADERS FROM "file:///FoodConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` = 'domain'
 MERGE (n:Domain {name:Line.name})
@@ -36,7 +36,7 @@ return n
 
 ### Creates all nodes from the CSV, you need add one FOREACH clause for each node type, which is possible in the CSV
 USING PERIODIC COMMIT 50
-LOAD CSV WITH HEADERS FROM "file:///foodConceptsToIntent.csv" AS Line 
+LOAD CSV WITH HEADERS FROM "file:///FoodConceptsToIntent.csv" AS Line 
 WITH Line
 WHERE Line.`node type` IS NOT NULL
 FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'term' THEN [1] ELSE [] END | MERGE (n:Term {name:Line.name}) SET n.nodeid = Line.`node id`)
@@ -48,7 +48,7 @@ FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'intent' THEN [1] ELSE [] END |
 
 ### Create intent-intent relations
 
-LOAD CSV WITH HEADERS FROM "file:///foodConceptsToIntent.csv" AS Line
+LOAD CSV WITH HEADERS FROM "file:///FoodConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
 MATCH (i:Intent {name:Line.name})
@@ -59,7 +59,7 @@ return i,pi,r
 
 ### Create term-intent relations
 
-LOAD CSV WITH HEADERS FROM "file:///foodConceptsToIntent.csv" AS Line
+LOAD CSV WITH HEADERS FROM "file:///FoodConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
 MATCH (n:Term {name:Line.name})
@@ -69,7 +69,7 @@ return n, pn, r
 
 ### Create term-term relations
 
-LOAD CSV WITH HEADERS FROM "file:///foodConceptsToIntent.csv" AS Line
+LOAD CSV WITH HEADERS FROM "file:///FoodConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
 MATCH (n:Term {name:Line.name})
@@ -77,4 +77,4 @@ MATCH (pn:Term {nodeid:Line.`parent node id`})
 call apoc.create.relationship(n, Line.`parent relation`, {weight:Line.weight}, pn) YIELD rel as r
 return n, pn, r
 
-Match (i:Intent {context:'FOOD'}) merge (d:Domain {name:'FOOD'}) merge (i)-[r:IntentOf]->(d) return i,r,d
+Match (i:Intent {context:'Food'}) merge (d:Domain {name:'Food'}) merge (i)-[r:IntentOf]->(d) return i,r,d

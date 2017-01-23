@@ -9,4 +9,3 @@ Food:INT:7,recipe,Food:INT:3,term,intent,IndicatorOf,10
 Food:INT:8,idea,Food:INT:3,term,intent,IndicatorOf,3
 Food:INT:9,Gravies,Food:INT:4,term,intent,indicatorOf,10
 Food:INT:9,Curries,Food:INT:4,term,intent,indicatorOf,10
-

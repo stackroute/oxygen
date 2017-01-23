@@ -160,7 +160,7 @@ export default class AddDomain extends React.Component {
       domainArr.push(domain.name);
     })
     
-    console.log('The domain arr'+domainArr);
+    console.log('The domain arr '+domainArr);
     Formsy.addValidationRule('isIn', function (values, value) {
       return domainArr.indexOf(value) < 0;
     });
