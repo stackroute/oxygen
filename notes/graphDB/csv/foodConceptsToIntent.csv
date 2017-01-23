@@ -1,7 +1,12 @@
 node id,name,parent node id,node type,parent node type,parent relation,weight,context
-FOOD:INT:1,FOOD,,intent,intent,,0,FOOD
-FOOD:INT:2,RESTAURANT,FOOD:INT:1,intent,intent,intentOf,0,FOOD
-FOOD:INT:3,RECEIPE,FOOD:INT:1,intent,intent,intentOf,0,FOOD
-FOOD:INT:4,DISHES,FOOD:INT:1,intent,intent,intentOf,0,FOOD
-FOOD:INT:5,DIET,FOOD:INT:1,intent,intent,intentOf,0,FOOD
-FOOD:INT:6,SOURCES,FOOD:INT:1,intent,intent,intentOf,0,FOOD
+Food:INT:1,Food,,intent,intent,,0,Food
+Food:INT:2,RESTAURANT,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:3,RECEIPE,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:4,DISHES,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:5,DIET,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:6,SOURCES,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:7,recipe,Food:INT:3,term,intent,IndicatorOf,10
+Food:INT:8,idea,Food:INT:3,term,intent,IndicatorOf,3
+Food:INT:9,Gravies,Food:INT:4,term,intent,indicatorOf,10
+Food:INT:9,Curries,Food:INT:4,term,intent,indicatorOf,10
+

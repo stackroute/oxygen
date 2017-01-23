@@ -540,7 +540,6 @@ let getTreeOfDomain = function (data) {
     
     let promise = new Promise(function (resolve, reject) {
         logger.debug("Start: tree structure of domain : ", data.domainName);
-        fs.writeFile('webclient/assets/data/' + data.domainName + '_concepts_tree.json', '');
         var treeData = [];
         var tree = {
             "name": "Java Web Programming",
@@ -575,13 +574,7 @@ let getTreeOfDomain = function (data) {
                 p3 = p3.replace(/},/g, "},\n\t");
                 p3 = p3.replace(/\\"/g, "");
                 p3 = p3.replace(/,/g, ",\n\t");
-                fs.writeFile('webclient/assets/data/' + data.domainName + '_concepts_tree.json', p3, function (err) {
-                    if (err) {
-                        reject(err);
-                    }
-                });
                 resolve(p3);
-               
             });
             
     });
