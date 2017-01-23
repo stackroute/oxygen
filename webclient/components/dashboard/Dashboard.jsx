@@ -123,7 +123,7 @@ export default class Dashboard extends React.Component {
 				}
 				// console.log('got response '+JSON.parse(res.text).name);
 				// console.log('length after call '+this.state.domainList.length);
-			 console.log('***^^^^^^^^^^^^^^^^',res);
+			 	console.log('***^^^^^^^^^^^^^^^^',res);
 				let domainList1 = this.state.domainList;
 				let response = JSON.parse(res.text);
 				let clen = response.concepts.length;

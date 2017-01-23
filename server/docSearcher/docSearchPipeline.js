@@ -85,10 +85,6 @@ const startSearcher = function() {
         result.forEach( function(res, i) {
             startCrawlerMQ(res);
         });
-        // for(let a=0; a<result.length; a++) {
-        //     // logger.debug("URL: ", result[a].url)
-        //     startCrawlerMQ(result[a]);
-        // }
     })
 }
 

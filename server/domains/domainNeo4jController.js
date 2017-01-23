@@ -543,12 +543,18 @@ let getTreeOfDomain = function (data) {
         fs.writeFile('webclient/assets/data/' + data.domainName + '_concepts_tree.json', '');
         var treeData = [];
         var tree = {
-            "name": "Java Web Programming",
+            "name": data.domainName,
             "children": []
         };
 
-        cypher('match (n:' + graphConsts.NODE_CONCEPT + ') return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
+        logger.debug("Data In getTreeOfDomain in Neo4j",data)
+        // cypher('match (n:' + graphConsts.NODE_CONCEPT + ') return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
+        cypher('match (d:' + graphConsts.NODE_DOMAIN + 
+            '{name:"' + data.domainName + '"}) -[]- ' +
+            '(c:' + graphConsts.NODE_CONCEPT + ')' +
+            'return c.context AS context,c.name AS name,c.conceptid AS conceptid,c.desc AS desc,c.parent AS parent')
             .on('data', function (result) {
+                logger.debug("Result from Neo4j", result)
                 treeData.push(result);
             })
             .on('end', function () {

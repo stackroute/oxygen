@@ -44,23 +44,23 @@ export default class SunburstView extends React.Component {
 
     getTreeOfDomain(){
         let url = `/domain/domainhomeview/` + this.props.domainName;
-        let that = this;
         Request
             .get(url)
             .end((err, res) => {
                 if(!err) {
                     let domainTree = JSON.parse(res.text);
-                    that.setState({ 
-                      domainName: domainTree.Domain,
-                      data: domainTree
-                    });
+                    let chart = this.drawChart(domainTree)
+                    this.setState({
+                        domainName: domainTree.Domain,
+                        data: domainTree,
+                        chart: chart
+                    })
                 }
         });
     }
   
-    drawChart() {
+    drawChart(data) {
         let th = this;
-
         const div = new ReactFauxDOM.Element('div')
         let width = 500;
         let height = 340;
@@ -109,7 +109,7 @@ export default class SunburstView extends React.Component {
             .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
         
         let path = vis.selectAll("path")
-                      .data(partition.nodes(this.state.data))
+                      .data(partition.nodes(data))
                       .enter().append("path")
                       .attr("d", arc)
                       .attr("fill-rule", "evenodd")
@@ -255,8 +255,8 @@ export default class SunburstView extends React.Component {
                           actAsExpander={true}
                           showExpandableButton={true}
                         />
-                         <CardText expandable={this.state.expandable}>
-                            {this.drawChart()}
+                        <CardText expandable={this.state.expandable}>
+                            {this.state.chart}
                         </CardText>
                     </Card>
 
