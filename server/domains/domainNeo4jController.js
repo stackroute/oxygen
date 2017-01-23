@@ -551,7 +551,8 @@ let getTreeOfDomain = function (data) {
         // cypher('match (n:' + graphConsts.NODE_CONCEPT + ') return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
         cypher('match (d:' + graphConsts.NODE_DOMAIN + 
             '{name:"' + data.domainName + '"}) -[]- ' +
-            '(c:' + graphConsts.NODE_CONCEPT + ')' +
+            '(c:' + graphConsts.NODE_CONCEPT + ') ' +
+            // '{context:"' + data.domainName + '"})' +
             'return c.context AS context,c.name AS name,c.conceptid AS conceptid,c.desc AS desc,c.parent AS parent')
             .on('data', function (result) {
                 logger.debug("Result from Neo4j", result)

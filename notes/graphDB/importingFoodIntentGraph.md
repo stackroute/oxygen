@@ -77,4 +77,4 @@ MATCH (pn:Term {nodeid:Line.`parent node id`})
 call apoc.create.relationship(n, Line.`parent relation`, {weight:Line.weight}, pn) YIELD rel as r
 return n, pn, r
 
-Match (i:Intent {context:'FOOD'}) merge (d:Domain {name:'FOOD'}) merge (i)-[r:IntentOf]->(d) return i,r,d
+Match (i:Intent {context:'Food'}) merge (d:Domain {name:'Food'}) merge (i)-[r:IntentOf]->(d) return i,r,d
