@@ -145,6 +145,7 @@ const extractData = function(data) {
             /* get the DOM MODEL to traverse the web document accordingly */
             async.apply(readFile, data),
             async.asyncify(function (modelObj) {
+              logger.debug("modelObj: ", modelObj);
                   let termOptimalWeight = 0;
                   let terms = [];
                   data.interestedTerms.forEach(function(item, index) {

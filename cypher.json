@@ -1,138 +1,183 @@
 {
-	"_id": 1856,
-	"_type": "domelt",
-	"title": "html",
-	"child": [{
-			"_id": 1857,
-			"_type": "domelt",
-			"title": "head",
-			"child.weight": 20
-		},
+    "_id": 1856,
+    "_type": "domelt",
+    "title": "html",
+    "child.weight": 1,
+    "child": [{
+            "_id": 1857,
+            "_type": "domelt",
+            "title": "head",
+            "child.weight": 20,
+            "child": [{
+                    "_id": 1859,
+                    "_type": "domelt",
+                    "title": "title",
+                    "child.weight": 15
+                },
 
-		{
-			"_type": "domelt",
-			"child.weight": 20,
-			"_id": 1857,
-			"child": [{
-					"_id": 1859,
-					"_type": "domelt",
-					"title": "title",
-					"child.weight": 15
-				},
+                {
+                    "_id": 1860,
+                    "_type": "domelt",
+                    "title": "meta",
+                    "child.weight": 10
+                }
+            ]
+        
+        },
 
-				{
-					"_id": 1860,
-					"_type": "domelt",
-					"title": "meta",
-					"child.weight": 10
-				}
-			],
-			"title": "head"
-		},
+        {
+            "_id": 1858,
+            "_type": "domelt",
+            "title": "body",
+            "child.weight": 2,
+            "child": [{
+                    "_id": 1861,
+                    "_type": "domelt",
+                    "title": "h1",
+                    "child.weight": 5
+                },
 
-		{
-			"_id": 1858,
-			"_type": "domelt",
-			"title": "body",
-			"child.weight": 2
-		},
+                {
+                    "_id": 1862,
+                    "_type": "domelt",
+                    "title": "h2",
+                    "child.weight": 5
+                },
 
-		{
-			"_type": "domelt",
-			"child.weight": 2,
-			"_id": 1858,
-			"child": [{
-					"_id": 1861,
-					"_type": "domelt",
-					"title": "h1",
-					"child.weight": 5
-				},
+                {
+                    "_id": 1863,
+                    "_type": "domelt",
+                    "title": "h3",
+                    "child.weight": 5
+                },
 
-				{
-					"_id": 1862,
-					"_type": "domelt",
-					"title": "h2",
-					"child.weight": 5
-				},
+                {
+                    "_id": 1864,
+                    "_type": "domelt",
+                    "title": "h4",
+                    "child.weight": 5
+                },
 
-				{
-					"_id": 1863,
-					"_type": "domelt",
-					"title": "h3",
-					"child.weight": 5
-				},
+                {
+                    "_id": 1865,
+                    "_type": "domelt",
+                    "title": "h5",
+                    "child.weight": 5
+                },
 
-				{
-					"_id": 1864,
-					"_type": "domelt",
-					"title": "h4",
-					"child.weight": 5
-				},
+                {
+                    "_id": 1866,
+                    "_type": "domelt",
+                    "title": "h6",
+                    "child.weight": 5
+                },
 
-				{
-					"_id": 1865,
-					"_type": "domelt",
-					"title": "h5",
-					"child.weight": 5
-				},
+                {
+                    "_id": 1867,
+                    "_type": "domelt",
+                    "title": "code",
+                    "child.weight": 5
+                },
 
-				{
-					"_id": 1866,
-					"_type": "domelt",
-					"title": "h6",
-					"child.weight": 5
-				},
+                {
+                    "_id": 1868,
+                    "_type": "domelt",
+                    "title": "address",
+                    "child.weight": 2
+                },
 
-				{
-					"_id": 1867,
-					"_type": "domelt",
-					"title": "code",
-					"child.weight": 5
-				},
+                {
+                    "_id": 1869,
+                    "_type": "domelt",
+                    "title": "summary",
+                    "child.weight": 4
+                },
 
-				{
-					"_id": 1868,
-					"_type": "domelt",
-					"title": "address",
-					"child.weight": 2
-				},
+                {
+                    "_id": 1870,
+                    "_type": "domelt",
+                    "title": "blockquote",
+                    "child.weight": 3
+                },
 
-				{
-					"_id": 1869,
-					"_type": "domelt",
-					"title": "summary",
-					"child.weight": 4
-				},
+                {
+                    "_id": 1871,
+                    "_type": "domelt",
+                    "title": "mark",
+                    "child.weight": 4
+                },
 
-				{
-					"_id": 1870,
-					"_type": "domelt",
-					"title": "blockquote",
-					"child.weight": 3
-				},
+                {
+                    "_id": 1872,
+                    "_type": "domelt",
+                    "title": "ins",
+                    "child.weight": 4
+                },
 
-				{
-					"_id": 1871,
-					"_type": "domelt",
-					"title": "mark",
-					"child.weight": 4
-				},
+                {
+                    "_id": 1873,
+                    "_type": "domelt",
+                    "title": "map",
+                    "child.weight": 4
+                },
 
-				{
-					"_id": 1872,
-					"_type": "domelt",
-					"title": "ins",
-					"child.weight": 4
-				},
+                {
+                    "_id": 1874,
+                    "_type": "domelt",
+                    "title": "p",
+                    "child.weight": 3
+                },
 
-				{
-					"_id": 1873,
-					"_type": "domelt",
-					"title": "map",
-					"child.weight": 4
-				}
-			],
-			"title": "body"
-		}
-	]
-}
+                {
+                    "_id": 1875,
+                    "_type": "domelt",
+                    "title": "span",
+                    "child.weight": 2
+                },
+
+                {
+                    "_id": 1876,
+                    "_type": "domelt",
+                    "title": "div",
+                    "child.weight": 1
+                },
+
+                {
+                    "_id": 1877,
+                    "_type": "domelt",
+                    "title": "ul",
+                    "child.weight": 2
+                },
+
+                {
+                    "_id": 1878,
+                    "_type": "domelt",
+                    "title": "ol",
+                    "child.weight": 2
+                },
+
+                {
+                    "_id": 1879,
+                    "_type": "domelt",
+                    "title": "li",
+                    "child.weight": 2
+                },
+
+                {
+                    "_id": 1880,
+                    "_type": "domelt",
+                    "title": "article",
+                    "child.weight": 4
+                },
+
+                {
+                    "_id": 1881,
+                    "_type": "domelt",
+                    "title": "nav",
+                    "child.weight": 5
+                }
+            ]
+            
+        }
+    ]
+};

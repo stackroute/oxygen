@@ -6,9 +6,11 @@ const controller = require('./docSearchController');
 const checkRecentlySearched = require('./docSearchController').checkRecentlySearched;
 const fetchPrevSearchResult = require('./docSearchController').fetchPrevSearchResult;
 const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
+const engineColln = require('./../common/engineColln');
 
 const startSearcher = function() {
 
+    let selector = 0;
     highland(function(push, next){
         let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
         amqpConn
@@ -65,7 +67,10 @@ const startSearcher = function() {
             return prev_res
         } else {
             logger.debug("Making a Google search request and storing the data in Redis");
-            return controller.getGoogleResults(recentSearchResult.msg)
+            if(selector > engineColln.KEYS.length-1) {
+                selector = 0;
+            }
+            return controller.getGoogleResults(recentSearchResult.msg, selector)
         }
     })
     .flatMap(promise => highland(
@@ -82,6 +87,7 @@ const startSearcher = function() {
     // })
     .each(function(result) {
         logger.info('Highland function ends');
+        selector += 1;
         result.forEach( function(res, i) {
             startCrawlerMQ(res);
         });

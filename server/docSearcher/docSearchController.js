@@ -11,19 +11,24 @@ const engineColln = require('./../common/engineColln');
 const client = require('redis').createClient();
 const config = require('./../../config');
 
-const getURL = function (searchQuery, callback) {
-    let engine = engineColln.ENGINES;
-    let key = engineColln.KEYS;
+const getURL = function (searchQuery, i, callback) {
+    logger.debug("SearchQuery:", searchQuery)
+    logger.debug("Selector:", i)
+    let engine = engineColln.ENGINES[i];
+    let key = engineColln.KEYS[i];
     // let eng = searchQuery.engineID.split(' ');
     let url = "https://www.googleapis.com/customsearch/v1?q=" + 
         searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 
-        + searchQuery.start + "&exactTerms=" + searchQuery.domain;
+        + searchQuery.start + "&exactTerms=" + searchQuery.domain +
+        "&num=" + searchQuery.nbrOfResults;
     // if (searchQuery.siteSearch !== 'NONE') {
     //     url += "&siteSearch=" + searchQuery.siteSearch;
     // }
     // if (searchQuery.domain !== 'NONE') {
     //     url += "&exactTerms=" + searchQuery.domain;
     // }
+    logger.debug("Engine ID:", engine)
+    logger.debug("API Key:", key)
     let searchResults = [];
     Request
         .get(url)
@@ -37,7 +42,9 @@ const getURL = function (searchQuery, callback) {
                 data = JSON.parse(body.text);
             }
 
-            if (typeof data !== "undefined" && Object.keys(data).length === 6) {
+            // if (typeof data !== "undefined" && Object.keys(data).length === 6) {
+            if (typeof data !== "undefined") {
+                logger.debug("Data",data);
                 logger.debug("retrieved the " + data.items.length +
                     " document for concept " + searchQuery.concept);
 
@@ -67,12 +74,12 @@ const getURL = function (searchQuery, callback) {
 /*
  searchEngineParams ??
  */
-const getGoogleResults = function (searchEngineParams) {
+const getGoogleResults = function (searchEngineParams, selector) {
     let stack = [];
     let key = generateKey(searchEngineParams);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
-            async.apply(getURL, searchEngineParams),
+            async.apply(getURL, searchEngineParams, selector),
             async.asyncify(function (urlResponse) {
                 logger.debug("Key of storeURL: ", key)
                 client.setex(key, config.CACHE_EXPIRY_TIME, JSON.stringify(urlResponse), function(error){
