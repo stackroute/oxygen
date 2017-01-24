@@ -30,12 +30,13 @@ Router.get('/:urlID', function (req, res) {
 
 Router.post('/doc', function (req, res) {
     try {
-        let crawlerObj = JSON.parse(req.body);
-        logger.debug("Crawling the given document",req.body);
+        let interestedTerms = [];
+        interestedTerms.push(req.body.term);
+        let crawlerObj = req.body;
+        crawlerObj.interestedTerms = interestedTerms;
 
-        crawlerController.crawl(crawlerObj)
+        crawlerController.crawlDocument(crawlerObj)
             .then(function (relativeWeights) {
-                    logger.debug("relativeWeights: ",relativeWeights);
                     res.send(relativeWeights);
                     return;
                 },

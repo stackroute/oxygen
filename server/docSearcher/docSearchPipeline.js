@@ -91,6 +91,7 @@ const startSearcher = function() {
         result.forEach( function(res, i) {
             startCrawlerMQ(res);
         });
+        
     })
 }
 
