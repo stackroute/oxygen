@@ -1,7 +1,7 @@
 version: '2'
 services:
   webapp:
-    image: oxygen/oxygen-platform:v1.0.1
+    image: bolt/bolt-platform:v1.0.1
     build:
       context: ./
       dockerfile: Dockerfile
@@ -15,13 +15,13 @@ services:
       - neo4j
       - redis
     env_file:
-      - ./oxygen.env
+      - ./bolt.env
     entrypoint:
       - /bin/sh
       - -c
       - 'npm run www --production'
   searcher:
-    image: oxygen/oxygen-platform:v1.0.1
+    image: bolt/bolt-platform:v1.0.1
     build:
       context: ./
       dockerfile: Dockerfile
@@ -32,13 +32,13 @@ services:
       - rabbitmq
       - redis
     env_file:
-      - ./oxygen.env
+      - ./bolt.env
     entrypoint:
       - /bin/sh
       - -c
       - 'npm run search --production'
   crawler:
-    image: oxygen/oxygen-platform:v1.0.1
+    image: bolt/bolt-platform:v1.0.1
     build:
       context: ./
       dockerfile: Dockerfile
@@ -50,13 +50,13 @@ services:
       - redis
       - neo4j
     env_file:
-      - ./oxygen.env
+      - ./bolt.env
     entrypoint:
       - /bin/sh
       - -c
       - 'npm run crawl --production'
   parser:
-    image: oxygen/oxygen-platform:v1.0.1
+    image: bolt/bolt-platform:v1.0.1
     build:
       context: ./
       dockerfile: Dockerfile
@@ -68,7 +68,7 @@ services:
       - redis
       - neo4j
     env_file:
-      - ./oxygen.env
+      - ./bolt.env
     entrypoint:
       - /bin/sh
       - -c
