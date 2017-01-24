@@ -159,7 +159,7 @@ const getResponseToLowerCase = function (dataObj) {
             resolve(dataObj);
 
             if (error) {
-                reject(err);
+                reject(error);
             }
         })
     });
