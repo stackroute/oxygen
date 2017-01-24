@@ -31,9 +31,11 @@ Router.get('/:urlID', function (req, res) {
 Router.post('/doc', function (req, res) {
     try {
         let interestedTerms = [];
-        interestedTerms.push(req.body.term);
+        interestedTerms.push(req.body.terms);
         let crawlerObj = req.body;
         crawlerObj.interestedTerms = interestedTerms;
+
+        logger.debug('post request',crawlerObj);
 
         crawlerController.crawlDocument(crawlerObj)
             .then(function (relativeWeights) {

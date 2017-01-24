@@ -174,8 +174,6 @@ const extractData = function (data) {
             /* get the DOM MODEL to traverse the web document accordingly */
             async.apply(readFile, data),
             async.asyncify(function (modelObj) {
-
-                logger.debug("modelObj wihtout parsing", modelObj.title);
                 modelObj = JSON.parse(modelObj);
                 logger.debug("modelObj parsing", modelObj.title);
                 logger.debug("Extracting the content from the URL");
@@ -188,6 +186,8 @@ const extractData = function (data) {
                 //     remove_duplicates: false
                 // })
                 // data.text = txt;
+
+
                 logger.debug('txt', data.text);
                 let termOptimalWeight = 0;
                 let terms = [];
@@ -199,7 +199,8 @@ const extractData = function (data) {
                     logger.debug("termOptimalWeight: ", termOptimalWeight);
                     terms.push({
                         word: data.interestedTerms[index],
-                        intensity: termOptimalWeight
+                        intensity: termOptimalWeight,
+                        pathWeights: termWeight.pathWeights
                     });
                 })
                 data.terms = terms;

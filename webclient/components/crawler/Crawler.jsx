@@ -12,7 +12,7 @@ export default class Crawler extends React.Component {
 			url:'',
 			term:'',
 			intensity: 0,
-			pathWeights: ''
+			pathWeights: []
 		}
 		this.handleUrl = this.handleUrl.bind(this);
 		this.handleTerm = this.handleTerm.bind(this);
@@ -29,7 +29,7 @@ export default class Crawler extends React.Component {
 	submitCrawl() {
 		let crawlObj = {
 	        url: this.state.url,
-	        term: this.state.term,
+	        terms: this.state.term,
     	};
 
 		let url =`/crawl/doc`;
@@ -44,22 +44,30 @@ export default class Crawler extends React.Component {
 				console.log('Response on show in child: ', JSON.parse(res.text));
 			    //let domainList1=this.state.domainList;
 			    let response=JSON.parse(res.text);
-			    console.log(response.terms[0]);
 			    this.setState({
 			    	intensity: response.terms[0].intensity,
-			    	pathWeights: ''
+			    	pathWeights: response.terms[0].pathWeights
 			    });
 			}
 		});
 	}
 	render(){
 		const style = {
-			  height: 150,
+			  height: 500,
 			  width: 500,
 			  margin: 20,
 			  textAlign: 'center',
 			  display: 'inline-block',
 			};
+		let tags = Object.keys(this.state.pathWeights);
+		let th = this;
+		let weights = [];
+		tags.map(function(tag, i) {
+			weights.push(<TableRow key={i}>
+							<TableRowColumn style={{textAlign: 'center'}}>{tag}</TableRowColumn>
+							<TableRowColumn style={{textAlign: 'center'}}>{th.state.pathWeights[tags[i]]}</TableRowColumn>
+						</TableRow>);
+		})
 		return (
 			<div style={{textAlign: 'left', paddingLeft: 100}}>
 				<div>
@@ -85,15 +93,12 @@ export default class Crawler extends React.Component {
 					<Table>
 					    <TableHeader displaySelectAll={false}>
 					      <TableRow>
-					        <TableHeaderColumn>Intensity</TableHeaderColumn>
-					        <TableHeaderColumn>Path Weight</TableHeaderColumn>
+					        <TableHeaderColumn>Path</TableHeaderColumn>
+					        <TableHeaderColumn>Weight</TableHeaderColumn>
 					      </TableRow>
 					    </TableHeader>
 					    <TableBody displayRowCheckbox={false}>
-					      <TableRow>
-					        <TableRowColumn style={{textAlign: 'center'}}>{this.state.intensity}</TableRowColumn>
-					        <TableRowColumn style={{textAlign: 'center'}}>{this.state.pathWeights}</TableRowColumn>
-					      </TableRow>
+							{weights}
 					    </TableBody>
 					</Table>				
 				</Paper>
