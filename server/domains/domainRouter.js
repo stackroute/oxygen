@@ -203,50 +203,29 @@ router.post('/documents/:domainName', function (req, res) {
 
 });
 
-// router.get('/domainhomeview/:domainName', function (req, res) {
-//     console.log('in DomainRouter')
-//     try {
-//         let reqObj = {
-//             domainName: req.params.domainName,
-//             data: req.body
-//     };
-
-//         logger.debug("DomainHomeView: Begining to get tree structure ", reqObj);
-//         console.log('reqObj', reqObj);
-//         res.send(domainCtrl.getTreeOfDomain(reqObj));
-//         return;
-//     } catch (err) {
-//         logger.error("Caught a error in posting URLs manually ", err);
-//         res.status(500).send({
-//             error: "Error: Failed get the tree structure"
-
-//         });
-//     }
-// });
 router.get('/domainhomeview/:domainName', function (req, res) {
-    
     console.log('in DomainRouter')
     try {
         let reqObj = {
             domainName: req.params.domainName,
             data: req.body
-    };
+        };
 
-           var collection = domainCtrl.getTreeOfDomain(reqObj);
-           // logger.debug('coll',collection);
-           collection.then(function(jsonTree){
-                logger.debug("getting data into API")
-             // logger.info(jsonTree);
-             res.send(jsonTree);
-             return; 
-            },function (err) {
-                logger.error(
-                    "Encountered error in retrieved concept(s) of domain: ",
-                    err);
-                res.send(err);
-                return;
-            });
-        
+        var collection = domainCtrl.getTreeOfDomain(reqObj);
+        // logger.debug('coll',collection);
+        collection.then(function (jsonTree) {
+            logger.debug("getting data into API")
+            // logger.info(jsonTree);
+            res.send(jsonTree);
+            return;
+        }, function (err) {
+            logger.error(
+                "Encountered error in retrieved concept(s) of domain: ",
+                err);
+            res.send(err);
+            return;
+        });
+
     } catch (err) {
         logger.error("Caught a error in posting URLs manually ", err);
         res.status(500).send({
