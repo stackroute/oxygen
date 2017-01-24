@@ -252,25 +252,4 @@ router.delete('/deletedomain/:domainName', function (req, res) {
     }
 });
 
-router.get('/test/:testparam', function (req, res) {
-    try {
-
-        let reqObj = {
-            param1: req.param.testparam,
-            data: req.body
-        }
-        logger.debug("sending data manually to test fn generator ", reqObj);
-        res.send(domainCtrl.testFnGen(reqObj));
-        return;
-
-    } catch (err) {
-        logger.error("Caught a error in posting URLs manually ", err);
-        res.status(500).send({
-            error: "Something went wrong, please try later..!"
-        });
-        return;
-    }
-});
-
-
 module.exports = router;

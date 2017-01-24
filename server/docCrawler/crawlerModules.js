@@ -142,6 +142,7 @@ const extractData = function(data) {
 
   let promise = new Promise(function(resolve, reject) {
         async.waterfall([
+            /* get the DOM MODEL to traverse the web document accordingly */
             async.apply(readFile, data),
             async.asyncify(function (modelObj) {
                   let termOptimalWeight = 0;
@@ -223,8 +224,8 @@ const createTreeOfWebDocLike = function(pageResponse, modelObj, needle) {
         });
         if(weightsArr.length!=0)
         {maxWeight = Math.max.apply(null, weightsArr);}
-        logger.debug("maxxy", maxWeight);
-        return { maxWeight: maxWeight, totalWeight: totalWeight };
+        logger.debug("max-weight of term", maxWeight);
+        return { maxWeight: maxWeight, totalWeight: totalWeight,pathWeights: data['pathWeights'] };
     }
 
     function addChild(currentNode, parent, childnode) {

@@ -28,7 +28,7 @@ Router.get('/:urlID', function (req, res) {
     }
 });
 
-Router.post('/crawl', function (req, res) {
+Router.post('/doc', function (req, res) {
     try {
         let crawlerObj = JSON.parse(req.body);
         logger.debug("Crawling the given document",req.body);
@@ -50,8 +50,7 @@ Router.post('/crawl', function (req, res) {
         logger.error("Caught a error in crawling document ", err);
         res.status(500).send({
             error: "Something went wrong in crawling document, please try later..!"
-        });
-        return;
+        });       return;
     }
 });
 
