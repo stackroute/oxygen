@@ -38,7 +38,6 @@ export default class DocResultCard extends React.Component {
     super(props);
   }
   render() {
-
     return (
       // <Paper zDepth={4} style={layout} rounded={false}>
         <Row>

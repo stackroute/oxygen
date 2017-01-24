@@ -1,12 +1,11 @@
 node id,name,parent node id,node type,node class,parent relation,context,identifier,description
-Food:993,NON-VEG,,concept,concept,,Food,NON-VEG,"NON-VEG FoodS"
-Food:994,VEG,,concept,concept,,Food,VEG,"Vegetarian foods"
-Food:995,DRINKS,,concept,concept,,Food,DRINKS,"DRINKS"
-Food:996,DESSERTS,,concept,concept,,Food,DESSERTS,"DESSERTS"
-Food:997,BEVERAGES,,concept,concept,,Food,BEVERAGES,"BEVERAGES"
-Food:998,MILK,,concept,concept,,Food,MILK,"MILK"
-Food:999,DRY FRUITS,,concept,concept,,Food,DRY FRUITS,"DRY FRUITS"
-Food:1000,FAST Food,,concept,concept,,Food,FAST Food,"FAST Food"
-Food:1001,SEA Food,Food:993,concept,concept,concept of,Food,SEA Food,Food: SEA Food
-
-
+Food:993,Non-veg,Food:1002,concept,concept,,Food,Non-veg,"Non-Veg Foods"
+Food:994,Veg,Food:1002,concept,concept,,Food,Veg,"Vegetarian Foods"
+Food:995,Drinks,Food:1002,concept,concept,,Food,Drinks,"Drinks"
+Food:996,Desserts,Food:1002,concept,concept,,Food,Desserts,"Desserts"
+Food:997,Beverages,Food:1002,concept,concept,,Food,Beverages,"Beverages"
+Food:998,Milk,Food:1002,concept,concept,,Food,Milk,"Milk"
+Food:999,Dry Fruits,Food:1002,concept,concept,,Food,Dry Fruits,"Dry Fruits"
+Food:1000,Fast Food,Food:1002,concept,concept,,Food,Fast Food,"Fast Food"
+Food:1001,Sea Food,Food:993,concept,concept,concept of,Food,Sea Food,Food: Sea Food
+Food:1002,Food,,concept,concept,,Food,Food,"Food"

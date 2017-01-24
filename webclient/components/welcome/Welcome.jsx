@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -45,7 +44,7 @@ class Welcome extends React.Component {
       </Drawer>
       <AppBar
       onLeftIconButtonTouchTap={this.handleToggle}
-      title='Oxygen'
+      title='Bolt'
       style={{position: 'fixed', top: 0}}
       iconElementRight={<span>
         <Link to='/dashboard'><IconButton iconStyle={styles.largeIcon}>

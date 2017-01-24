@@ -18,8 +18,8 @@ USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///javaConcepts.csv" AS Line
 WITH Line
 WHERE Line.name IS NOT NULL
-MATCH (c:concept {name:Line.name})
-MATCH (pc:concept {conceptid:Line.`parent node id`})
+MATCH (c:Concept {name:Line.name})
+MATCH (pc:Concept {conceptid:Line.`parent node id`})
 call apoc.create.relationship(c, Line.`parent relation`, {}, pc) YIELD rel
 return c, pc, rel
  

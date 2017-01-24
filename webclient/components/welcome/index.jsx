@@ -1,4 +1,4 @@
 import Welcome from './Welcome.jsx';
-import Oxygen from './Oxygen.jsx';
+// import Oxygen from './Oxygen.jsx';
 
-export {Oxygen as default, Welcome};
+export {Welcome as default};

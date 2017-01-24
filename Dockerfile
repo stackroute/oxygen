@@ -1,7 +1,7 @@
 FROM mhart/alpine-node
 
 # Create app directory
-RUN mkdir -p /usr/src/app && echo "Oxygen"
+RUN mkdir -p /usr/src/app && echo "Bolt"
 
 WORKDIR /usr/src/app
 

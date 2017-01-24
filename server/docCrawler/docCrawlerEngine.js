@@ -47,12 +47,13 @@ const startCrawler = function() {
     let text,
         dataObj = JSON.parse(pipeDataObj.data);
     let promise = crawlerModules.parseText(dataObj);
-    logger.debug("Got message in pipe: ", dataObj);
+    // logger.debug("Got message in pipe: ", dataObj);
     return promise;
   })
   .flatMap(promise => highland(
     promise
       .then(function(result) {
+            logger.debug("Got message in pipe: ", result);
               return result;
           },
           function(err) {
@@ -74,11 +75,13 @@ const startCrawler = function() {
   ))
   .map(function(dataToProcess) {
     let processedInfo = crawlerModules.extractData(dataToProcess);
+    logger.debug('processedInfo: ', processedInfo);
     return processedInfo;
   })
   .flatMap(promise => highland(
     promise
       .then(function(result) {
+        logger.debug('extract Result: ', result);
           return result;
         },
         function(err) {

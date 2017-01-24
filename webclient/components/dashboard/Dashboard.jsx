@@ -347,7 +347,7 @@ export default class Dashboard extends React.Component {
 						{
 							list.length!==0?<div>
 							<br/>
-							<h1>Our Domains</h1>
+							<h1>Knowledge Domains</h1>
 							<Container>
 							{
 								list.map((item,i) =>{
