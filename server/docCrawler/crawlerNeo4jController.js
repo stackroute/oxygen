@@ -10,7 +10,7 @@ let getTerms = function(data) {
   let promise = new Promise(function(resolve, reject) {
     logger.debug("Now proceeding to get all terms of domain: ", data.domain);
 
-    let query = 'MATCH(d:'+graphConsts.NODE_DOMAIN+')<-[]-(i:'+graphConsts.NODE_INTENT+')<-[]-(t:'
+    let query = 'MATCH(d:'+graphConsts.NODE_DOMAIN+')<-[]-(i:'+graphConsts.NODE_INTENT+')-[]-(t:'
                   +graphConsts.NODE_TERM+') where d.name={name} return t';
 
     let params = {
