@@ -4,7 +4,6 @@ const service = require('./service');
 
 function setupWebAppRESTRoutes(app) {
   app.use('/docsearchjob', require(path.join(__dirname, 'docSearchJob')));
-
   app.use('/domain', require(path.join(__dirname, 'domains')));
 
   return app;

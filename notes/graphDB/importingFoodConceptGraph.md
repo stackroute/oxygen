@@ -22,7 +22,7 @@ MATCH (c:concept {name:Line.name})
 MATCH (pc:concept {conceptid:Line.`parent node id`})
 call apoc.create.relationship(c, Line.`parent relation`, {}, pc) YIELD rel
 return c, pc, rel
- 
+
 ##Create a relationship if you know the relation between nodes
 USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///food.csv" AS Line
@@ -43,4 +43,3 @@ MATCH (pc:Concept)
 MATCH (d:Domain)
 MATCH (c)-[]-(pc)
 MATCH (c)-[]-(d)
-return *
