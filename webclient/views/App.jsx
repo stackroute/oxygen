@@ -6,6 +6,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {blue400, blue700} from 'material-ui/styles/colors';
 import Welcome from '../components/welcome/';
 import JobResult, {Job} from '../components/job/';
+import Crawler from '../components/crawler/';
 import Dashboard from '../components/dashboard/';
 import Graph from '../components/graph';
 import DomainHome from '../components/domainhome';
@@ -29,6 +30,7 @@ ReactDOM.render(
   <Route path = "/" component = {Welcome}>
   <IndexRoute component = {Dashboard}/>
   <Route path = "/job" component = {Job}/>
+  <Route path = "/crawl" component = {Crawler}/>
   <Route path = "/jobResult/:jobID" component = {JobResult}/>
   <Route path = "/dashboard" component = {Dashboard}/>
   <Route path = "/graph/:domainName" component = {Graph}/>
