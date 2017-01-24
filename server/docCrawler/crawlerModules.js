@@ -144,6 +144,7 @@ const extractData = function(data) {
         async.waterfall([
             async.apply(readFile, data),
             async.asyncify(function (modelObj) {
+              logger.debug("modelObj: ", modelObj);
                   let termOptimalWeight = 0;
                   let terms = [];
                   data.interestedTerms.forEach(function(item, index) {
