@@ -4,7 +4,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'webclient', 'assets'),
     filename: 'bundle.js',
-    publicPath: '/webclient/assets/'
+    publicPath: '/assets/'
       // publicPath: path.resolve(__dirname, 'webclient', 'assets')
     },
     module: {

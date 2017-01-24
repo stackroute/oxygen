@@ -5,15 +5,12 @@ const logger = require('./../../applogger');
 const async = require('async');
 const Request = require('superagent');
 //@todo
-// const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
 const datapublisher = require('../serviceLogger/redisLogger');
 const engineColln = require('./../common/engineColln');
 const client = require('redis').createClient();
 const config = require('./../../config');
 
 const getURL = function (searchQuery, i, callback) {
-    logger.debug("SearchQuery:", searchQuery)
-    logger.debug("Selector:", i)
     let engine = engineColln.ENGINES[i];
     let key = engineColln.KEYS[i];
     // let eng = searchQuery.engineID.split(' ');
@@ -27,8 +24,6 @@ const getURL = function (searchQuery, i, callback) {
     // if (searchQuery.domain !== 'NONE') {
     //     url += "&exactTerms=" + searchQuery.domain;
     // }
-    logger.debug("Engine ID:", engine)
-    logger.debug("API Key:", key)
     let searchResults = [];
     Request
         .get(url)
@@ -42,15 +37,15 @@ const getURL = function (searchQuery, i, callback) {
                 data = JSON.parse(body.text);
             }
 
-            // if (typeof data !== "undefined" && Object.keys(data).length === 6) {
-            if (typeof data !== "undefined") {
-                logger.debug("Data",data);
+            if (typeof data !== "undefined" && Object.keys(data).length === 6) {
+            // if (typeof data !== "undefined") {
                 logger.debug("retrieved the " + data.items.length +
                     " document for concept " + searchQuery.concept);
 
                 for (let k = 0; k < data.items.length; k += 1) {
 
                     // if ((i + k) <= searchQuery.nbrOfResults) {
+                    if (k <= searchQuery.nbrOfResults) {
                         let searchResult = {
                             // "jobID": searchQuery._id,
                             "domain": searchQuery.domain,
@@ -60,9 +55,9 @@ const getURL = function (searchQuery, i, callback) {
                             "description": data.items[k].snippet
                         };
                         searchResults.push(searchResult);
-            //         } else {
-            //             break;
-                    // }
+                    } else {
+                        break;
+                    }
 
                 }
                 callback(null, searchResults);
