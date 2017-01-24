@@ -277,8 +277,8 @@ const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
          return data;
          */
 
-        /* return the path with max weight and the summation of the weight of all the paths*/
-        return {maxWeight: maxWeight, totalWeight: totalWeight};
+        /* return the path with max weght and the summation of the weight of all the paths*/
+        return {maxWeight: maxWeight, totalWeight: totalWeight, pathWeights: data['pathWeights']};
     }
 
     /*
