@@ -127,6 +127,7 @@ export default class DomainHomeView extends React.Component {
   }
 
   sunSelectedConcept(conceptName){
+    console.log('In sunSelectedConcept');
     this.state.selectedConcept.push(conceptName);
     this.setState({selectedConceptText: conceptName});
     this.searchDocuments();
@@ -275,6 +276,13 @@ export default class DomainHomeView extends React.Component {
   componentDidMount() {
    this.getIntentsAndConcepts();
   }
+
+  componentWillMount() {
+    selectedConceptName.onNewSelect = (clickedConceptName) => {
+      console.log('On outside variable change ', clickedConceptName);
+      this.sunSelectedConcept(clickedConceptName);
+    };
+  }
   onPageClick(e) {
     let page = this.state.pageNum;
     if(e.currentTarget.dataset.id === 'prev') {
@@ -344,7 +352,16 @@ export default class DomainHomeView extends React.Component {
                   </ScreenClassRender>
                 </Col>
               </Row>
-              {showSunburst}
+              <div id="main">
+                <div id="sequence"></div>
+                <div id="chart">
+                  <div id="explanation">
+                    <span id="courseName"></span><br/>
+                  </div>
+                </div>
+              </div>
+              {//showSunburst
+              }
               <Row style={{padding:"0 20px"}}>
                  <Col sm={5} xs={5} md={5} style={{float:'left'}}>
                     <AutoCompleteConceptSearch concepts={this.state.concepts}
