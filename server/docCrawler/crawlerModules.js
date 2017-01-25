@@ -225,8 +225,8 @@ const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
         data = {tree: {}, pathWeights: {}},
         pathWeight = 0,
         eltNweight = {};
-    // needle = needle.toLowerCase(),
-    // pageResponse = pageResponse.toLowerCase();
+    needle = needle.toLowerCase();
+    pageResponse = pageResponse.toLowerCase();
     /*
      iterating the Dom Model and creating your own tree
      */
