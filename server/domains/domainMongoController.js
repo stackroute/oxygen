@@ -1,5 +1,5 @@
 const DomainModel = require('./domainEntity').DomainModel;
-const webDocumentModel = require('./../crawler/webDocumentsEntity').webDocumentsModel;
+const webDocumentModel = require('./../docCcrawler/webDocumentsEntity').webDocumentsModel;
 const logger = require('./../../applogger');
 
 let saveNewDomain = function(newDomainObj) {

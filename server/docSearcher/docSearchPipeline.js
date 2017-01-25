@@ -8,9 +8,10 @@ const fetchPrevSearchResult = require('./docSearchController').fetchPrevSearchRe
 const startCrawlerMQ = require('./docOpenCrawlerEngine').startCrawler;
 const engineColln = require('./../common/engineColln');
 
+let selector = 0;
+
 const startSearcher = function() {
 
-    let selector = 0;
     highland(function(push, next){
         let amqpConn = amqp.connect(config.RABBITMQ.rabbitmqURL);
         amqpConn
@@ -70,6 +71,7 @@ const startSearcher = function() {
             if(selector > engineColln.KEYS.length-1) {
                 selector = 0;
             }
+            logger.debug("selector:", selector);
             return controller.getGoogleResults(recentSearchResult.msg, selector)
         }
     })

@@ -2,12 +2,10 @@
 
 // /* beautify ignore:start */
 // /* beautify preserve:start */
-
 // const contentSchema = new mongoose.Schema({
 // 	word:{type:String},
 // 	intensity:{type:String}
 // },{ _id : false });
-
 
 // const schema = new mongoose.Schema({
 // 	domain: { type: String, required: true },

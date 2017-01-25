@@ -13,6 +13,8 @@ const config = require('./../../config');
 const getURL = function (searchQuery, i, callback) {
     let engine = engineColln.ENGINES[i];
     let key = engineColln.KEYS[i];
+    logger.debug("Engine:", engine);
+    logger.debug("Key:", key);
     // let eng = searchQuery.engineID.split(' ');
     let url = "https://www.googleapis.com/customsearch/v1?q=" + 
         searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 

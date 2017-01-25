@@ -14,6 +14,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
 import {Tabs, Tab} from 'material-ui/Tabs';
+// import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
   const iPanel = {
     minWidth: 150,
@@ -253,10 +254,10 @@ export default class DomainHomeView extends React.Component {
           else {
             let response = JSON.parse(res.text);
             console.log('Response on documents to show: ',response);
-            response.sort(function(a, b) {
-              return (Number(b.intensity) - Number(a.intensity));
-            });
             if(typeof response === 'undefined' || response.length === 0) {
+              response.sort(function(a, b) {
+                return (Number(b.intensity) - Number(a.intensity));
+              });
               this.setState({
                 msgSelector: 'No documents found for specified concepts and/or intent...!'
               });
@@ -360,6 +361,7 @@ export default class DomainHomeView extends React.Component {
                   </div>
                 </div>
               </div>
+              
               {//showSunburst
               }
               <Row style={{padding:"0 20px"}}>
