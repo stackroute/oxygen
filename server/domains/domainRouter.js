@@ -385,6 +385,33 @@ router.post('/delete/relation', function(req, res) {
 
 });
 
+//Adding sub concept to a concept
 
+router.post('/add/subConcept', function(req, res) {
+    let conceptObj = req.body;
+    logger.debug("Got request to add a sub concept to a concept", req.body);
+    logger.debug("Concept name :" + conceptObj.subject);
+
+    try {
+        domainCtrl.publishNewSubConcept(conceptObj).then(function(objectName) {
+                logger.info("Successfully published a subConcept to the concept " + conceptObj.subject);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing subConcept : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a subConcept to the concept ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
 
 module.exports = router;

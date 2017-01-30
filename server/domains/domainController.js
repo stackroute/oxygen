@@ -625,6 +625,31 @@ let deleteRelation = function(deleteObj) {
     return promise;
 }
 
+//Ading new subConcept to a existing concept
+
+let publishNewSubConcept = function(conceptObj) {
+    logger.debug("Received request for publishing new subConcept to the concept: " + conceptObj.subject);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(conceptObj.intent);
+        if (!conceptObj.subject || !conceptObj.object) {
+            reject({
+                error: 'Invalid concept or subConcept name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    conceptNeo4jController.getPublishSubConceptCallback(conceptObj, callback);
+                }
+            ],
+            function(err, objectName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(objectName);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
 
 module.exports = {
     publishNewDomain: publishNewDomain,
@@ -637,15 +662,9 @@ module.exports = {
     getAllDomain: getAllDomain,
     getTreeOfDomain: getTreeOfDomain,
     deleteDomain:deleteDomain,
-<<<<<<< HEAD
 getTermsIntents: getTermsIntents
-=======
     publishNewIntent: publishNewIntent,
-<<<<<<< HEAD
     publishNewTerm: publishNewTerm,
-deleteRelation: deleteRelation
-=======
-    publishNewTerm: publishNewTerm
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
->>>>>>> 34b479da49321d92fe553cf627f2382a9e19772b
+deleteRelation: deleteRelation,
+ publishSubConcept: publishSubConcept
 }
