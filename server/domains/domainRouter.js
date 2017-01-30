@@ -251,5 +251,32 @@ router.delete('/deletedomain/:domainName', function (req, res) {
         });
     }
 });
+router.get('/:intentName/terms', function(req,res){
+  try {
+    let domainName = req.params.intentName;
+    domainCtrl.getTermsIntents(domainName).then(function(domainDetails) {
+        logger.info(
+          "Successfully retrieved all Relations and intents of a domain : "
+        );
+        logger.info(domainDetails)
+        res.send(domainDetails);
+        return;
+      },
+      function(err) {
+        logger.error(
+          "Encountered error in retrieved concept(s) of domain: ",
+          err);
+        res.send(err);
+        return;
+      })
+
+  } catch (err) {
+    logger.error("Caught a error in retrieved concept(s) of domain ", err);
+    res.status(500).send({
+      error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
+})
 
 module.exports = router;
