@@ -4,6 +4,7 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import Dialog from 'material-ui/Dialog';
 import MenuItem from 'material-ui/MenuItem';
 import Predicate from './Predicate.jsx';
+import Intent from './addIntent.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
@@ -21,50 +22,25 @@ export default class SubjectNode extends React.Component{
     this.state = {
       searchSubjectText: '',
       searchObjectText: '',
-      searchTermText: '',
       nodeRelations: rel,
       value: 1,
       hintTextSubject: "Enter a Domain",
       hintTextObject: "Nothing selected",
-      hintTextTerm: "Nothing selected",
       errmsg: null,
       loading: null,
       subjectList: [],
       objectList: [],
-      termList: [],
       addLabel : 'Add Domain',
       relObjects: {},
-      relTerm: {},
       modalOpen: false,
     };
     this.getDomains();
   }
-  getTerms(searchIntent, searchTerm){
-    let url = `domain/${searchIntent}/intents/${searchTerm}/term`;
-    Request
-    .get(url)
-    .end((err, res) => {
-      if(err) {
-      // res.send(err);
-      this.setState({errmsg: res.body, loading: 'hide'});
-      }else {
-        // console.log('Response on show: ', JSON.parse(res.text));
-        // let domainList1=this.state.domainList;
-        let response = JSON.parse(res.text);
-        if(response['Terms'].length === 0){
-          this.setState({
-            hintTextTerm: "No Results",
-          })
-        }
-        else {
-          this.setState({
-            relTerm: response['Terms'],
-            TermList: Object.keys(response['Terms'])
-          });
-        }
-      }
-    });
-  }
+
+getTerms(searchText){
+  let url = `domain/${searchText}/intents/${sear}`
+}
+
   getIntents(searchText){
     let url = `domain/${searchText}/intents`;
     Request
@@ -131,13 +107,6 @@ export default class SubjectNode extends React.Component{
       addLabel: 'Edit Intent',
     });
   };
-  handleUpdateTermInput = (searchIntent, searchTerm) => {
-    let relations = this.state.relTerm[searchIntent, searchTerm];
-    this.setState({
-      nodeRelations: relations,
-      addLabel: 'Edit Term',
-    });
-  };
 
   handleChange = (event, index, value) => this.setState({value});
 
@@ -173,14 +142,10 @@ export default class SubjectNode extends React.Component{
     var menuitems =
       this.state.nodeRelations.map((relation,i) => <MenuItem value={i+1} primaryText={relation}/>);
     let relObjects = [];
-    let relTerm = [];
     let that = this;
     Object.keys(this.state.relObjects).map(function(key) {
           relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
       });
-    Object.keys(this.state.relObjects).map(function(key) {
-            relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
-        });
 
     return (
       <div>
@@ -208,16 +173,6 @@ export default class SubjectNode extends React.Component{
           onUpdateInput={this.handleUpdateObjectInput}
           onNewRequest={this.handleNewRequest}
           dataSource={this.state.objectList}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-        />
-        <AutoComplete
-          hintText={this.state.hintTextTerm}
-          searchText={this.state.searchTermText}
-          onUpdateInput={this.handleUpdateTermInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.termList}
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
