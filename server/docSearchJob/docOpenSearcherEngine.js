@@ -9,7 +9,7 @@ const startSearcher = function(urlDataObjId) {
 
  amqpConn
  .then(function(conn) {
-   logger.info('[*] Connected to AMQP successfully..!');
+   logger.info('[*] Connected to AMQP..!');
    return conn.createChannel();
  })
  .then(function(chConn) {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -36,23 +35,23 @@ class Welcome extends React.Component {
       width={250}
       open={this.state.open}
       onRequestChange={(open) => this.setState({open})}>
-      <Link to='/job'>
+      <Link to='/crawl'>
       <MenuItem onTouchTap={this.handleToggle}>
       <IconButton><ActionSearch /></IconButton>
-      <FlatButton label='Job' hoverColor= '#e8f1fb' labelStyle={{textAlign: 'left'}}
+      <FlatButton label='crawler' hoverColor= '#e8f1fb' labelStyle={{textAlign: 'left'}}
       style = {{fontSize: '50px', marginTop: '4px'}}/>
       </MenuItem>
       </Link>
       <Link to='/dashboard'>
-      <MenuItem onTouchTap={this.handleToggle}>
-      <IconButton><ActionDashboard/></IconButton>
-      <FlatButton label='dashboard' hoverColor='#e8f1fb' labelStyle={{textAlign: 'left'}}
-      style={{fontSize: '50px', marginTop: '4px'}}/></MenuItem>
+        <MenuItem onTouchTap={this.handleToggle}>
+        <IconButton><ActionDashboard/></IconButton>
+        <FlatButton label='dashboard' hoverColor='#e8f1fb' labelStyle={{textAlign: 'left'}}
+        style={{fontSize: '50px', marginTop: '4px'}}/></MenuItem>
       </Link>
       </Drawer>
       <AppBar
       onLeftIconButtonTouchTap={this.handleToggle}
-      title='Oxygen'
+      title='Bolt'
       style={{position: 'fixed', top: 0}}
       iconElementRight={<span>
         <Link to='/dashboard'><IconButton iconStyle={styles.largeIcon}>

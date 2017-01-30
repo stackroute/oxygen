@@ -101,7 +101,6 @@ let getIntents = function(data) {
   return promise
 }
 
-
 module.exports = {
  termsFinder: termsFinder,
  indexUrl: indexUrl,

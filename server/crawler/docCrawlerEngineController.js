@@ -115,7 +115,7 @@ const urlIndexing = function(data) {
         }
       }
       text = page('body').text();
-      logger.debug('this is the text ' + text);
+      // logger.debug('this is the text ' + text);
       text = text.replace(/\s+/g, ' ')
       .replace(/[^a-zA-Z ]/g, '')
       .toLowerCase();

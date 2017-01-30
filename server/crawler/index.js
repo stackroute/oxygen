@@ -1,1 +1,1 @@
-module.exports = require('./crawlerRouter');
+module.exports = require('./../docCrawler/crawlerRouter');

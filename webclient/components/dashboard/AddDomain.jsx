@@ -34,7 +34,6 @@ const errorMessages= {
 } ;
 
 export default class AddDomain extends React.Component {
-
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -49,7 +48,7 @@ export default class AddDomain extends React.Component {
       imageUrl:defaultImgURL
     }
   }
-  domianFetch()
+  domainFetch()
   {
     let url =`/domain/domains`;
 
@@ -78,7 +77,7 @@ export default class AddDomain extends React.Component {
 
   componentDidMount()
   {
-    this.domianFetch();
+    this.domainFetch();
   }
 
   handleSubmit() {
@@ -161,7 +160,7 @@ export default class AddDomain extends React.Component {
       domainArr.push(domain.name);
     })
     
-    console.log('The domain arr'+domainArr);
+    console.log('The domain arr '+domainArr);
     Formsy.addValidationRule('isIn', function (values, value) {
       return domainArr.indexOf(value) < 0;
     });

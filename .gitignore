@@ -30,6 +30,7 @@ build/Release
 node_modules
 jspm_packages
 bundle.js
+neo4jContainer
 
 # Optional npm cache directory
 .npm
@@ -42,3 +43,9 @@ dist
 
 # This folder gets created when locally docker-compose is built, hence not needed to be in repo
 neo4j
+
+# Ignore data generated for application
+*tree.json
+.idea
+data.json
+.gulpfile.js.swp

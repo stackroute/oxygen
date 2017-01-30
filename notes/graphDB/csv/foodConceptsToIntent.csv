@@ -1,0 +1,11 @@
+node id,name,parent node id,node type,parent node type,parent relation,weight,context
+Food:INT:1,Food,,intent,intent,,0,Food
+Food:INT:2,Restaurant,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:3,Recipe,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:4,Dishes,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:5,Diet,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:6,Sources,Food:INT:1,intent,intent,intentOf,0,Food
+Food:INT:7,Recipe,Food:INT:3,term,intent,IndicatorOf,10,Food
+Food:INT:8,Idea,Food:INT:3,term,intent,IndicatorOf,3,Food
+Food:INT:9,Gravies,Food:INT:4,term,intent,indicatorOf,10,Food
+Food:INT:10,Curries,Food:INT:4,term,intent,indicatorOf,10,Food

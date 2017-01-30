@@ -4,10 +4,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {blue400, blue700} from 'material-ui/styles/colors';
-import Oxygen, {Welcome} from '../components/welcome/';
+import Welcome from '../components/welcome/';
 import JobResult, {Job} from '../components/job/';
+import Crawler from '../components/crawler/';
 import Dashboard from '../components/dashboard/';
 import Graph from '../components/graph';
+import DomainHome from '../components/domainhome';
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 injectTapEventPlugin();
 
@@ -25,13 +27,14 @@ const muiTheme = getMuiTheme({
 ReactDOM.render(
   <MuiThemeProvider muiTheme={muiTheme}>
   <Router history = {hashHistory}>
-  <Route path = "/" component = {Oxygen}/>
-  <Route path = "/welcome" component = {Welcome}>
+  <Route path = "/" component = {Welcome}>
   <IndexRoute component = {Dashboard}/>
   <Route path = "/job" component = {Job}/>
+  <Route path = "/crawl" component = {Crawler}/>
   <Route path = "/jobResult/:jobID" component = {JobResult}/>
   <Route path = "/dashboard" component = {Dashboard}/>
   <Route path = "/graph/:domainName" component = {Graph}/>
+  <Route path = "/domainhome/:domainName" component= {DomainHome} />
   </Route>
   </Router>
   </MuiThemeProvider>,
