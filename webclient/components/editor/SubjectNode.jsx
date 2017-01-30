@@ -21,21 +21,65 @@ export default class SubjectNode extends React.Component{
     this.state = {
       searchSubjectText: '',
       searchObjectText: '',
+<<<<<<< HEAD
+=======
+      searchTermText: '',
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
       nodeRelations: rel,
       value: 1,
       hintTextSubject: "Enter a Domain",
       hintTextObject: "Nothing selected",
+<<<<<<< HEAD
+=======
+      hintTextTerm: "Nothing selected",
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
       errmsg: null,
       loading: null,
       subjectList: [],
       objectList: [],
+<<<<<<< HEAD
       addLabel : 'Add Domain',
       relObjects: {},
+=======
+      termList: [],
+      addLabel : 'Add Domain',
+      relObjects: {},
+      relTerm: {},
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
       modalOpen: false,
     };
     this.getDomains();
   }
+<<<<<<< HEAD
 
+=======
+  getTerms(searchIntent, searchTerm){
+    let url = `domain/${searchIntent}/intents/${searchTerm}/term`;
+    Request
+    .get(url)
+    .end((err, res) => {
+      if(err) {
+      // res.send(err);
+      this.setState({errmsg: res.body, loading: 'hide'});
+      }else {
+        // console.log('Response on show: ', JSON.parse(res.text));
+        // let domainList1=this.state.domainList;
+        let response = JSON.parse(res.text);
+        if(response['Terms'].length === 0){
+          this.setState({
+            hintTextTerm: "No Results",
+          })
+        }
+        else {
+          this.setState({
+            relTerm: response['Terms'],
+            TermList: Object.keys(response['Terms'])
+          });
+        }
+      }
+    });
+  }
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
   getIntents(searchText){
     let url = `domain/${searchText}/intents`;
     Request
@@ -102,6 +146,16 @@ export default class SubjectNode extends React.Component{
       addLabel: 'Edit Intent',
     });
   };
+<<<<<<< HEAD
+=======
+  handleUpdateTermInput = (searchIntent, searchTerm) => {
+    let relations = this.state.relTerm[searchIntent, searchTerm];
+    this.setState({
+      nodeRelations: relations,
+      addLabel: 'Edit Term',
+    });
+  };
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
 
   handleChange = (event, index, value) => this.setState({value});
 
@@ -137,10 +191,20 @@ export default class SubjectNode extends React.Component{
     var menuitems =
       this.state.nodeRelations.map((relation,i) => <MenuItem value={i+1} primaryText={relation}/>);
     let relObjects = [];
+<<<<<<< HEAD
+=======
+    let relTerm = [];
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
     let that = this;
     Object.keys(this.state.relObjects).map(function(key) {
           relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
       });
+<<<<<<< HEAD
+=======
+    Object.keys(this.state.relObjects).map(function(key) {
+            relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
+        });
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
 
     return (
       <div>
@@ -172,6 +236,19 @@ export default class SubjectNode extends React.Component{
           openOnFocus={true}
           maxSearchResults={5}
         />
+<<<<<<< HEAD
+=======
+        <AutoComplete
+          hintText={this.state.hintTextTerm}
+          searchText={this.state.searchTermText}
+          onUpdateInput={this.handleUpdateTermInput}
+          onNewRequest={this.handleNewRequest}
+          dataSource={this.state.termList}
+          filter={AutoComplete.caseInsensitiveFilter}
+          openOnFocus={true}
+          maxSearchResults={5}
+        />
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
       <Dialog
           title="Edit"

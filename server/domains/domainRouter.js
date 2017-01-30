@@ -251,6 +251,7 @@ router.delete('/deletedomain/:domainName', function (req, res) {
         });
     }
 });
+<<<<<<< HEAD
 router.get('/:intentName/terms', function(req,res){
   try {
     let domainName = req.params.intentName;
@@ -278,5 +279,63 @@ router.get('/:intentName/terms', function(req,res){
     return;
   }
 })
+=======
+//Adding new intent to a existing domain
+
+router.post('/add/intent', function(req, res) {
+    let domainObj = req.body;
+    logger.debug("Got request to add a new intent to a domain", req.body);
+    logger.debug("Domin name :" + domainObj.domain);
+
+    try {
+        domainCtrl.publishNewIntent(domainObj).then(function(intentName) {
+                logger.info("Successfully published a intent to the domain " + domainObj.domain);
+                res.send(intentName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing intent : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new intent to the domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+//Adding new term to a existing intent
+router.post('/add/term', function(req, res) {
+    let intentObj = req.body;
+    logger.debug("Got request to add a new term to a intent", req.body);
+    logger.debug("Intent name :" + intentObj.intent);
+
+    try {
+        domainCtrl.publishNewTerm(intentObj).then(function(termName) {
+                logger.info("Successfully published a term to the intent " + intentObj.intent);
+                res.send(termName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing term : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new term to the intent ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
 
 module.exports = router;
