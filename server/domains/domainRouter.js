@@ -308,4 +308,53 @@ router.post('/add/term', function(req, res) {
     }
 });
 
+//deleting
+
+
+router.post('/delete/relation', function(req, res) {
+
+    let deleteObj = req.body;
+
+    logger.info("Got request to delete a relationship :" +deleteObj.subject);
+
+
+
+    try {
+
+        domainCtrl.deleteRelation(deleteObj).then(function(result) {
+
+                logger.info("Successfully deleted the relationship...!!!");
+
+                return;
+
+            },
+
+            function(err) {
+
+                logger.error("Encountered error in deleting : ",err);
+
+                res.send(err);
+
+                return;
+
+            });
+
+    } catch (err){
+
+        logger.error("Caught an error in deleting ", err);
+
+        res.status(500).send({
+
+            error: "Something went wrong, please try later..!"
+
+        });
+
+        return;
+
+    }
+
+});
+
+
+
 module.exports = router;

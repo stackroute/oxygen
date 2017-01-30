@@ -50,6 +50,57 @@ let indexNewDomain = function(newDomainObj) {
   return promise;
 }
 
+
+let getDeleteRelation = function(deleteObj) {
+    let subject = deleteObj.subject,
+        object = deleteObj.object,
+        subjectType = deleteObj.subject_type,
+        objectType = deleteObj.object_type,
+        relation = deleteObj.relation;
+
+    let promise = new Promise(function(resolve, reject) {
+        logger.info("Now proceeding to delete the relationship for the subject :",
+            deleteObj.subject
+        );
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+        let session = driver.session();
+        logger.debug("obtained connection with neo4j");
+
+        let query = '';
+        let params = {};
+        if (subjectType === graphConsts.NODE_CONCEPT && objectType === graphConsts.NODE_DOMAIN) {
+           query += 'match(c:' + graphConsts.NODE_CONCEPT + '{name:{subject}})-[r:' + relation + ']->(d:' + graphConsts.NODE_DOMAIN + '{name:{object}})'
+           query += 'detach delete(r)'
+
+           params = {
+                subject: subject,
+                object: object,
+                relation: relation
+            };
+
+        }
+
+        session.run(query, params).then(function(result) {
+                session.close();
+                resolve(true);
+            })
+            .catch(function(error) {
+                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+}
+
+
+
+
+
+
 let getAllDomainConcept = function(domainNameColln) {
   let promise = new Promise(function(resolve, reject) {
 
@@ -681,6 +732,18 @@ let getWebDocumentsCallback = function(domainObj, callback) {
   });
 }
 
+
+let getDeleteRelationCallback = function(deleteObj, callback) {
+    logger.debug("from the callback : " + deleteObj);
+    getDeleteRelation(deleteObj).then(function(result) {
+        callback(null, result);
+    }, function(err) {
+        callback(err, null);
+    });
+}
+
+
+
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept: getDomainConcept,
@@ -699,5 +762,6 @@ module.exports = {
   getIntentforDocument: getIntentforDocument,
   getTreeOfDomain: getTreeOfDomain,
   getTreeOfDomainCallback: getTreeOfDomainCallback,
-  deleteDomainCallback: deleteDomainCallback
+  deleteDomainCallback: deleteDomainCallback,
+ getDeleteRelationCallback: getDeleteRelationCallback
 }

@@ -584,6 +584,25 @@ let publishNewTerm = function(intentObj) {
    return promise;
 }
 
+
+
+let deleteRelation = function(deleteObj) {
+    logger.debug("Received request for deleting the relationship between " + deleteObj.subject + " and " + deleteObj.object);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([function(callback) {
+                domainNeo4jController.getDeleteRelationCallback(deleteObj, callback);
+            }],
+            function(err, result) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
+
+
 module.exports = {
     publishNewDomain: publishNewDomain,
     getDomain: getDomain,
@@ -596,5 +615,6 @@ module.exports = {
     getTreeOfDomain: getTreeOfDomain,
     deleteDomain:deleteDomain,
     publishNewIntent: publishNewIntent,
-    publishNewTerm: publishNewTerm
+    publishNewTerm: publishNewTerm,
+deleteRelation: deleteRelation
 }
