@@ -145,6 +145,29 @@ let indexPublishedDomain = function(domainName) {
         });
     return promise;
 }
+let getTermsIntents = function(intentName){
+  logger.debug("Received request for retriving Concept(s) in domain: ",
+    intentName);
+  //Save to Mongo DB
+  //Save to Neo4j
+
+  let promise = new Promise(function(resolve, reject) {
+    async.waterfall([
+        function(callback) {
+          domainNeo4jController.getTermsIntentsCallback(
+            intentName,
+            callback)
+        }
+      ],
+      function(err, retrivedRelationsAndIntents) {
+        if (err) {
+          reject(err);
+        }
+        resolve(retrivedRelationsAndIntents);
+      }); //end of async.waterfall
+  });
+  return promise;
+}
 
 let publishNewDomain = function(newDomainObj) {
     logger.debug('Received request for saving new domain: ', newDomainObj);
@@ -614,7 +637,15 @@ module.exports = {
     getAllDomain: getAllDomain,
     getTreeOfDomain: getTreeOfDomain,
     deleteDomain:deleteDomain,
+<<<<<<< HEAD
+getTermsIntents: getTermsIntents
+=======
     publishNewIntent: publishNewIntent,
+<<<<<<< HEAD
     publishNewTerm: publishNewTerm,
 deleteRelation: deleteRelation
+=======
+    publishNewTerm: publishNewTerm
+>>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
+>>>>>>> 34b479da49321d92fe553cf627f2382a9e19772b
 }
