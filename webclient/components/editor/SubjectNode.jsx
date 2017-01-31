@@ -16,6 +16,10 @@ const styles = {
 };
 
 const rel = ['No relations','No relations'];
+const dataSourceConfig = {
+  text: 'nodeKey',
+  value: 'nodeValue',
+};
 export default class SubjectNode extends React.Component{
   constructor(props){
     super(props);
@@ -66,9 +70,9 @@ export default class SubjectNode extends React.Component{
     });
   }
 
-getTerms(searchText){
-  let url = `domain/${searchText}/intents/${sear}`
-}
+  getTerms(searchText){
+    let url = `domain/${searchText}/intents/${sear}`
+  }
   getIntents(searchText){
     let url = `domain/${searchText}/intents`;
     Request
@@ -110,7 +114,7 @@ getTerms(searchText){
         }else{
           var listDomain = [];
           for(let each in response){
-            listDomain.push(response[each]['name']);
+            listDomain.push({nodeKey: 'D:'+ response[each]['name'],nodeValue: response[each]['name']});
           }
           this.setState({
             subjectList: listDomain,
@@ -122,6 +126,7 @@ getTerms(searchText){
   }
 
   handleUpdateSubjectInput = (searchText) => {
+    console.log(this.state.subjectList[searchText]);
     this.getIntents(searchText);
     this.setState({
       addLabel: 'Add Intent',
@@ -194,9 +199,11 @@ getTerms(searchText){
           onUpdateInput={this.handleUpdateSubjectInput}
           onNewRequest={this.handleNewRequest}
           dataSource={this.state.subjectList}
+          dataSourceConfig={dataSourceConfig}
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
+          style={styles.div}
         />-[
         <AutoComplete
           hintText={this.state.hintTextRel}
@@ -207,7 +214,8 @@ getTerms(searchText){
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
-        />]->
+          style={styles.div}
+        />]-->
         <AutoComplete
           hintText={this.state.hintTextObject}
           searchText={this.state.searchObjectText}
@@ -217,6 +225,7 @@ getTerms(searchText){
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
+          style={styles.div}
         />
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
       <Dialog
