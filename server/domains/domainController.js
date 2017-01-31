@@ -509,33 +509,7 @@ let getAllDomain = function() {
     return promise;
 }
 
-let publishNewIntent = function(domainObj) {
-   logger.debug("Received request for publishing new intent to the domain: "+domainObj.domain);
-   let promise = new Promise(function(resolve, reject) {
-       logger.debug(domainObj.intent);
-       if (!domainObj.intent ||
-           domainObj.intent.length <= INTENT_NAME_MIN_LENGTH) {
-           reject({
-               error: 'Invalid intent name..!'
-           });
-       }
-       async.waterfall([function(callback) {
-                   domainMongoController.checkDomainCallback(domainObj.domain,
-                       callback);
-               },
-               function(checkedDomain, callback) {
-                   intentNeo4jController.getPublishIntentCallback(domainObj, callback);
-               }
-           ],
-           function(err, intentName) {
-               if (err) {
-                   reject(err);
-               }
-               resolve(intentName);
-           }); //end of async.waterfall
-   });
-   return promise;
-}
+
 
 let publishNewSubConcept = function(conceptObj) {
   logger.debug("Received request for publishing new subConcept to the concept: "+conceptObj.subject);
@@ -712,4 +686,4 @@ module.exports = {
     publishNewConcept: publishNewConcept,
     publishNewSubConcept : publishNewSubConcept,
     deleteRelation : deleteRelation
-}
+};
