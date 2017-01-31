@@ -2,7 +2,7 @@ var app = require('../server/webapp.service')();
 var expect = require('chai').expect;
 var assert = require('chai').assert;
 var request = require("supertest");
-var intentToTest = require('../server/domains/intentNeo4jController').getPublishIntent;
+var intentToTest = require('../server/domains/intentNeo4jController').getPublishIntentCallback;
 
 request = request(app);
 
@@ -51,7 +51,7 @@ describe("fetching terms from the intent which is not present", function() {
 
 	it('trying to get the Terms of intent which is not there', function() {
 
-		expect(Object.keys(moduleToTest(intentObj))).to.have.lengthOf(0);
+		expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
 
 	});
 
