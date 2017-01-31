@@ -4,68 +4,41 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import Dialog from 'material-ui/Dialog';
 import MenuItem from 'material-ui/MenuItem';
 import Predicate from './Predicate.jsx';
-import Intent from './addIntent.jsx';
+//import Intent from './addIntent.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
 
 const styles = {
-  customWidth: {
-    width: 200
+  div: {
+    margin: 30
   },
 };
 
-const rel = ['No relations'];
+const rel = ['No relations','No relations'];
 export default class SubjectNode extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       searchSubjectText: '',
       searchObjectText: '',
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      searchTermText: '',
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
+      searchRelText: '',
       nodeRelations: rel,
       value: 1,
-      hintTextSubject: "Enter a Domain",
-      hintTextObject: "Nothing selected",
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      hintTextTerm: "Nothing selected",
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
+      hintTextSubject: "Enter a Subject",
+      hintTextObject: "No Subject Selected",
+      hintTextRel: "No Object Selected",
       errmsg: null,
       loading: null,
       subjectList: [],
       objectList: [],
-<<<<<<< HEAD
-<<<<<<< HEAD
       addLabel : 'Add Domain',
       relObjects: {},
-=======
-      termList: [],
-      addLabel : 'Add Domain',
-      relObjects: {},
-      relTerm: {},
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
-      addLabel : 'Add Domain',
-      relObjects: {},
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
       modalOpen: false,
     };
     this.getDomains();
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
   getTerms(searchIntent, searchTerm){
     let url = `domain/${searchIntent}/intents/${searchTerm}/term`;
     Request
@@ -92,14 +65,10 @@ export default class SubjectNode extends React.Component{
       }
     });
   }
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
 
 getTerms(searchText){
   let url = `domain/${searchText}/intents/${sear}`
 }
-
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
   getIntents(searchText){
     let url = `domain/${searchText}/intents`;
     Request
@@ -166,9 +135,6 @@ getTerms(searchText){
       addLabel: 'Edit Intent',
     });
   };
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
   handleUpdateTermInput = (searchIntent, searchTerm) => {
     let relations = this.state.relTerm[searchIntent, searchTerm];
     this.setState({
@@ -176,9 +142,6 @@ getTerms(searchText){
       addLabel: 'Edit Term',
     });
   };
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
 
   handleChange = (event, index, value) => this.setState({value});
 
@@ -214,29 +177,17 @@ getTerms(searchText){
     var menuitems =
       this.state.nodeRelations.map((relation,i) => <MenuItem value={i+1} primaryText={relation}/>);
     let relObjects = [];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     let relTerm = [];
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
     let that = this;
     Object.keys(this.state.relObjects).map(function(key) {
           relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
       });
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     Object.keys(this.state.relObjects).map(function(key) {
             relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
         });
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
 
     return (
-      <div>
+      <div styles={styles.div}>
         <AutoComplete
           hintText={this.state.hintTextSubject}
           searchText={this.state.searchSubjectText}
@@ -246,15 +197,17 @@ getTerms(searchText){
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
-        />
-        <DropDownMenu
-            value={this.state.value}
-            onChange={this.handleChange}
-            style={styles.customWidth}
-            autoWidth={false}
-          >
-          {menuitems}
-        </DropDownMenu>
+        />-[
+        <AutoComplete
+          hintText={this.state.hintTextRel}
+          searchText={this.state.searchRelText}
+          onUpdateInput={this.handleUpdateRelInput}
+          onNewRequest={this.handleNewRequest}
+          dataSource={this.state.nodeRelations}
+          filter={AutoComplete.caseInsensitiveFilter}
+          openOnFocus={true}
+          maxSearchResults={5}
+        />]->
         <AutoComplete
           hintText={this.state.hintTextObject}
           searchText={this.state.searchObjectText}
@@ -265,22 +218,6 @@ getTerms(searchText){
           openOnFocus={true}
           maxSearchResults={5}
         />
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        <AutoComplete
-          hintText={this.state.hintTextTerm}
-          searchText={this.state.searchTermText}
-          onUpdateInput={this.handleUpdateTermInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.termList}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-        />
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
-=======
->>>>>>> 84dcae83963fa615e47616eb1f7a34b5b754c7c2
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
       <Dialog
           title="Edit"
