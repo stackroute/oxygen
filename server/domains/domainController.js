@@ -662,9 +662,7 @@ module.exports = {
     getAllDomain: getAllDomain,
     getTreeOfDomain: getTreeOfDomain,
     deleteDomain:deleteDomain,
-getTermsIntents: getTermsIntents
-    publishNewIntent: publishNewIntent,
+    getTermsIntents: getTermsIntents,
     publishNewTerm: publishNewTerm,
-deleteRelation: deleteRelation,
- publishSubConcept: publishSubConcept
+    deleteRelation: deleteRelation
 }
