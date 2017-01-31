@@ -51,7 +51,7 @@ describe("Make GET requests to intent :", function() {
 describe("fetching terms from the intent which is not present", function() {
 	let intentObj = {
 		domain: "no_domain",
-		intent:"no_domain"
+		intent: "no_domain"
 	};
 
 	it('trying to get the Terms of intent which is not there', function() {

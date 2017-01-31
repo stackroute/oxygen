@@ -6,6 +6,7 @@ const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 
 let getPublishTerm = function(intentObj) {
+
   let intentName=intentObj.intent;
   let termName=intentObj.term;
   let relation=intentObj.relation;

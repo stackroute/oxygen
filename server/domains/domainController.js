@@ -1,3 +1,4 @@
+
 'use strict';
 const domainNeo4jController = require('./domainNeo4jController');
 const intentNeo4jController = require('./intentNeo4jController');
