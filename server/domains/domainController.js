@@ -665,7 +665,7 @@ module.exports = {
     publishNewConcept: publishNewConcept,
     deleteRelation: deleteRelation,
 
-    publishNewTerm: publishNewTerm
+    publishNewTerm: publishNewTerm,
     publishNewIntent: publishNewIntent,
     publishNewSubConcept: publishNewSubConcept,
     publishEditedSubConcept: publishEditedSubConcept

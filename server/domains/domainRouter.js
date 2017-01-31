@@ -466,7 +466,7 @@ router.patch('/subConcept', function(req, res) {
     }
 });
 
-/Adding new term to a existing intent
+//Adding new term to a existing intent
 router.post('/add/term', function(req, res) {
    let intentObj = req.body;
    logger.debug("Got request to add a new term to a intent", req.body);
