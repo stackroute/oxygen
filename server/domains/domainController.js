@@ -559,9 +559,6 @@ module.exports = {
     freshlyIndexDomain: freshlyIndexDomain,
     fetchWebDocuments: fetchWebDocuments,
     getAllDomain: getAllDomain,
-    getIntentsRelations: getIntentsRelations,
-    publishNewIntent: publishNewIntent,
     publishNewConcept: publishNewConcept,
-    publishNewSubConcept : publishNewSubConcept,
     deleteRelation : deleteRelation
 }
