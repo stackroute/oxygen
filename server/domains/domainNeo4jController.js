@@ -665,6 +665,11 @@ let deleteDomain = function(domain) {
     });
 }
 
+
+
+
+
+
 let deleteDomainCallback = function(domain, callback) {
   deleteDomain(domain)
 }
@@ -744,6 +749,9 @@ let getDeleteRelationCallback = function(deleteObj, callback) {
 
 
 
+
+
+
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept: getDomainConcept,
@@ -764,4 +772,5 @@ module.exports = {
   getTreeOfDomainCallback: getTreeOfDomainCallback,
   deleteDomainCallback: deleteDomainCallback,
  getDeleteRelationCallback: getDeleteRelationCallback
+
 }

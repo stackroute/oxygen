@@ -251,35 +251,6 @@ router.delete('/deletedomain/:domainName', function (req, res) {
         });
     }
 });
-<<<<<<< HEAD
-router.get('/:intentName/terms', function(req,res){
-  try {
-    let domainName = req.params.intentName;
-    domainCtrl.getTermsIntents(domainName).then(function(domainDetails) {
-        logger.info(
-          "Successfully retrieved all Relations and intents of a domain : "
-        );
-        logger.info(domainDetails)
-        res.send(domainDetails);
-        return;
-      },
-      function(err) {
-        logger.error(
-          "Encountered error in retrieved concept(s) of domain: ",
-          err);
-        res.send(err);
-        return;
-      })
-
-  } catch (err) {
-    logger.error("Caught a error in retrieved concept(s) of domain ", err);
-    res.status(500).send({
-      error: "Something went wrong, please try later..!"
-    });
-    return;
-  }
-})
-=======
 //Adding new intent to a existing domain
 
 router.post('/add/intent', function(req, res) {
@@ -336,7 +307,6 @@ router.post('/add/term', function(req, res) {
         return;
     }
 });
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
 
 //deleting
 
