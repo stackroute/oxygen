@@ -6,6 +6,17 @@ var intentToTest = require('../server/domains/intentNeo4jController').getPublish
 
 request = request(app);
 
+describe("testing", function(){
+	it('content length', function(done){
+		request.post('/domain/add/intent')
+		.expect('Content-Length', '34', done)
+	});
+	it('content type', function(done){
+		request.post('/domain/add/intent')
+		.expect('Content-Type', /json/, done)
+	});
+});
+
 describe("Make GET requests to intent ", function() {
 	it('Simple GET Request to root url', function(done) {
 		request.get('/').expect(200, done);
@@ -19,12 +30,12 @@ describe("Make GET requests to intent ", function() {
 	});
 });
 
-// describe("Make GET requests to intent :", function() {
-// 	it('Testing for all intent', function(done) {
-// 		request.get('/domain/add/intent').expect(200, done);
-// 		this.timeout(10000);
-// 	});
-// });
+describe("Make GET requests to intent :", function() {
+	it('Testing for all intent', function(done) {
+		request.post('/domain/add/intent').expect(200, done);
+		this.timeout(10000);
+	});
+});
 
 
 // describe("Make GET requests to intent along with intent name ", function() {
@@ -36,12 +47,6 @@ describe("Make GET requests to intent ", function() {
 // });
 //
 
-describe("Make POST requests to intents along with intent name", function(){
-	it('Testing for a intent which is not present', function(done){
-		request.post('/domain/add/intent').
-		expect({error: 'Intents are not added from mongo'})
-	});
-});
 
 describe("fetching terms from the intent which is not present", function() {
 	let intentObj = {

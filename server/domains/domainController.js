@@ -1,5 +1,8 @@
 'use strict';
 const domainNeo4jController = require('./domainNeo4jController');
+const intentNeo4jController = require('./intentNeo4jController');
+const conceptNeo4jController = require('./conceptNeo4jController')
+const termNeo4jController = require('./termNeo4jController');
 const domainMongoController = require('./domainMongoController');
 const domainMgr = require('./domainManager');
 const startCrawlerMQ = require('./../searcher/docOpenCrawlerEngine').startCrawler;
@@ -42,21 +45,21 @@ let insertUrls = function(dataToInsert) {
 }
 
 
-let deleteRelation = function(deleteObj) {
-    logger.debug("Received request for deleting the relationship between " + deleteObj.subject + " and " + deleteObj.object);
-    let promise = new Promise(function(resolve, reject) {
-        async.waterfall([function(callback) {
-                domainNeo4jController.getDeleteRelationCallback(deleteObj, callback);
-            }],
-            function(err, result) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
-            }); //end of async.waterfall
-    });
-    return promise;
-}
+// let deleteRelation = function(deleteObj) {
+//     logger.debug("Received request for deleting the relationship between " + deleteObj.subject + " and " + deleteObj.object);
+//     let promise = new Promise(function(resolve, reject) {
+//         async.waterfall([function(callback) {
+//                 domainNeo4jController.getDeleteRelationCallback(deleteObj, callback);
+//             }],
+//             function(err, result) {
+//                 if (err) {
+//                     reject(err);
+//                 }
+//                 resolve(result);
+//             }); //end of async.waterfall
+//     });
+//     return promise;
+// }
 
 
 
@@ -548,6 +551,66 @@ let getAllDomain = function() {
   });
   return promise;
 }
+/*
+test function generation
+ */
+
+let testFnGen = function(data){
+    console.log('testFnGen: data ',data);
+    try{
+
+        startFnGen();
+        return {
+            msg: "Test function generation was successful"
+        }
+    } catch (err){
+        return {
+            msg: 'Error: test Function wasn not generated successfully',
+            err: err
+        }
+    }
+}
+
+let publishNewTerm = function(intentObj) {
+   logger.debug("Received request for publishing new term to the intent: "+intentObj.intent);
+   let promise = new Promise(function(resolve, reject) {
+       logger.debug(intentObj.term);
+       if (!intentObj.term ||
+           intentObj.term.length <= INTENT_NAME_MIN_LENGTH) {
+           reject({
+               error: 'Invalid term name..!'
+           });
+       }
+       async.waterfall([
+               function(callback) {
+                   termNeo4jController.getPublishTermCallback(intentObj, callback);
+               }
+           ],
+           function(err, termName) {
+               if (err) {
+                   reject(err);
+               }
+               resolve(termName);
+           }); //end of async.waterfall
+     });
+   return promise;
+}
+
+let deleteRelation = function(deleteObj) {
+    logger.debug("Received request for deleting the relationship between " + deleteObj.subject + " and " + deleteObj.object);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([function(callback) {
+                domainNeo4jController.getDeleteRelationCallback(deleteObj, callback);
+            }],
+            function(err, result) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
 let publishNewConcept = function(domainObj) {
    logger.debug("Received request for publishing new concept to the domain: "+domainObj.domain);
    let promise = new Promise(function(resolve, reject) {
@@ -575,7 +638,6 @@ let publishNewConcept = function(domainObj) {
    return promise;
 }
 
-
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain: getDomain,
@@ -587,6 +649,7 @@ module.exports = {
   getAllDomain: getAllDomain,
   publishNewIntent: publishNewIntent,
   publishNewConcept : publishNewConcept,
+  publishNewTerm: publishNewTerm,
   getTermsIntents: getTermsIntents,
   deleteRelation: deleteRelation
 }

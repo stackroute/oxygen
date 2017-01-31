@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 var assert = require('chai').assert;
 var request = require("supertest");
 var moduleToTest = require('../server/crawler/crawlerNeo4jController').getTerms;
-var intentToTest = require('../server/domains/intentNeo4jController').getPublishIntent;
+
 
 request = request(app);
 describe("Make GET requests to domain ", function() {
