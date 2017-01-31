@@ -535,6 +535,34 @@ let getTreeOfDomain = function(domain) {
     return promise;
 }
 
+let publishNewIntent = function(domainObj) {
+   logger.debug("Received request for publishing new intent to the domain: "+domainObj.domain);
+   let promise = new Promise(function(resolve, reject) {
+       logger.debug(domainObj.intent);
+       if (!domainObj.intent ||
+           domainObj.intent.length <= INTENT_NAME_MIN_LENGTH) {
+           reject({
+               error: 'Invalid intent name..!'
+           });
+       }
+       async.waterfall([function(callback) {
+                   domainMongoController.checkDomainCallback(domainObj.domain,
+                       callback);
+               },
+               function(checkedDomain, callback) {
+                   intentNeo4jController.getPublishIntentCallback(domainObj, callback);
+               }
+           ],
+           function(err, intentName) {
+               if (err) {
+                   reject(err);
+               }
+               resolve(intentName);
+           }); //end of async.waterfall
+   });
+   return promise;
+}
+
 let deleteDomain =function(domain){
     logger.debug('domain ctrl',domain);
     logger.debug("Received request for deleting domain",domain.domainName);
