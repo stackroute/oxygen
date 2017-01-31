@@ -235,6 +235,33 @@ router.get('/domainhomeview/:domainName', function (req, res) {
     }
 });
 
+router.post('/add/concept', function(req, res) {
+    let domainObj = req.body;
+    logger.debug("Got request to add a new concept to a domain", req.body);
+    logger.debug("Domin name :" + domainObj.domain);
+
+    try {
+        domainCtrl.publishNewConcept(domainObj).then(function(conceptName) {
+                logger.info("Successfully published a concept to the domain " + domainObj.domain);
+                res.send(conceptName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing concept : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new concept to the domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
 router.delete('/deletedomain/:domainName', function (req, res) {
     try {
         let reqObj = {
@@ -251,7 +278,7 @@ router.delete('/deletedomain/:domainName', function (req, res) {
         });
     }
 });
-<<<<<<< HEAD
+
 router.get('/:intentName/terms', function(req,res){
   try {
     let domainName = req.params.intentName;
@@ -279,7 +306,7 @@ router.get('/:intentName/terms', function(req,res){
     return;
   }
 })
-=======
+
 //Adding new intent to a existing domain
 
 router.post('/add/intent', function(req, res) {
@@ -336,7 +363,7 @@ router.post('/add/term', function(req, res) {
         return;
     }
 });
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
+
 
 //deleting
 
