@@ -4,7 +4,7 @@
   "description": "Breath intent intelligence to semantic search",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha test/test.js",
     "serve": "node bin/www",
     "www": "node bin/www",
     "search": "node server/docsearch.service",
