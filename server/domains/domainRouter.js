@@ -251,7 +251,7 @@ router.delete('/deletedomain/:domainName', function (req, res) {
         });
     }
 });
-<<<<<<< HEAD
+
 router.get('/:intentName/terms', function(req,res){
   try {
     let domainName = req.params.intentName;
@@ -279,7 +279,7 @@ router.get('/:intentName/terms', function(req,res){
     return;
   }
 })
-=======
+
 //Adding new intent to a existing domain
 
 router.post('/add/intent', function(req, res) {
@@ -336,7 +336,7 @@ router.post('/add/term', function(req, res) {
         return;
     }
 });
->>>>>>> 7d6e997075ccf72d6fbace4b02a971bd00d0fec5
+
 
 //deleting
 

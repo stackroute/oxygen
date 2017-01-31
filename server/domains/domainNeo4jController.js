@@ -793,6 +793,59 @@ let getDeleteRelationCallback = function(deleteObj, callback) {
         callback(err, null);
     });
 }
+let getTermsIntentsCallback = function(termsObj, callback) {
+    logger.debug("from the callback : " + termsObj);
+    getTermsIntents(termsObj).then(function(result) {
+        callback(null, result);
+    }, function(err) {
+        callback(err, null);
+    });
+}
+let getTermsIntents = function(domainName){
+  let promise = new Promise(function(resolve, reject) {
+    logger.debug(
+      "Now proceeding to retrive the intents and relations for domain name: ",
+      domainName);
+    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+        encrypted: false
+      }
+    );
+    let session = driver.session();
+    logger.debug("obtained connection with neo4j");
+    let query = 'MATCH (i:' + graphConsts.NODE_INTENT +
+      '{name:{domainName}})'
+      query += 'match (t:Term)-[r]->(i)'
+      query += 'return t.name as Term,type(r) as Relation';
+    let params = {
+      domainName: domainName
+    };
+    let intents = {};
+    session.run(query, params)
+    .then(function(result) {
+      result.records.forEach(function(record){
+        if(intents.hasOwnProperty(record._fields[0])){
+          intents[record._fields[0]].push(record._fields[1]);
+        }else{
+          intents[record._fields[0]] = [record._fields[1]];
+        }
+      });
+      //intents = result;
+      session.close();
+      resolve({
+        Domain: domainName,
+        Intents: intents
+      });
+    })
+    .catch(function(err) {
+      logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
+        query);
+      reject(err);
+    });
+  });
+  return promise;
+}
+
 
 
 
@@ -816,5 +869,6 @@ module.exports = {
   getTreeOfDomainCallback: getTreeOfDomainCallback,
   deleteDomainCallback: deleteDomainCallback,
  getDeleteRelationCallback: getDeleteRelationCallback,
- getPublishSubConceptCallback: getPublishSubConceptCallback
+ getPublishSubConceptCallback: getPublishSubConceptCallback,
+ getTermsIntentsCallback:getTermsIntentsCallback
 }
