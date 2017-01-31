@@ -7,7 +7,7 @@ const domainCtrl = require('./domainController');
 // Mounted at mount point /domain/
 
 // Create new domain
-router.post('/:domainName', function (req, res) {
+router.post('/:domainName', function(req, res) {
 
     try {
 
@@ -16,13 +16,13 @@ router.post('/:domainName', function (req, res) {
             req.params.domainName);
 
         domainCtrl.publishNewDomain(newDomainObj)
-            .then(function (savedDomainObj) {
+            .then(function(savedDomainObj) {
                     logger.debug("Successfully published new domain: ",
                         savedDomainObj.name);
                     res.send(savedDomainObj);
                     return;
                 },
-                function (err) {
+                function(err) {
                     logger.error("Encountered error in publishing a new domain: ",
                         err);
                     res.status(500).send({
@@ -38,7 +38,7 @@ router.post('/:domainName', function (req, res) {
         return;
     }
 });
-router.post('/:domainName/crawl', function (req, res) {
+router.post('/:domainName/crawl', function(req, res) {
     try {
 
         let reqObj = {
@@ -60,16 +60,16 @@ router.post('/:domainName/crawl', function (req, res) {
     }
 });
 // Get details of all domain in the system
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
     try {
-        domainCtrl.getAllDomainDetails().then(function (cardDetailsObj) {
+        domainCtrl.getAllDomainDetails().then(function(cardDetailsObj) {
                 logger.debug(
                     "Successfully retrieved all details to show length----->",
                     cardDetailsObj.length);
                 res.send(cardDetailsObj);
                 return;
             },
-            function (err) {
+            function(err) {
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
@@ -87,16 +87,16 @@ router.get('/', function (req, res) {
 });
 
 // Get all domain in the system
-router.get('/domains', function (req, res) {
+router.get('/domains', function(req, res) {
     try {
-        domainCtrl.getAllDomain().then(function (domainObj) {
+        domainCtrl.getAllDomain().then(function(domainObj) {
                 logger.debug(
                     "Successfully retrieved all details to show length----->",
                     domainObj.length);
                 res.send(domainObj);
                 return;
             },
-            function (err) {
+            function(err) {
                 logger.error("Encountered error in retrieving  domain: ",
                     err);
                 res.send(err);
@@ -113,12 +113,12 @@ router.get('/domains', function (req, res) {
 });
 
 // Get details of a specific domain by its name
-router.get('/:domainName', function (req, res) {
+router.get('/:domainName', function(req, res) {
 
     try {
 
         let domainName = req.params.domainName;
-        domainCtrl.getDomain(domainName).then(function (domainDetails) {
+        domainCtrl.getDomain(domainName).then(function(domainDetails) {
                 logger.info(
                     "Successfully retrieved all concepts and intents of a domain : "
                 );
@@ -126,7 +126,7 @@ router.get('/:domainName', function (req, res) {
                 res.send(domainDetails);
                 return;
             },
-            function (err) {
+            function(err) {
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
@@ -145,16 +145,16 @@ router.get('/:domainName', function (req, res) {
 });
 
 // Freshly index a domain
-router.post('/:domainName/index', function (req, res) {
+router.post('/:domainName/index', function(req, res) {
     logger.debug("going to freshly index domain ", req.params.domainName);
     try {
-        domainCtrl.freshlyIndexDomain(req.params.domainName).then(function (obj) {
+        domainCtrl.freshlyIndexDomain(req.params.domainName).then(function(obj) {
                 logger.debug("Successfully indexing for all concepts  ----->",
                     obj);
                 res.send("Successfully done");
                 return;
             },
-            function (err) {
+            function(err) {
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
@@ -172,20 +172,20 @@ router.post('/:domainName/index', function (req, res) {
 });
 
 //get web Documents
-router.post('/documents/:domainName', function (req, res) {
+router.post('/documents/:domainName', function(req, res) {
     logger.debug("got request for retrieving web documents ", req.body);
     logger.debug("Domain name ", req.body.domainName);
     //res.send('success');
     try {
 
         let domainObj = req.body;
-        domainCtrl.fetchWebDocuments(domainObj).then(function (webDocuments) {
+        domainCtrl.fetchWebDocuments(domainObj).then(function(webDocuments) {
                 logger.info("Successfully retrieved all we documents : ");
                 logger.debug(webDocuments)
                 res.send(webDocuments);
                 return;
             },
-            function (err) {
+            function(err) {
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
@@ -203,7 +203,7 @@ router.post('/documents/:domainName', function (req, res) {
 
 });
 
-router.get('/domainhomeview/:domainName', function (req, res) {
+router.get('/domainhomeview/:domainName', function(req, res) {
     console.log('in DomainRouter')
     try {
         let reqObj = {
@@ -213,12 +213,12 @@ router.get('/domainhomeview/:domainName', function (req, res) {
 
         var collection = domainCtrl.getTreeOfDomain(reqObj);
         // logger.debug('coll',collection);
-        collection.then(function (jsonTree) {
+        collection.then(function(jsonTree) {
             logger.debug("getting data into API")
-            // logger.info(jsonTree);
+                // logger.info(jsonTree);
             res.send(jsonTree);
             return;
-        }, function (err) {
+        }, function(err) {
             logger.error(
                 "Encountered error in retrieved concept(s) of domain: ",
                 err);
@@ -262,7 +262,7 @@ router.post('/add/concept', function(req, res) {
     }
 });
 
-router.delete('/deletedomain/:domainName', function (req, res) {
+router.delete('/deletedomain/:domainName', function(req, res) {
     try {
         let reqObj = {
             domainName: req.params.domainName
@@ -279,35 +279,34 @@ router.delete('/deletedomain/:domainName', function (req, res) {
     }
 });
 
-router.get('/:intentName/terms', function(req,res){
-  try {
-    let domainName = req.params.intentName;
-    domainCtrl.getTermsIntents(domainName).then(function(domainDetails) {
-        logger.info(
-          "Successfully retrieved all Relations and intents of a domain : "
-        );
-        logger.info(domainDetails)
-        res.send(domainDetails);
-        return;
-      },
-      function(err) {
-        logger.error(
-          "Encountered error in retrieved concept(s) of domain: ",
-          err);
-        res.send(err);
-        return;
-      })
+router.get('/:intentName/terms', function(req, res) {
+    try {
+        let domainName = req.params.intentName;
+        domainCtrl.getTermsIntents(domainName).then(function(domainDetails) {
+                logger.info(
+                    "Successfully retrieved all Relations and intents of a domain : "
+                );
+                logger.info(domainDetails)
+                res.send(domainDetails);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in retrieved concept(s) of domain: ",
+                    err);
+                res.send(err);
+                return;
+            })
 
-  } catch (err) {
-    logger.error("Caught a error in retrieved concept(s) of domain ", err);
-    res.status(500).send({
-      error: "Something went wrong, please try later..!"
-    });
-    return;
-  }
+    } catch (err) {
+        logger.error("Caught a error in retrieved concept(s) of domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
 })
 
-//Adding new intent to a existing domain
 
 router.post('/add/intent', function(req, res) {
     let domainObj = req.body;
@@ -365,14 +364,11 @@ router.post('/add/term', function(req, res) {
 });
 
 
-//deleting
-
-
 router.post('/delete/relation', function(req, res) {
 
     let deleteObj = req.body;
 
-    logger.info("Got request to delete a relationship :" +deleteObj.subject);
+    logger.info("Got request to delete a relationship :" + deleteObj.subject);
 
 
 
@@ -388,7 +384,7 @@ router.post('/delete/relation', function(req, res) {
 
             function(err) {
 
-                logger.error("Encountered error in deleting : ",err);
+                logger.error("Encountered error in deleting : ", err);
 
                 res.send(err);
 
@@ -396,7 +392,7 @@ router.post('/delete/relation', function(req, res) {
 
             });
 
-    } catch (err){
+    } catch (err) {
 
         logger.error("Caught an error in deleting ", err);
 
@@ -439,6 +435,63 @@ router.post('/add/subConcept', function(req, res) {
         });
         return;
     }
+});
+
+//Editing sub concept to a concept
+
+router.patch('/subConcept', function(req, res) {
+    let conceptObj = req.body;
+    logger.debug("Got request to edit a sub concept to a concept", req.body);
+    logger.debug("Concept name :" + conceptObj.subject);
+
+    try {
+        domainCtrl.publishEditedSubConcept(conceptObj).then(function(objectName) {
+                logger.info("Successfully Edited a subConcept to the concept " + conceptObj.subject);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing Edited subConcept : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a subConcept to the concept ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+/Adding new term to a existing intent
+router.post('/add/term', function(req, res) {
+   let intentObj = req.body;
+   logger.debug("Got request to add a new term to a intent", req.body);
+   logger.debug("Intent name :" + intentObj.intent);
+
+   try {
+       domainCtrl.publishNewTerm(intentObj).then(function(termName) {
+               logger.info("Successfully published a term to the intent " + intentObj.intent);
+               res.send(termName);
+               return;
+           },
+           function(err) {
+               logger.error(
+                   "Encountered error in publishing term : ",
+                   err);
+               res.send(err);
+               return;
+           })
+   } catch (err) {
+       logger.error("Caught a error in publishing a new term to the intent ", err);
+       res.status(500).send({
+           error: "Something went wrong, please try later..!"
+       });
+       return;
+   }
 });
 
 module.exports = router;
