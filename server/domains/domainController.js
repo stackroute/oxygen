@@ -655,6 +655,33 @@ let publishNewTerm = function(intentObj) {
     return promise;
 }
 
+//Editing Intent term relation
+
+let publishEditedIntentTermRelation = function(editTermRelation) {
+    logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(editTermRelation.intentName);
+        if (!editTermRelation.intentName || !editTermRelation.termName) {
+            reject({
+                error: 'Invalid Intent or term name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    termNeo4jController.getPublishEditedIntentTermRelationCallback(editTermRelation, callback);
+                }
+            ],
+            function(err, objectName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(objectName);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
+
+
 module.exports = {
     publishNewDomain: publishNewDomain,
     getDomain: getDomain,
@@ -670,5 +697,6 @@ module.exports = {
     publishNewTerm: publishNewTerm,
     publishNewIntent: publishNewIntent,
     publishNewSubConcept: publishNewSubConcept,
-    publishEditedSubConcept: publishEditedSubConcept
+    publishEditedSubConcept: publishEditedSubConcept,
+    publishEditedIntentTermRelation: publishEditedIntentTermRelation
 }

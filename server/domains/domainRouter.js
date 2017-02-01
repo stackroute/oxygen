@@ -402,11 +402,8 @@ router.post('/delete/relation', function(req, res) {
             error: "Something went wrong, please try later..!"
 
         });
-
         return;
-
     }
-
 });
 
 //Adding sub concept to a concept
@@ -506,6 +503,39 @@ router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', 
     }
 });
 
+
+
+router.get('/:domainName/:subjectType/:subjectName/objects', function(req, res) {
+    logger.debug("Got request to get Objects of", req.params.subjectType);
+    logger.debug("Node name :" + req.params.subjectName);
+    let nodeObj = {
+        nodeType: req.params.subjectType,
+        nodeName: req.params.subjectName,
+        domainName: req.params.domainName
+    }
+
+    try {
+        subjectObjectCtrl.getObjects(nodeObj).then(function(objects) {
+                logger.info("Successfully published a term to the intent " + objects);
+                res.send(objects);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing term : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught error getting objects ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
 //Generalized Editing Relation for Concept,Intent and Term
 router.patch('/:domainName/subject/:subject/object/:object/oldPredicate/:oldRelation/newPredicate/:newRelation', function(req, res) {
 
@@ -543,7 +573,41 @@ router.patch('/:domainName/subject/:subject/object/:object/oldPredicate/:oldRela
         });
         return;
     }
+});
 
+//Editing Term relation with Intent
+
+router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation', function(req, res) {
+
+  let editTermRelation = {
+      domain: req.params.domainName,
+      intentName: req.params.intentName,
+      termName: req.params.termName,
+      relationName: req.params.relation
+  }
+    logger.debug("Got request to edit a Intent terrm relation");
+    logger.debug("Intent name :" + editTermRelation.intentName);
+
+    try {
+        domainCtrl.publishEditedIntentTermRelation(editTermRelation).then(function(objectName) {
+                logger.info("Successfully Edited a Intent terrm relation for " + editTermRelation.intentName);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing Intent terrm relation : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a Intent terrm relation ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
 });
 
 module.exports = router;

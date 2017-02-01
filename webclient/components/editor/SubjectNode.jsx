@@ -13,9 +13,15 @@ const styles = {
   div: {
     margin: 30
   },
+  domainDiv: {
+    width: '50%'
+  }
 };
 
-const rel = ['No relations','No relations'];
+const dataSourceConfig = {
+  text: 'nodeKey',
+  value: 'nodeValue',
+};
 export default class SubjectNode extends React.Component{
   constructor(props){
     super(props);
@@ -23,13 +29,16 @@ export default class SubjectNode extends React.Component{
       searchSubjectText: '',
       searchObjectText: '',
       searchRelText: '',
-      nodeRelations: rel,
+      nodeRelations: [],
       value: 1,
-      hintTextSubject: "Enter a Subject",
+      hintTextDomain: "Enter a Domain",
+      hintTextSubject: "No Domain Selected",
       hintTextObject: "No Subject Selected",
       hintTextRel: "No Object Selected",
       errmsg: null,
       loading: null,
+      selectedDomain: null,
+      domainList: [],
       subjectList: [],
       objectList: [],
       addLabel : 'Add Domain',
@@ -39,8 +48,8 @@ export default class SubjectNode extends React.Component{
     this.getDomains();
   }
 
-  getTerms(searchIntent, searchTerm){
-    let url = `domain/${searchIntent}/intents/${searchTerm}/term`;
+  getSubjects(domainName){
+    let url = `domain/${domainName}/domain/${domainName}/objects`;
     Request
     .get(url)
     .end((err, res) => {
@@ -51,26 +60,42 @@ export default class SubjectNode extends React.Component{
         // console.log('Response on show: ', JSON.parse(res.text));
         // let domainList1=this.state.domainList;
         let response = JSON.parse(res.text);
-        if(response['Terms'].length === 0){
+        if(response.length === 0){
           this.setState({
-            hintTextTerm: "No Results",
+            hintTextObject: "No Results",
           })
         }
         else {
+          var listSubjects = [];
+          for(let each in response){
+            if(response.hasOwnProperty(each))
+              listSubjects.push({nodeKey: each,nodeValue: response[each]});
+          }
+          listSubjects.push({nodeKey: 'D:'+ domainName,nodeValue: 'D:'+domainName});
           this.setState({
-            relTerm: response['Terms'],
-            TermList: Object.keys(response['Terms'])
+            subjectList: listSubjects,
+            searchObjectText: '',
+            loading: 'hide'
           });
         }
       }
     });
   }
 
-getTerms(searchText){
-  let url = `domain/${searchText}/intents/${sear}`
-}
-  getIntents(searchText){
-    let url = `domain/${searchText}/intents`;
+  getObjects(nodeType,searchText){
+    let url = '';
+    switch(nodeType){
+      case 'D':
+        url = `domain/${searchText}/domain/${searchText}/objects`;
+        break;
+      case 'C':
+        url = `domain/${searchText}/concept/${searchText}/objects`;
+        break;
+      case 'I':
+        url = `domain/${searchText}/intent/${searchText}/objects`;
+        break;
+    }
+
     Request
     .get(url)
     .end((err, res) => {
@@ -81,15 +106,21 @@ getTerms(searchText){
         // console.log('Response on show: ', JSON.parse(res.text));
         // let domainList1=this.state.domainList;
         let response = JSON.parse(res.text);
-        if(response['Intents'].length === 0){
+        if(response.length === 0){
           this.setState({
             hintTextObject: "No Results",
           })
         }
         else {
+          var listObjects = [];
+          for(let each in response){
+            if(response.hasOwnProperty(each))
+              listObjects.push({nodeKey: each,nodeValue: response[each]});
+          }
           this.setState({
-            relObjects: response['Intents'],
-            objectList: Object.keys(response['Intents'])
+            objectList: listObjects,
+            searchRelText: '',
+            loading: 'hide'
           });
         }
       }
@@ -113,7 +144,7 @@ getTerms(searchText){
             listDomain.push(response[each]['name']);
           }
           this.setState({
-            subjectList: listDomain,
+            domainList: listDomain,
             loading: 'hide'
           });
         }
@@ -121,26 +152,33 @@ getTerms(searchText){
     });
   }
 
-  handleUpdateSubjectInput = (searchText) => {
-    this.getIntents(searchText);
+  handleUpdateDomainInput = (searchText) => {
+    this.getSubjects(searchText);
     this.setState({
       addLabel: 'Add Intent',
+      hintTextSubject: 'Subjects loaded'
+    });
+  };
+
+  handleUpdateSubjectInput = (searchText) => {
+    console.log(searchText);
+    this.getObjects(searchText.charAt(0),searchText.substr(2,searchText.length));
+    this.setState({
+      addLabel: 'Add Intent',
+      hintTextObject: 'Objects loaded'
     });
   };
 
   handleUpdateObjectInput = (searchText) => {
-    let relations = this.state.relObjects[searchText];
-    this.setState({
-      nodeRelations: relations,
-      addLabel: 'Edit Intent',
-    });
-  };
-  handleUpdateTermInput = (searchIntent, searchTerm) => {
-    let relations = this.state.relTerm[searchIntent, searchTerm];
-    this.setState({
-      nodeRelations: relations,
-      addLabel: 'Edit Term',
-    });
+    for (var key in this.state.objectList) {
+      if(this.state.objectList[key]['nodeKey'] == searchText){
+        this.setState({
+          nodeRelations: this.state.objectList[key]['nodeValue'],
+          hintTextRel: 'Relations Loaded',
+        });
+        break;
+      }
+    }
   };
 
   handleChange = (event, index, value) => this.setState({value});
@@ -148,6 +186,8 @@ getTerms(searchText){
   handleNewRequest = () => {
     this.setState({
       searchSubjectText: '',
+      searchObjectText: '',
+      searchRelText: '',
     });
   };
 
@@ -174,29 +214,39 @@ getTerms(searchText){
             onTouchTap={this.handleModalClose}
           />,
       ];
-    var menuitems =
-      this.state.nodeRelations.map((relation,i) => <MenuItem value={i+1} primaryText={relation}/>);
     let relObjects = [];
     let relTerm = [];
     let that = this;
     Object.keys(this.state.relObjects).map(function(key) {
           relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
       });
-    Object.keys(this.state.relObjects).map(function(key) {
-            relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
-        });
 
     return (
       <div styles={styles.div}>
+        <div style={{width : "50%",margin: 'auto'}}>
+          <AutoComplete
+            hintText={this.state.hintTextDomain}
+            searchText={this.state.searchDomainText}
+            onUpdateInput={this.handleUpdateDomainInput}
+            onNewRequest={this.handleNewRequest}
+            dataSource={this.state.domainList}
+            filter={AutoComplete.caseInsensitiveFilter}
+            openOnFocus={true}
+            maxSearchResults={5}
+            style={styles.div}
+          />
+        </div>
         <AutoComplete
           hintText={this.state.hintTextSubject}
           searchText={this.state.searchSubjectText}
           onUpdateInput={this.handleUpdateSubjectInput}
           onNewRequest={this.handleNewRequest}
           dataSource={this.state.subjectList}
+          dataSourceConfig={dataSourceConfig}
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
+          style={styles.div}
         />-[
         <AutoComplete
           hintText={this.state.hintTextRel}
@@ -207,16 +257,19 @@ getTerms(searchText){
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
-        />]->
+          style={styles.div}
+        />]-->
         <AutoComplete
           hintText={this.state.hintTextObject}
           searchText={this.state.searchObjectText}
           onUpdateInput={this.handleUpdateObjectInput}
           onNewRequest={this.handleNewRequest}
           dataSource={this.state.objectList}
+          dataSourceConfig={dataSourceConfig}
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
+          style={styles.div}
         />
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
       <Dialog
