@@ -91,6 +91,29 @@ let fetchDomainCardDetails = function(domain) {
   return promise;
 }
 
+let publishEditedSubConcept = function(conceptObj) {
+   logger.debug("Received request for publishing Edited subConcept to the concept: " + conceptObj.subject);
+   let promise = new Promise(function(resolve, reject) {
+       logger.debug(conceptObj.intent);
+       if (!conceptObj.subject || !conceptObj.object) {
+           reject({
+               error: 'Invalid concept or subConcept name..!'
+           });
+       }
+       async.waterfall([
+               function(callback) {
+                   conceptNeo4jController.getPublishEditedSubConceptCallback(conceptObj, callback);
+               }
+           ],
+           function(err, objectName) {
+               if (err) {
+                   reject(err);
+               }
+               resolve(objectName);
+           }); //end of async.waterfall
+   });
+   return promise;
+}
 
 // This should be private and not exposed
 let indexPublishedDomain = function(domainName) {
@@ -639,6 +662,31 @@ let publishNewConcept = function(domainObj) {
    return promise;
 }
 
+
+let publishEditedIntent = function(intentObj) {
+   logger.debug("Received request for publishing Edited intent: " + intentObj.domain);
+   let promise = new Promise(function(resolve, reject) {
+       logger.debug(intentObj.intent);
+       if (!intentObj.domain || !intentObj.intent) {
+           reject({
+               error: 'Invalid intent name..!'
+           });
+       }
+       async.waterfall([
+               function(callback) {
+                   intentNeo4jController.getPublishEditedIntentCallback(intentObj, callback);
+               }
+           ],
+           function(err, intentName) {
+               if (err) {
+                   reject(err);
+               }
+               resolve(intentName);
+           }); //end of async.waterfall
+   });
+   return promise;
+}
+
 module.exports = {
   publishNewDomain: publishNewDomain,
   getDomain: getDomain,
@@ -652,5 +700,7 @@ module.exports = {
   publishNewConcept : publishNewConcept,
   publishNewTerm: publishNewTerm,
   getTermsIntents: getTermsIntents,
-  deleteRelation: deleteRelation
+  deleteRelation: deleteRelation,
+  publishEditedIntent: publishEditedIntent,
+  publishEditedSubConcept: publishEditedSubConcept
 }

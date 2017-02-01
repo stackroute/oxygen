@@ -1,7 +1,5 @@
 const neo4jDriver = require('neo4j-driver').v1;
-
 const logger = require('./../../applogger');
-
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 
