@@ -1,5 +1,7 @@
 'use strict';
 const domainNeo4jController = require('./domainNeo4jController');
+const termNeo4jController = require('./termNeo4jController');
+const intentNeo4jController = require('./intentNeo4jController');
 const domainMongoController = require('./domainMongoController');
 const domainMgr = require('./domainManager');
 const startCrawlerMQ = require('./../searcher/docOpenCrawlerEngine').startCrawler;
@@ -629,28 +631,28 @@ let publishNewIntent = function(domainObj) {
 }
 
 let publishNewTerm = function(intentObj) {
-  logger.debug("Received request for publishing new term to the intent: "+intentObj.intent);
-  let promise = new Promise(function(resolve, reject) {
-      logger.debug(intentObj.term);
-      if (!intentObj.term ||
-          intentObj.term.length <= INTENT_NAME_MIN_LENGTH) {
-          reject({
-              error: 'Invalid term name..!'
-          });
-      }
-      async.waterfall([
-              function(callback) {
-                  termNeo4jController.getPublishTermCallback(intentObj, callback);
-              }
-          ],
-          function(err, termName) {
-              if (err) {
-                  reject(err);
-              }
-              resolve(termName);
-          }); //end of async.waterfall
+    logger.debug("Received request for publishing new term to the intent: " + intentObj.intent);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(intentObj.term);
+        if (!intentObj.term ||
+            intentObj.term.length <= INTENT_NAME_MIN_LENGTH) {
+            reject({
+                error: 'Invalid term name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    termNeo4jController.getPublishTermCallback(intentObj, callback);
+                }
+            ],
+            function(err, termName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(termName);
+            }); //end of async.waterfall
     });
-  return promise;
+    return promise;
 }
 
 module.exports = {

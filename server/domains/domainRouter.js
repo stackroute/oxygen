@@ -4,6 +4,7 @@ const router = require('express').Router();
 
 const domainCtrl = require('./domainController');
 const subjectObjectCtrl = require('./subjectObjectController');
+
 // Mounted at mount point /domain/
 
 // Create new domain
@@ -410,7 +411,7 @@ router.post('/delete/relation', function(req, res) {
 
 //Adding sub concept to a concept
 
-router.post('/add/subConcept', function(req, res) {
+router.post('/subConcepts', function(req, res) {
     let conceptObj = req.body;
     logger.debug("Got request to add a sub concept to a concept", req.body);
     logger.debug("Concept name :" + conceptObj.subject);
@@ -466,32 +467,48 @@ router.patch('/subConcept', function(req, res) {
     }
 });
 
-//Adding new term to a existing intent
-router.post('/add/term', function(req, res) {
-   let intentObj = req.body;
-   logger.debug("Got request to add a new term to a intent", req.body);
-   logger.debug("Intent name :" + intentObj.intent);
+//Generalized adding for Concept,Intent and Term
 
-   try {
-       domainCtrl.publishNewTerm(intentObj).then(function(termName) {
-               logger.info("Successfully published a term to the intent " + intentObj.intent);
-               res.send(termName);
-               return;
-           },
-           function(err) {
-               logger.error(
-                   "Encountered error in publishing term : ",
-                   err);
-               res.send(err);
-               return;
-           })
-   } catch (err) {
-       logger.error("Caught a error in publishing a new term to the intent ", err);
-       res.status(500).send({
-           error: "Something went wrong, please try later..!"
-       });
-       return;
-   }
+router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', function(req, res) {
+
+    // let domain = req.params.domainName;
+    // let subjectNode = req.params.subject;
+    // let objectNode = req.params.object;
+    // let relationName = req.params.relation;
+
+    let addItem = {
+      domain : req.params.domainName,
+      subjectNode : req.params.subject,
+      objectNode : req.params.object,
+      relationName : req.params.relation
+    }
+
+     logger.debug("object",addItem.objectNode);
+     logger.debug("relation",addItem.relationName);
+
+    logger.debug("Got request to add a subject");
+    logger.debug("Subject name :" + addItem.subjectNode);
+
+    try {
+        subjectObjectCtrl.publishNewAddItem(addItem).then(function(objectName) {
+                logger.info("Successfully published a Subject " + addItem.subjectNode);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing subjectNode : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a subjectNode ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
 });
 
 router.get('/:domainName/:subjectType/:subjectName/objects', function(req,res){
