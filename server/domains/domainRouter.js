@@ -379,6 +379,7 @@ router.post('/delete/relation', function(req, res) {
         domainCtrl.deleteRelation(deleteObj).then(function(result) {
 
                 logger.info("Successfully deleted the relationship...!!!");
+                res.send(true)
 
                 return;
 
@@ -468,7 +469,6 @@ router.patch('/subConcept', function(req, res) {
     }
 });
 
-//Adding new term to a existing intent
 router.post('/add/term', function(req, res) {
    let intentObj = req.body;
    logger.debug("Got request to add a new term to a intent", req.body);

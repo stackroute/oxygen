@@ -39,12 +39,13 @@ describe("Make get requests to delete ", function() {
 describe("testing", function(){
     it('content length', function(done){
         request.post('/domain/delete/relation')
-        .expect('Content-Length', '34', done)
+        .expect('Content-Length', '218', done)
     });
 
 		it('content type', function(done){
         request.post('/domain/delete/relation')
-        .expect('Content-Type', /json/, done)
+        .expect('Content-Type', /json/)
+				done();
     });
 });
 
@@ -60,18 +61,22 @@ describe("Make POST requests to delete relation along with relation name", funct
 	it('Testing for a relation which is  present', function(done){
 		request.post('/domain/delete/relation').
 		expect({error: 'relations are deleted from mongo'})
+		done();
 	});
 });
 
-describe("fetching terms from the intent which is not present", function() {
-	let intentObj = {
+describe("fetching relation which is not present", function() {
+	let deleteObj = {
 		domain: "no_domain",
-		intent:"no_domain"
+		concept:"no_domain"
 	};
 
-	it('trying to get the Terms of intent which is not there', function() {
+	it('trying to get the relation of domain which is not there', function() {
 
-		expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
+		request.post('/domain/introduction/terms').
+		expect({error: 'relations are deleted from mongo'})
+
+		//expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
 
 	});
 

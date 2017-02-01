@@ -72,9 +72,14 @@ let getDeleteRelation = function(deleteObj) {
 
         let query = '';
         let params = {};
-        if (subjectType === graphConsts.NODE_CONCEPT && objectType === graphConsts.NODE_DOMAIN) {
-           query += 'match(c:' + graphConsts.NODE_CONCEPT + '{name:{subject}})-[r:' + relation + ']->(d:' + graphConsts.NODE_DOMAIN + '{name:{object}})'
-           query += 'detach delete(r)'
+        if (subjectType === graphConsts.NODE_DOMAIN && objectType === graphConsts.NODE_CONCEPT) {
+           query += 'match(c:' + graphConsts.NODE_CONCEPT + '{name:{subject}})-[r:'+ relation +']->(d:' + graphConsts.NODE_DOMAIN + '{name:{object}}) '
+           query += 'delete(r)';
+           
+//            match (d:Domain {name:'Oxygen'})
+// match (c:Concept {name:'Oxygen'})
+// match (c)-[r]->(d)
+// detach delete r
 
            params = {
                 subject: subject,
@@ -799,7 +804,14 @@ let getDeleteRelationCallback = function(deleteObj, callback) {
     });
 }
 
-
+// let getPublishEditedConceptCallback = function(conceptObj, callback) {
+//     logger.debug("from the callback : " + domainObj.subject);
+//     getPublishEditedConcept(conceptObj).then(function(ConceptDetails) {
+//         callback(null, ConceptDetails);
+//     }, function(err) {
+//         callback(err, null);
+//     });
+// };
 
 
 
