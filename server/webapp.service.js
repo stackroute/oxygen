@@ -23,7 +23,7 @@ function welcome() {
 // App Constructor function is exported
 module.exports = function() {
 
-  welcome();    
+  welcome();
 
   let app = service.createApp();
 

@@ -1,6 +1,7 @@
 'use strict';
 const domainNeo4jController = require('./domainNeo4jController');
 const termNeo4jController = require('./termNeo4jController');
+const intentNeo4jController = require('./intentNeo4jController');
 const domainMongoController = require('./domainMongoController');
 const domainMgr = require('./domainManager');
 const startCrawlerMQ = require('./../searcher/docOpenCrawlerEngine').startCrawler;
