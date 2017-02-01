@@ -469,22 +469,17 @@ router.patch('/subConcept', function(req, res) {
 
 //Generalized adding for Concept,Intent and Term
 
-router.post('/:domainName/:subject/:object/:relation', function(req, res) {
-
-    // let domain = req.params.domainName;
-    // let subjectNode = req.params.subject;
-    // let objectNode = req.params.object;
-    // let relationName = req.params.relation;
+router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', function(req, res) {
 
     let addItem = {
-      domain : req.params.domainName,
-      subjectNode : req.params.subject,
-      objectNode : req.params.object,
-      relationName : req.params.relation
+        domain: req.params.domainName,
+        subjectNode: req.params.subject,
+        objectNode: req.params.object,
+        relationName: req.params.relation
     }
 
-     logger.debug("object",addItem.objectNode);
-     logger.debug("relation",addItem.relationName);
+    logger.debug("object", addItem.objectNode);
+    logger.debug("relation", addItem.relationName);
 
     logger.debug("Got request to add a subject");
     logger.debug("Subject name :" + addItem.subjectNode);
@@ -509,6 +504,46 @@ router.post('/:domainName/:subject/:object/:relation', function(req, res) {
         });
         return;
     }
+});
+
+//Generalized Editing Relation for Concept,Intent and Term
+router.patch('/:domainName/subject/:subject/object/:object/oldPredicate/:oldRelation/newPredicate/:newRelation', function(req, res) {
+
+    let editRelationItem = {
+        domain: req.params.domainName,
+        subjectNode: req.params.subject,
+        objectNode: req.params.object,
+        oldRelationName: req.params.oldRelation,
+        newRelationName: req.params.newRelation
+    }
+
+    logger.debug("object", editRelationItem.objectNode);
+    logger.debug("relation", editRelationItem.relationName);
+
+    logger.debug("Got request to Editing a subject");
+    logger.debug("Subject name :" + editRelationItem.subjectNode);
+
+    try {
+        subjectObjectCtrl.publishEditedRelations(editRelationItem).then(function(objectName) {
+                logger.info("Successfully Editing a Subject " + editRelationItem.subjectNode);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in Editing subjectNode : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in Editing a subjectNode ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+
 });
 
 module.exports = router;
