@@ -8,12 +8,14 @@ import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import {Link} from 'react-router';
 import ActionHome from 'material-ui/svg-icons/action/home';
+
 const styles = {
  largeIcon: {
-  width: 30,
-  height: 30
-}
+   width: 30,
+   height: 30
+  }
 };
+
 class Welcome extends React.Component {
   constructor(props) {
     super(props);

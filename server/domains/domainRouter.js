@@ -499,7 +499,7 @@ router.post('/add/term', function(req, res) {
 });
 //Generalized adding for Concept,Intent and Term
 
-router.post('/:domainName/:subject/:object/:relation', function(req, res) {
+router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', function(req, res) {
 
     // let domain = req.params.domainName;
     // let subjectNode = req.params.subject;
@@ -540,6 +540,37 @@ router.post('/:domainName/:subject/:object/:relation', function(req, res) {
         return;
     }
 
+});
+
+router.get('/:domainName/:subjectType/:subjectName/objects', function(req,res){
+  logger.debug("Got request to get Objects of", req.params.subjectType);
+  logger.debug("Node name :" + req.params.subjectName);
+  let nodeObj = {
+    nodeType: req.params.subjectType,
+    nodeName: req.params.subjectName,
+    domainName: req.params.domainName
+  }
+
+  try {
+      subjectObjectCtrl.getObjects(nodeObj).then(function(objects) {
+              logger.info("Successfully published a term to the intent " + objects);
+              res.send(objects);
+              return;
+          },
+          function(err) {
+              logger.error(
+                  "Encountered error in publishing term : ",
+                  err);
+              res.send(err);
+              return;
+          })
+  } catch (err) {
+      logger.error("Caught error getting objects ", err);
+      res.status(500).send({
+          error: "Something went wrong, please try later..!"
+      });
+      return;
+  }
 });
 
 module.exports = router;
