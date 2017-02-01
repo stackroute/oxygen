@@ -3,7 +3,7 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 
 const domainCtrl = require('./domainController');
-
+const subjectObjectCtrl = require('./subjectObjectController');
 // Mounted at mount point /domain/
 
 // Create new domain
@@ -492,6 +492,37 @@ router.post('/add/term', function(req, res) {
        });
        return;
    }
+});
+
+router.get('/:domainName/:subjectType/:subjectName/objects', function(req,res){
+  logger.debug("Got request to get Objects of", req.params.subjectType);
+  logger.debug("Node name :" + req.params.subjectName);
+  let nodeObj = {
+    nodeType: req.params.subjectType,
+    nodeName: req.params.subjectName,
+    domainName: req.params.domainName
+  }
+
+  try {
+      subjectObjectCtrl.getObjects(nodeObj).then(function(objects) {
+              logger.info("Successfully published a term to the intent " + objects);
+              res.send(objects);
+              return;
+          },
+          function(err) {
+              logger.error(
+                  "Encountered error in publishing term : ",
+                  err);
+              res.send(err);
+              return;
+          })
+  } catch (err) {
+      logger.error("Caught error getting objects ", err);
+      res.status(500).send({
+          error: "Something went wrong, please try later..!"
+      });
+      return;
+  }
 });
 
 module.exports = router;
