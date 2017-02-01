@@ -1,0 +1,91 @@
+const neo4jDriver = require('neo4j-driver').v1;
+
+const logger = require('./../../applogger');
+
+const config = require('./../../config');
+const graphConsts = require('./../common/graphConstants');
+
+let getPublishAddItem = function(addItem) {
+
+    logger.debug(addItem.subjectNode);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(
+            "Now proceeding to publish subjectNode name: ",
+            addItem.subjectNode);
+        // logger.debug("Type of object",typeof objectNode);
+        // logger.debug("Type of relation",typeof relationName);
+
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+
+        let session = driver.session();
+
+        logger.debug("obtained connection with neo4j");
+
+        var subjectName = '',
+            relation = '',
+            objectName = '';
+
+        if (addItem.relationName == 'ConceptOf') {
+            logger.debug("Concept");
+            subjectName = graphConsts.NODE_DOMAIN;
+            objectName = graphConsts.NODE_CONCEPT;
+            relation = graphConsts.REL_CONCEPT_OF;
+        } else if (addItem.relationName == 'IntentOf') {
+            subjectName = graphConsts.NODE_DOMAIN;
+            objectName = graphConsts.NODE_INTENT;
+            relation = graphConsts.REL_INTENT_OF;
+        } else if (addItem.relationName == 'IndicatorOf') {
+            subjectName = graphConsts.NODE_INTENT;
+            objectName = graphConsts.NODE_TERM;
+            relation = graphConsts.REL_INDICATOR_OF;
+        } else if (addItem.relationName == 'CounterIndicatorOf') {
+            subjectName = graphConsts.NODE_INTENT;
+            objectName = graphConsts.NODE_TERM;
+            relation = graphConsts.REL_COUNTER_INDICATOR_OF;
+        }
+
+        logger.debug(subjectName);
+
+        let query = 'merge (s:' + subjectName + '{name:{subjectNode}})'
+        query += 'merge(o:' + objectName + '{name:{objectNode}})'
+        query += 'merge(o)-[r:' + relation + ']->(s)'
+            //query += 'return r'
+
+        let params = {
+            subjectNode: addItem.subjectNode,
+            objectNode: addItem.objectNode,
+            //relationName: addItem.relationName
+        };
+
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    logger.debug(result);
+                }
+                session.close();
+                resolve(result);
+            })
+            .catch(function(error) {
+                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+};
+
+
+let getPublishAddItemCallback = function(addItem, callback) {
+    logger.debug("from the callback : " + addItem.subjectNode);
+    getPublishAddItem(addItem).then(function(addItemDetails) {
+        callback(null, addItemDetails);
+    }, function(err) {
+        callback(err, null);
+    });
+};
+
+module.exports = {
+    getPublishAddItemCallback: getPublishAddItemCallback,
+};
