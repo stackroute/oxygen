@@ -1,10 +1,9 @@
-
-
 'use strict';
 const logger = require('./../../applogger');
 const router = require('express').Router();
 
 const domainCtrl = require('./domainController');
+const subjectObjectCtrl = require('./subjectObjectController');
 
 // Mounted at mount point /domain/
 
@@ -283,62 +282,6 @@ router.get('/:intentName/terms', function(req, res) {
 })
 
 
-router.post('/add/intent', function(req, res) {
-    let domainObj = req.body;
-    logger.debug("Got request to add a new intent to a domain", req.body);
-    logger.debug("Domin name :" + domainObj.domain);
-
-    try {
-        domainCtrl.publishNewIntent(domainObj).then(function(intentName) {
-                logger.info("Successfully published a intent to the domain " + domainObj.domain);
-                res.send(intentName);
-                return;
-            },
-            function(err) {
-                logger.error(
-                    "Encountered error in publishing intent : ",
-                    err);
-                res.send(err);
-                return;
-            })
-    } catch (err) {
-        logger.error("Caught a error in publishing a new intent to the domain ", err);
-        res.status(500).send({
-            error: "Something went wrong, please try later..!"
-        });
-        return;
-    }
-});
-
-//Adding new term to a existing intent
-router.post('/add/term', function(req, res) {
-    let intentObj = req.body;
-    logger.debug("Got request to add a new term to a intent", req.body);
-    logger.debug("Intent name :" + intentObj.intent);
-
-    try {
-        domainCtrl.publishNewTerm(intentObj).then(function(termName) {
-                logger.info("Successfully published a term to the intent " + intentObj.intent);
-                res.send(termName);
-                return;
-            },
-            function(err) {
-                logger.error(
-                    "Encountered error in publishing term : ",
-                    err);
-                res.send(err);
-                return;
-            })
-    } catch (err) {
-        logger.error("Caught a error in publishing a new term to the intent ", err);
-        res.status(500).send({
-            error: "Something went wrong, please try later..!"
-        });
-        return;
-    }
-});
-
-
 router.post('/delete/relation', function(req, res) {
 
     let deleteObj = req.body;
@@ -349,7 +292,7 @@ router.post('/delete/relation', function(req, res) {
 
     try {
 
-        domainCtrl.deleteRelation(deleteObj).then(function(result) {
+        subjectObjectCtrl.deleteRelation(deleteObj).then(function(result) {
 
                 logger.info("Successfully deleted the relationship...!!!");
                 res.send(true)
@@ -383,18 +326,17 @@ router.post('/delete/relation', function(req, res) {
 
 //Adding sub concept to a concept
 
-router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', function(req, res) {
+router.post('/:domainName/subject/:subject/object/:object', function(req, res) {
     let addSubconcept = {
       domain: req.params.domainName,
       subjectNode: req.params.subject,
-      objectNode: req.params.object,
-      relationName: req.params.relation
+      objectNode: req.params.object
     }
     logger.debug("Got request to add a sub concept to a concept");
     logger.debug("Concept name :" + addSubconcept.subjectNode);
 
     try {
-        domainCtrl.publishNewSubConcept(addSubconcept).then(function(objectName) {
+        subjectObjectCtrl.publishNewSubConcept(addSubconcept).then(function(objectName) {
                 logger.info("Successfully published a subConcept to the concept " + addSubconcept.subjectNode);
                 res.send(objectName);
                 return;
@@ -415,62 +357,6 @@ router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', 
     }
 });
 
-//Editing sub concept to a concept
-
-router.patch('/subConcept', function(req, res) {
-    let conceptObj = req.body;
-    logger.debug("Got request to edit a sub concept to a concept", req.body);
-    logger.debug("Concept name :" + conceptObj.subject);
-
-    try {
-        domainCtrl.publishEditedSubConcept(conceptObj).then(function(objectName) {
-                logger.info("Successfully Edited a subConcept to the concept " + conceptObj.subject);
-                res.send(objectName);
-                return;
-            },
-            function(err) {
-                logger.error(
-                    "Encountered error in publishing Edited subConcept : ",
-                    err);
-                res.send(err);
-                return;
-            })
-    } catch (err) {
-        logger.error("Caught a error in publishing a subConcept to the concept ", err);
-        res.status(500).send({
-            error: "Something went wrong, please try later..!"
-        });
-        return;
-    }
-});
-
-
-router.post('/add/term', function(req, res) {
-   let intentObj = req.body;
-   logger.debug("Got request to add a new term to a intent", req.body);
-   logger.debug("Intent name :" + intentObj.intent);
-
-   try {
-       domainCtrl.publishNewTerm(intentObj).then(function(termName) {
-               logger.info("Successfully published a term to the intent " + intentObj.intent);
-               res.send(termName);
-               return;
-           },
-           function(err) {
-               logger.error(
-                   "Encountered error in publishing term : ",
-                   err);
-               res.send(err);
-               return;
-           })
-   } catch (err) {
-       logger.error("Caught a error in publishing a new term to the intent ", err);
-       res.status(500).send({
-           error: "Something went wrong, please try later..!"
-       });
-       return;
-   }
-});
 //Generalized adding for Concept,Intent and Term
 
 router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', function(req, res) {
@@ -511,8 +397,6 @@ router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', 
 
 });
 
-
-
 router.get('/:domainName/:subjectType/:subjectName/objects', function(req, res) {
     logger.debug("Got request to get Objects of", req.params.subjectType);
     logger.debug("Node name :" + req.params.subjectName);
@@ -544,45 +428,6 @@ router.get('/:domainName/:subjectType/:subjectName/objects', function(req, res) 
     }
 });
 
-//Generalized Editing Relation for Concept,Intent and Term
-router.patch('/:domainName/subject/:subject/object/:object/oldPredicate/:oldRelation/newPredicate/:newRelation', function(req, res) {
-
-    let editRelationItem = {
-        domain: req.params.domainName,
-        subjectNode: req.params.subject,
-        objectNode: req.params.object,
-        oldRelationName: req.params.oldRelation,
-        newRelationName: req.params.newRelation
-    }
-
-    logger.debug("object", editRelationItem.objectNode);
-    logger.debug("relation", editRelationItem.relationName);
-
-    logger.debug("Got request to Editing a subject");
-    logger.debug("Subject name :" + editRelationItem.subjectNode);
-
-    try {
-        subjectObjectCtrl.publishEditedRelations(editRelationItem).then(function(objectName) {
-                logger.info("Successfully Editing a Subject " + editRelationItem.subjectNode);
-                res.send(objectName);
-                return;
-            },
-            function(err) {
-                logger.error(
-                    "Encountered error in Editing subjectNode : ",
-                    err);
-                res.send(err);
-                return;
-            })
-    } catch (err) {
-        logger.error("Caught a error in Editing a subjectNode ", err);
-        res.status(500).send({
-            error: "Something went wrong, please try later..!"
-        });
-        return;
-    }
-});
-
 //Editing Term relation with Intent
 
 router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation', function(req, res) {
@@ -597,7 +442,7 @@ router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation
     logger.debug("Intent name :" + editTermRelation.intentName);
 
     try {
-        domainCtrl.publishEditedIntentTermRelation(editTermRelation).then(function(objectName) {
+        subjectObjectCtrl.publishEditedIntentTermRelation(editTermRelation).then(function(objectName) {
                 logger.info("Successfully Edited a Intent terrm relation for " + editTermRelation.intentName);
                 res.send(objectName);
                 return;

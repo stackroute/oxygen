@@ -1,8 +1,6 @@
 'use strict';
 const domainNeo4jController = require('./domainNeo4jController');
 const domainMongoController = require('./domainMongoController');
-const termNeo4jController = require('./termNeo4jController');
-const conceptNeo4jController = require('./conceptNeo4jController');
 const domainMgr = require('./domainManager');
 const startCrawlerMQ = require('./../searcher/docOpenCrawlerEngine').startCrawler;
 const startFnGen = require('./domainEngine').startDomainEngine;
@@ -557,57 +555,6 @@ let testFnGen = function(data){
     }
 }
 
-//Editing Intent term relation
-
-let publishEditedIntentTermRelation = function(editTermRelation) {
-    logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug(editTermRelation.intentName);
-        if (!editTermRelation.intentName || !editTermRelation.termName) {
-            reject({
-                error: 'Invalid Intent or term name..!'
-            });
-        }
-        async.waterfall([
-                function(callback) {
-                    termNeo4jController.getPublishEditedIntentTermRelationCallback(editTermRelation, callback);
-                }
-            ],
-            function(err, objectName) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(objectName);
-            }); //end of async.waterfall
-    });
-    return promise;
-}
-
-//Ading new subConcept to a existing concept
-
-let publishNewSubConcept = function(addSubconcept) {
-   logger.debug("Received request for publishing new subConcept to the concept: " + addSubconcept.subject);
-   let promise = new Promise(function(resolve, reject) {
-       logger.debug(addSubconcept.subject);
-       if (!addSubconcept.subjectNode || !addSubconcept.objectNode) {
-           reject({
-               error: 'Invalid concept or subConcept name..!'
-           });
-       }
-       async.waterfall([
-               function(callback) {
-                   conceptNeo4jController.getPublishSubConceptCallback(addSubconcept, callback);
-               }
-           ],
-           function(err, objectName) {
-               if (err) {
-                   reject(err);
-               }
-               resolve(objectName);
-           }); //end of async.waterfall
-   });
-   return promise;
-}
 
 module.exports = {
     publishNewDomain: publishNewDomain,
@@ -618,11 +565,6 @@ module.exports = {
     freshlyIndexDomain: freshlyIndexDomain,
     fetchWebDocuments: fetchWebDocuments,
     getAllDomain: getAllDomain,
-
     getTreeOfDomain: getTreeOfDomain,
-    
-    deleteDomain:deleteDomain,
-     publishNewSubConcept: publishNewSubConcept,
-     publishEditedIntentTermRelation: publishEditedIntentTermRelation
-
+    deleteDomain:deleteDomain
 }

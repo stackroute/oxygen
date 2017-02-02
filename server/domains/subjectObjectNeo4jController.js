@@ -127,15 +127,6 @@ let getObjects = function(nodeObj) {
     return promise;
 };
 
-let getObjectsCallback = function(nodeObj, callback) {
-    logger.debug("from the callback : " + nodeObj)
-    getObjects(nodeObj).then(function(retrievedObjects) {
-        callback(null, retrievedObjects);
-    }, function(err) {
-        callback(err, null);
-    });
-}
-
 let getPublishAddItem = function(addItem) {
 
     logger.debug(addItem.subjectNode);
@@ -210,18 +201,17 @@ let getPublishAddItem = function(addItem) {
     return promise;
 };
 
-//Generalized Editing but inder confusion by the team
+//Create new sub concept
 
-let getPublishEditRelationItem = function(editRelationItem) {
+let getPublishSubConcept = function(addSubconcept) {
+    let subjectName = addSubconcept.subjectNode;
+    let objectName = addSubconcept.objectNode;
+    logger.debug(objectName);
 
-    logger.debug(editRelationItem.subjectNode);
     let promise = new Promise(function(resolve, reject) {
         logger.debug(
-            "Now proceeding to publish subjectNode name: ",
-            editRelationItem.subjectNode);
-        // logger.debug("Type of object",typeof objectNode);
-        // logger.debug("Type of relation",typeof relationName);
-
+            "Now proceeding to publish the concepts for domain name: ",
+            subjectName);
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
                 encrypted: false
@@ -232,42 +222,16 @@ let getPublishEditRelationItem = function(editRelationItem) {
 
         logger.debug("obtained connection with neo4j");
 
-        var subjectName = '',
-            relation = '',
-            objectName = '';
-
-
-        if (editRelationItem.relationName == 'ConceptOf') {
-            logger.debug("Concept");
-            subjectName = graphConsts.NODE_DOMAIN;
-            objectName = graphConsts.NODE_CONCEPT;
-            relation = graphConsts.REL_CONCEPT_OF;
-        } else if (editRelationItem.relationName == 'IntentOf') {
-            subjectName = graphConsts.NODE_DOMAIN;
-            objectName = graphConsts.NODE_INTENT;
-            relation = graphConsts.REL_INTENT_OF;
-        } else if (editRelationItem.relationName == 'IndicatorOf') {
-            subjectName = graphConsts.NODE_INTENT;
-            objectName = graphConsts.NODE_TERM;
-            relation = graphConsts.REL_INDICATOR_OF;
-
-        } else if (editRelationItem.relationName == 'CounterIndicatorOf') {
-            subjectName = graphConsts.NODE_INTENT;
-            objectName = graphConsts.NODE_TERM;
-            relation = graphConsts.REL_COUNTER_INDICATOR_OF;
-        }
-
-        logger.debug("Kowsik");
-
-        let query = 'merge (s:' + subjectName + '{name:{subjectNode}})'
-        query += 'merge(o:' + objectName + '{name:{objectNode}})'
-        query += 'merge(o)-[r:' + relation+']->(s)'
-            //query += 'return r'
+        let query = 'match (s: ' + graphConsts.NODE_CONCEPT +
+          '{name: {subjectName}} )'
+       query += 'match(o: ' + graphConsts.NODE_CONCEPT +
+         '{name: {objectName}} )'
+       query += 'merge(o)-[r: ' + graphConsts.REL_SUB_CONCEPT_OF + ']->(s)'
+       query += 'return r';
 
         let params = {
-            subjectNode: addItem.subjectNode,
-            objectNode: addItem.objectNode,
-            //relationName: addItem.relationName
+            subjectName: subjectName,
+            objectName: objectName,
         };
 
         session.run(query, params).then(function(result) {
@@ -285,6 +249,113 @@ let getPublishEditRelationItem = function(editRelationItem) {
     return promise;
 };
 
+let getPublishEditedIntentTermRelation = function(editTermRelation) {
+    let intentName = editTermRelation.intentName;
+    let termName = editTermRelation.termName;
+    let relationName = '';
+    let weight = '';
+
+    logger.debug(relationName);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(
+            "Now proceeding to publish the edited intent term relation: ",
+            editTermRelation.relationName);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+
+        let session = driver.session();
+
+        logger.debug("obtained connection with neo4j");
+
+        if(editTermRelation.relationName == graphConsts.REL_INDICATOR_OF){
+          //logger.debug("1");
+          relationName = graphConsts.REL_COUNTER_INDICATOR_OF;
+          weight = '{weight:-5}';
+
+        }else { //if (editTermRelation.relationName == graphConsts.REL_COUNTER_INDICATOR_OF)
+          //logger.debug("2");
+          relationName = graphConsts.REL_INDICATOR_OF;
+          weight = '{weight:5}';
+        }
+
+        logger.debug(relationName);
+
+        let query = 'match(s:' + graphConsts.NODE_TERM + '{name:{termName}})-[r:' + editTermRelation.relationName + ']->(o:' + graphConsts.NODE_INTENT + '{name:{intentName}})'
+        query += 'merge(s)-[r1:' + relationName +weight+ ']->(o)'
+        query += 'delete r '
+        query += 'return r1'
+
+        let params = {
+            intentName: intentName,
+            termName: termName,
+            relationName: relationName
+        };
+
+        logger.debug(query);
+
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    logger.debug(result);
+                }
+                session.close();
+                resolve(result);
+            })
+            .catch(function(error) {
+                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+};
+
+let getDeleteRelation = function(deleteObj) {
+    let subject = deleteObj.subject,
+        object = deleteObj.object,
+        subjectType = deleteObj.subject_type,
+        objectType = deleteObj.object_type,
+        relation = deleteObj.relation;
+
+    let promise = new Promise(function(resolve, reject) {
+        logger.info("Now proceeding to delete the relationship for the subject :",
+            deleteObj.subject
+        );
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+        let session = driver.session();
+        logger.debug("obtained connection with neo4j");
+
+        let query = '';
+        let params = {};
+        if (subjectType === graphConsts.NODE_CONCEPT && objectType === graphConsts.NODE_DOMAIN) {
+            query += 'match(c:' + graphConsts.NODE_CONCEPT + '{name:{subject}})-[r:' + relation + ']->(d:' + graphConsts.NODE_DOMAIN + '{name:{object}})'
+            query += 'detach delete(r)' ;
+
+            params = {
+                subject: subject,
+                object: object,
+                relation: relation
+            };
+
+        }
+
+        session.run(query, params).then(function(result) {
+                session.close();
+                resolve(true);
+            })
+            .catch(function(error) {
+                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+}
+
 
 let getPublishAddItemCallback = function(addItem, callback) {
     logger.debug("from the callback : " + addItem.subjectNode);
@@ -295,17 +366,46 @@ let getPublishAddItemCallback = function(addItem, callback) {
     });
 };
 
-let getPublishEditRelationItemCallback = function(editRelationItem, callback) {
-    logger.debug("from the callback : " + editRelationItem.subjectNode);
-    getPublishEditRelationItem(editRelationItem).then(function(editRelationItemDetails) {
-        callback(null, editRelationItemDetails);
+let getObjectsCallback = function(nodeObj, callback) {
+    logger.debug("from the callback : " + nodeObj)
+    getObjects(nodeObj).then(function(retrievedObjects) {
+        callback(null, retrievedObjects);
     }, function(err) {
         callback(err, null);
     });
 };
 
+let getPublishSubConceptCallback = function(conceptObj, callback) {
+    logger.debug("from the callback : " + conceptObj.subject);
+    getPublishSubConcept(conceptObj).then(function(subConceptDetails) {
+        callback(null, subConceptDetails);
+    }, function(err) {
+        callback(err, null);
+    });
+};
+
+let getPublishEditedIntentTermRelationCallback = function(editTermRelation, callback) {
+    logger.debug("from the callback : " + editTermRelation.intentName);
+    getPublishEditedIntentTermRelation(editTermRelation).then(function(termRelationDetails) {
+        callback(null, termRelationDetails);
+    }, function(err) {
+        callback(err, null);
+    });
+};
+
+let getDeleteRelationCallback = function(deleteObj, callback) {
+    logger.debug("from the callback : " + deleteObj);
+    getDeleteRelation(deleteObj).then(function(result) {
+        callback(null, result);
+    }, function(err) {
+        callback(err, null);
+    });
+}
+
 module.exports = {
     getPublishAddItemCallback: getPublishAddItemCallback,
-    getPublishEditRelationItemCallback: getPublishEditRelationItemCallback,
-    getObjectsCallback: getObjectsCallback
+    getObjectsCallback: getObjectsCallback,
+    getPublishSubConceptCallback: getPublishSubConceptCallback,
+    getPublishEditedIntentTermRelationCallback: getPublishEditedIntentTermRelationCallback,
+    getDeleteRelationCallback: getDeleteRelationCallback
 };
