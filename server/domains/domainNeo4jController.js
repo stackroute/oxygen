@@ -74,7 +74,7 @@ let getDeleteRelation = function(deleteObj) {
         let params = {};
         if (subjectType === graphConsts.NODE_CONCEPT && objectType === graphConsts.NODE_DOMAIN) {
             query += 'match(c:' + graphConsts.NODE_CONCEPT + '{name:{subject}})-[r:' + relation + ']->(d:' + graphConsts.NODE_DOMAIN + '{name:{object}})'
-            query += 'detach delete(r)'
+            query += 'detach delete(r)' ;
 
             params = {
                 subject: subject,
