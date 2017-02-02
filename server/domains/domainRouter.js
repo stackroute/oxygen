@@ -1,9 +1,10 @@
+
+
 'use strict';
 const logger = require('./../../applogger');
 const router = require('express').Router();
 
 const domainCtrl = require('./domainController');
-const subjectObjectCtrl = require('./subjectObjectController');
 
 // Mounted at mount point /domain/
 
@@ -351,6 +352,7 @@ router.post('/delete/relation', function(req, res) {
         domainCtrl.deleteRelation(deleteObj).then(function(result) {
 
                 logger.info("Successfully deleted the relationship...!!!");
+                res.send(true)
 
                 return;
 
@@ -442,6 +444,33 @@ router.patch('/subConcept', function(req, res) {
     }
 });
 
+
+router.post('/add/term', function(req, res) {
+   let intentObj = req.body;
+   logger.debug("Got request to add a new term to a intent", req.body);
+   logger.debug("Intent name :" + intentObj.intent);
+
+   try {
+       domainCtrl.publishNewTerm(intentObj).then(function(termName) {
+               logger.info("Successfully published a term to the intent " + intentObj.intent);
+               res.send(termName);
+               return;
+           },
+           function(err) {
+               logger.error(
+                   "Encountered error in publishing term : ",
+                   err);
+               res.send(err);
+               return;
+           })
+   } catch (err) {
+       logger.error("Caught a error in publishing a new term to the intent ", err);
+       res.status(500).send({
+           error: "Something went wrong, please try later..!"
+       });
+       return;
+   }
+});
 //Generalized adding for Concept,Intent and Term
 
 router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', function(req, res) {
@@ -479,6 +508,7 @@ router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', 
         });
         return;
     }
+
 });
 
 

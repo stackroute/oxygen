@@ -620,6 +620,7 @@ module.exports = {
     getAllDomain: getAllDomain,
 
     getTreeOfDomain: getTreeOfDomain,
+    
     deleteDomain:deleteDomain,
      publishNewSubConcept: publishNewSubConcept,
      publishEditedIntentTermRelation: publishEditedIntentTermRelation

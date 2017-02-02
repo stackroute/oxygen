@@ -50,6 +50,13 @@ class Welcome extends React.Component {
         <FlatButton label='dashboard' hoverColor='#e8f1fb' labelStyle={{textAlign: 'left'}}
         style={{fontSize: '50px', marginTop: '4px'}}/></MenuItem>
       </Link>
+      <Link to='/edit'>
+        <MenuItem onTouchTap={this.handleToggle}>
+        <IconButton><ActionSearch /></IconButton>
+        <FlatButton label='Editor' hoverColor= '#e8f1fb' labelStyle={{textAlign: 'left'}}
+        style = {{fontSize: '50px', marginTop: '4px'}}/>
+        </MenuItem>
+      </Link>
       </Drawer>
       <AppBar
       onLeftIconButtonTouchTap={this.handleToggle}

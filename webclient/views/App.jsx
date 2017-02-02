@@ -8,9 +8,10 @@ import Welcome from '../components/welcome/';
 import JobResult, {Job} from '../components/job/';
 import Crawler from '../components/crawler/';
 import Dashboard from '../components/dashboard/';
+import SubjectNode from '../components/editor/';
 import Graph from '../components/graph';
 import DomainHome from '../components/domainhome';
-import SubjectNode from '../components/editor';
+
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 injectTapEventPlugin();
 
