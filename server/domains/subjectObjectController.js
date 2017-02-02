@@ -53,7 +53,33 @@ let publishNewAddItem = function(addItem) {
     return promise;
 }
 
+let publishEditedRelations = function(editRelationItem) {
+    logger.debug("Received request for editing node relation: " + editRelationItem.subjectNode);
+    let promise = new Promise(function(resolve, reject) {
+
+        if (!editRelationItem.subjectNode || !editRelationItem.objectNode || editRelationItem.subjectNode.length <= 3 || editRelationItem.objectNode.length <= 3) {
+            reject({
+                error: 'Invalid subjectNode/objectNode name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    subjectObjectNeo4jController.getPublishEditRelationItemCallback(editRelationItem, callback);
+                }
+            ],
+            function(err, objectName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(objectName);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
+
 module.exports = {
+    publishNewAddItem: publishNewAddItem,
+    publishEditedRelations: publishEditedRelations,
     getObjects: getObjects,
     publishNewAddItem: publishNewAddItem
 }

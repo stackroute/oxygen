@@ -1,19 +1,14 @@
-
-
 'use strict';
 const domainNeo4jController = require('./domainNeo4jController');
-const termNeo4jController = require('./termNeo4jController');
-const intentNeo4jController = require('./intentNeo4jController');
 const domainMongoController = require('./domainMongoController');
 const domainMgr = require('./domainManager');
 const startCrawlerMQ = require('./../searcher/docOpenCrawlerEngine').startCrawler;
+const startFnGen = require('./domainEngine').startDomainEngine;
 const logger = require('./../../applogger');
 
 const async = require('async');
 
 const DOMAIN_NAME_MIN_LENGTH = 3;
-const INTENT_NAME_MIN_LENGTH = 3;
-const CONCEPT_NAME_MIN_LENGTH = 3;
 
 let insertUrls = function(dataToInsert) {
     console.log(dataToInsert)
@@ -44,26 +39,6 @@ let insertUrls = function(dataToInsert) {
         }
     }
 }
-
-
-let deleteRelation = function(deleteObj) {
-    logger.debug("Received request for deleting the relationship between " + deleteObj.subject + " and " + deleteObj.object);
-    let promise = new Promise(function(resolve, reject) {
-        async.waterfall([function(callback) {
-                domainNeo4jController.getDeleteRelationCallback(deleteObj, callback);
-            }],
-            function(err, result) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
-            }); //end of async.waterfall
-    });
-    return promise;
-}
-
-
-
 let fetchDomainCardDetails = function(domain) {
     logger.debug("Received request for retriving domain details ", domain);
     //Save to Mongo DB
@@ -71,11 +46,9 @@ let fetchDomainCardDetails = function(domain) {
 
     let promise = new Promise(function(resolve, reject) {
 
-
-
         async.waterfall([
                 function(callback) {
-                    logger.debug("inside the waterfall " + domain)
+                    //  logger.debug("inside the waterfall " + domain)
                     domainNeo4jController.getDomainCardDetailsCallback(domain,
                         callback);
                 }
@@ -97,6 +70,7 @@ let indexPublishedDomain = function(domainName) {
     //process.nextTick(function() {
     let promise = new Promise(
         function(resolve, reject) {
+
             logger.debug('Off-line initialising New Domain ', domainName);
 
             async.waterfall([
@@ -181,7 +155,6 @@ let publishNewDomain = function(newDomainObj) {
             });
         }
 
-
         async.waterfall([function(callback) {
                     domainMongoController.saveNewDomainCallBack(newDomainObj,
                         callback);
@@ -199,12 +172,9 @@ let publishNewDomain = function(newDomainObj) {
                     reject(err);
                 }
                 if (indexedDomainObj) {
-
                     //Kick off indexing in off-line,
                     //so the API request is not blocked till indexing is complete,
                     // as it may take long time to complete
-
-
                     indexPublishedDomain(indexedDomainObj.name).then(
                             function(domainObj) {
                                 logger.debug("going to fetch domain card details: ",
@@ -238,6 +208,7 @@ let publishNewDomain = function(newDomainObj) {
                             });
 
 
+
                 } else {
                     reject({
                         error: 'Null indexed object was returned..!'
@@ -249,6 +220,8 @@ let publishNewDomain = function(newDomainObj) {
     return promise;
 }
 
+
+
 let getDomain = function(domainName) {
     logger.debug("Received request for retriving Concept(s) in domain: ",
         domainName);
@@ -256,6 +229,10 @@ let getDomain = function(domainName) {
     //Save to Neo4j
 
     let promise = new Promise(function(resolve, reject) {
+
+
+
+
         async.waterfall([function(callback) {
                     domainMongoController.checkDomainCallback(domainName,
                         callback);
@@ -283,32 +260,11 @@ let getDomain = function(domainName) {
     return promise;
 }
 
-let getTermsIntents = function(intentName) {
-    logger.debug("Received request for retriving Concept(s) in domain: ",
-        intentName);
-    //Save to Mongo DB
-    //Save to Neo4j
 
-    let promise = new Promise(function(resolve, reject) {
-        async.waterfall([
-                function(callback) {
-                    domainNeo4jController.getTermsIntentsCallback(
-                        intentName,
-                        callback)
-                }
-            ],
-            function(err, retrivedRelationsAndIntents) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(retrivedRelationsAndIntents);
-            }); //end of async.waterfall
-    });
-    return promise;
-}
 
 
 let getAllDomainDetails = function() {
+
     logger.debug("Received request for retriving Concept(s) of all domain: ");
 
     let promise = new Promise(function(resolve, reject) {
@@ -335,7 +291,7 @@ let getAllDomainDetails = function() {
                                             domainObj.description = domain.description;
                                             domainObj.domainImgURL = domain.domainImgURL;
                                             cardDetailsObj.push(domainObj)
-                                            logger.debug("after each pushing", cardDetailsObj);
+                                                // logger.debug("after each pushing", cardDetailsObj);
                                             if (cardDetailsObj.length === domainDetailedColln
                                                 .length) {
                                                 callback(null, cardDetailsObj);
@@ -350,18 +306,18 @@ let getAllDomainDetails = function() {
                                         });
                             }
                         }
-                        logger.debug("pushing ended", cardDetailsObj);
+                        logger.debug("cardData populated", cardDetailsObj);
                     }
                 }
             ],
             function(err, finalCardDetailsObj) {
-                logger.debug("inside callback", finalCardDetailsObj);
+                //logger.debug("inside callback", finalCardDetailsObj);
                 if (err) {
                     reject(err);
                 }
 
                 if (finalCardDetailsObj) {
-                    logger.debug(" now sending back", finalCardDetailsObj);
+                    logger.debug(" now sending back card details", finalCardDetailsObj);
                     resolve(finalCardDetailsObj);
                 } else {
                     reject({
@@ -426,7 +382,7 @@ let fetchWebDocuments = function(domainObj) {
                         let abc = [];
                         for (let item in docs) {
                             if (Object.prototype.hasOwnProperty.call(docs, item)) {
-                                logger.debug("going to neo4J ", docs.length);
+                                // logger.debug("going to neo4J ", docs.length);
                                 let url = docs[item].url;
                                 logger.debug("going to neo4J ", url);
                                 domainNeo4jController.getIntentforDocument({
@@ -436,9 +392,9 @@ let fetchWebDocuments = function(domainObj) {
                                     .then(function(intentObj) {
                                             docs[item].intentObj = intentObj;
                                             abc.push('hi');
-                                            logger.debug("url--> ", url);
-                                            logger.debug("after each pushing of intents*****",
-                                                docs[item].intentObj);
+                                            // logger.debug("url--> ", url);
+                                            // logger.debug("after each pushing of intents*****",
+                                            //  docs[item].intentObj);
                                             if (abc.length === docs.length) {
                                                 callback(null, docs);
                                             }
@@ -465,9 +421,9 @@ let fetchWebDocuments = function(domainObj) {
                                 logger.debug("going to mongo url ", url);
                                 domainMongoController.getSearchResultDocument(url)
                                     .then(function(docObj) {
-                                            logger.debug(
-                                                "Successfully fetched doc details from mongo *****: ",
-                                                docObj);
+                                            //  logger.debug(
+                                            //   "Successfully fetched doc details from mongo *****: ",
+                                            //    docObj);
                                             docsDetails.push({
                                                 title: docObj.title,
                                                 description: docObj.description,
@@ -476,7 +432,7 @@ let fetchWebDocuments = function(domainObj) {
                                                 intentObj: docs[item].intentObj
                                             })
 
-                                            logger.debug("after each pushing", docsDetails);
+                                            //  logger.debug("after each pushing", docsDetails);
                                             if (docsDetails.length === docs.length) {
                                                 callback(null, docsDetails);
                                             }
@@ -490,7 +446,7 @@ let fetchWebDocuments = function(domainObj) {
                                         });
                             }
                         }
-                        logger.debug("pushing ended", docsDetails);
+                        // logger.debug("pushing ended", docsDetails);
                     }
                 }
             ],
@@ -506,6 +462,7 @@ let fetchWebDocuments = function(domainObj) {
 }
 
 let getAllDomain = function() {
+
     logger.debug("Received request for retriving all domain: ");
 
 
@@ -515,7 +472,7 @@ let getAllDomain = function() {
                 domainMongoController.getAllDomainsCallback(callback);
             }],
             function(err, domainColln) {
-                logger.debug("getting it")
+                logger.debug("got the domain collection", domainColln)
                 if (!err) {
                     resolve(domainColln)
                 }
@@ -524,138 +481,106 @@ let getAllDomain = function() {
     });
     return promise;
 }
-let publishNewConcept = function(domainObj) {
-    logger.debug("Received request for publishing new concept to the domain: " + domainObj.domain);
+
+let getTreeOfDomain = function(domain) {
+  logger.debug('domain ctrl',domain);
+    logger.debug("Received request for retriving domain details ", domain.name);
+    //Save to Mongo DB
+    //Save to Neo4j
+
     let promise = new Promise(function(resolve, reject) {
-        if (!domainObj.concept ||
-            domainObj.concept.length <= CONCEPT_NAME_MIN_LENGTH) {
-            reject({
-                error: 'Invalid concept name..!'
-            });
-        }
-        async.waterfall([function(callback) {
-                    domainMongoController.checkDomainCallback(domainObj.domain,
+        async.waterfall([
+                function(callback) {
+                     logger.debug("inside the waterfall " + domain)
+                    domainNeo4jController.getTreeOfDomainCallback(domain,
                         callback);
-                },
-                function(checkedDomain, callback) {
-                    conceptNeo4jController.getPublishConceptCallback(domainObj, callback);
                 }
             ],
-            function(err, conceptName) {
-                if (err) {
-                    reject(err);
+           function(err, tree) {
+                logger.debug("got the domain collection", domain)
+                if (!err) {
+                    resolve(tree)
                 }
-                resolve(conceptName);
-            }); //end of async.waterfall
+                reject(err)
+            });//end of async.waterfall
     });
+
     return promise;
 }
 
-//Ading new subConcept to a existing concept
+let deleteDomain =function(domain){
+    logger.debug('domain ctrl',domain);
+    logger.debug("Received request for deleting domain",domain.domainName);
 
-let publishNewSubConcept = function(conceptObj) {
-    logger.debug("Received request for publishing new subConcept to the concept: " + conceptObj.subject);
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug(conceptObj.intent);
-        if (!conceptObj.subject || !conceptObj.object) {
-            reject({
-                error: 'Invalid concept or subConcept name..!'
-            });
-        }
-        async.waterfall([
-                function(callback) {
-                    conceptNeo4jController.getPublishSubConceptCallback(conceptObj, callback);
-                }
-            ],
-            function(err, objectName) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(objectName);
-            }); //end of async.waterfall
-    });
-    return promise;
-}
+    let promise = new Promise(function(resolve,reject){
+            async.waterfall([
+                     function(callback){
+                         logger.debug("inside waterfall::mongodelete", domain)
+                        domainMongoController.deleteDomain(domain,callback);
+                     },
 
-//Editing new subConcept to a existing concept
-
-let publishEditedSubConcept = function(conceptObj) {
-    logger.debug("Received request for publishing Edited subConcept to the concept: " + conceptObj.subject);
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug(conceptObj.intent);
-        if (!conceptObj.subject || !conceptObj.object) {
-            reject({
-                error: 'Invalid concept or subConcept name..!'
-            });
-        }
-        async.waterfall([
-                function(callback) {
-                    conceptNeo4jController.getPublishEditedSubConceptCallback(conceptObj, callback);
-                }
-            ],
-            function(err, objectName) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(objectName);
-            }); //end of async.waterfall
-    });
-    return promise;
-}
-
-let publishNewIntent = function(domainObj) {
-    logger.debug("Received request for publishing new intent to the domain: " + domainObj.domain);
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug(domainObj.intent);
-        if (!domainObj.intent ||
-            domainObj.intent.length <= INTENT_NAME_MIN_LENGTH) {
-            reject({
-                error: 'Invalid intent name..!'
-            });
-        } else {
-            async.waterfall([function(callback) {
-                        domainMongoController.checkDomainCallback(domainObj.domain,
-                            callback);
-                    },
-                    function(checkedDomain, callback) {
-                        intentNeo4jController.getPublishIntentCallback(domainObj, callback);
+                     function(deletedDomain, callback){
+                         logger.debug("inside waterfall::neo4jdelete", deletedDomain)
+                        domainNeo4jController.deleteDomainCallback(domain, callback);
                     }
                 ],
-                function(err, intentName) {
-                    if (err) {
+                function(err,tree){
+                    if(err){
                         reject(err);
                     }
-                    resolve(intentName);
-                }); //end of async.waterfall
-        }
+
+                    resolve(domain);
+                });
     });
     return promise;
 }
 
-let publishNewTerm = function(intentObj) {
-    logger.debug("Received request for publishing new term to the intent: " + intentObj.intent);
+/*
+test function generation
+ */
+
+let testFnGen = function(data){
+    console.log('testFnGen: data ',data);
+    try{
+
+        startFnGen();
+        return {
+            msg: "Test function generation was successful"
+        }
+    } catch (err){
+        return {
+            msg: 'Error: test Function wasn not generated successfully',
+            err: err
+        }
+    }
+}
+
+//Editing Intent term relation
+
+let publishEditedIntentTermRelation = function(editTermRelation) {
+    logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
     let promise = new Promise(function(resolve, reject) {
-        logger.debug(intentObj.term);
-        if (!intentObj.term ||
-            intentObj.term.length <= INTENT_NAME_MIN_LENGTH) {
+        logger.debug(editTermRelation.intentName);
+        if (!editTermRelation.intentName || !editTermRelation.termName) {
             reject({
-                error: 'Invalid term name..!'
+                error: 'Invalid Intent or term name..!'
             });
         }
         async.waterfall([
                 function(callback) {
-                    termNeo4jController.getPublishTermCallback(intentObj, callback);
+                    termNeo4jController.getPublishEditedIntentTermRelationCallback(editTermRelation, callback);
                 }
             ],
-            function(err, termName) {
+            function(err, objectName) {
                 if (err) {
                     reject(err);
                 }
-                resolve(termName);
+                resolve(objectName);
             }); //end of async.waterfall
     });
     return promise;
 }
+
 
 module.exports = {
     publishNewDomain: publishNewDomain,
@@ -666,11 +591,17 @@ module.exports = {
     freshlyIndexDomain: freshlyIndexDomain,
     fetchWebDocuments: fetchWebDocuments,
     getAllDomain: getAllDomain,
-    publishNewConcept: publishNewConcept,
-    deleteRelation: deleteRelation,
 
-    publishNewTerm: publishNewTerm,
-    publishNewIntent: publishNewIntent,
-    publishNewSubConcept: publishNewSubConcept,
-    publishEditedSubConcept: publishEditedSubConcept
+    getTreeOfDomain: getTreeOfDomain,
+    deleteDomain:deleteDomain
+
+    // publishNewConcept: publishNewConcept,
+    // deleteRelation: deleteRelation,
+    //
+    // publishNewTerm: publishNewTerm,
+    // publishNewIntent: publishNewIntent,
+    // publishNewSubConcept: publishNewSubConcept,
+    // publishEditedSubConcept: publishEditedSubConcept,
+    //publishEditedIntentTermRelation: publishEditedIntentTermRelation
+
 }

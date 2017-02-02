@@ -9,5 +9,5 @@ module.exports = {
 	REL_CONCEPT_OF: 'ConceptOf',
 	REL_INDICATOR_OF: 'IndicatorOf',
 	REL_COUNTER_INDICATOR_OF: 'CounterIndicatorOf',
-	REL_SUBCONCEPT_OF: '`subconcept of`',
+	REL_SUBCONCEPT_OF: 'subconcept of',
 };
