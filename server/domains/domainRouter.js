@@ -252,4 +252,334 @@ router.delete('/deletedomain/:domainName', function (req, res) {
     }
 });
 
+router.get('/:intentName/terms', function(req, res) {
+    try {
+        let domainName = req.params.intentName;
+        domainCtrl.getTermsIntents(domainName).then(function(domainDetails) {
+                logger.info(
+                    "Successfully retrieved all Relations and intents of a domain : "
+                );
+                logger.info(domainDetails)
+                res.send(domainDetails);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in retrieved concept(s) of domain: ",
+                    err);
+                res.send(err);
+                return;
+            })
+
+    } catch (err) {
+        logger.error("Caught a error in retrieved concept(s) of domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+})
+
+
+router.post('/add/intent', function(req, res) {
+    let domainObj = req.body;
+    logger.debug("Got request to add a new intent to a domain", req.body);
+    logger.debug("Domin name :" + domainObj.domain);
+
+    try {
+        domainCtrl.publishNewIntent(domainObj).then(function(intentName) {
+                logger.info("Successfully published a intent to the domain " + domainObj.domain);
+                res.send(intentName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing intent : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new intent to the domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+//Adding new term to a existing intent
+router.post('/add/term', function(req, res) {
+    let intentObj = req.body;
+    logger.debug("Got request to add a new term to a intent", req.body);
+    logger.debug("Intent name :" + intentObj.intent);
+
+    try {
+        domainCtrl.publishNewTerm(intentObj).then(function(termName) {
+                logger.info("Successfully published a term to the intent " + intentObj.intent);
+                res.send(termName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing term : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new term to the intent ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+
+router.post('/delete/relation', function(req, res) {
+
+    let deleteObj = req.body;
+
+    logger.info("Got request to delete a relationship :" + deleteObj.subject);
+
+
+
+    try {
+
+        domainCtrl.deleteRelation(deleteObj).then(function(result) {
+
+                logger.info("Successfully deleted the relationship...!!!");
+
+                return;
+
+            },
+
+            function(err) {
+
+                logger.error("Encountered error in deleting : ", err);
+
+                res.send(err);
+
+                return;
+
+            });
+
+    } catch (err) {
+
+        logger.error("Caught an error in deleting ", err);
+
+        res.status(500).send({
+
+            error: "Something went wrong, please try later..!"
+
+        });
+        return;
+    }
+});
+
+//Adding sub concept to a concept
+
+router.post('/subConcepts', function(req, res) {
+    let conceptObj = req.body;
+    logger.debug("Got request to add a sub concept to a concept", req.body);
+    logger.debug("Concept name :" + conceptObj.subject);
+
+    try {
+        domainCtrl.publishNewSubConcept(conceptObj).then(function(objectName) {
+                logger.info("Successfully published a subConcept to the concept " + conceptObj.subject);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing subConcept : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a subConcept to the concept ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+//Editing sub concept to a concept
+
+router.patch('/subConcept', function(req, res) {
+    let conceptObj = req.body;
+    logger.debug("Got request to edit a sub concept to a concept", req.body);
+    logger.debug("Concept name :" + conceptObj.subject);
+
+    try {
+        domainCtrl.publishEditedSubConcept(conceptObj).then(function(objectName) {
+                logger.info("Successfully Edited a subConcept to the concept " + conceptObj.subject);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing Edited subConcept : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a subConcept to the concept ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+//Generalized adding for Concept,Intent and Term
+
+router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', function(req, res) {
+
+    let addItem = {
+        domain: req.params.domainName,
+        subjectNode: req.params.subject,
+        objectNode: req.params.object,
+        relationName: req.params.relation
+    }
+
+    logger.debug("object", addItem.objectNode);
+    logger.debug("relation", addItem.relationName);
+
+    logger.debug("Got request to add a subject");
+    logger.debug("Subject name :" + addItem.subjectNode);
+
+    try {
+        subjectObjectCtrl.publishNewAddItem(addItem).then(function(objectName) {
+                logger.info("Successfully published a Subject " + addItem.subjectNode);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing subjectNode : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a subjectNode ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+
+
+router.get('/:domainName/:subjectType/:subjectName/objects', function(req, res) {
+    logger.debug("Got request to get Objects of", req.params.subjectType);
+    logger.debug("Node name :" + req.params.subjectName);
+    let nodeObj = {
+        nodeType: req.params.subjectType,
+        nodeName: req.params.subjectName,
+        domainName: req.params.domainName
+    }
+
+    try {
+        subjectObjectCtrl.getObjects(nodeObj).then(function(objects) {
+                logger.info("Successfully published a term to the intent " + objects);
+                res.send(objects);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing term : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught error getting objects ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+//Generalized Editing Relation for Concept,Intent and Term
+router.patch('/:domainName/subject/:subject/object/:object/oldPredicate/:oldRelation/newPredicate/:newRelation', function(req, res) {
+
+    let editRelationItem = {
+        domain: req.params.domainName,
+        subjectNode: req.params.subject,
+        objectNode: req.params.object,
+        oldRelationName: req.params.oldRelation,
+        newRelationName: req.params.newRelation
+    }
+
+    logger.debug("object", editRelationItem.objectNode);
+    logger.debug("relation", editRelationItem.relationName);
+
+    logger.debug("Got request to Editing a subject");
+    logger.debug("Subject name :" + editRelationItem.subjectNode);
+
+    try {
+        subjectObjectCtrl.publishEditedRelations(editRelationItem).then(function(objectName) {
+                logger.info("Successfully Editing a Subject " + editRelationItem.subjectNode);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in Editing subjectNode : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in Editing a subjectNode ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+//Editing Term relation with Intent
+
+router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation', function(req, res) {
+
+  let editTermRelation = {
+      domain: req.params.domainName,
+      intentName: req.params.intentName,
+      termName: req.params.termName,
+      relationName: req.params.relation
+  }
+    logger.debug("Got request to edit a Intent terrm relation");
+    logger.debug("Intent name :" + editTermRelation.intentName);
+
+    try {
+        domainCtrl.publishEditedIntentTermRelation(editTermRelation).then(function(objectName) {
+                logger.info("Successfully Edited a Intent terrm relation for " + editTermRelation.intentName);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing Intent terrm relation : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a Intent terrm relation ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
 module.exports = router;
