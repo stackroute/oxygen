@@ -77,11 +77,11 @@ let getPublishEditedIntentTermRelation = function(editTermRelation) {
         logger.debug("obtained connection with neo4j");
 
         if(editTermRelation.relationName == graphConsts.REL_INDICATOR_OF){
-          logger.debug("1");
+          //logger.debug("1");
           relationName = graphConsts.REL_COUNTER_INDICATOR_OF;
 
         }else { //if (editTermRelation.relationName == graphConsts.REL_COUNTER_INDICATOR_OF)
-          logger.debug("2");
+          //logger.debug("2");
           relationName = graphConsts.REL_INDICATOR_OF;
         }
 

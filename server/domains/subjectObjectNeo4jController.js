@@ -8,132 +8,132 @@ const graphConsts = require('./../common/graphConstants');
 //@todo change the neo4j connectiont config
 // let cypher = require('cypher-stream')('bolt://localhost', 'neo4j', 'password');
 let cypher = require('cypher-stream')(config.NEO4J.neo4jURL, config.NEO4J.usr,
-  config.NEO4J.pwd);
+    config.NEO4J.pwd);
 let fs = require('fs');
 
-let getObjects = function(nodeObj){
-  let promise = new Promise(function(resolve, reject) {
+let getObjects = function(nodeObj) {
+    let promise = new Promise(function(resolve, reject) {
 
-    logger.debug("Now proceeding to retrive objects for node name: ",
-      nodeObj.nodeName);
-    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
-        encrypted: false
-      }
-    );
-
-    let session = driver.session();
-
-    logger.debug("obtained connection with neo4j");
-    if(nodeObj.nodeType == 'domain'){
-      let query = 'MATCH (d:' + graphConsts.NODE_DOMAIN +
-       '{name:{nodeName}})'
-      query += 'match (i:' + graphConsts.NODE_INTENT + ')'
-      query += 'match (c:' + graphConsts.NODE_CONCEPT + ')'
-      query += 'match (d)<-[r]-(i)'
-      query += 'match (d)<-[r1]-(c) RETURN i.name as Intent,type(r) as relationIntent, c.name as Concept, type(r1) as relationConcept';
-
-      let params = {
-        nodeName: nodeObj.nodeName
-      };
-      let objects = {};
-
-      session.run(query, params)
-        .then(function(result) {
-          result.records.forEach(function(record){
-            if(objects.hasOwnProperty('I:'+ record._fields[0])){
-              objects['I:'+ record._fields[0]].push(record._fields[1]);
-            }else{
-              objects['I:'+ record._fields[0]] = [record._fields[1]];
+        logger.debug("Now proceeding to retrive objects for node name: ",
+            nodeObj.nodeName);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
             }
-            if(objects.hasOwnProperty('C:'+ record._fields[2])){
-              objects['C:'+ record._fields[2]].push(record._fields[3]);
-            }else{
-              objects['C:'+ record._fields[2]] = [record._fields[3]];
-            }
-          });
-          session.close();
-          logger.debug(objects);
-          resolve(objects);
-        })
-        .catch(function(err) {
-          logger.error("Error in neo4j query: ", err, ' query is: ',
-            query);
-          reject(err);
-        });
-    }
+        );
 
-    if(nodeObj.nodeType == 'concept'){
-      let query = 'MATCH (g:' + graphConsts.NODE_CONCEPT + ')'
-      query += 'match (c:' + graphConsts.NODE_CONCEPT +
-        '{name:{nodeName}})'
-      query += 'match (g)<-[r]-(c) RETURN c.name as conceptName,type(r) as relationConcept';
+        let session = driver.session();
 
-      let params = {
-        nodeName: nodeObj.nodeName,
-      };
-      let objects = {};
+        logger.debug("obtained connection with neo4j");
+        if (nodeObj.nodeType == 'domain') {
+            let query = 'MATCH (d:' + graphConsts.NODE_DOMAIN +
+                '{name:{nodeName}})'
+            query += 'match (i:' + graphConsts.NODE_INTENT + ')'
+            query += 'match (c:' + graphConsts.NODE_CONCEPT + ')'
+            query += 'match (d)<-[r]-(i)'
+            query += 'match (d)<-[r1]-(c) RETURN i.name as Intent,type(r) as relationIntent, c.name as Concept, type(r1) as relationConcept';
 
-      session.run(query, params)
-        .then(function(result) {
-          result.records.forEach(function(record){
-            if(objects.hasOwnProperty('C:'+ record._fields[0])){
-              objects['C:'+ record._fields[0]].push(record._fields[1]);
-            }else{
-              objects['C:'+ record._fields[0]] = [record._fields[1]];
-            }
-          });
-          session.close();
-          logger.debug(objects);
-          resolve(objects);
-        })
-        .catch(function(err) {
-          logger.error("Error in neo4j query: ", err, ' query is: ',
-            query);
-          reject(err);
-        });
-    }
-    if(nodeObj.nodeType == 'intent'){
-      let query = 'MATCH (t:' + graphConsts.NODE_TERM + ')'
-      query += 'match (i:' + graphConsts.NODE_INTENT +
-        '{name:{nodeName}})'
-      query += 'match (i)<-[r]-(t) RETURN t.name as termName,type(r) as relationIntent';
+            let params = {
+                nodeName: nodeObj.nodeName
+            };
+            let objects = {};
 
-      let params = {
-        nodeName: nodeObj.nodeName,
-      };
-      let objects = {};
+            session.run(query, params)
+                .then(function(result) {
+                    result.records.forEach(function(record) {
+                        if (objects.hasOwnProperty('I:' + record._fields[0])) {
+                            objects['I:' + record._fields[0]].push(record._fields[1]);
+                        } else {
+                            objects['I:' + record._fields[0]] = [record._fields[1]];
+                        }
+                        if (objects.hasOwnProperty('C:' + record._fields[2])) {
+                            objects['C:' + record._fields[2]].push(record._fields[3]);
+                        } else {
+                            objects['C:' + record._fields[2]] = [record._fields[3]];
+                        }
+                    });
+                    session.close();
+                    logger.debug(objects);
+                    resolve(objects);
+                })
+                .catch(function(err) {
+                    logger.error("Error in neo4j query: ", err, ' query is: ',
+                        query);
+                    reject(err);
+                });
+        }
 
-      session.run(query, params)
-        .then(function(result) {
-          result.records.forEach(function(record){
-            if(objects.hasOwnProperty('T:'+record._fields[0])){
-              objects['T:'+record._fields[0]].push(record._fields[1]);
-            }else{
-              objects['T:'+ record._fields[0]] = [record._fields[1]];
-            }
-          });
-          session.close();
-          logger.debug(objects);
-          resolve(objects);
-        })
-        .catch(function(err) {
-          logger.error("Error in neo4j query: ", err, ' query is: ',
-            query);
-          reject(err);
-        });
-    }
-  });
-  return promise;
+        if (nodeObj.nodeType == 'concept') {
+            let query = 'MATCH (g:' + graphConsts.NODE_CONCEPT + ')'
+            query += 'match (c:' + graphConsts.NODE_CONCEPT +
+                '{name:{nodeName}})'
+            query += 'match (g)<-[r]-(c) RETURN c.name as conceptName,type(r) as relationConcept';
+
+            let params = {
+                nodeName: nodeObj.nodeName,
+            };
+            let objects = {};
+
+            session.run(query, params)
+                .then(function(result) {
+                    result.records.forEach(function(record) {
+                        if (objects.hasOwnProperty('C:' + record._fields[0])) {
+                            objects['C:' + record._fields[0]].push(record._fields[1]);
+                        } else {
+                            objects['C:' + record._fields[0]] = [record._fields[1]];
+                        }
+                    });
+                    session.close();
+                    logger.debug(objects);
+                    resolve(objects);
+                })
+                .catch(function(err) {
+                    logger.error("Error in neo4j query: ", err, ' query is: ',
+                        query);
+                    reject(err);
+                });
+        }
+        if (nodeObj.nodeType == 'intent') {
+            let query = 'MATCH (t:' + graphConsts.NODE_TERM + ')'
+            query += 'match (i:' + graphConsts.NODE_INTENT +
+                '{name:{nodeName}})'
+            query += 'match (i)<-[r]-(t) RETURN t.name as termName,type(r) as relationIntent';
+
+            let params = {
+                nodeName: nodeObj.nodeName,
+            };
+            let objects = {};
+
+            session.run(query, params)
+                .then(function(result) {
+                    result.records.forEach(function(record) {
+                        if (objects.hasOwnProperty('T:' + record._fields[0])) {
+                            objects['T:' + record._fields[0]].push(record._fields[1]);
+                        } else {
+                            objects['T:' + record._fields[0]] = [record._fields[1]];
+                        }
+                    });
+                    session.close();
+                    logger.debug(objects);
+                    resolve(objects);
+                })
+                .catch(function(err) {
+                    logger.error("Error in neo4j query: ", err, ' query is: ',
+                        query);
+                    reject(err);
+                });
+        }
+    });
+    return promise;
 };
 
-let getObjectsCallback = function(nodeObj, callback){
-  logger.debug("from the callback : " + nodeObj)
-  getObjects(nodeObj).then(function(retrievedObjects) {
-    callback(null, retrievedObjects);
-  }, function(err) {
-    callback(err, null);
-  });
+let getObjectsCallback = function(nodeObj, callback) {
+    logger.debug("from the callback : " + nodeObj)
+    getObjects(nodeObj).then(function(retrievedObjects) {
+        callback(null, retrievedObjects);
+    }, function(err) {
+        callback(err, null);
+    });
 }
 
 let getPublishAddItem = function(addItem) {
@@ -158,7 +158,8 @@ let getPublishAddItem = function(addItem) {
 
         var subjectName = '',
             relation = '',
-            objectName = '';
+            objectName = '',
+            weight = '';
 
         if (addItem.relationName == 'ConceptOf') {
             logger.debug("Concept");
@@ -173,17 +174,19 @@ let getPublishAddItem = function(addItem) {
             subjectName = graphConsts.NODE_INTENT;
             objectName = graphConsts.NODE_TERM;
             relation = graphConsts.REL_INDICATOR_OF;
+            weight = '{weight:5}';
         } else if (addItem.relationName == 'CounterIndicatorOf') {
             subjectName = graphConsts.NODE_INTENT;
             objectName = graphConsts.NODE_TERM;
             relation = graphConsts.REL_COUNTER_INDICATOR_OF;
+            weight = '{weight:-5}';
         }
 
-        logger.debug(subjectName);
+        logger.debug(weight);
 
         let query = 'merge (s:' + subjectName + '{name:{subjectNode}})'
         query += 'merge(o:' + objectName + '{name:{objectNode}})'
-        query += 'merge(o)-[r:' + relation + ']->(s)'
+        query += 'merge(o)-[r:' + relation +weight+ ']->(s)'
             //query += 'return r'
 
         let params = {
@@ -206,6 +209,8 @@ let getPublishAddItem = function(addItem) {
     });
     return promise;
 };
+
+//Generalized Editing but inder confusion by the team
 
 let getPublishEditRelationItem = function(editRelationItem) {
 
@@ -231,30 +236,32 @@ let getPublishEditRelationItem = function(editRelationItem) {
             relation = '',
             objectName = '';
 
-        if (addItem.relationName == 'ConceptOf') {
+
+        if (editRelationItem.relationName == 'ConceptOf') {
             logger.debug("Concept");
             subjectName = graphConsts.NODE_DOMAIN;
             objectName = graphConsts.NODE_CONCEPT;
             relation = graphConsts.REL_CONCEPT_OF;
-        } else if (addItem.relationName == 'IntentOf') {
+        } else if (editRelationItem.relationName == 'IntentOf') {
             subjectName = graphConsts.NODE_DOMAIN;
             objectName = graphConsts.NODE_INTENT;
             relation = graphConsts.REL_INTENT_OF;
-        } else if (addItem.relationName == 'IndicatorOf') {
+        } else if (editRelationItem.relationName == 'IndicatorOf') {
             subjectName = graphConsts.NODE_INTENT;
             objectName = graphConsts.NODE_TERM;
             relation = graphConsts.REL_INDICATOR_OF;
-        } else if (addItem.relationName == 'CounterIndicatorOf') {
+
+        } else if (editRelationItem.relationName == 'CounterIndicatorOf') {
             subjectName = graphConsts.NODE_INTENT;
             objectName = graphConsts.NODE_TERM;
             relation = graphConsts.REL_COUNTER_INDICATOR_OF;
         }
 
-        logger.debug(subjectName);
+        logger.debug("Kowsik");
 
         let query = 'merge (s:' + subjectName + '{name:{subjectNode}})'
         query += 'merge(o:' + objectName + '{name:{objectNode}})'
-        query += 'merge(o)-[r:' + relation + ']->(s)'
+        query += 'merge(o)-[r:' + relation+']->(s)'
             //query += 'return r'
 
         let params = {
