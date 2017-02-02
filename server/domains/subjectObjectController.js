@@ -80,6 +80,5 @@ let publishEditedRelations = function(editRelationItem) {
 module.exports = {
     publishNewAddItem: publishNewAddItem,
     publishEditedRelations: publishEditedRelations,
-    getObjects: getObjects,
-    publishNewAddItem: publishNewAddItem
+    getObjects: getObjects
 }

@@ -5,10 +5,11 @@ const logger = require('./../../applogger');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 
-let getPublishSubConcept = function(conceptObj) {
-    let subjectName = conceptObj.subject;
-    let objectName = conceptObj.object;
-    logger.debug(subjectName);
+let getPublishSubConcept = function(addSubconcept) {
+    let subjectName = addSubconcept.subjectNode;
+    let objectName = addSubconcept.objectNode;
+    logger.debug(objectName);
+
     let promise = new Promise(function(resolve, reject) {
         logger.debug(
             "Now proceeding to publish the concepts for domain name: ",
@@ -23,14 +24,16 @@ let getPublishSubConcept = function(conceptObj) {
 
         logger.debug("obtained connection with neo4j");
 
-        let query = 'match (s:' + graphConsts.NODE_CONCEPT + '{name:{subjectName}})'
-        query += 'match(o:' + graphConsts.NODE_CONCEPT + '{name:{objectName}})'
-        query += 'merge(o)-[r:' + graphConsts.REL_SUB_CONCEPT_OF + ']->(s)'
-        query += 'return r'
+        let query = 'match (s: ' + graphConsts.NODE_CONCEPT +
+          '{name: {subjectName}} )'
+       query += 'match(o: ' + graphConsts.NODE_CONCEPT +
+         '{name: {objectName}} )'
+       query += 'merge(o)-[r: ' + graphConsts.REL_SUB_CONCEPT_OF + ']->(s)'
+       query += 'return r';
 
         let params = {
             subjectName: subjectName,
-            objectName: objectName
+            objectName: objectName,
         };
 
         session.run(query, params).then(function(result) {
@@ -38,7 +41,7 @@ let getPublishSubConcept = function(conceptObj) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(objectName);
+                resolve(result);
             })
             .catch(function(error) {
                 logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
