@@ -4,6 +4,7 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import Dialog from 'material-ui/Dialog';
 import MenuItem from 'material-ui/MenuItem';
 import Predicate from './Predicate.jsx';
+//import Intent from './addIntent.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
@@ -27,12 +28,6 @@ export default class SubjectNode extends React.Component{
     this.state = {
       searchSubjectText: '',
       searchObjectText: '',
-
-      nodeRelations: rel,
-      value: 1,
-      hintTextSubject: "Enter a Domain",
-      hintTextObject: "Nothing selected",
-
       searchRelText: '',
       nodeRelations: [],
       value: 1,
@@ -40,7 +35,6 @@ export default class SubjectNode extends React.Component{
       hintTextSubject: "No Domain Selected",
       hintTextObject: "No Subject Selected",
       hintTextRel: "No Object Selected",
-
       errmsg: null,
       loading: null,
       selectedDomain: null,
@@ -54,14 +48,8 @@ export default class SubjectNode extends React.Component{
     this.getDomains();
   }
 
-
-
-  getTerms(searchIntent, searchTerm){
-    let url = `domain/${searchIntent}/intents/${searchTerm}/term`;
-
   getSubjects(domainName){
     let url = `domain/${domainName}/domain/${domainName}/objects`;
-
     Request
     .get(url)
     .end((err, res) => {
@@ -94,14 +82,6 @@ export default class SubjectNode extends React.Component{
     });
   }
 
-
-getTerms(searchText){
-  let url = `domain/${searchText}/intents/${sear}`
-}
-
-  getIntents(searchText){
-    let url = `domain/${searchText}/intents`;
-
   getObjects(nodeType,searchText){
     let url = '';
     switch(nodeType){
@@ -115,7 +95,6 @@ getTerms(searchText){
         url = `domain/${searchText}/intent/${searchText}/objects`;
         break;
     }
-
 
     Request
     .get(url)
@@ -190,14 +169,6 @@ getTerms(searchText){
     });
   };
 
-
-  handleUpdateTermInput = (searchIntent, searchTerm) => {
-    let relations = this.state.relTerm[searchIntent, searchTerm];
-    this.setState({
-      nodeRelations: relations,
-      addLabel: 'Edit Term',
-    });
-
   handleUpdateObjectInput = (searchText) => {
     for (var key in this.state.objectList) {
       if(this.state.objectList[key]['nodeKey'] == searchText){
@@ -208,9 +179,7 @@ getTerms(searchText){
         break;
       }
     }
-
   };
-
 
   handleChange = (event, index, value) => this.setState({value});
 
@@ -247,19 +216,10 @@ getTerms(searchText){
       ];
     let relObjects = [];
     let relTerm = [];
-
     let that = this;
     Object.keys(this.state.relObjects).map(function(key) {
           relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
       });
-
-
-    Object.keys(this.state.relObjects).map(function(key) {
-            relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
-        });
-
-
-
 
     return (
       <div styles={styles.div}>
@@ -297,13 +257,8 @@ getTerms(searchText){
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
-
-
-        />]->
-
           style={styles.div}
         />]-->
-
         <AutoComplete
           hintText={this.state.hintTextObject}
           searchText={this.state.searchObjectText}
@@ -314,9 +269,7 @@ getTerms(searchText){
           filter={AutoComplete.caseInsensitiveFilter}
           openOnFocus={true}
           maxSearchResults={5}
-
           style={styles.div}
-
         />
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
       <Dialog

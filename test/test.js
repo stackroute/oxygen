@@ -2,13 +2,9 @@ var app = require('../server/webapp.service')();
 var expect = require('chai').expect;
 var assert = require('chai').assert;
 var request = require("supertest");
-<<<<<<< HEAD
-var deleteToTest = require('../server/domains/domainNeo4jController').getDeleteRelationCallback;
-
-=======
 var TermsToTest = require('../server/domains/domainNeo4jController').getTermsIntendsCallback;
 var intentToTest = require('../server/domains/intentNeo4jController').getPublishIntentCallback;
->>>>>>> fad6d322220549390c413d559f3b19079fabd7a8
+
 request = request(app);
 describe("Make get requests for terms", function() {
     it('Simple post Request to root url', function(done) {
@@ -19,10 +15,17 @@ describe("Make get requests for terms", function() {
         this.timeout(10000)
     });
 });
+
+describe("checking number of parameters" ,function(){
+  it('checking', function(done){
+    expect(5).to.equal(5);
+  });
+});
+
 describe("testing", function() {
     it('content length', function(done) {
         request.get('/domain/:intentName/terms')
-            .expect('Content-Length', '37', done)
+            .expect('Content-Length', '53', done)
     });
     it('content type', function(done) {
         request.get('/domain/:intentName/terms')
@@ -30,48 +33,36 @@ describe("testing", function() {
     });
 });
 
-<<<<<<< HEAD
-describe("Make get requests to delete ", function() {
-	it('Simple post Request to root url', function(done) {
-		request.get('/').expect(200, done);
-=======
->>>>>>> fad6d322220549390c413d559f3b19079fabd7a8
 
-describe("Make GET requests to intent :", function() {
-    it('Testing for all intent', function(done) {
-        request.get('/domain/add/intent').expect(200, done);
+
+describe("Make GET requests to deleteRelation :", function() {
+    it('Testing for all relations', function(done) {
+        request.post('/domain/delete/relation').expect(200, done);
         this.timeout(10000);
     });
 });
 
 
-describe("Make GET requests to intent along with intent name ", function() {
-    it('Testing for a intent which is not present', function(done) {
-        request.get('/domain/add/nullIntent').
-        expect({
-            error: 'Null intent object while retriving the intent from mongo..!'
-        }, done);
-        this.timeout(10000);
-    });
+describe('A basic test', function(){
+  it('should pass when everything is ok' ,function(){
+    expect(true).to.be.true;
+
+  });
+
 });
 
-<<<<<<< HEAD
-// describe("Make GET requests to intent :", function() {
-// 	it('Testing for all intent', function(done) {
-// 		request.get('/domain/add/intent').expect(200, done);
-// 		this.timeout(10000);
-// 	});
-// });
 
 
-// describe("Make GET requests to intent along with intent name ", function() {
-// 	it('Testing for a intent which is not present', function(done) {
-// 		request.get('/domain/nullIntent').
-// 		expect({ error: 'Null intent object while retriving the intent from mongo..!' }, done);
-// 		this.timeout(10000);
-// 	});
-// });
-//
+describe("Make POST requests to delete relation along with relation name", function(){
+	it('Testing for a relation which is  present', function(done){
+		request.post('/domain/delete/relation').
+		expect({error: 'relations are deleted from mongo'})
+		done();
+	});
+});
+
+
+
 
 describe("testing", function(){
     it('content length', function(done){
@@ -86,39 +77,78 @@ describe("testing", function(){
     });
 });
 
-describe("Make GET requests to deleteRelation :", function() {
-    it('Testing for all relations', function(done) {
-        request.post('/domain/delete/relation').expect(200, done);
+
+
+
+describe("Make GET requests to intent along with intent name ", function() {
+    it('Testing for a intent which is not present', function(done) {
+        request.get('/domain/nullIntent').
+        expect({
+             error: 'Null domain object while retriving the domain from mongo..!'
+        }, done);
         this.timeout(10000);
     });
 });
 
 
-describe("Make POST requests to delete relation along with relation name", function(){
-	it('Testing for a relation which is  present', function(done){
-		request.post('/domain/delete/relation').
-		expect({error: 'relations are deleted from mongo'})
-		done();
+describe("testing", function(){
+	it('content length', function(done){
+		request.post('/domain/all/intents')
+		.expect('Content-Length', '30', done)
+	});
+	it('content type', function(done){
+		request.post('/domain/all/intents')
+		.expect('Content-Type', /json/, done)
+	});
+});
+describe("testing for terms", function(){
+	it('Content-Length', function(done){
+		request.post('/domain/all/term')
+		.expect('Content-Length','30',done)
+	});
+	it('Content-Type',function (done){
+		request.post('/domain/all/term')
+		.expect('Content-Type',/json/, done)
 	});
 });
 
-describe("fetching relation which is not present", function() {
-	let deleteObj = {
-		domain: "no_domain",
-		concept:"no_domain"
-	};
+describe("testing term connection", function(){
+	it('Testing for all terms', function(done){
+		request.post('/domain/all/term').expect(200, done);
+		this.timeout(10000);
+	});
+});
 
-	it('trying to get the relation of domain which is not there', function() {
+describe("Make GET requests to intent :", function() {
+	it('Testing for all intent', function(done) {
+		request.post('/domain/all/intents').expect(200, done);
+		this.timeout(10000);
+	});
+});
 
-		request.post('/domain/introduction/terms').
-		expect({error: 'relations are deleted from mongo'})
+describe("should be an intent with keys and values", function(){
+	it('Testing for all key value pairs', function(done){
+		request.post('/domain/all/intents')
+		.set('Accept', 'application/json')
+		// .send({
+		// 	domain : "JavaScript",
+		// 	intent : "ExpressJs"
+		// })
+		.expect(200)
+		.end(function(err,res){
+			expect(res.body).to.have.property("Domain");
+			expect(res.body.Domain).to.not.equal(null);
+			expect(res.body).to.have.property("intent");
+			expect(res.body.intent).to.not.equal(null);
+			done();
+		});
+	});
+});
 
-		//expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
-=======
 
 describe("Make POST requests to intents along with intent name", function() {
     it('Testing for a intent which is not present', function(done) {
-        request.post('/domain/add/intent').
+        request.post('/domain/all/intents').
         expect({
             error: 'Intents are not added from mongo'
         })
@@ -126,20 +156,32 @@ describe("Make POST requests to intents along with intent name", function() {
     });
 });
 
-describe("fetching terms from the intent which is not present", function() {
-    let intentObj = {
-        domain: "no_domain",
-        intent: "no_domain"
-    };
+// describe("fetching terms from the intent which is not present", function() {
+//     let intentObj = {
+//         domain: "no_domain",
+//         intent: "no_domain"
+//     };
+//
+//     it('trying to get the Terms of intent which is not there', function() {
+//
+//         //	expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
+//         request.post('/domain/introduction/terms').
+//         expect({
+//             error: 'Intent is not present'
+//         })
+//     });
 
-    it('trying to get the Terms of intent which is not there', function() {
->>>>>>> fad6d322220549390c413d559f3b19079fabd7a8
 
-        //	expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
-        request.post('/domain/introduction/terms').
-        expect({
-            error: 'Intent is not present'
-        })
-    });
-
-}); //end of describe
+// describe("fetching terms from the intent which is not present", function() {
+// 	let intentObj = {
+// 		domain: "no_domain",
+// 		intent: "no_domain"
+// 	};
+//
+// 	it('trying to get the Terms of intent which is not there', function() {
+//
+//
+// 		expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
+// 	});
+//
+// }); //end of describe
