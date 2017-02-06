@@ -4,6 +4,7 @@ const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
 
+<<<<<<< HEAD
 //Code for : Generalized adding for Concept,Intent and Term with Predicate
 //Developer : Kowsikan
 
@@ -38,3 +39,45 @@ let publishAddNode = function(subject, object) {
 module.exports = {
     publishAddNode: publishAddNode
 }
+=======
+let publishRelations = function(subject) {
+    logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getRelationsCallback(subject, callback)
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+}
+
+let publishAllRelations = function(subject) {
+    logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getAllRelationsCallback(subject, callback)
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+}
+module.exports = {
+    publishAllRelations: publishAllRelations,
+    publishRelations: publishRelations
+}
+
+>>>>>>> ad11f9654ae427fd14f1bcac971a7fc745a42a7a
