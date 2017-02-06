@@ -1,1 +1,1 @@
-module.exports = require('./ontologyMgrRouter');
+module.exports=require('./ontologyMgrRouter');

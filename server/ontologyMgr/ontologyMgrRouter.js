@@ -3,7 +3,6 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 const ontologyMgrCtrl = require('./ontologyMgrController');
 
-<<<<<<< HEAD
 //Code for : Generalized add API for Concept,Intent and Term with Predicate
 //Developer : Kowsikan
 
@@ -32,7 +31,39 @@ router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
         })
     } catch (err) {
         logger.error("Caught a error in publishing a Generalized Add: ", err);
-=======
+
+    }
+
+});
+router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
+    try {
+        let deleteObj = {
+            domainName: req.params.domainName,
+            nodeType: req.params.nodeType,
+            nodeName: req.params.nodeName,
+            cascade: req.query.cascade
+        }
+        logger.debug("Got request to delete the Orphan nodes");
+        ontologyMgrCtrl.deleteOrphans(deleteObj).then(function(result) {
+                logger.info("Successfully deleted the node" + deleteObj.nodename);
+                res.send(result);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in deleting the node: ",
+                    err);
+
+                res.status(500).send({
+                    error: "Something went wrong, please try later..!"
+                });
+                return;
+            });
+    } catch (err) {
+        logger.error("Caught a error in deleting the node ", err);
+    }
+});
+
 router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1/predicates/:predicatename", function(req, res) {
     //logger.debug("am I getting displayed?", req.params.predicatename)
     let subject = {
@@ -89,7 +120,6 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
         });
     } catch (err) {
         logger.error("Caught a error in publishing a predicate: ", err);
->>>>>>> ad11f9654ae427fd14f1bcac971a7fc745a42a7a
 
         res.status(500).send({
             error: "Something went wrong, please try later..!"
@@ -99,7 +129,3 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
 });
 
 module.exports = router;
-<<<<<<< HEAD
-=======
-
->>>>>>> ad11f9654ae427fd14f1bcac971a7fc745a42a7a

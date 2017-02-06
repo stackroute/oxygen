@@ -555,7 +555,6 @@ let testFnGen = function(data){
     }
 }
 
-
 module.exports = {
     publishNewDomain: publishNewDomain,
     getDomain: getDomain,

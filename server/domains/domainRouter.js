@@ -236,6 +236,33 @@ router.get('/domainhomeview/:domainName', function(req, res) {
     }
 });
 
+router.post('/concept', function(req, res) {
+    let domainObj = req.body;
+    logger.debug("Got request to add a new concept to a domain", req.body);
+    logger.debug("Domin name :" + domainObj.domain);
+
+    try {
+        domainCtrl.publishNewConcept(domainObj).then(function(conceptName) {
+                logger.info("Successfully published a concept to the domain " + domainObj.domain);
+                res.send(conceptName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing concept : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new concept to the domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
 router.delete('/deletedomain/:domainName', function(req, res) {
     try {
         let reqObj = {
@@ -282,6 +309,64 @@ router.get('/:intentName/terms', function(req, res) {
 })
 
 
+
+router.post('/all/intents', function(req, res) {
+    let domainObj = req.body;
+    logger.debug("Got request to add a new intent to a domain", req.body);
+    logger.debug("Domain name :" + domainObj.domain);
+
+    try {
+        domainCtrl.publishNewIntent(domainObj).then(function(intentName) {
+                logger.info("Successfully published a intent to the domain " + domainObj.domain);
+                res.send(intentName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing intent : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new intent to the domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+//Adding new term to a existing intent
+router.post('/all/term', function(req, res) {
+    let intentObj = req.body;
+    logger.debug("Got request to add a new term to a intent", req.body);
+    logger.debug("Intent name :" + intentObj.intent);
+
+    try {
+        domainCtrl.publishNewTerm(intentObj).then(function(termName) {
+                logger.info("Successfully published a term to the intent " + intentObj.intent);
+                res.send(termName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing term : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a new term to the intent ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+
+
 router.post('/delete/relation', function(req, res) {
 
     let deleteObj = req.body;
@@ -295,7 +380,6 @@ router.post('/delete/relation', function(req, res) {
         subjectObjectCtrl.deleteRelation(deleteObj).then(function(result) {
 
                 logger.info("Successfully deleted the relationship...!!!");
-                res.send(true)
 
                 return;
 
@@ -394,7 +478,6 @@ router.post('/:domainName/subject/:subject/object/:object/predicate/:relation', 
         });
         return;
     }
-
 });
 
 router.get('/:domainName/:subjectType/:subjectName/objects', function(req, res) {
