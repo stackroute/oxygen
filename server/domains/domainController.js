@@ -39,6 +39,7 @@ let insertUrls = function(dataToInsert) {
         }
     }
 }
+
 let fetchDomainCardDetails = function(domain) {
     logger.debug("Received request for retriving domain details ", domain);
     //Save to Mongo DB
@@ -291,7 +292,7 @@ let getAllDomainDetails = function() {
                                             domainObj.description = domain.description;
                                             domainObj.domainImgURL = domain.domainImgURL;
                                             cardDetailsObj.push(domainObj)
-                                                // logger.debug("after each pushing", cardDetailsObj);
+                                            // logger.debug("after each pushing", cardDetailsObj);
                                             if (cardDetailsObj.length === domainDetailedColln
                                                 .length) {
                                                 callback(null, cardDetailsObj);
@@ -483,7 +484,7 @@ let getAllDomain = function() {
 }
 
 let getTreeOfDomain = function(domain) {
-  logger.debug('domain ctrl',domain);
+    logger.debug('domain ctrl', domain);
     logger.debug("Received request for retriving domain details ", domain.name);
     //Save to Mongo DB
     //Save to Neo4j
@@ -491,46 +492,46 @@ let getTreeOfDomain = function(domain) {
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
-                     logger.debug("inside the waterfall " + domain)
+                    logger.debug("inside the waterfall " + domain)
                     domainNeo4jController.getTreeOfDomainCallback(domain,
                         callback);
                 }
             ],
-           function(err, tree) {
+            function(err, tree) {
                 logger.debug("got the domain collection", domain)
                 if (!err) {
                     resolve(tree)
                 }
                 reject(err)
-            });//end of async.waterfall
+            }); //end of async.waterfall
     });
 
     return promise;
 }
 
-let deleteDomain =function(domain){
-    logger.debug('domain ctrl',domain);
-    logger.debug("Received request for deleting domain",domain.domainName);
+let deleteDomain = function(domain) {
+    logger.debug('domain ctrl', domain);
+    logger.debug("Received request for deleting domain", domain.domainName);
 
-    let promise = new Promise(function(resolve,reject){
-            async.waterfall([
-                     function(callback){
-                         logger.debug("inside waterfall::mongodelete", domain)
-                        domainMongoController.deleteDomain(domain,callback);
-                     },
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    logger.debug("inside waterfall::mongodelete", domain)
+                    domainMongoController.deleteDomain(domain, callback);
+                },
 
-                     function(deletedDomain, callback){
-                         logger.debug("inside waterfall::neo4jdelete", deletedDomain)
-                        domainNeo4jController.deleteDomainCallback(domain, callback);
-                    }
-                ],
-                function(err,tree){
-                    if(err){
-                        reject(err);
-                    }
+                function(deletedDomain, callback) {
+                    logger.debug("inside waterfall::neo4jdelete", deletedDomain)
+                    domainNeo4jController.deleteDomainCallback(domain, callback);
+                }
+            ],
+            function(err, tree) {
+                if (err) {
+                    reject(err);
+                }
 
-                    resolve(domain);
-                });
+                resolve(domain);
+            });
     });
     return promise;
 }
@@ -539,15 +540,15 @@ let deleteDomain =function(domain){
 test function generation
  */
 
-let testFnGen = function(data){
-    console.log('testFnGen: data ',data);
-    try{
+let testFnGen = function(data) {
+    console.log('testFnGen: data ', data);
+    try {
 
         startFnGen();
         return {
             msg: "Test function generation was successful"
         }
-    } catch (err){
+    } catch (err) {
         return {
             msg: 'Error: test Function wasn not generated successfully',
             err: err
@@ -566,5 +567,5 @@ module.exports = {
     fetchWebDocuments: fetchWebDocuments,
     getAllDomain: getAllDomain,
     getTreeOfDomain: getTreeOfDomain,
-    deleteDomain:deleteDomain
+    deleteDomain: deleteDomain
 }
