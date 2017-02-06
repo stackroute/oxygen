@@ -60,7 +60,7 @@ class Welcome extends React.Component {
       </Drawer>
       <AppBar
       onLeftIconButtonTouchTap={this.handleToggle}
-      title='Bolt'
+      title='Oxygen'
       style={{position: 'fixed', top: 0}}
       iconElementRight={<span>
         <Link to='/dashboard'><IconButton iconStyle={styles.largeIcon}>
