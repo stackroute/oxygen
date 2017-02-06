@@ -7,15 +7,8 @@ const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
 
-//Code for : Generalized adding for Concept,Intent and Term with Predicate
-//Developer : Kowsikan
-
 let publishAddNode = function(subject, object) {
-
-    //logger.debug("Received request for publishing new subjectNode: " + subject.nodename + " objectNode: " + object.objects[1].predicates[1].name);
-
     let promise = new Promise(function(resolve, reject) {
-
         if (!subject.nodeName || subject.nodeName.length <= 3) {
             reject({
                 error: 'Invalid subject/object name..!'
@@ -34,7 +27,6 @@ let publishAddNode = function(subject, object) {
                 }); //End of waterfall
         }
     }); //End of Promise
-
     return promise;
 }
 
@@ -90,8 +82,8 @@ let publishAllRelations = function(subject) {
     return promise;
 }
 module.exports = {
+    publishAddNode: publishAddNode,
     deleteOrphans: deleteOrphans,
     publishAllRelations: publishAllRelations,
-    publishRelations: publishRelations,
-    publishAddNode: publishAddNode
+    publishRelations: publishRelations
 }

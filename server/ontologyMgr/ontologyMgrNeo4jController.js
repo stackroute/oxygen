@@ -2,6 +2,84 @@ const neo4jDriver = require('neo4j-driver').v1;
 const logger = require('./../../applogger');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
+
+let getPublishAddNode = function(subject, object) {
+
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug("Now proceeding to publish subject: ", subject.nodeName);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+
+        let session = driver.session();
+
+        var predicateWeight = '';
+        var subjectDomainname = subject.domainName;
+        var subjectNodeType = subject.nodeType;
+        var subjectNodeName = subject.nodeName;
+        var attributesVar = '';
+        for (k in object.attributes) {
+            attributesVar = attributesVar + ',' + k + ':"' + object.attributes[k] + '"';
+        }
+
+        let query = '';
+        let params = {};
+
+        for (var i = 0; i < object.objects.length; i++) {
+            objectURL = object.objects[i].name;
+            splitArray = objectURL.split('/');
+
+            var objectDomainname = splitArray[2];
+            var objectNodeType = splitArray[4];
+            var objectNodeName = splitArray[5];
+
+            for (j = 0; j < object.objects[i].predicates.length; j++) {
+                var predicateName = object.objects[i].predicates[j].name;
+                var predicateDirection = object.objects[i].predicates[j].direction;
+
+                if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_INDICATOR_OF) {
+                    predicateWeight = '{weight:5}';
+                } else if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_COUNTER_INDICATOR_OF) {
+                    predicateWeight = '{weight:-5}';
+                }
+
+                if (predicateDirection == 'I') {
+                    query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}' + attributesVar + '})'
+                    query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
+                    query += ' merge(o)-[r:' + predicateName + predicateWeight + ']->(s)'
+                    query += ' return r'
+                } else if (predicateDirection == 'O') {
+                    query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}' + attributesVar + '})'
+                    query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
+                    query += ' merge(o)<-[r:' + predicateName + predicateWeight + ']-(s)'
+                    query += ' return r'
+                }
+
+                params = {
+                    subjectNodeName: subjectNodeName,
+                    objectNodeName: objectNodeName
+                };
+
+                session.run(query, params).then(function(result) {
+
+                        if (result) {
+                            logger.debug(result);
+                        }
+                        session.close();
+                        resolve(result);
+                    })
+                    .catch(function(error) {
+                        logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
+                        reject(error);
+                    });
+            }
+        }
+    });
+    return promise;
+};
+
 let deleteOrphans = function(deleteObj) {
     let nodeType = deleteObj.nodeType.toLowerCase();
     let nodeRef = nodeType.charAt(0);
@@ -34,15 +112,7 @@ let deleteOrphans = function(deleteObj) {
                     // nodeType: nodetype,
                     nodeName: deleteObj.nodeName
                 };
-                // MATCH (i:Intent)-[r]-(allRelatedNodes)
-                // WHERE i.name = "Athletics"
-                // AND size((allRelatedNodes)--()) = 1
-                // DETACH DELETE i, allRelatedNodes
-                //
-                // match (i:Intent{name:"Athletics"})<-[r]-(allRelatedNodes)
-                //
-                // where i.name = "Athletics" AND size((allRelatedNodes)--()) = (count(r)-(count(r)-1))
-                // DETACH DELETE i, allRelatedNodes
+
             } else {
                 query += 'match (s:' + deleteObj.nodeType + ')<-[r]-(allRelatedNodes)'
                 query += 'WHERE s.name = {nodeName}'
@@ -68,6 +138,7 @@ let deleteOrphans = function(deleteObj) {
         return promise;
     });
 };
+
 let getRelations = function(subject) {
     let promise = new Promise(function(resolve, reject) {
         logger.debug(subject.nodename);
@@ -110,14 +181,7 @@ let getRelations = function(subject) {
     });
     return promise;
 };
-let getRelationsCallback = function(subject, callback) {
-    logger.debug("from the callback : " + subject.nodename);
-    getRelations(subject).then(function(nodename) {
-        callback(null, nodename);
-    }, function(err) {
-        callback(err, null);
-    });
-};
+
 let getAllRelations = function(subject) {
     let promise = new Promise(function(resolve, reject) {
         logger.debug(subject.nodename);
@@ -131,11 +195,7 @@ let getAllRelations = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-        //MATCH (:Intent { name: 'functions' })-[r :IndicatorOf]->(:Term {name:"jsf"})
-        //RETURN (r)
-        // for all
-        // MATCH (x:Test)-[r:CONNECTED_TO*]->(z:Test)
-        // RETURN x, r, z
+
         query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s, r, o'
         params = {
@@ -159,112 +219,12 @@ let getAllRelations = function(subject) {
     return promise;
 };
 
-let getPublishAddNode = function(subject, object) {
-
-    logger.debug(subject.nodeName);
-
-    let promise = new Promise(function(resolve, reject) {
-
-        logger.debug("Now proceeding to publish subject: ", subject.nodeName);
-
-        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
-                encrypted: false
-            }
-        );
-
-        let session = driver.session();
-
-        logger.debug("obtained connection with neo4j");
-
-        var predicateWeight = '';
-
-        var subjectDomainname = subject.domainName;
-        var subjectNodeType = subject.nodeType;
-        var subjectNodeName = subject.nodeName;
-
-        var attributesVar = '';
-
-        for (k in object.attributes) {
-            // logger.debug(k);
-            // logger.debug(object.attributes[k]);
-            attributesVar = attributesVar + ',' + k + ':"' + object.attributes[k] + '"';
-        }
-
-        attributesVar = attributesVar.substr(1, attributesVar.length - 1);
-        attributesVar = '{' + attributesVar + '}'
-        logger.debug(attributesVar);
-
-        let query = '';
-        let params = {};
-
-        for (var i = 0; i < object.objects.length; i++) {
-
-            objectURL = object.objects[i].name;
-            splitArray = objectURL.split('/');
-            logger.debug(objectURL);
-
-            var objectDomainname = splitArray[2];
-            var objectNodeType = splitArray[4];
-            var objectNodeName = splitArray[5];
-
-            for (j = 0; j < object.objects[i].predicates.length; j++) {
-
-                var predicateName = object.objects[i].predicates[j].name;
-                var predicateDirection = object.objects[i].predicates[j].direction;
-
-                logger.debug(predicateName);
-                logger.debug(predicateDirection);
-
-                if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_INDICATOR_OF) {
-                    predicateWeight = '{weight:5}';
-                } else if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_COUNTER_INDICATOR_OF) {
-                    predicateWeight = '{weight:-5}';
-                }
-
-                if (predicateDirection == 'O') {
-                    var temp = '';
-
-                    temp = objectNodeName;
-                    objectNodeName = subjectNodeName;
-                    subjectNodeName = temp;
-
-                    temp = objectNodeType;
-                    objectNodeType = subjectNodeType;
-                    subjectNodeType = temp;
-                }
-
-                //Query Area
-
-                query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}})'
-                query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
-                query += ' merge(o)-[r:' + predicateName + ']->(s)'
-                query += ' return r'
-
-                params = {
-                    subjectNodeName: subjectNodeName,
-                    objectNodeName: objectNodeName
-                };
-
-                logger.debug(params.subjectNodeName);
-
-                session.run(query, params).then(function(result) {
-                        if (result) {
-                            logger.debug(result);
-                        }
-                        session.close();
-                        resolve(result);
-                    })
-                    .catch(function(error) {
-                        logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
-                        reject(error);
-                    });
-            }
-        }
-
+let getPublishAddNodeCallback = function(subject, object, callback) {
+    getPublishAddNode(subject, object).then(function(nodename) {
+        callback(null, nodename);
+    }, function(err) {
+        callback(err, null);
     });
-    return promise;
-
 };
 
 let deleteOrphansCallback = function(deleteObj, callback) {
@@ -276,6 +236,7 @@ let deleteOrphansCallback = function(deleteObj, callback) {
             callback(error, null);
         });
 };
+
 let getAllRelationsCallback = function(subject, callback) {
     logger.debug("from the callback : " + subject.nodename);
     getAllRelations(subject).then(function(nodename) {
@@ -285,19 +246,18 @@ let getAllRelationsCallback = function(subject, callback) {
     });
 };
 
-let getPublishAddNodeCallback = function(subject, object, callback) {
-
+let getRelationsCallback = function(subject, callback) {
     logger.debug("from the callback : " + subject.nodename);
-
-    getPublishAddNode(subject, object).then(function(nodename) {
+    getRelations(subject).then(function(nodename) {
         callback(null, nodename);
     }, function(err) {
         callback(err, null);
     });
 };
+
 module.exports = {
+    getPublishAddNodeCallback: getPublishAddNodeCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
-    getAllRelationsCallback: getAllRelationsCallback,
-    getPublishAddNodeCallback: getPublishAddNodeCallback
+    getAllRelationsCallback: getAllRelationsCallback
 };

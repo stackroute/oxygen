@@ -3,21 +3,15 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 const ontologyMgrCtrl = require('./ontologyMgrController');
 
-//Code for : Generalized add API for Concept,Intent and Term with Predicate
-//Developer : Kowsikan
-
 router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
-
     let subject = {
         domainName: req.params.domainname,
         nodeType: req.params.nodetype,
         nodeName: req.params.nodename
     };
-
     let object = req.body;
 
     logger.debug("Generalize add Receiving nodetype: " + subject.nodeName);
-
     try {
 
         ontologyMgrCtrl.publishAddNode(subject, object).then(function(nodename) {
@@ -31,10 +25,9 @@ router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
         })
     } catch (err) {
         logger.error("Caught a error in publishing a Generalized Add: ", err);
-
     }
-
 });
+
 router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
     try {
         let deleteObj = {
@@ -63,6 +56,7 @@ router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
         logger.error("Caught a error in deleting the node ", err);
     }
 });
+
 
 router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1/predicates/:predicatename", function(req, res) {
     //logger.debug("am I getting displayed?", req.params.predicatename)
