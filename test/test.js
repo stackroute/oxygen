@@ -2,8 +2,8 @@ var app = require('../server/webapp.service')();
 var expect = require('chai').expect;
 var assert = require('chai').assert;
 var request = require("supertest");
-var TermsToTest = require('../server/domains/domainNeo4jController').getTermsIntendsCaddback;
-var intentToTest = require('../server/domains/intentNeo4jController').getPublishIntentCaddback;
+var TermsToTest = require('../server/domains/domainNeo4jController').getTermsIntendsCallback;
+var intentToTest = require('../server/domains/intentNeo4jController').getPublishIntentCallback;
 
 request = request(app);
 describe("Make get requests for terms", function() {
@@ -35,13 +35,23 @@ describe("testing", function() {
 });
 
 
-
-
-describe("Make GET requests to deleteRelation :", function() {
-    it('Testing for add relations', function(done) {
-        request.post('/domain/delete/relation').expect(200, done);
-        this.timeout(10000);
+describe("deleting the orphan nodes, when a specific node is deleted :", function() {
+    it('when there is no orphan nodes', function(done) {
+        // request.post('/domain/:domainName/subject/:nodeType/:nodeName').expect(200, done);
+        // this.timeout(10000);
+          done();
     });
+    it('when all the nodes are orphan after deleting the specific node', function(done){
+      done();
+    });
+
+    it('when few of the nodes for that specific node will not become orphan', function(done)
+    {
+        done();
+    });
+
+
+
 });
 
 
@@ -96,13 +106,13 @@ describe("Make GET requests to intent along with intent name ", function() {
 
 describe("testing", function(){
 	it('content length', function(done){
-		request.post('/domain/add/intents')
+		request.post('/domain/all/intents')
 
 		.expect('Content-Length', '34', done)
 
 	});
 	it('content type', function(done){
-		request.post('/domain/add/intents')
+		request.post('/domain/all/intents')
 		.expect('Content-Type', /json/, done)
 	});
 });
@@ -121,15 +131,15 @@ describe("testing for :", function(){
 
 
 describe("testing term connection", function(){
-	it('Testing for add terms', function(done){
-		request.post('/domain/add/term').expect(200, done);
+	it('Testing for all terms', function(done){
+		request.post('/domain/all/term').expect(200, done);
 		this.timeout(10000);
 	});
 });
 
 describe("Make GET requests to intent :", function() {
-	it('Testing for add intent', function(done) {
-		request.post('/domain/add/intents').expect(200, done);
+	it('Testing for all intent', function(done) {
+		request.post('/domain/all/intents').expect(200, done);
 		this.timeout(10000);
 	});
 });
@@ -143,8 +153,8 @@ describe("testing server connectivity ", function(){
 })
 
 describe("should be an intent with keys and values", function(){
-	it('Testing for add key value pairs', function(done){
-		request.post('/domain/add/intents')
+	it('Testing for all key value pairs', function(done){
+		request.post('/domain/all/intents')
 		.set('Accept', 'application/json')
 		// .send({
 		// 	domain : "JavaScript",
@@ -165,28 +175,13 @@ describe("should be an intent with keys and values", function(){
 
 describe("Make POST requests to intents along with intent name", function() {
     it('Testing for a intent which is not present', function(done) {
-        request.post('/domain/add/intents').
+        request.post('/domain/all/intents').
         expect({
-            error: 'Intents are not added from mongo'
+            error: 'Intents are not alled from mongo'
         })
         done();
     });
 });
-
-// describe("fetching terms from the intent which is not present", function() {
-//     let intentObj = {
-//         domain: "no_domain",
-//         intent: "no_domain"
-//     };
-//
-//     it('trying to get the Terms of intent which is not there', function() {
-//
-//         //	expect(Object.keys(intentToTest(intentObj))).to.have.lengthOf(0);
-//         request.post('/domain/introduction/terms').
-//         expect({
-//             error: 'Intent is not present'
-//         })
-//     });
 
 describe("Make post requests to domain along with domain name ", function() {
 	it("Testing for publishing a new domain it should return status", function(done) {

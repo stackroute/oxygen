@@ -22,7 +22,7 @@ let neo4j = {
   usr: process.env.NEO4J_USR || 'neo4j',
 
 
-  pwd: process.env.NEO4J_PWD || 'puri1234567890'
+  pwd: process.env.NEO4J_PWD || 'password'
 };
 //@ TODO use neo4j username & password in constructing the URL if given
 neo4j['neo4jURL'] = ('bolt://' + neo4j.host + ':' + neo4j.bolt);
