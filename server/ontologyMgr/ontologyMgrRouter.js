@@ -28,6 +28,40 @@ router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
     }
 });
 
+router.delete('/:domainName/subject/:nodeType1/:nodeName1/object/:nodeType2/:nodeName2/predicate/:predicateName', (req, res) => {
+    try {
+        let deleteObj = {
+            domainName: req.params.domainName,
+            subNodeType: req.params.nodeType1,
+            subNodeName: req.params.nodeName1,
+            objNodeType: req.params.nodeType2,
+            objNodeName: req.params.nodeName2,
+            predicateName: req.params.predicateName
+        };
+
+        ontologyMgrCtrl.deleteObject(deleteObj)
+            .then(function(result) {
+                    logger.debug("Successfully deleted the Object: ", deleteObj.objNodeName);
+                    res.send(result);
+                    return;
+                },
+                function(err) {
+                    logger.error("Encountered error in deleting the object: ",
+                        err);
+                    res.status(500).send({
+                        error: 'Failed to complete operation...!'
+                    });
+                    return;
+                });
+    } catch (error) {
+        logger.error("Caught a error in posting new domain ", error);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
 router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
     try {
         let deleteObj = {
@@ -114,7 +148,6 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
         });
     } catch (err) {
         logger.error("Caught a error in publishing a predicate: ", err);
-
         res.status(500).send({
             error: "Something went wrong, please try later..!"
         });
