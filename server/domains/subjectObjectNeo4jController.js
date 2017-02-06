@@ -177,7 +177,7 @@ let getPublishAddItem = function(addItem) {
 
         let query = 'merge (s:' + subjectName + '{name:{subjectNode}})'
         query += 'merge(o:' + objectName + '{name:{objectNode}})'
-        query += 'merge(o)-[r:' + relation +weight+ ']->(s)'
+        query += 'merge(o)-[r:' + relation + weight + ']->(s)'
             //query += 'return r'
 
         let params = {
@@ -223,11 +223,11 @@ let getPublishSubConcept = function(addSubconcept) {
         logger.debug("obtained connection with neo4j");
 
         let query = 'match (s: ' + graphConsts.NODE_CONCEPT +
-          '{name: {subjectName}} )'
-       query += 'match(o: ' + graphConsts.NODE_CONCEPT +
-         '{name: {objectName}} )'
-       query += 'merge(o)-[r: ' + graphConsts.REL_SUB_CONCEPT_OF + ']->(s)'
-       query += 'return r';
+            '{name: {subjectName}} )'
+        query += 'match(o: ' + graphConsts.NODE_CONCEPT +
+            '{name: {objectName}} )'
+        query += 'merge(o)-[r: ' + graphConsts.REL_SUB_CONCEPT_OF + ']->(s)'
+        query += 'return r';
 
         let params = {
             subjectName: subjectName,
@@ -249,17 +249,20 @@ let getPublishSubConcept = function(addSubconcept) {
     return promise;
 };
 
-let getPublishEditedIntentTermRelation = function(editTermRelation) {
-    let intentName = editTermRelation.intentName;
-    let termName = editTermRelation.termName;
+//Edit intent term relation weight by user
+
+let getPublishEditedIntentTermRelation = function(editTermRelationWeight) {
+    let intentName = editTermRelationWeight.intentName;
+    let termName = editTermRelationWeight.termName;
     let relationName = '';
+    let value = editTermRelationWeight.weightValue;
     let weight = '';
 
     logger.debug(relationName);
     let promise = new Promise(function(resolve, reject) {
         logger.debug(
             "Now proceeding to publish the edited intent term relation: ",
-            editTermRelation.relationName);
+            editTermRelationWeight.relationName);
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
                 encrypted: false
@@ -270,28 +273,27 @@ let getPublishEditedIntentTermRelation = function(editTermRelation) {
 
         logger.debug("obtained connection with neo4j");
 
-        if(editTermRelation.relationName == graphConsts.REL_INDICATOR_OF){
-          //logger.debug("1");
-          relationName = graphConsts.REL_COUNTER_INDICATOR_OF;
-          weight = '{weight:-5}';
+        if (editTermRelationWeight.relationName == graphConsts.REL_INDICATOR_OF && value >= 0) {
+            //logger.debug("1");
+            relationName = graphConsts.REL_INDICATOR_OF;
+            weight = '{weight:'+value+'}';
 
-        }else { //if (editTermRelation.relationName == graphConsts.REL_COUNTER_INDICATOR_OF)
-          //logger.debug("2");
-          relationName = graphConsts.REL_INDICATOR_OF;
-          weight = '{weight:5}';
+        } else { //if (editTermRelation.relationName == graphConsts.REL_COUNTER_INDICATOR_OF)
+            //logger.debug("2");
+            relationName = graphConsts.REL_COUNTER_INDICATOR_OF;
+            weight = '{weight:'+value+'}';
         }
 
         logger.debug(relationName);
 
-        let query = 'match(s:' + graphConsts.NODE_TERM + '{name:{termName}})-[r:' + editTermRelation.relationName + ']->(o:' + graphConsts.NODE_INTENT + '{name:{intentName}})'
-        query += 'merge(s)-[r1:' + relationName +weight+ ']->(o)'
+        let query = 'match(s:' + graphConsts.NODE_TERM + '{name:{termName}})-[r:' + editTermRelationWeight.relationName + ']->(o:' + graphConsts.NODE_INTENT + '{name:{intentName}})'
+        query += 'merge(s)-[r1:' + relationName + weight + ']->(o)'
         query += 'delete r '
         query += 'return r1'
 
         let params = {
             intentName: intentName,
-            termName: termName,
-            relationName: relationName
+            termName: termName
         };
 
         logger.debug(query);
@@ -334,7 +336,7 @@ let getDeleteRelation = function(deleteObj) {
         let params = {};
         if (subjectType === graphConsts.NODE_CONCEPT && objectType === graphConsts.NODE_DOMAIN) {
             query += 'match(c:' + graphConsts.NODE_CONCEPT + '{name:{subject}})-[r:' + relation + ']->(d:' + graphConsts.NODE_DOMAIN + '{name:{object}})'
-            query += 'detach delete(r)' ;
+            query += 'detach delete(r)';
 
             params = {
                 subject: subject,
@@ -356,6 +358,66 @@ let getDeleteRelation = function(deleteObj) {
     return promise;
 }
 
+let getPublishEditedIntentTermRelationWeight = function(editTermRelation) {
+    let intentName = editTermRelation.intentName;
+    let termName = editTermRelation.termName;
+    let relationName = '';
+    let weight = '';
+
+    logger.debug(relationName);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(
+            "Now proceeding to publish the edited intent term relation: ",
+            editTermRelation.relationName);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+
+        let session = driver.session();
+
+        logger.debug("obtained connection with neo4j");
+
+        if (editTermRelation.relationName == graphConsts.REL_INDICATOR_OF) {
+            //logger.debug("1");
+            relationName = graphConsts.REL_COUNTER_INDICATOR_OF;
+            weight = '{weight:-5}';
+
+        } else { //if (editTermRelation.relationName == graphConsts.REL_COUNTER_INDICATOR_OF)
+            //logger.debug("2");
+            relationName = graphConsts.REL_INDICATOR_OF;
+            weight = '{weight:5}';
+        }
+
+        logger.debug(relationName);
+
+        let query = 'match(s:' + graphConsts.NODE_TERM + '{name:{termName}})-[r:' + editTermRelation.relationName + ']->(o:' + graphConsts.NODE_INTENT + '{name:{intentName}})'
+        query += 'merge(s)-[r1:' + relationName + weight + ']->(o)'
+        query += 'delete r '
+        query += 'return r1'
+
+        let params = {
+            intentName: intentName,
+            termName: termName
+        };
+
+        logger.debug(query);
+
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    logger.debug(result);
+                }
+                session.close();
+                resolve(result);
+            })
+            .catch(function(error) {
+                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+};
 
 let getPublishAddItemCallback = function(addItem, callback) {
     logger.debug("from the callback : " + addItem.subjectNode);
@@ -400,12 +462,22 @@ let getDeleteRelationCallback = function(deleteObj, callback) {
     }, function(err) {
         callback(err, null);
     });
-}
+};
+
+let getPublishEditedIntentTermRelationWeightCallback = function(editTermRelationWeight, callback) {
+    logger.debug("from the callback : " + editTermRelationWeight.intentName);
+    getPublishEditedIntentTermRelationWeight(editTermRelationWeight).then(function(termRelationWeightDetails) {
+        callback(null, termRelationWeightDetails);
+    }, function(err) {
+        callback(err, null);
+    });
+};
 
 module.exports = {
     getPublishAddItemCallback: getPublishAddItemCallback,
     getObjectsCallback: getObjectsCallback,
     getPublishSubConceptCallback: getPublishSubConceptCallback,
     getPublishEditedIntentTermRelationCallback: getPublishEditedIntentTermRelationCallback,
-    getDeleteRelationCallback: getDeleteRelationCallback
+    getDeleteRelationCallback: getDeleteRelationCallback,
+    getPublishEditedIntentTermRelationWeightCallback: getPublishEditedIntentTermRelationWeightCallback
 };
