@@ -50,57 +50,6 @@ let indexNewDomain = function(newDomainObj) {
     return promise;
 }
 
-
-let getDeleteRelation = function(deleteObj) {
-    let subject = deleteObj.subject,
-        object = deleteObj.object,
-        subjectType = deleteObj.subject_type,
-        objectType = deleteObj.object_type,
-        relation = deleteObj.relation;
-
-    let promise = new Promise(function(resolve, reject) {
-        logger.info("Now proceeding to delete the relationship for the subject :",
-            deleteObj.subject
-        );
-        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
-                encrypted: false
-            }
-        );
-        let session = driver.session();
-        logger.debug("obtained connection with neo4j");
-
-        let query = '';
-        let params = {};
-        if (subjectType === graphConsts.NODE_CONCEPT && objectType === graphConsts.NODE_DOMAIN) {
-            query += 'match(c:' + graphConsts.NODE_CONCEPT + '{name:{subject}})-[r:' + relation + ']->(d:' + graphConsts.NODE_DOMAIN + '{name:{object}})'
-            query += 'detach delete(r)' ;
-
-            params = {
-                subject: subject,
-                object: object,
-                relation: relation
-            };
-
-        }
-
-        session.run(query, params).then(function(result) {
-                session.close();
-                resolve(true);
-            })
-            .catch(function(error) {
-                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
-                reject(error);
-            });
-    });
-    return promise;
-}
-
-
-
-
-
-
 let getAllDomainConcept = function(domainNameColln) {
     let promise = new Promise(function(resolve, reject) {
 
@@ -641,59 +590,6 @@ let getTreeOfDomain = function(data) {
     return promise;
 }
 
-let getPublishSubConcept = function(conceptObj) {
-    let subjectName = conceptObj.subject;
-    let objectName = conceptObj.object;
-    logger.debug(subjectName);
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug(
-            "Now proceeding to publish the concepts for domain name: ",
-            subjectName);
-        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
-                encrypted: false
-            }
-        );
-
-        let session = driver.session();
-
-        logger.debug("obtained connection with neo4j");
-
-        let query = 'match (s:' + graphConsts.NODE_CONCEPT + '{name:{subjectName}})'
-        query += 'match(o:' + graphConsts.NODE_CONCEPT + '{name:{objectName}})'
-        query += 'merge(o)-[r:' + graphConsts.REL_SUB_CONCEPT_OF + ']->(s)'
-        query += 'return r'
-
-        let params = {
-            subjectName: subjectName,
-            objectName: objectName
-        };
-
-        session.run(query, params).then(function(result) {
-                if (result) {
-                    logger.debug(result);
-                }
-                session.close();
-                resolve(objectName);
-            })
-            .catch(function(error) {
-                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
-                reject(error);
-            });
-    });
-    return promise;
-};
-
-let getPublishSubConceptCallback = function(conceptObj, callback) {
-    logger.debug("from the callback : " + conceptObj.subject);
-    getPublishSubConcept(conceptObj).then(function(subConceptDetails) {
-        callback(null, subConceptDetails);
-    }, function(err) {
-        callback(err, null);
-    });
-};
-
-
 let deleteDomain = function(domain) {
     var neo4j = require('neo4j-driver').v1;
     var driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j",
@@ -785,71 +681,6 @@ let getWebDocumentsCallback = function(domainObj, callback) {
     });
 }
 
-
-let getDeleteRelationCallback = function(deleteObj, callback) {
-    logger.debug("from the callback : " + deleteObj);
-    getDeleteRelation(deleteObj).then(function(result) {
-        callback(null, result);
-    }, function(err) {
-        callback(err, null);
-    });
-}
-let getTermsIntentsCallback = function(termsObj, callback) {
-    logger.debug("from the callback : " + termsObj);
-    getTermsIntents(termsObj).then(function(result) {
-        callback(null, result);
-    }, function(err) {
-        callback(err, null);
-    });
-}
-let getTermsIntents = function(domainName){
-  let promise = new Promise(function(resolve, reject) {
-    logger.debug(
-      "Now proceeding to retrive the intents and relations for domain name: ",
-      domainName);
-    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-      neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
-        encrypted: false
-      }
-    );
-    let session = driver.session();
-    logger.debug("obtained connection with neo4j");
-    let query = 'MATCH (i:' + graphConsts.NODE_INTENT +
-      '{name:{domainName}})'
-      query += 'match (t:Term)-[r]->(i)'
-      query += 'return t.name as Term,type(r) as Relation';
-    let params = {
-      domainName: domainName
-    };
-    let intents = {};
-    session.run(query, params)
-    .then(function(result) {
-      result.records.forEach(function(record){
-        if(intents.hasOwnProperty(record._fields[0])){
-          intents[record._fields[0]].push(record._fields[1]);
-        }else{
-          intents[record._fields[0]] = [record._fields[1]];
-        }
-      });
-      //intents = result;
-      session.close();
-      resolve({
-        Domain: domainName,
-        Intents: intents
-      });
-    })
-    .catch(function(err) {
-      logger.error("Error in NODE_INTENT query: ", err, ' query is: ',
-        query);
-      reject(err);
-    });
-  });
-  return promise;
-}
-
-
-
-
 module.exports = {
   indexNewDomain: indexNewDomain,
   getDomainConcept: getDomainConcept,
@@ -868,8 +699,5 @@ module.exports = {
   getIntentforDocument: getIntentforDocument,
   getTreeOfDomain: getTreeOfDomain,
   getTreeOfDomainCallback: getTreeOfDomainCallback,
-  deleteDomainCallback: deleteDomainCallback,
- getDeleteRelationCallback: getDeleteRelationCallback,
- getPublishSubConceptCallback: getPublishSubConceptCallback,
- getTermsIntentsCallback:getTermsIntentsCallback
+  deleteDomainCallback: deleteDomainCallback
 }
