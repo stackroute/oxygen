@@ -33,7 +33,7 @@ let deleteObject = function(deleteObj) {
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([function(callback) {
                 logger.debug("inside waterfall:neo4jdelete", deleteObj);
-                ontologyMgrNeo4jCtrl.deleteObjectCallback(deleteObj, callback);
+                ontologyMgrNeo4jController.deleteObjectCallback(deleteObj, callback);
             }],
             function(err, result) {
                 if (err) {
