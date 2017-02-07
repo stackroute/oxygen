@@ -22,9 +22,9 @@ let getObjects = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrivedRelationsAndIntents);
-              });
-  });
-  return promise;
+            });
+    });
+    return promise;
 }
 
 
@@ -106,49 +106,77 @@ let publishEditedIntentTermRelation = function(editTermRelation) {
 //Ading new subConcept to a existing concept
 
 let publishNewSubConcept = function(addSubconcept) {
-   logger.debug("Received request for publishing new subConcept to the concept: " + addSubconcept.subject);
-   let promise = new Promise(function(resolve, reject) {
-       logger.debug(addSubconcept.subject);
-       if (!addSubconcept.subjectNode || !addSubconcept.objectNode) {
-           reject({
-               error: 'Invalid concept or subConcept name..!'
-           });
-       }
-       async.waterfall([
-               function(callback) {
-                   subjectObjectNeo4jController.getPublishSubConceptCallback(addSubconcept, callback);
-               }
-           ],
-           function(err, objectName) {
-               if (err) {
-                   reject(err);
-               }
-               resolve(objectName);
-           }); //end of async.waterfall
-   });
-   return promise;
+    logger.debug("Received request for publishing new subConcept to the concept: " + addSubconcept.subject);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(addSubconcept.subject);
+        if (!addSubconcept.subjectNode || !addSubconcept.objectNode) {
+            reject({
+                error: 'Invalid concept or subConcept name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    subjectObjectNeo4jController.getPublishSubConceptCallback(addSubconcept, callback);
+                }
+            ],
+            function(err, objectName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(objectName);
+            }); //end of async.waterfall
+    });
+    return promise;
 }
 
 let deleteRelation = function(deleteObj) {
-   logger.debug("Received request for deleting the relationship between " + deleteObj.subject + " and " + deleteObj.object);
-   let promise = new Promise(function(resolve, reject) {
-       async.waterfall([function(callback) {
-               subjectObjectNeo4jController.getDeleteRelationCallback(deleteObj, callback);
-           }],
-           function(err, result) {
-               if (err) {
-                   reject(err);
-               }
-               resolve(result);
-           }); //end of async.waterfall
-   });
-   return promise;
+    logger.debug("Received request for deleting the relationship between " + deleteObj.subject + " and " + deleteObj.object);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([function(callback) {
+                subjectObjectNeo4jController.getDeleteRelationCallback(deleteObj, callback);
+            }],
+            function(err, result) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            }); //end of async.waterfall
+    });
+    return promise;
 }
+
+//Editing Intent term relation weight
+
+let publishEditedIntentTermRelationWeight = function(editTermRelationWeight) {
+    logger.debug("Received request for publishing Edited Intent term weight: " + editTermRelationWeight.intentName);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(editTermRelationWeight.intentName);
+        if (!editTermRelationWeight.intentName || !editTermRelationWeight.termName) {
+            reject({
+                error: 'Invalid Intent or term name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    subjectObjectNeo4jController.getPublishEditedIntentTermRelationWeightCallback(editTermRelationWeight, callback);
+                }
+            ],
+            function(err, objectName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(objectName);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
+
 
 module.exports = {
     publishNewAddItem: publishNewAddItem,
     getObjects: getObjects,
     publishNewSubConcept: publishNewSubConcept,
     publishEditedIntentTermRelation: publishEditedIntentTermRelation,
-    deleteRelation: deleteRelation
+    deleteRelation: deleteRelation,
+    publishEditedIntentTermRelationWeight: publishEditedIntentTermRelationWeight
 }

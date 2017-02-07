@@ -35,7 +35,7 @@ return n
 
 ### Creates all nodes from the CSV, you need add one FOREACH clause for each node type, which is possible in the CSV
 USING PERIODIC COMMIT 50
-LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line 
+LOAD CSV WITH HEADERS FROM "file:///javaConceptsToIntent.csv" AS Line
 WITH Line
 WHERE Line.`node type` IS NOT NULL
 FOREACH(ignoreMe IN CASE WHEN Line.`node type` = 'term' THEN [1] ELSE [] END | MERGE (n:Term {name:Line.name}) SET n.nodeid = Line.`node id`)
@@ -75,5 +75,3 @@ MATCH (n:Term {name:Line.name})
 MATCH (pn:Term {nodeid:Line.`parent node id`})
 call apoc.create.relationship(n, Line.`parent relation`, {weight:Line.weight}, pn) YIELD rel as r
 return n, pn, r
-
-

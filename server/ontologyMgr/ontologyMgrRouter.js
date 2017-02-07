@@ -154,6 +154,7 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
         return;
     }
 });
+<<<<<<< HEAD
 //Editing Term relation with Intent
 
 router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodename2/predicate/:predicatename', function(req, res) {
@@ -193,5 +194,7 @@ router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodena
         return;
     }
 });
+=======
+>>>>>>> fbea2a130fcf5096cb23567b8e44a7bab5806a1d
 
 module.exports = router;
