@@ -4,41 +4,41 @@ const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 
 let getPublishAddNode = function(subject, object) {
+
     logger.debug(subject.nodeName);
     let promise = new Promise(function(resolve, reject) {
         logger.debug("Now proceeding to publish subject: ", subject.nodeName);
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
                 encrypted: false
-            });
+            }
+        );
 
         let session = driver.session();
         logger.debug("obtained connection with neo4j");
+
         var predicateWeight = '';
         var subjectDomainname = subject.domainName;
         var subjectNodeType = subject.nodeType;
         var subjectNodeName = subject.nodeName;
+        var attributesVar = '';
+        for (k in object.attributes) {
+            attributesVar = attributesVar + ',' + k + ':"' + object.attributes[k] + '"';
+        }
 
         var attributesVar = '';
 
         for (k in object.attributes) {
-            // logger.debug(k);
-            // logger.debug(object.attributes[k]);
             attributesVar = attributesVar + ',' + k + ':"' + object.attributes[k] + '"';
         }
-
-        attributesVar = attributesVar.substr(1, attributesVar.length - 1);
-        attributesVar = '{' + attributesVar + '}'
-        logger.debug(attributesVar);
 
         let query = '';
         let params = {};
 
         for (var i = 0; i < object.objects.length; i++) {
 
-            objectURL = object.objects[i].name;
-            splitArray = objectURL.split('/');
-            logger.debug(objectURL);
+            splitArray = object.objects[i].name.split('/');
+
             var objectDomainname = splitArray[2];
             var objectNodeType = splitArray[4];
             var objectNodeName = splitArray[5];
@@ -47,31 +47,23 @@ let getPublishAddNode = function(subject, object) {
                 var predicateName = object.objects[i].predicates[j].name;
                 var predicateDirection = object.objects[i].predicates[j].direction;
 
-                logger.debug(predicateName);
-                logger.debug(predicateDirection);
-
                 if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_INDICATOR_OF) {
                     predicateWeight = '{weight:5}';
                 } else if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_COUNTER_INDICATOR_OF) {
                     predicateWeight = '{weight:-5}';
                 }
 
-                if (predicateDirection == 'O') {
-                    var temp = '';
-                    temp = objectNodeName;
-                    objectNodeName = subjectNodeName;
-                    subjectNodeName = temp;
-                    temp = objectNodeType;
-                    objectNodeType = subjectNodeType;
-                    subjectNodeType = temp;
+                if (predicateDirection == 'I') {
+                    query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}' + attributesVar + '})'
+                    query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
+                    query += ' merge(o)-[r:' + predicateName + predicateWeight + ']->(s)'
+                    query += ' return r'
+                } else if (predicateDirection == 'O') {
+                    query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}' + attributesVar + '})'
+                    query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
+                    query += ' merge(o)<-[r:' + predicateName + predicateWeight + ']-(s)'
+                    query += ' return r'
                 }
-
-                //Query Area
-
-                query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}})'
-                query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
-                query += ' merge(o)-[r:' + predicateName + ']->(s)'
-                query += ' return r'
 
                 params = {
                     subjectNodeName: subjectNodeName,
@@ -252,11 +244,7 @@ let getAllRelations = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-        //MATCH (:Intent { name: 'functions' })-[r :IndicatorOf]->(:Term {name:"jsf"})
-        //RETURN (r)
-        // for all
-        // MATCH (x:Test)-[r:CONNECTED_TO*]->(z:Test)
-        // RETURN x, r, z
+
         query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s, r, o'
         params = {
@@ -327,9 +315,9 @@ let getAllRelationsCallback = function(subject, callback) {
 };
 
 module.exports = {
+    getPublishAddNodeCallback: getPublishAddNodeCallback,
     deleteObjectCallback: deleteObjectCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
-    getAllRelationsCallback: getAllRelationsCallback,
-    getPublishAddNodeCallback: getPublishAddNodeCallback
+    getAllRelationsCallback: getAllRelationsCallback
 };

@@ -100,9 +100,9 @@ let publishAllRelations = function(subject) {
 };
 
 module.exports = {
+    publishAddNode: publishAddNode,
     deleteObject: deleteObject,
     deleteOrphans: deleteOrphans,
     publishAllRelations: publishAllRelations,
-    publishRelations: publishRelations,
-    publishAddNode: publishAddNode
+    publishRelations: publishRelations
 }
