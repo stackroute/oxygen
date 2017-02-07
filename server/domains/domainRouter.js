@@ -463,4 +463,44 @@ router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation
     }
 });
 
+//Editing Term relation with Intent
+
+router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodename2/predicate/:predicatename', function(req, res) {
+    let props=req.body;
+    let editTermRelation = {
+        domain: req.params.domainName,
+        subjectName: req.params.nodename1,
+        objectName: req.params.nodename2,
+        subjectType: req.params.nodetype1,
+        objectType: req.params.nodetype2,
+        relationName: req.params.predicatename,
+        attributes: props
+    }
+    logger.debug("Got request to edit a Subject object relation");
+    logger.debug("Attributes name :" + editTermRelation.attributes);
+    logger.debug("Intent name :" + editTermRelation.subjectName);
+
+
+    try {
+        subjectObjectCtrl.publishEditedIntentTermRelation(editTermRelation).then(function(objectName) {
+                logger.info("Successfully Edited a Intent term relation for " + editTermRelation.subjectName);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing Subject object relation : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a Subject object relation ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
 module.exports = router;

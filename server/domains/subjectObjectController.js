@@ -83,7 +83,7 @@ let publishEditedIntentTermRelation = function(editTermRelation) {
     logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
     let promise = new Promise(function(resolve, reject) {
         logger.debug(editTermRelation.intentName);
-        if (!editTermRelation.intentName || !editTermRelation.termName) {
+        if (!editTermRelation.subjectName || !editTermRelation.objectName) {
             reject({
                 error: 'Invalid Intent or term name..!'
             });
