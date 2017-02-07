@@ -21,7 +21,6 @@ let neo4j = {
     http: process.env.NEO4J_HTTP_PORT ||  7474,
     bolt: process.env.NEO4J_BOLT_PORT ||  7687,
     usr: process.env.NEO4J_USR ||  'neo4j',
-
     pwd: process.env.NEO4J_PWD ||  'password'
 
 };
