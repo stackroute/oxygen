@@ -19,9 +19,7 @@ let deleteOrphans = function(deleteObj) {
         let cypher = require('cypher-stream')(config.NEO4J.neo4jURL, config.NEO4J.usr,
             config.NEO4J.pwd);
         let fs = require('fs');
-
-        let promise = new Promise(function(resolve, reject) {
-            logger.debug(subject.nodename);
+            logger.debug(deleteObj.nodeName);
             let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
                 neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
                     encrypted: false
@@ -31,13 +29,18 @@ let deleteOrphans = function(deleteObj) {
 
             let query = '';
             let params = {};
-            if (deleteObj.cascade == 1) {
-                query += 'match (s:' + deleteObj.nodeType + ')<-[r]-(allRelatedNodes)'
+            if (parseInt(deleteObj.cascade) == 1) {
+
+
+
+
+
+
+                query += 'match (s:' + deleteObj.nodeType + ')-[r]-(allRelatedNodes)'
                 query += 'WHERE s.name = {nodeName}'
                 query += 'AND size((allRelatedNodes)--()) = 1 '
-                query += 'DETACH DELETE s, allRelatedNodes';
+                query += 'DETACH DELETE allRelatedNodes,s';
                 params = {
-                    // nodeType: nodetype,
                     nodeName: deleteObj.nodeName
                 };
 
@@ -57,35 +60,25 @@ let deleteOrphans = function(deleteObj) {
 
 
             } else {
-                query += 'match (s:' + deleteObj.nodeType + ')<-[r]-(allRelatedNodes)'
-                query += 'WHERE s.name = {nodeName}'
-                query += 'detach delete s';
+                query += 'match (s:' + deleteObj.nodeType + ' {name : {nodeName}})'
+                query += 'detach delete s return count(s)';
 
                 params = {
-                    // nodeType: nodetype,
                     nodeName: deleteObj.nodeName
                 };
             }
-
-
-
-            logger.debug("Query ", query);
             session.run(query, params).then(function(result) {
-                    if (result) {
-                        logger.debug(result);
-                    }
+                    logger.debug(result);
                     session.close();
-                    resolve(result);
+                    resolve(result.summary.counters);
                 })
                 .catch(function(error) {
-
                     logger.error("Error in query: ", error, ' query is: ', query);
                     reject(error);
                 });
 
         });
         return promise;
-    });
 };
 
 let getRelations = function(subject) {
