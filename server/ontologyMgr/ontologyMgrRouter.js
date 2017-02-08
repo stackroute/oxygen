@@ -3,6 +3,32 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 const ontologyMgrCtrl = require('./ontologyMgrController');
 
+
+
+router.get('/:domainName/subjects', function(req, res) {
+    let domain = {
+        name: req.params.domainName
+    }
+    try {
+        ontologyMgrCtrl.getAllDomainDetails(domain).then(function(Obj) {
+                logger.debug(
+                    "Successfully retrieved all details to show length----->",
+                    Obj.length);
+                res.send(Obj);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in retrieved concept(s) of domain: ",
+                    err);
+                res.send(err);
+                return;
+            })
+
+    } catch (err) {
+        logger.error("Caught a error in retrieved concept(s) of domain ", err);
+    }
+});
 router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
     let subject = {
         domainName: req.params.domainname,
@@ -148,6 +174,7 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
         });
     } catch (err) {
         logger.error("Caught a error in publishing a predicate: ", err);
+
         res.status(500).send({
             error: "Something went wrong, please try later..!"
         });
@@ -155,12 +182,11 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
     }
 });
 
-
-//Editing Term relation with Intent
+//Editing relation attributes
 //Yogee codes
 
 router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodename2/predicate/:predicatename', function(req, res) {
-    let props=req.body;
+    let props = req.body;
     let editTermRelation = {
         domain: req.params.domainName,
         subjectName: req.params.nodename1,
@@ -227,4 +253,35 @@ router.get("/:domainname/subject/:nodetype/:nodename", function(req, res) {
         return;
     }
 });
+
+router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req, res) {
+    let reqObj = {
+        domainname: req.params.domainname,
+        nodetype: req.params.nodetype,
+        nodename: req.params.nodename
+    }
+    try {
+        ontologyMgrCtrl.getSubjectObjects(reqObj).then(function(Obj) {
+                logger.debug(
+                    "Successfully retrieved all details to show length----->",
+                    Obj.length);
+                res.send(Obj);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in retrieved concept(s) of domain: ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in retrieved concept(s) of domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
 module.exports = router;
