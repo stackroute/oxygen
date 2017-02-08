@@ -1,7 +1,7 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
 const logger = require('./../../applogger');
-
+const domainMongoController = require('../domains/domainMongoController');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
@@ -150,6 +150,28 @@ let publishAllRelations = function(subject) {
     return promise;
 };
 
+
+let modifySubjectProperties = function(subject){
+  logger.debug("Editing Properties for ", subject.nodename);
+  let promise = new Promise(function(resolve, reject){
+        async.waterfall([function(callback) {
+                    domainMongoController.checkDomainCallback(subject.domain,
+                        callback);
+                    },function(checkedDomain,callback){
+                      ontologyMgrNeo4jController.modifySubjectPropertiesCallback(subject,callback)
+                    },
+                  ],
+      function(err, modifiedProperties){
+        if(err){
+          reject(err)
+        }
+        resolve(modifiedProperties);
+      });
+  });
+  return promise;
+}
+
+
 module.exports = {
     publishAddNode: publishAddNode,
     deleteObject: deleteObject,
@@ -157,6 +179,6 @@ module.exports = {
     publishAllRelations: publishAllRelations,
     publishRelations: publishRelations,
     getAllDomainDetails: getAllDomainDetails,
-    getSubjectObjects: getSubjectObjects
-
+    getSubjectObjects: getSubjectObjects,
+    modifySubjectProperties: modifySubjectProperties,
 }

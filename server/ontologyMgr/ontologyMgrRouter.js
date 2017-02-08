@@ -213,4 +213,38 @@ router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req,res)
   }
 });
 
+
+router.patch('/:domainName/subject/:nodetype/:nodename', function (req,res){
+  try {
+    let props = req.body;
+    let subject = {
+      domain: req.params.domainName,
+      nodetype: req.params.nodetype,
+      nodename: req.params.nodename,
+      properties: props
+    }
+    ontologyMgrCtrl.modifySubjectProperties(subject)
+          .then(function(modifiedProperties){
+            logger.debug("Successfully added/modified props",modifiedProperties);
+            res.send(modifiedProperties);
+            return;
+          },
+          function (err) {
+              logger.error("Posting properties error",
+                  err);
+              res.status(500).send({
+                  error: 'Failed to complete operation...!'
+              });
+              return;
+          });
+  } catch(err){
+    logger.error("Caught a error in editing properties", err);
+    res.status(500).send({
+        error: "Something went wrong, please try later..!"
+    });
+    return;
+  }
+});
+
+
 module.exports = router;
