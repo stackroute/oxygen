@@ -1,7 +1,8 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
-const logger = require('./../../applogger');
 const domainMongoController = require('../domains/domainMongoController');
+const logger = require('./../../applogger');
+//const domainMongoController = require('../domains/domainMongoController');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
@@ -98,11 +99,14 @@ let deleteObject = function(deleteObj) {
 };
 
 let deleteOrphans = function(deleteObj) {
-    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodename);
+    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([function(callback) {
-                ontologyMgrNeo4jCtrl.deleteOrphansCallback(deleteObj, callback);
-            }],
+                domainMongoController.checkDomainCallback(deleteObj.domainName,callback);
+              },function(checkedDomain, callback){
+                ontologyMgrNeo4jController.deleteOrphansCallback(deleteObj, callback);
+              }
+            ],
             function(err, result) {
                 if (err) {
                     reject(err);
