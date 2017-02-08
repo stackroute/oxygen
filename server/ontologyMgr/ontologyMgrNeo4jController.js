@@ -542,6 +542,7 @@ let getAllRelationsCallback = function(subject, callback) {
     });
 };
 
+
 let getAllOrphansCallback = function(subject, callback) {
     logger.debug("from the callback : " + subject.nodename);
     getAllRelations(subject).then(function(nodename) {
@@ -560,14 +561,58 @@ let getPublishSubjectObjectAttributesCallback = function(editTermRelation, callb
     });
 };
 
+
+let modifySubjectProperties = function(subject){
+  let promise = new Promise(function(resolve, reject){
+    logger.info('Now proceeding to modify properties for subject name', subject.nodename);
+    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+        neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+            encrypted: false
+        }
+    );
+    let query = 'match (s:' + subject.nodetype + '{name:{nodename}})'
+        query += 'set s += {props}'
+        query += 'return s';
+    let params = {
+      nodename: subject.nodename,
+      props: subject.properties
+    }
+
+    let session = driver.session();
+    session.run(query, params).then(function(result) {
+            if (result) {
+                logger.debug(result);
+            }
+            session.close();
+            resolve({properties : result.records[0]._fields[0]['properties']});
+        })
+        .catch(function(error) {
+            logger.error("Error in EDIT properties query: ", error, ' query is: ', query);
+            reject(false);
+        });
+  });
+  return promise;
+}
+
+
+let modifySubjectPropertiesCallback = function(subject, callback){
+  logger.debug("from the callback : " + subject);
+  modifySubjectProperties(subject).then(function(result){
+    callback(null, result);
+  }, function(err){
+    callback(err, null);
+  });
+}
+
 module.exports = {
 
-  getAllDomainDetailsCallback: getAllDomainDetailsCallback,
-  getSubjectObjectsCallback: getSubjectObjectsCallback,
+    getAllDomainDetailsCallback: getAllDomainDetailsCallback,
+    getSubjectObjectsCallback: getSubjectObjectsCallback,
     getPublishAddNodeCallback: getPublishAddNodeCallback,
     deleteObjectCallback: deleteObjectCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
     getAllRelationsCallback: getAllRelationsCallback,
-    getPublishSubjectObjectAttributesCallback:getPublishSubjectObjectAttributesCallback
+    getPublishSubjectObjectAttributesCallback:getPublishSubjectObjectAttributesCallback,
+    modifySubjectPropertiesCallback: modifySubjectPropertiesCallback
 };

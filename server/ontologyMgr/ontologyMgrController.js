@@ -1,7 +1,7 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
 const logger = require('./../../applogger');
-
+const domainMongoController = require('../domains/domainMongoController');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
@@ -150,6 +150,7 @@ let publishAllRelations = function(subject) {
     return promise;
 };
 
+<<<<<<< HEAD
 let publishEditedSubjectObjectAttributes = function(editTermRelation) {
     logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
     let promise = new Promise(function(resolve, reject) {
@@ -192,6 +193,29 @@ let publishAllOrphanedNodes = function(subject) {
     });
     return promise;
 };
+=======
+
+let modifySubjectProperties = function(subject){
+  logger.debug("Editing Properties for ", subject.nodename);
+  let promise = new Promise(function(resolve, reject){
+        async.waterfall([function(callback) {
+                    domainMongoController.checkDomainCallback(subject.domain,
+                        callback);
+                    },function(checkedDomain,callback){
+                      ontologyMgrNeo4jController.modifySubjectPropertiesCallback(subject,callback)
+                    },
+                  ],
+      function(err, modifiedProperties){
+        if(err){
+          reject(err)
+        }
+        resolve(modifiedProperties);
+      });
+  });
+  return promise;
+}
+
+>>>>>>> 361b0a4137d352a849bcbea2eb1f52963d9b3b05
 
 module.exports = {
     publishAddNode: publishAddNode,
@@ -202,5 +226,10 @@ module.exports = {
     publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes,
     publishAllOrphanedNodes:publishAllOrphanedNodes,
     getAllDomainDetails: getAllDomainDetails,
+<<<<<<< HEAD
     getSubjectObjects: getSubjectObjects
+=======
+    getSubjectObjects: getSubjectObjects,
+    modifySubjectProperties: modifySubjectProperties,
+>>>>>>> 361b0a4137d352a849bcbea2eb1f52963d9b3b05
 }
