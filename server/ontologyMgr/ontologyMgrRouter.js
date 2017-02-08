@@ -154,8 +154,10 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
         return;
     }
 });
-<<<<<<< HEAD
+
+
 //Editing Term relation with Intent
+//Yogee codes
 
 router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodename2/predicate/:predicatename', function(req, res) {
     let props=req.body;
@@ -174,7 +176,7 @@ router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodena
 
 
     try {
-        subjectObjectCtrl.publishEditedIntentTermRelation(editTermRelation).then(function(objectName) {
+        ontologyMgrCtrl.publishEditedSubjectObjectAttributes(editTermRelation).then(function(objectName) {
                 logger.info("Successfully Edited a Intent term relation for " + editTermRelation.subjectName);
                 res.send(objectName);
                 return;
@@ -194,7 +196,35 @@ router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodena
         return;
     }
 });
-=======
->>>>>>> fbea2a130fcf5096cb23567b8e44a7bab5806a1d
 
+
+//Finding number of orphaned nodes in the given nodes
+
+router.get("/:domainname/subject/:nodetype/:nodename", function(req, res) {
+    //logger.debug("am I getting displayed?", req.params.predicatename)
+    let subject = {
+        domainname: req.params.domainname,
+        nodetype: req.params.nodetype,
+        nodename: req.params.nodename
+    }
+
+    try {
+        ontologyMgrCtrl.publishAllOrphanedNodes(subject).then(function(nodename) {
+            logger.info("Got requests from :" + req.params.domainname);
+            res.send(nodename);
+            return;
+        }, function(err) {
+            logger.error("Encountered error in publishing the predicates: ", err);
+            res.send(err);
+
+            return;
+        });
+    } catch (err) {
+        logger.error("Caught a error in publishing orphans: ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
 module.exports = router;

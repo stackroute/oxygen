@@ -101,7 +101,7 @@ gulp.task('htmlhint', function() {
 });
 
 gulp.task('test', function() {
-  return gulp.src(['server/**/*.spec.js', '!node_modules/**/*',
+  return gulp.src(['test/**/*spec.js', 'test/**/*test.js','test/*spec.js','test/**/*test.js', '!node_modules/**/*',
     '!bower_components/**/*'
     ], {
       read: false
