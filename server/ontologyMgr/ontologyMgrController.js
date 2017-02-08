@@ -150,7 +150,7 @@ let publishAllRelations = function(subject) {
     return promise;
 };
 
-<<<<<<< HEAD
+
 let publishEditedSubjectObjectAttributes = function(editTermRelation) {
     logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
     let promise = new Promise(function(resolve, reject) {
@@ -193,7 +193,7 @@ let publishAllOrphanedNodes = function(subject) {
     });
     return promise;
 };
-=======
+
 
 let modifySubjectProperties = function(subject){
   logger.debug("Editing Properties for ", subject.nodename);
@@ -215,7 +215,7 @@ let modifySubjectProperties = function(subject){
   return promise;
 }
 
->>>>>>> 361b0a4137d352a849bcbea2eb1f52963d9b3b05
+
 
 module.exports = {
     publishAddNode: publishAddNode,
@@ -226,10 +226,7 @@ module.exports = {
     publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes,
     publishAllOrphanedNodes:publishAllOrphanedNodes,
     getAllDomainDetails: getAllDomainDetails,
-<<<<<<< HEAD
-    getSubjectObjects: getSubjectObjects
-=======
     getSubjectObjects: getSubjectObjects,
-    modifySubjectProperties: modifySubjectProperties,
->>>>>>> 361b0a4137d352a849bcbea2eb1f52963d9b3b05
+    getSubjectObjects: getSubjectObjects,
+    modifySubjectProperties: modifySubjectProperties
 }
