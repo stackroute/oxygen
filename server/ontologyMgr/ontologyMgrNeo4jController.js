@@ -19,7 +19,7 @@ let getAllDomainDetails = function(nodeObj) {
                 let params = {
                     nodeName: nodeObj.name
                 };
-
+                logger.debug('query',query);
                 let domain = [];
                 session.run(query, params)
                     .then(function(result) {
@@ -31,10 +31,10 @@ let getAllDomainDetails = function(nodeObj) {
                             domainname: nodeObj.name,
                             nodetype: nodetype,
                             nodename: nodename
-                          }
+                          };
                           getSubjectObjects(node).then(function(result){
                             //logger.debug("The returned result from getSubjectObjects promise callback for success: ", result);
-                            //domain.push(result);
+                            domain.push(result);
                           });
                         });
                         session.close();
