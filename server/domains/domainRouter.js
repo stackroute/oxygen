@@ -412,9 +412,9 @@ router.post('/delete/relation', function(req, res) {
 
 router.post('/:domainName/subject/:subject/object/:object', function(req, res) {
     let addSubconcept = {
-      domain: req.params.domainName,
-      subjectNode: req.params.subject,
-      objectNode: req.params.object
+        domain: req.params.domainName,
+        subjectNode: req.params.subject,
+        objectNode: req.params.object
     }
     logger.debug("Got request to add a sub concept to a concept");
     logger.debug("Concept name :" + addSubconcept.subjectNode);
@@ -515,12 +515,12 @@ router.get('/:domainName/:subjectType/:subjectName/objects', function(req, res) 
 
 router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation', function(req, res) {
 
-  let editTermRelation = {
-      domain: req.params.domainName,
-      intentName: req.params.intentName,
-      termName: req.params.termName,
-      relationName: req.params.relation
-  }
+    let editTermRelation = {
+        domain: req.params.domainName,
+        intentName: req.params.intentName,
+        termName: req.params.termName,
+        relationName: req.params.relation
+    }
     logger.debug("Got request to edit a Intent terrm relation");
     logger.debug("Intent name :" + editTermRelation.intentName);
 
@@ -539,6 +539,42 @@ router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation
             })
     } catch (err) {
         logger.error("Caught a error in publishing a Intent terrm relation ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+
+
+router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation/weightValue/:weight', function(req, res) {
+
+    let editTermRelationWeight = {
+        domain: req.params.domainName,
+        intentName: req.params.intentName,
+        termName: req.params.termName,
+        relationName: req.params.relation,
+        weightValue: req.params.weightValue
+    }
+    logger.debug("Got request to edit a Intent term weight");
+    logger.debug("Intent name :" + editTermRelationWeight.intentName);
+
+    try {
+        subjectObjectCtrl.publishEditedIntentTermRelationWeight(editTermRelationWeight).then(function(objectName) {
+                logger.info("Successfully Edited a Intent terrm weight for " + editTermRelationWeight.intentName);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing Intent term weight : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a Intent term weight ", err);
         res.status(500).send({
             error: "Something went wrong, please try later..!"
         });
