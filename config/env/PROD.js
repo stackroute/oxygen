@@ -22,6 +22,7 @@ let neo4j = {
     bolt: process.env.NEO4J_BOLT_PORT ||  7687,
     usr: process.env.NEO4J_USR ||  'neo4j',
     pwd: process.env.NEO4J_PWD ||  'password'
+
 };
 //@ TODO use neo4j username & password in constructing the URL if given
 neo4j['neo4jURL'] = ('bolt://' + neo4j.host + ':' + neo4j.bolt);

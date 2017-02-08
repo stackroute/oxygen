@@ -5,6 +5,7 @@ const service = require('./service');
 function setupWebAppRESTRoutes(app) {
   app.use('/docsearchjob', require(path.join(__dirname, 'docSearchJob')));
   app.use('/domain', require(path.join(__dirname, 'domains')));
+  app.use('/domain', require(path.join(__dirname, 'ontologyMgr')));
   app.use('/crawl', require(path.join(__dirname, 'docCrawler')));
   return app;
 }
@@ -23,7 +24,7 @@ function welcome() {
 // App Constructor function is exported
 module.exports = function() {
 
-  welcome();    
+  welcome();
 
   let app = service.createApp();
 

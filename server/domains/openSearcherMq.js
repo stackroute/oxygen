@@ -63,5 +63,3 @@ logger.debug("inside queue")
 module.exports = {
  sendToSearcherQueue : sendToSearcherQueue
 };
-
-

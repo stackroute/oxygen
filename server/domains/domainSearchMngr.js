@@ -2,10 +2,10 @@ let searchCtrl = require('./domainSearchCntrl');
 const engineCollnData = require('./../common/engineColln');
 const logger = require('./../../applogger');
 let kickOffDomainIndexing = function(conceptsColln) {
-  // Kick off search jobs for each concept  
+  // Kick off search jobs for each concept
   let promise = new Promise(function(resolve, reject) {
     //Looping through for each given concept, as each concept should be one job
-          let selector=0;          
+          let selector=0;
           conceptsColln.Concepts.forEach(function(concept) {
 
             logger.debug("inside the domain indexing "+concept)
@@ -27,8 +27,8 @@ let kickOffDomainIndexing = function(conceptsColln) {
         {
           reject({msg:'faced some internal error: ',err});
         }
-             
-        ); 
+
+        );
   });
 
   return promise;

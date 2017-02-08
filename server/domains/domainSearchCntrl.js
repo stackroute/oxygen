@@ -12,10 +12,10 @@ const addSearch = function(domainName,concept,selector) {
 		domain: domainName,
 		start: 1,
 		nbrOfResults: config.NO_OF_RESULTS
-	}		
+	}
 	logger.debug('Before search queue');
 	sendToSearcherQueue(config.RABBITMQ.rabbitmqURL, config.OXYGEN.SEARCHER_MQ_NAME, reqData);
-					
+
 };
 module.exports = {
  addSearch: addSearch
