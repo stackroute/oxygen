@@ -151,6 +151,50 @@ let publishAllRelations = function(subject) {
 };
 
 
+let publishEditedSubjectObjectAttributes = function(editTermRelation) {
+    logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(editTermRelation.intentName);
+        if (!editTermRelation.subjectName || !editTermRelation.objectName) {
+            reject({
+                error: 'Invalid Intent or term name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getPublishSubjectObjectAttributesCallback(editTermRelation, callback);
+                }
+            ],
+            function(err, objectName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(objectName);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
+
+//orphaned nodes
+let publishAllOrphanedNodes = function(subject) {
+    logger.debug("Received request for retreiving orphans of :", subject.nodetype);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getAllOrphansCallback(subject, callback);
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+};
+
+
 let modifySubjectProperties = function(subject){
   logger.debug("Editing Properties for ", subject.nodename);
   let promise = new Promise(function(resolve, reject){
@@ -172,13 +216,17 @@ let modifySubjectProperties = function(subject){
 }
 
 
+
 module.exports = {
     publishAddNode: publishAddNode,
     deleteObject: deleteObject,
     deleteOrphans: deleteOrphans,
     publishAllRelations: publishAllRelations,
     publishRelations: publishRelations,
+    publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes,
+    publishAllOrphanedNodes:publishAllOrphanedNodes,
     getAllDomainDetails: getAllDomainDetails,
     getSubjectObjects: getSubjectObjects,
-    modifySubjectProperties: modifySubjectProperties,
+    getSubjectObjects: getSubjectObjects,
+    modifySubjectProperties: modifySubjectProperties
 }

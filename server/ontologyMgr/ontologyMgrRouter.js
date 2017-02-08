@@ -5,19 +5,19 @@ const ontologyMgrCtrl = require('./ontologyMgrController');
 
 
 
-router.get('/:domainName/subjects', function (req, res) {
+router.get('/:domainName/subjects', function(req, res) {
     let domain = {
-      name: req.params.domainName
+        name: req.params.domainName
     }
     try {
-        ontologyMgrCtrl.getAllDomainDetails(domain).then(function (Obj) {
+        ontologyMgrCtrl.getAllDomainDetails(domain).then(function(Obj) {
                 logger.debug(
                     "Successfully retrieved all details to show length----->",
                     Obj.length);
                 res.send(Obj);
                 return;
             },
-            function (err) {
+            function(err) {
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
@@ -27,7 +27,7 @@ router.get('/:domainName/subjects', function (req, res) {
 
     } catch (err) {
         logger.error("Caught a error in retrieved concept(s) of domain ", err);
-      }
+    }
 });
 router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
     let subject = {
@@ -51,8 +51,8 @@ router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
         })
     } catch (err) {
         logger.error("Caught a error in publishing a Generalized Add: ", err);
-      }
-    });
+    }
+});
 
 router.delete('/:domainName/subject/:nodeType1/:nodeName1/object/:nodeType2/:nodeName2/predicate/:predicateName', (req, res) => {
     try {
@@ -182,35 +182,106 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
     }
 });
 
+//Editing relation attributes
+//Yogee codes
 
-router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req,res){
-  let reqObj = {
-    domainname: req.params.domainname,
-    nodetype: req.params.nodetype,
-    nodename: req.params.nodename
-  }
-  try {
-      ontologyMgrCtrl.getSubjectObjects(reqObj).then(function (Obj) {
-              logger.debug(
-                  "Successfully retrieved all details to show length----->",
-                  Obj.length);
-              res.send(Obj);
-              return;
-          },
-          function (err) {
-              logger.error(
-                  "Encountered error in retrieved concept(s) of domain: ",
-                  err);
-              res.send(err);
-              return;
-          })
-  } catch (err) {
-      logger.error("Caught a error in retrieved concept(s) of domain ", err);
-      res.status(500).send({
-          error: "Something went wrong, please try later..!"
-      });
-      return;
-  }
+router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodename2/predicate/:predicatename', function(req, res) {
+    let props = req.body;
+    let editTermRelation = {
+        domain: req.params.domainName,
+        subjectName: req.params.nodename1,
+        objectName: req.params.nodename2,
+        subjectType: req.params.nodetype1,
+        objectType: req.params.nodetype2,
+        relationName: req.params.predicatename,
+        attributes: props
+    }
+    logger.debug("Got request to edit a Subject object relation");
+    logger.debug("Attributes name :" + editTermRelation.attributes);
+    logger.debug("Intent name :" + editTermRelation.subjectName);
+
+
+    try {
+        ontologyMgrCtrl.publishEditedSubjectObjectAttributes(editTermRelation).then(function(objectName) {
+                logger.info("Successfully Edited a Intent term relation for " + editTermRelation.subjectName);
+                res.send(objectName);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in publishing Subject object relation : ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in publishing a Subject object relation ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+
+//Finding number of orphaned nodes in the given nodes
+
+router.get("/:domainname/subject/:nodetype/:nodename", function(req, res) {
+    //logger.debug("am I getting displayed?", req.params.predicatename)
+    let subject = {
+        domainname: req.params.domainname,
+        nodetype: req.params.nodetype,
+        nodename: req.params.nodename
+    }
+
+    try {
+        ontologyMgrCtrl.publishAllOrphanedNodes(subject).then(function(nodename) {
+            logger.info("Got requests from :" + req.params.domainname);
+            res.send(nodename);
+            return;
+        }, function(err) {
+            logger.error("Encountered error in publishing the predicates: ", err);
+            res.send(err);
+
+            return;
+        });
+    } catch (err) {
+        logger.error("Caught a error in publishing orphans: ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req, res) {
+    let reqObj = {
+        domainname: req.params.domainname,
+        nodetype: req.params.nodetype,
+        nodename: req.params.nodename
+    }
+    try {
+        ontologyMgrCtrl.getSubjectObjects(reqObj).then(function(Obj) {
+                logger.debug(
+                    "Successfully retrieved all details to show length----->",
+                    Obj.length);
+                res.send(Obj);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in retrieved concept(s) of domain: ",
+                    err);
+                res.send(err);
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in retrieved concept(s) of domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
 });
 
 
