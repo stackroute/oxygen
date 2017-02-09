@@ -275,17 +275,16 @@ export default class SubjectNode extends React.Component{
           style={styles.div}
         />
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
-      <Graph/>
       <Dialog
           title="Edit"
           actions={actions}
           modal={true}
           open={this.state.modalOpen}
-        >
+          >
         {relObjects}
         </Dialog>
         <DomainTable/>
-        <div class="treeGraph">
+        <div className="treeGraph">
           <Graph/>
         </div>
       </div>
