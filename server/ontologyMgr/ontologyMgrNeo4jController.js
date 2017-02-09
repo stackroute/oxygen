@@ -195,6 +195,9 @@ let getSubjectObjects = function(nodeObj){
                 }
               });
               session.close();
+              if(obj.attributes == null){
+                resolve({err : 'No such Node name'});
+              }
               resolve(obj);
           })
           .catch(function(err) {
@@ -277,8 +280,9 @@ let deleteOrphans = function(deleteObj) {
         let cypher = require('cypher-stream')(config.NEO4J.neo4jURL, config.NEO4J.usr,
             config.NEO4J.pwd);
         let fs = require('fs');
-        let promise = new Promise(function(resolve, reject) {
-            logger.debug(subject.nodename);
+
+            logger.debug(deleteObj.nodeName);
+
             let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
                 neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
                     encrypted: false
@@ -287,31 +291,27 @@ let deleteOrphans = function(deleteObj) {
             logger.debug("obtained connection with neo4j");
             let query = '';
             let params = {};
-            if (deleteObj.cascade == 1) {
-                query += 'match (s:' + deleteObj.nodeType + ')<-[r]-(allRelatedNodes)'
+            if (parseInt(deleteObj.cascade) == 1) {
+                query += 'match (s:' + deleteObj.nodeType + ')-[r]-(allRelatedNodes)'
                 query += 'WHERE s.name = {nodeName}'
                 query += 'AND size((allRelatedNodes)--()) = 1 '
-                query += 'DETACH DELETE s, allRelatedNodes';
+                query += 'DETACH DELETE allRelatedNodes,s';
                 params = {
-                    // nodeType: nodetype,
                     nodeName: deleteObj.nodeName
                 };
             } else {
-                query += 'match (s:' + deleteObj.nodeType + ')<-[r]-(allRelatedNodes)'
-                query += 'WHERE s.name = {nodeName}'
-                query += 'detach delete s';
+
+                query += 'match (s:' + deleteObj.nodeType + ' {name : {nodeName}})'
+                query += 'detach delete s return count(s)';
                 params = {
-                    // nodeType: nodetype,
                     nodeName: deleteObj.nodeName
                 };
             }
-            logger.debug("Query ", query);
+
             session.run(query, params).then(function(result) {
-                    if (result) {
-                        logger.debug(result);
-                    }
+                    logger.debug(result);
                     session.close();
-                    resolve(result);
+                    resolve(result.summary.counters);
                 })
                 .catch(function(error) {
                     logger.error("Error in query: ", error, ' query is: ', query);
@@ -319,7 +319,6 @@ let deleteOrphans = function(deleteObj) {
                 });
         });
         return promise;
-    });
 };
 
 let getRelations = function(subject) {
@@ -365,6 +364,63 @@ let getRelations = function(subject) {
     return promise;
 };
 
+//Yogee part of modifying attributes
+let getPublishSubjectObjectAttributes = function(editTermRelation) {
+    let subjectName = editTermRelation.subjectName;
+    let objectName = editTermRelation.objectName;
+    let relationName = editTermRelation.relationName;
+    let nodetype1=editTermRelation.subjectType;
+    let nodetype2=editTermRelation.objectType;
+
+
+    logger.debug(relationName);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(
+            "Now proceeding to publish the edited intent term relation: ",
+            editTermRelation.relationName);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+
+        let session = driver.session();
+
+        logger.debug("obtained connection with neo4j");
+
+        logger.debug(relationName);
+
+        let query = 'match(s:' + nodetype2 + '{name:{objectName}})-[r:' + relationName + ']->(o:' + nodetype1 + '{name:{subjectName}})'
+        query += 'Create(s)-[r1:' + relationName + ']->(o)'
+        query += 'set r1 +={props}'
+        query += 'delete r '
+        query += 'return r1'
+
+        let params = {
+            subjectName: subjectName,
+            objectName: objectName,
+            relationName: relationName,
+            props :editTermRelation.attributes
+        };
+
+        logger.debug(query);
+
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    logger.debug(result);
+                }
+                session.close();
+                resolve(result.records[0]._fields);
+            })
+            .catch(function(error) {
+                logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+};
+
+
 let getAllRelations = function(subject) {
     let promise = new Promise(function(resolve, reject) {
         logger.debug(subject.nodename);
@@ -401,6 +457,42 @@ let getAllRelations = function(subject) {
     });
     return promise;
 };
+
+
+// Getting all the orphans
+let getAllOrphans = function(subject) {
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(subject.nodename);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            });
+        let session = driver.session();
+        var subjectDomainname = subject.domainname;
+        var subjectNodeType = subject.nodetype;
+        var subjectNodeName = subject.nodename;
+
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+        query += 'return s, r, o'
+        params = {
+            subjectNodeType: subjectNodeType,
+            subjectNodeName: subjectNodeName
+        }
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    logger.debug(result);
+                }
+                session.close();
+                resolve(result);
+            })
+            .catch(function(error) {
+                logger.error("Error in deleting the query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+};
+
 
 let getPublishAddNodeCallback = function(subject, object, callback) {
     logger.debug("from the callback : " + subject.nodename);
@@ -449,13 +541,77 @@ let getAllRelationsCallback = function(subject, callback) {
     });
 };
 
+
+let getAllOrphansCallback = function(subject, callback) {
+    logger.debug("from the callback : " + subject.nodename);
+    getAllRelations(subject).then(function(nodename) {
+        callback(null, nodename);
+    }, function(err) {
+        callback(err, null);
+    });
+};
+
+let getPublishSubjectObjectAttributesCallback = function(editTermRelation, callback) {
+    logger.debug("from the callback : " + editTermRelation.subjectName);
+    getPublishSubjectObjectAttributes(editTermRelation).then(function(termRelationDetails) {
+        callback(null, termRelationDetails);
+    }, function(err) {
+        callback(err, null);
+    });
+};
+
+
+let modifySubjectProperties = function(subject){
+  let promise = new Promise(function(resolve, reject){
+    logger.info('Now proceeding to modify properties for subject name', subject.nodename);
+    let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+        neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+            encrypted: false
+        }
+    );
+    let query = 'match (s:' + subject.nodetype + '{name:{nodename}})'
+        query += 'set s += {props}'
+        query += 'return s';
+    let params = {
+      nodename: subject.nodename,
+      props: subject.properties
+    }
+
+    let session = driver.session();
+    session.run(query, params).then(function(result) {
+            if (result) {
+                logger.debug(result);
+            }
+            session.close();
+            resolve({properties : result.records[0]._fields[0]['properties']});
+        })
+        .catch(function(error) {
+            logger.error("Error in EDIT properties query: ", error, ' query is: ', query);
+            reject(false);
+        });
+  });
+  return promise;
+}
+
+
+let modifySubjectPropertiesCallback = function(subject, callback){
+  logger.debug("from the callback : " + subject);
+  modifySubjectProperties(subject).then(function(result){
+    callback(null, result);
+  }, function(err){
+    callback(err, null);
+  });
+}
+
 module.exports = {
 
-  getAllDomainDetailsCallback: getAllDomainDetailsCallback,
-  getSubjectObjectsCallback: getSubjectObjectsCallback,
+    getAllDomainDetailsCallback: getAllDomainDetailsCallback,
+    getSubjectObjectsCallback: getSubjectObjectsCallback,
     getPublishAddNodeCallback: getPublishAddNodeCallback,
     deleteObjectCallback: deleteObjectCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
-    getAllRelationsCallback: getAllRelationsCallback
+    getAllRelationsCallback: getAllRelationsCallback,
+    getPublishSubjectObjectAttributesCallback:getPublishSubjectObjectAttributesCallback,
+    modifySubjectPropertiesCallback: modifySubjectPropertiesCallback
 };

@@ -1,7 +1,8 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
+const domainMongoController = require('../domains/domainMongoController');
 const logger = require('./../../applogger');
-
+//const domainMongoController = require('../domains/domainMongoController');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
@@ -98,11 +99,14 @@ let deleteObject = function(deleteObj) {
 };
 
 let deleteOrphans = function(deleteObj) {
-    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodename);
+    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([function(callback) {
-                ontologyMgrNeo4jCtrl.deleteOrphansCallback(deleteObj, callback);
-            }],
+                domainMongoController.checkDomainCallback(deleteObj.domainName,callback);
+              },function(checkedDomain, callback){
+                ontologyMgrNeo4jController.deleteOrphansCallback(deleteObj, callback);
+              }
+            ],
             function(err, result) {
                 if (err) {
                     reject(err);
@@ -150,13 +154,83 @@ let publishAllRelations = function(subject) {
     return promise;
 };
 
+
+let publishEditedSubjectObjectAttributes = function(editTermRelation) {
+    logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(editTermRelation.intentName);
+        if (!editTermRelation.subjectName || !editTermRelation.objectName) {
+            reject({
+                error: 'Invalid Intent or term name..!'
+            });
+        }
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getPublishSubjectObjectAttributesCallback(editTermRelation, callback);
+                }
+            ],
+            function(err, objectName) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(objectName);
+            }); //end of async.waterfall
+    });
+    return promise;
+}
+
+//orphaned nodes
+let publishAllOrphanedNodes = function(subject) {
+    logger.debug("Received request for retreiving orphans of :", subject.nodetype);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getAllOrphansCallback(subject, callback);
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+};
+
+
+let modifySubjectProperties = function(subject){
+  logger.debug("Editing Properties for ", subject.nodename);
+  let promise = new Promise(function(resolve, reject){
+        async.waterfall([function(callback) {
+                    domainMongoController.checkDomainCallback(subject.domain,
+                        callback);
+                    },function(checkedDomain,callback){
+                      ontologyMgrNeo4jController.modifySubjectPropertiesCallback(subject,callback)
+                    },
+                  ],
+      function(err, modifiedProperties){
+        if(err){
+          reject(err)
+        }
+        resolve(modifiedProperties);
+      });
+  });
+  return promise;
+}
+
+
+
 module.exports = {
     publishAddNode: publishAddNode,
     deleteObject: deleteObject,
     deleteOrphans: deleteOrphans,
     publishAllRelations: publishAllRelations,
     publishRelations: publishRelations,
+    publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes,
+    publishAllOrphanedNodes:publishAllOrphanedNodes,
     getAllDomainDetails: getAllDomainDetails,
-    getSubjectObjects: getSubjectObjects
-
+    getSubjectObjects: getSubjectObjects,
+    getSubjectObjects: getSubjectObjects,
+    modifySubjectProperties: modifySubjectProperties
 }

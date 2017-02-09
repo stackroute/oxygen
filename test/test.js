@@ -1,4 +1,3 @@
-
 var app = require('../server/webapp.service')();
 var expect = require('chai').expect;
 var assert = require('chai').assert;
@@ -35,25 +34,6 @@ describe("testing", function() {
     });
 });
 
-
-describe("deleting the orphan nodes, when a specific node is deleted :", function() {
-    it('when there is no orphan nodes', function(done) {
-        // request.post('/domain/:domainName/subject/:nodeType/:nodeName').expect(200, done);
-        // this.timeout(10000);
-          done();
-    });
-    it('when all the nodes are orphan after deleting the specific node', function(done){
-      done();
-    });
-
-    it('when few of the nodes for that specific node will not become orphan', function(done)
-    {
-        done();
-    });
-
-
-
-});
 
 
 

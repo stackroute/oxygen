@@ -250,15 +250,14 @@ let getPublishSubConcept = function(addSubconcept) {
 };
 
 //Edit intent term relation weight by user
+let getPublishEditedIntentTermRelation = function(editTermRelation) {
+    let subjectName = editTermRelation.subjectName;
+    let objectName = editTermRelation.objectName;
+    let relationName = editTermRelation.relationName;
+    let nodetype1=editTermRelation.subjectType;
+    let nodetype2=editTermRelation.objectType;
 
-let getPublishEditedIntentTermRelation = function(editTermRelationWeight) {
-    let intentName = editTermRelationWeight.intentName;
-    let termName = editTermRelationWeight.termName;
-    let relationName = '';
-    let value = editTermRelationWeight.weightValue;
-    let weight = '';
-
-    logger.debug(relationName);
+  logger.debug(relationName);
     let promise = new Promise(function(resolve, reject) {
         logger.debug(
             "Now proceeding to publish the edited intent term relation: ",
@@ -273,27 +272,30 @@ let getPublishEditedIntentTermRelation = function(editTermRelationWeight) {
 
         logger.debug("obtained connection with neo4j");
 
-        if (editTermRelationWeight.relationName == graphConsts.REL_INDICATOR_OF && value >= 0) {
-            //logger.debug("1");
-            relationName = graphConsts.REL_INDICATOR_OF;
-            weight = '{weight:'+value+'}';
 
-        } else { //if (editTermRelation.relationName == graphConsts.REL_COUNTER_INDICATOR_OF)
-            //logger.debug("2");
-            relationName = graphConsts.REL_COUNTER_INDICATOR_OF;
-            weight = '{weight:'+value+'}';
-        }
+        // if(editTermRelation.relationName == graphConsts.REL_INDICATOR_OF){
+        //   //logger.debug("1");
+        //   relationName = graphConsts.REL_COUNTER_INDICATOR_OF;
+        //   weight = '{weight:-5}';
+        //
+        // }else { //if (editTermRelation.relationName == graphConsts.REL_COUNTER_INDICATOR_OF)
+        //   //logger.debug("2");
+        //   relationName = graphConsts.REL_INDICATOR_OF;
+        //   weight = '{weight:5}';
+        // }
 
         logger.debug(relationName);
 
-        let query = 'match(s:' + graphConsts.NODE_TERM + '{name:{termName}})-[r:' + editTermRelationWeight.relationName + ']->(o:' + graphConsts.NODE_INTENT + '{name:{intentName}})'
-        query += 'merge(s)-[r1:' + relationName + weight + ']->(o)'
+        let query = 'match(s:' + nodetype2 + '{name:{objectName}})-[r:' + relationName + ']->(o:' + nodetype1 + '{name:{subjectName}})'
+        query += 'Create(s)-[r1:' + relationName + ']->(o)'
+        query += 'set r1 +={props}'
         query += 'delete r '
-        query += 'return r1'
 
         let params = {
-            intentName: intentName,
-            termName: termName
+            subjectName: subjectName,
+            objectName: objectName,
+            relationName: relationName,
+            props :editTermRelation.attributes
         };
 
         logger.debug(query);

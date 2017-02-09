@@ -546,7 +546,7 @@ router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation
     }
 });
 
-//Editing Term weigth with Intent
+
 
 router.patch('/:domainName/intent/:intentName/term/:termName/predicate/:relation/weightValue/:weight', function(req, res) {
 
