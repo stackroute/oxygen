@@ -6,11 +6,16 @@ import MenuItem from 'material-ui/MenuItem';
 import Predicate from './Predicate.jsx';
 //import Intent from './addIntent.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
+import DomainTable from './DomainTable.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
+<<<<<<< HEAD
 import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Paper from 'material-ui/Paper';
+=======
+import Graph from './TreeGraph.jsx';
+>>>>>>> 286bfe2c89033709e4eeeb1664de0cabedabfdce
 
 const styles = {
   div: {
@@ -29,6 +34,7 @@ const dataSourceConfig = {
   text: 'nodeKey',
   value: 'nodeValue',
 };
+
 export default class SubjectNode extends React.Component{
   constructor(props){
     super(props);
@@ -284,7 +290,12 @@ export default class SubjectNode extends React.Component{
           maxSearchResults={5}
           style={styles.div}
         />
+<<<<<<< HEAD
       </Paper>
+=======
+      <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
+      <Graph/>
+>>>>>>> 286bfe2c89033709e4eeeb1664de0cabedabfdce
       <Dialog
           title="Add"
           actions={actions}
@@ -293,6 +304,10 @@ export default class SubjectNode extends React.Component{
         >
         {relObjects}
         </Dialog>
+        <DomainTable/>
+        <div class="treeGraph">
+          <Graph/>
+        </div>
       </div>
     );
   }
