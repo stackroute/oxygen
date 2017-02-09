@@ -29,7 +29,7 @@ router.get('/:domainName/subjects', function(req, res) {
         logger.error("Caught a error in retrieved concept(s) of domain ", err);
     }
 });
-router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
+router.post('/:domainname/subject/:nodetype/:nodename', function(req, res) {
     let subject = {
         domainName: req.params.domainname,
         nodeType: req.params.nodetype,

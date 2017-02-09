@@ -8,7 +8,6 @@ import Predicate from './Predicate.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
-import TreeGraph from 'treeGraph.jsx';
 
 const styles = {
   div: {
@@ -23,6 +22,7 @@ const dataSourceConfig = {
   text: 'nodeKey',
   value: 'nodeValue',
 };
+
 export default class SubjectNode extends React.Component{
   constructor(props){
     super(props);
@@ -281,8 +281,6 @@ export default class SubjectNode extends React.Component{
         >
         {relObjects}
         </Dialog>
-        <
-        />
       </div>
     );
   }

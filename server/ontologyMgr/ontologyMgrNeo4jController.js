@@ -68,6 +68,7 @@ let getPublishAddNode = function(subject, object) {
         var subjectNodeType = subject.nodeType;
         var subjectNodeName = subject.nodeName;
         var attributesVar = '';
+        var relationWithDirectionAndWeight = '';
 
         for (k in object.attributes) {
             attributesVar = attributesVar + ',' + k + ':"' + object.attributes[k] + '"';
@@ -88,25 +89,35 @@ let getPublishAddNode = function(subject, object) {
                 var predicateName = object.objects[i].predicates[j].name;
                 var predicateDirection = object.objects[i].predicates[j].direction;
 
-                if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_INDICATOR_OF) {
-                    predicateWeight = '{weight:5}';
-                } else if (objectNodeType == graphConsts.NODE_TERM && predicateName == graphConsts.REL_COUNTER_INDICATOR_OF) {
-                    predicateWeight = '{weight:-5}';
+                if (objectNodeType == graphConsts.NODE_TERM) {
+                    predicateWeight = '{weight:1}';
                 }
 
                 if (predicateDirection == 'I') {
-                    query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}' + attributesVar + '})'
-                    query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
-                    query += ' merge(o)-[r:' + predicateName + predicateWeight + ']->(s)'
-                    query += ' return r'
+
+                    relationWithDirectionAndWeight = '-[r:' + predicateName + predicateWeight + ']->'
+
                 } else if (predicateDirection == 'O') {
-                    query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}' + attributesVar + '})'
-                    query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}})'
-                    query += ' merge(o)<-[r:' + predicateName + predicateWeight + ']-(s)'
-                    query += ' return r'
+
+                    relationWithDirectionAndWeight = '<-[r:' + predicateName + predicateWeight + ']-'
                 }
 
+                if(subjectNodeType == graphConsts.NODE_DOMAIN){
+                  query = 'merge (s:' + subjectNodeType + '{name:{subjectNodeName}})'
+                  query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}' + attributesVar + '})'
+                  query += ' merge(o)'+ relationWithDirectionAndWeight +'(s)'
+                  query += ' return r'
+                } else{
+                  query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[]-(d:Domain{name:{subjectDomainname}})'
+                  query += ' merge(o:' + objectNodeType + '{name:{objectNodeName}' + attributesVar + '})'
+                  query += ' merge(o)'+ relationWithDirectionAndWeight +'(s)'
+                  query += ' return r'
+                }
+
+
+
                 params = {
+                    subjectDomainname: subjectDomainname,
                     subjectNodeName: subjectNodeName,
                     objectNodeName: objectNodeName
                 };
