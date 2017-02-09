@@ -26,16 +26,35 @@ let getAllDomainDetails = function(nodeObj) {
                     nodeName: nodeObj.name
                 };
 
+                logger.debug('query',query);
+                let domain = [];
+
+
                 let obj = {
                   attributes: null,
                   subjects: []
                 };
+
                 session.run(query, params)
                     .then(function(result) {
                         if(result.records.length == 0){
                           resolve({error: 'No Domain/No related intents or concepts'});
                         }
                         result.records.forEach(function(record) {
+
+                          logger.debug('asas', record._fields[0]['labels'][0].toLowerCase());
+                          let nodetype = record._fields[0]['labels'][0].toLowerCase();
+                          let nodename = record._fields[0]['properties']['name'];
+                          let node = {
+                            domainname: nodeObj.name,
+                            nodetype: nodetype,
+                            nodename: nodename
+                          };
+                          getSubjectObjects(node).then(function(result){
+                            //logger.debug("The returned result from getSubjectObjects promise callback for success: ", result);
+                            domain.push(result);
+                          });
+
                           if(obj.attributes == null){
                             obj.attributes = record._fields[0]['properties'];
                           }
@@ -234,6 +253,9 @@ let getSubjectObjects = function(nodeObj){
                 }
               });
               session.close();
+              if(obj.attributes == null){
+                resolve({err : 'No such Node name'});
+              }
               resolve(obj);
           })
           .catch(function(err) {

@@ -46,12 +46,32 @@ describe("Make post requests to domain along with domain name ", function() {
             });
     });
 });
-describe("fetching terms from the domain which is not present", function() {
+describe("fetching concepts from the domain which is not present", function() {
     let domainObj = {
         domain: "no_domain",
         concept: "no_domain"
     };
     it('trying to get the Terms of domain which is not there', function() {
         expect(Object.keys(moduleToTest(domainObj))).to.have.lengthOf(0);
+    });
+}); //end of describe
+
+describe("fetching intents from the domain which is not present", function() {
+    let domainObj = {
+        domain: "Java",
+        intent: "no_intent"
+    };
+    it('trying to get the intents of domain which is not there', function() {
+        expect(Object.keys(moduleToTest(domainObj))).to.have.lengthOf(0);
+    });
+}); //end of describe
+
+describe("fetching terms from the intents which is not present", function() {
+    let intentObj = {
+        intent: "no_intent",
+        term: "no_term"
+    };
+    it('trying to get the terms of intents which is not there', function() {
+        expect(Object.keys(moduleToTest(intentObj))).to.have.lengthOf(0);
     });
 }); //end of describe
