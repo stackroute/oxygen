@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var app = require('../server/webapp.service')();
 var expect = require('chai').expect;
 var assert = require('chai').assert;
@@ -205,5 +204,3 @@ describe("Make post requests to domain along with domain name ", function() {
 	});
 
 });
-=======
->>>>>>> bbed1a1a1bc2bfac495dfb4b0affd8710b5d26dd

@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Predicate from './Predicate.jsx';
 //import Intent from './addIntent.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
+import DomainTable from './DomainTable.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
 
@@ -280,6 +281,7 @@ export default class SubjectNode extends React.Component{
         >
         {relObjects}
         </Dialog>
+        <DomainTable/>
       </div>
     );
   }

@@ -3,8 +3,6 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 const ontologyMgrCtrl = require('./ontologyMgrController');
 
-
-
 router.get('/:domainName/subjects', function (req, res) {
     let domain = {
       name: req.params.domainName
@@ -232,7 +230,7 @@ router.patch('/:domainName/subject/:nodetype/:nodename', function (req,res){
           function (err) {
               logger.error("Posting properties error",
                   err);
-              res.status(500).send({
+              res.status(200).send({
                   error: 'Failed to complete operation...!'
               });
               return;

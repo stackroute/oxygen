@@ -8,37 +8,62 @@ let cypher = require('cypher-stream')(config.NEO4J.neo4jURL, config.NEO4J.usr,
 let fs = require('fs');
 
 let getAllDomainDetails = function(nodeObj) {
-    let promise = new Promise(function(resolve, reject) {
 
+    let promise = new Promise(function(resolve, reject) {
         logger.debug("Now proceeding to retrive objects for node name: ",
             nodeObj.name);
+            let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+                neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                    encrypted: false
+                }
+            );
 
+            let session = driver.session();
             logger.debug("obtained connection with neo4j");
                 let query = 'MATCH (d:' + graphConsts.NODE_DOMAIN +
-                    '{name:{nodeName}})-[]-(c) return distinct  c';
+                    '{name:{nodeName}})-[r]-(c) return d as Domain,type(r) as Relation,c as RelNodes';
                 let params = {
                     nodeName: nodeObj.name
                 };
 
-                let domain = [];
+                let obj = {
+                  attributes: null,
+                  subjects: []
+                };
                 session.run(query, params)
                     .then(function(result) {
                         result.records.forEach(function(record) {
-                          logger.debug('asas', record._fields[0]['labels'][0].toLowerCase());
-                          let nodetype = record._fields[0]['labels'][0].toLowerCase();
-                          let nodename = record._fields[0]['properties']['name'];
-                          let node = {
-                            domainname: nodeObj.name,
-                            nodetype: nodetype,
-                            nodename: nodename
+                          if(obj.attributes == null){
+                            obj.attributes = record._fields[0]['properties'];
                           }
-                          getSubjectObjects(node).then(function(result){
-                            //logger.debug("The returned result from getSubjectObjects promise callback for success: ", result);
-                            //domain.push(result);
-                          });
+                          if(obj['subjects'].length == 0){
+                            let tempObj = {
+                              name : record._fields[2]['properties']['name'],
+                              label: record._fields[2]['labels'][0],
+                              predicates: [record._fields[1]]
+                            };
+                            obj.subjects.push(tempObj);
+                          }else{
+                            let found = false;
+                            for(let each in obj.subjects){
+                              if(obj.subjects[each]['name'] == record._fields[2]['properties']['name']){
+                                obj.subjects[each]['predicates'].push(record._fields[1]);
+                                found = true;
+                                break;
+                              }
+                            }
+                            if(!found){
+                              let tempObj = {
+                                name : record._fields[2]['properties']['name'],
+                                label: record._fields[2]['labels'][0],
+                                predicates: [record._fields[1]]
+                              }
+                              obj.subjects.push(tempObj);
+                            }
+                          }
                         });
                         session.close();
-                        resolve(domain);
+                        resolve(obj);
                     })
                     .catch(function(err) {
                         logger.error("Error in neo4j query: ", err, ' query is: ',
@@ -133,7 +158,7 @@ let getPublishAddNode = function(subject, object) {
 let getSubjectObjects = function(nodeObj){
   let promise = new Promise(function(resolve, reject) {
       logger.debug("Now proceeding to retrive objects for node name: ",
-          nodeObj.domainname);
+          nodeObj.nodename);
       let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
           neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
               encrypted: false
@@ -217,9 +242,9 @@ let getAllDomainDetailsCallback = function(nodeObj, callback) {
     logger.debug("from the callback : " + nodeObj)
     getAllDomainDetails(nodeObj).then(function(retrievedObjects) {
         callback(null, retrievedObjects);
-
-        logger.debug("obtained connection with neo4j");
-});
+    },function(err){
+      callback(err, null);
+  });
 }
 
 let deleteObject = function(deleteObj) {
@@ -472,7 +497,11 @@ let modifySubjectProperties = function(subject){
                 logger.debug(result);
             }
             session.close();
-            resolve({properties : result.records[0]._fields[0]['properties']});
+            if(result.records.length > 0){
+              resolve({properties : result.records[0]._fields[0]['properties']});
+            }else{
+              reject({error : 'No such node'});
+            }
         })
         .catch(function(error) {
             logger.error("Error in EDIT properties query: ", error, ' query is: ', query);
