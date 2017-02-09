@@ -1,8 +1,6 @@
 import React from 'react';
 import Request from 'superagent';
-import Paper from 'material-ui/Paper';
 import ReactFauxDOM from 'react-faux-dom';
-import $ from 'jquery';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import d3 from 'd3';
 // var treeData = [
@@ -51,15 +49,15 @@ export default class TreeGraph extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            chart: 'Loading...',
+            graph: 'Loading...',
             data: {},
-            domainName: 'Java Web Application Development',
+            domainName: '',
             expandable: false
         }
+        this.getTreeOfDomain();
     }
 
     componentDidMount() {
-        this.getTreeOfDomain();
     }
 
     getTreeOfDomain() {
@@ -68,14 +66,14 @@ export default class TreeGraph extends React.Component {
             if (!err) {
                 let treeData = JSON.parse(res.text);
                 treeData = [treeData];
-                let graph = this.drawGraph(treeData);
                 this.setState({data: treeData, graph: graph});
+                let graph = this.drawGraph(this.state.data);
             }
         });
     }
 
     drawGraph(treeData) {
-        const div = new ReactFauxDOM.Element('div')
+      let div = new ReactFauxDOM.Element('div');
             var margin = {
                     top: 20,
                     right: 120,
@@ -218,7 +216,7 @@ export default class TreeGraph extends React.Component {
         render() {
             return (
                 <Card>
-                    <CardHeader title="Select concept" actAsExpander={true} showExpandableButton={true}/>
+                    <CardHeader title="Graph View of the node" actAsExpander={true} showExpandableButton={true}/>
                     <CardText expandable={this.state.expandable}>
                         {this.state.graph}
                     </CardText>

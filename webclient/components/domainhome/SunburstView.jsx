@@ -1,8 +1,6 @@
 import React from 'react';
 import Request from 'superagent';
-import Paper from 'material-ui/Paper';
 import ReactFauxDOM from 'react-faux-dom';
-import $ from 'jquery';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 import d3 from 'd3';
@@ -26,7 +24,7 @@ export default class SunburstView extends React.Component {
         // promise.then(function() {
 
         // })
-    }
+    };
 
     // componentWillReceiveProps(nextProps) {
     //     let th = this;

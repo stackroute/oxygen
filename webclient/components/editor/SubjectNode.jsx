@@ -274,6 +274,7 @@ export default class SubjectNode extends React.Component{
           style={styles.div}
         />
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
+      <Graph/>
       <Dialog
           title="Edit"
           actions={actions}
@@ -281,8 +282,7 @@ export default class SubjectNode extends React.Component{
           open={this.state.modalOpen}
         >
         {relObjects}
-        </Dialog>
-          <Graph/>
+      </Dialog>
       </div>
     );
   }
