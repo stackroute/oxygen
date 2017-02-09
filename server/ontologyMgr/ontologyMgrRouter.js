@@ -4,7 +4,6 @@ const router = require('express').Router();
 const ontologyMgrCtrl = require('./ontologyMgrController');
 
 
-
 router.get('/:domainName/subjects', function(req, res) {
     let domain = {
         name: req.params.domainName
@@ -29,7 +28,8 @@ router.get('/:domainName/subjects', function(req, res) {
         logger.error("Caught a error in retrieved concept(s) of domain ", err);
     }
 });
-router.post('/:domainname/subject/:nodetype/:nodename', function(req, res) {
+
+router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
     let subject = {
         domainName: req.params.domainname,
         nodeType: req.params.nodetype,
@@ -305,7 +305,7 @@ router.patch('/:domainName/subject/:nodetype/:nodename', function (req,res){
           function (err) {
               logger.error("Posting properties error",
                   err);
-              res.status(500).send({
+              res.status(200).send({
                   error: 'Failed to complete operation...!'
               });
               return;

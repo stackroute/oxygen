@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Predicate from './Predicate.jsx';
 //import Intent from './addIntent.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
+import DomainTable from './DomainTable.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
 import Graph from './TreeGraph.jsx';
@@ -282,7 +283,11 @@ export default class SubjectNode extends React.Component{
           open={this.state.modalOpen}
         >
         {relObjects}
-      </Dialog>
+        </Dialog>
+        <DomainTable/>
+        <div class="treeGraph">
+          <Graph/>
+        </div>
       </div>
     );
   }
