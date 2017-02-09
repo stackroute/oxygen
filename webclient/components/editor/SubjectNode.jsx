@@ -8,6 +8,7 @@ import Predicate from './Predicate.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
+import Graph from './TreeGraph.jsx';
 
 const styles = {
   div: {
@@ -281,6 +282,7 @@ export default class SubjectNode extends React.Component{
         >
         {relObjects}
         </Dialog>
+          <Graph/>
       </div>
     );
   }
