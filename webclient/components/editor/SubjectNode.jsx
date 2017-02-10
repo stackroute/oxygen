@@ -283,7 +283,6 @@ export default class SubjectNode extends React.Component{
         {relObjects}
         </Dialog>
         <DomainTable/>
-          <Graph/>
       </div>
     );
   }

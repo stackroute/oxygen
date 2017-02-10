@@ -3,6 +3,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
   from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
+import Request from 'superagent';
 
 const styles = {
   propContainer: {
@@ -14,39 +15,6 @@ const styles = {
     margin: '20px auto 10px',
   },
 };
-
-const tableData = [
-  {
-    name: 'John Smith',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Randal White',
-    status: 'Unemployed',
-  },
-  {
-    name: 'Stephanie Sanders',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Steve Brown',
-    status: 'Employed',
-  },
-  {
-    name: 'Joyce Whitten',
-    status: 'Employed',
-  },
-  {
-    name: 'Samuel Roberts',
-    status: 'Employed',
-  },
-  {
-    name: 'Adam Moore',
-    status: 'Employed',
-  },
-];
 
 export default class TableExampleComplex extends React.Component {
 
@@ -66,7 +34,7 @@ export default class TableExampleComplex extends React.Component {
       height: '300px',
       tableData: null,
     };
-    getDomainDetails('Java Web Application Development');
+    this.getSubjects('Java Web Application Development');
   }
 
   getSubjects(domainName){
@@ -78,27 +46,27 @@ export default class TableExampleComplex extends React.Component {
       // res.send(err);
       this.setState({errmsg: res.body, loading: 'hide'});
       }else {
-        // console.log('Response on show: ', JSON.parse(res.text));
-        // let domainList1=this.state.domainList;
-        let response = JSON.parse(res.text);
-        if(response.length === 0){
-          this.setState({
-            hintTextObject: "No Results",
-          })
-        }
-        else {
-          var listSubjects = [];
-          for(let each in response){
-            if(response.hasOwnProperty(each))
-              listSubjects.push({nodeKey: each,nodeValue: response[each]});
-          }
-          listSubjects.push({nodeKey: 'D:'+ domainName,nodeValue: 'D:'+domainName});
-          this.setState({
-            subjectList: listSubjects,
-            searchObjectText: '',
-            loading: 'hide'
-          });
-        }
+        let response = res.body;
+               if (response['subjects'].length == 0) {
+                   this.setState({floatingLabelTextObject: "No Results"})
+               } else {
+                   var listSubjects = [];
+                   var domain = response['attributes']['name'];
+                   for(let each in response['subjects']){
+                     let nodekey = response['subjects'][each].label;
+                     let nodename = response['subjects'][each].name;
+                     let predicates = response['subjects'][each].predicates;
+                     listSubjects.push({
+                       name: domain,
+                       type: nodekey,
+                       SubName: nodename,
+                       predicate: predicates.toString()
+                      });
+                   }
+                   this.setState({
+                     tableData: listSubjects
+                   })
+               }
       }
     });
   }
@@ -113,13 +81,30 @@ export default class TableExampleComplex extends React.Component {
     this.setState({height: event.target.value});
   };
 
+  onRowSelection(key) {
+    console.log(key);
+  }
+
   render() {
+    let tableRowData = '';
+    if(this.state.tableData !== null){
+      tableRowData = this.state.tableData.map( (row, index) => (
+      <TableRow key={index} value={row} selected={row.selected}>
+        <TableRowColumn>{row.name}</TableRowColumn>
+        <TableRowColumn>{row.type}</TableRowColumn>
+        <TableRowColumn>{row.SubName}</TableRowColumn>
+        <TableRowColumn>{row.predicate}</TableRowColumn>
+      </TableRow>
+    ));
+    }
+
     return (
       <div>
         <Table
           height={this.state.height}
           fixedHeader={this.state.fixedHeader}
-          multiSelectable={this.state.multiSelectable}
+          selectable={this.state.selectable}
+          onRowSelection={this.onRowSelection}
         >
           <TableHeader>
             <TableRow>
@@ -129,8 +114,9 @@ export default class TableExampleComplex extends React.Component {
             </TableRow>
             <TableRow>
               <TableHeaderColumn tooltip="The ID">Domain Name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Name">Node Type</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Status">Node Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Node Type">Node Type</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Node Name">Node Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Predicate">Predicate?s</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody
@@ -139,13 +125,7 @@ export default class TableExampleComplex extends React.Component {
             showRowHover={this.state.showRowHover}
             stripedRows={this.state.stripedRows}
           >
-            {tableData.map( (row, index) => (
-              <TableRow key={index} selected={row.selected}>
-                <TableRowColumn>{index}</TableRowColumn>
-                <TableRowColumn>{row.name}</TableRowColumn>
-                <TableRowColumn>{row.status}</TableRowColumn>
-              </TableRow>
-              ))}
+            {tableRowData}
           </TableBody>
         </Table>
       </div>
