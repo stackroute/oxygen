@@ -4,7 +4,6 @@ const router = require('express').Router();
 const ontologyMgrCtrl = require('./ontologyMgrController');
 
 
-
 router.get('/:domainName/subjects', function(req, res) {
     let domain = {
         name: req.params.domainName
@@ -29,6 +28,7 @@ router.get('/:domainName/subjects', function(req, res) {
         logger.error("Caught a error in retrieved concept(s) of domain ", err);
     }
 });
+
 router.put('/:domainname/subject/:nodetype/:nodename', function(req, res) {
     let subject = {
         domainName: req.params.domainname,
@@ -98,7 +98,7 @@ router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
         }
         logger.debug("Got request to delete the Orphan nodes");
         ontologyMgrCtrl.deleteOrphans(deleteObj).then(function(result) {
-                logger.info("Successfully deleted the node" + deleteObj.nodename);
+                logger.info("Successfully deleted the node" + deleteObj.nodeName);
                 res.send(result);
                 return;
             },
@@ -114,8 +114,10 @@ router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
             });
     } catch (err) {
         logger.error("Caught a error in deleting the node ", err);
-    }
-});
+
+      }
+    });
+
 
 
 router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1/predicates/:predicatename", function(req, res) {
@@ -272,7 +274,7 @@ router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req, res
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
-                res.send(err);
+              res.send(err)
                 return;
             })
     } catch (err) {
@@ -303,7 +305,7 @@ router.patch('/:domainName/subject/:nodetype/:nodename', function (req,res){
           function (err) {
               logger.error("Posting properties error",
                   err);
-              res.status(500).send({
+              res.status(200).send({
                   error: 'Failed to complete operation...!'
               });
               return;

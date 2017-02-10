@@ -6,8 +6,13 @@ import MenuItem from 'material-ui/MenuItem';
 import Predicate from './Predicate.jsx';
 //import Intent from './addIntent.jsx';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
+import DomainTable from './DomainTable.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
+import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import Paper from 'material-ui/Paper';
+import Graph from './TreeGraph.jsx';
 
 const styles = {
   div: {
@@ -18,10 +23,15 @@ const styles = {
   }
 };
 
+const style = {
+  margin : 30
+}
+
 const dataSourceConfig = {
   text: 'nodeKey',
   value: 'nodeValue',
 };
+
 export default class SubjectNode extends React.Component{
   constructor(props){
     super(props);
@@ -44,6 +54,7 @@ export default class SubjectNode extends React.Component{
       addLabel : 'Add Domain',
       relObjects: {},
       modalOpen: false,
+      stepNumber: 0,
     };
     this.getDomains();
   }
@@ -165,7 +176,8 @@ export default class SubjectNode extends React.Component{
     this.getObjects(searchText.charAt(0),searchText.substr(2,searchText.length));
     this.setState({
       addLabel: 'Add Intent',
-      hintTextObject: 'Objects loaded'
+      hintTextObject: 'Objects loaded',
+      stepNumber: 1
     });
   };
 
@@ -175,11 +187,13 @@ export default class SubjectNode extends React.Component{
         this.setState({
           nodeRelations: this.state.objectList[key]['nodeValue'],
           hintTextRel: 'Relations Loaded',
+          stepNumber:2
         });
         break;
       }
     }
   };
+
 
   handleChange = (event, index, value) => this.setState({value});
 
@@ -198,8 +212,6 @@ export default class SubjectNode extends React.Component{
   handleModalClose = () => {
     this.setState({modalOpen: false});
   };
-
-
 
   render() {
     const actions = [
@@ -235,7 +247,9 @@ export default class SubjectNode extends React.Component{
             maxSearchResults={5}
             style={styles.div}
           />
+        <HorizontalLinearStepper stepNumber = {this.state.stepNumber}/>
         </div>
+        <Paper style={style}>
         <AutoComplete
           hintText={this.state.hintTextSubject}
           searchText={this.state.searchSubjectText}
@@ -247,7 +261,9 @@ export default class SubjectNode extends React.Component{
           openOnFocus={true}
           maxSearchResults={5}
           style={styles.div}
-        />-[
+        />
+      <ContentAdd onClick={this.handleModalOpen} />
+      -[
         <AutoComplete
           hintText={this.state.hintTextRel}
           searchText={this.state.searchRelText}
@@ -271,15 +287,21 @@ export default class SubjectNode extends React.Component{
           maxSearchResults={5}
           style={styles.div}
         />
+      </Paper>
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
+      <Graph/>
       <Dialog
-          title="Edit"
+          title="Add"
           actions={actions}
-          modal={true}
+          modal={false}
           open={this.state.modalOpen}
         >
         {relObjects}
         </Dialog>
+        <DomainTable/>
+        <div class="treeGraph">
+          <Graph/>
+        </div>
       </div>
     );
   }

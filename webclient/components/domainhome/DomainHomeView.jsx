@@ -175,7 +175,7 @@ export default class DomainHomeView extends React.Component {
       selectedIntent: prevIntents
     });
   }
-  
+
   deleteConcepts(data) {
     let delConcepts = this.state.selectedConcept;
     delConcepts = delConcepts.filter(function(concept) {
@@ -361,7 +361,7 @@ export default class DomainHomeView extends React.Component {
                   </div>
                 </div>
               </div>
-              
+
               {//showSunburst
               }
               <Row style={{padding:"0 20px"}}>
@@ -382,7 +382,7 @@ export default class DomainHomeView extends React.Component {
                         </Col>
                       </Row>
                  </Col>
-                <Col sm={5} xs={5} md={5} style={{float:'right'}}> 
+                <Col sm={5} xs={5} md={5} style={{float:'right'}}>
                   <AutoCompleteIntentSearch intents={this.state.intents}
                     searchDocument={this.searchDocuments.bind(this)}
                     getIntent={this.getIntents.bind(this)}
@@ -398,7 +398,7 @@ export default class DomainHomeView extends React.Component {
                         }
                       </Col>
                     </Row>
-                </Col>  
+                </Col>
               </Row>
               <br/><br/>
               <Row>

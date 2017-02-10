@@ -6,9 +6,16 @@ let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
         encrypted: false
     }
 );
-
-if(driver.session()){
-    console.log('asas');
-}else{
-  console.log('asasaasas');
-}
+//let result;
+var connectWithNeo4j = function() {
+  return driver.session(result, function(err) {
+    if(result){
+      console.log("Connection established")
+    }
+    if (err) {
+      console.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
+      setTimeout(connectWithNeo4j, 5000);
+    }
+  });
+};
+connectWithNeo4j();
