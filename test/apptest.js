@@ -3,6 +3,7 @@ var expect = require('chai').expect;
 var assert = require('chai').assert;
 var request = require("supertest");
 var moduleToTest = require('../server/crawler/crawlerNeo4jController').getTerms;
+var moduleForTest = require('../server/ontologyMgr/noe4jConnection');
 request = request(app);
 describe("Make GET requests to domain ", function() {
     it('Simple GET Request to root url', function(done) {
@@ -55,3 +56,10 @@ describe("fetching terms from the domain which is not present", function() {
         expect(Object.keys(moduleToTest(domainObj))).to.have.lengthOf(0);
     });
 }); //end of describe
+
+
+describe("Testing for neo4j connection", function() {
+    it('trying to get connected to neo4j', function(done) {
+        done();
+    });
+});

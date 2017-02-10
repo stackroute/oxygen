@@ -412,6 +412,7 @@ let getPublishSubjectObjectAttributes = function(editTermRelation) {
                 }
                 session.close();
                 resolve(result.records[0]._fields);
+
             })
             .catch(function(error) {
                 logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
