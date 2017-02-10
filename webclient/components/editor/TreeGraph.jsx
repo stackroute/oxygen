@@ -5,6 +5,7 @@ import ReactFauxDOM from 'react-faux-dom';
 import $ from 'jquery';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import d3 from 'd3';
+var count = 1;
 let margin = {
         top: 20,
         right: 120,
@@ -35,9 +36,9 @@ export default class TreeGraph extends React.Component {
         Request.get(url).end((err, res) => {
             if (!err) {
                 let treeData = JSON.parse(res.text);
-                treeData=JSON.stringify(treeData);
-                treeData=treeData.replace("children","kids");
-                treeData=JSON.parse(treeData);
+                treeData = JSON.stringify(treeData);
+                treeData = treeData.replace("children", "kids");
+                treeData = JSON.parse(treeData);
                 treeData = [treeData];
                 this.setState({data: treeData, graph: treeGraph});
                 let treeGraph = this.drawTreeGraph(this.state.data);
@@ -61,14 +62,17 @@ export default class TreeGraph extends React.Component {
         root.y0 = 0;
         reset(root)
         update(root);
+
         function update(source) {
             // Compute the new tree layout.
             let nodes = tree.nodes(root).reverse(),
                 links = tree.links(nodes);
             // Normalize for fixed-depth.
+
             nodes.forEach(function(d) {
                 d.y = d.depth * 180;
             });
+
             // Update the nodes…
             let node = svg.selectAll("g.node").data(nodes, function(d) {
                 return d.id || (d.id = ++i);
@@ -216,9 +220,11 @@ export default class TreeGraph extends React.Component {
                     if (d.page === d1.pageNo) {
                         d.children.push(d1)
                     }
+                    //console.log(d);
                     reset(d1);
                 })
             }
+
         }
         // Toggle children on click.
         function click(d) {
@@ -235,7 +241,16 @@ export default class TreeGraph extends React.Component {
     }
     render() {
         return (
-            <div>{this.state.graph}</div>
+              <Card>
+                  <CardHeader
+                  title="Graph View"
+                    actAsExpander={true}
+                    showExpandableButton={true}
+                  />
+                  <CardText expandable={this.state.expandable}>
+                      {this.state.graph}
+                  </CardText>
+              </Card>
         );
     }
 }

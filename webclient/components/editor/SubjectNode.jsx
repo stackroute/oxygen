@@ -10,266 +10,214 @@ import DomainTable from './DomainTable.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
 import TreeGraph from './TreeGraph.jsx';
+import {Tabs, Tab} from 'material-ui/Tabs';
 const styles = {
-  div: {
-    margin: 30
-  },
-  domainDiv: {
-    width: '50%'
-  }
+    div: {
+        margin: 30
+    },
+    headline: {
+        fontSize: 24,
+        paddingTop: 16,
+        marginBottom: 12,
+        fontWeight: 400
+    },
+    domainDiv: {
+        width: '50%'
+    }
 };
+
 const dataSourceConfig = {
-  text: 'nodeKey',
-  value: 'nodeValue',
+    text: 'nodeKey',
+    value: 'nodeValue'
 };
-export default class SubjectNode extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      searchSubjectText: '',
-      searchObjectText: '',
-      searchRelText: '',
-      nodeRelations: [],
-      value: 1,
-      hintTextDomain: "Enter a Domain",
-      hintTextSubject: "No Domain Selected",
-      hintTextObject: "No Subject Selected",
-      hintTextRel: "No Object Selected",
-      errmsg: null,
-      loading: null,
-      selectedDomain: null,
-      domainList: [],
-      subjectList: [],
-      objectList: [],
-      addLabel : 'Add Domain',
-      relObjects: {},
-      modalOpen: false,
-    };
-    this.getDomains();
-  }
-  getSubjects(domainName){
-    let url = `domain/${domainName}/domain/${domainName}/objects`;
-    Request
-    .get(url)
-    .end((err, res) => {
-      if(err) {
-      // res.send(err);
-      this.setState({errmsg: res.body, loading: 'hide'});
-      }else {
-        // console.log('Response on show: ', JSON.parse(res.text));
-        // let domainList1=this.state.domainList;
-        let response = JSON.parse(res.text);
-        if(response.length === 0){
-          this.setState({
-            hintTextObject: "No Results",
-          })
-        }
-        else {
-          var listSubjects = [];
-          for(let each in response){
-            if(response.hasOwnProperty(each))
-              listSubjects.push({nodeKey: each,nodeValue: response[each]});
-          }
-          listSubjects.push({nodeKey: 'D:'+ domainName,nodeValue: 'D:'+domainName});
-          this.setState({
-            subjectList: listSubjects,
+export default class SubjectNode extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchSubjectText: '',
             searchObjectText: '',
-            loading: 'hide'
-          });
-        }
-      }
-    });
-  }
-  getObjects(nodeType,searchText){
-    let url = '';
-    switch(nodeType){
-      case 'D':
-        url = `domain/${searchText}/domain/${searchText}/objects`;
-        break;
-      case 'C':
-        url = `domain/${searchText}/concept/${searchText}/objects`;
-        break;
-      case 'I':
-        url = `domain/${searchText}/intent/${searchText}/objects`;
-        break;
-    }
-    Request
-    .get(url)
-    .end((err, res) => {
-      if(err) {
-      // res.send(err);
-      this.setState({errmsg: res.body, loading: 'hide'});
-      }else {
-        // console.log('Response on show: ', JSON.parse(res.text));
-        // let domainList1=this.state.domainList;
-        let response = JSON.parse(res.text);
-        if(response.length === 0){
-          this.setState({
-            hintTextObject: "No Results",
-          })
-        }
-        else {
-          var listObjects = [];
-          for(let each in response){
-            if(response.hasOwnProperty(each))
-              listObjects.push({nodeKey: each,nodeValue: response[each]});
-          }
-          this.setState({
-            objectList: listObjects,
             searchRelText: '',
-            loading: 'hide'
-          });
-        }
-      }
-    });
-  }
-  getDomains(){
-    let url = `/domain/`;
-    Request
-    .get(url)
-    .end((err, res) => {
-      if(err) {
-      this.setState({errmsg: res.body, loading: 'hide'});
-      }else {
-        let response = JSON.parse(res.text);
-        if(response.length === 0){
-          this.setState({subjectList: [], loading: 'hide'});
-        }else{
-          var listDomain = [];
-          for(let each in response){
-            listDomain.push(response[each]['name']);
-          }
-          this.setState({
-            domainList: listDomain,
-            loading: 'hide'
-          });
-        }
-      }
-    });
-  }
-  handleUpdateDomainInput = (searchText) => {
-    this.getSubjects(searchText);
-    this.setState({
-      addLabel: 'Add Intent',
-      hintTextSubject: 'Subjects loaded'
-    });
-  };
-  handleUpdateSubjectInput = (searchText) => {
-    console.log(searchText);
-    this.getObjects(searchText.charAt(0),searchText.substr(2,searchText.length));
-    this.setState({
-      addLabel: 'Add Intent',
-      hintTextObject: 'Objects loaded'
-    });
-  };
-  handleUpdateObjectInput = (searchText) => {
-    for (var key in this.state.objectList) {
-      if(this.state.objectList[key]['nodeKey'] == searchText){
-        this.setState({
-          nodeRelations: this.state.objectList[key]['nodeValue'],
-          hintTextRel: 'Relations Loaded',
-        });
-        break;
-      }
+            nodeRelations: [],
+            value: 1,
+            hintTextDomain: "Enter a Domain",
+            hintTextSubject: "No Domain Selected",
+            hintTextObject: "No Subject Selected",
+            hintTextRel: "No Object Selected",
+            errmsg: null,
+            loading: null,
+            selectedDomain: null,
+            domainList: [],
+            subjectList: [],
+            objectList: [],
+            addLabel: 'Add Domain',
+            relObjects: {},
+            modalOpen: false,
+            tabValue: 'l'
+        };
+        this.getDomains();
     }
-  };
-  handleChange = (event, index, value) => this.setState({value});
-  handleNewRequest = () => {
-    this.setState({
-      searchSubjectText: '',
-      searchObjectText: '',
-      searchRelText: '',
-    });
-  };
-  handleModalOpen = () => {
-    this.setState({modalOpen: true});
-  };
-  handleModalClose = () => {
-    this.setState({modalOpen: false});
-  };
-  render() {
-    const actions = [
-          <FlatButton
-            label="Cancel"
-            primary={true}
-            onTouchTap={this.handleModalClose}
-          />,
-          <FlatButton
-            label="Submit"
-            primary={true}
-            onTouchTap={this.handleModalClose}
-          />,
-      ];
-    let relObjects = [];
-    let relTerm = [];
-    let that = this;
-    Object.keys(this.state.relObjects).map(function(key) {
-          relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
-      });
-    return (
-      <div styles={styles.div}>
-        <div style={{width : "50%",margin: 'auto'}}>
-          <AutoComplete
-            hintText={this.state.hintTextDomain}
-            searchText={this.state.searchDomainText}
-            onUpdateInput={this.handleUpdateDomainInput}
-            onNewRequest={this.handleNewRequest}
-            dataSource={this.state.domainList}
-            filter={AutoComplete.caseInsensitiveFilter}
-            openOnFocus={true}
-            maxSearchResults={5}
-            style={styles.div}
-          />
-        </div>
-        <AutoComplete
-          hintText={this.state.hintTextSubject}
-          searchText={this.state.searchSubjectText}
-          onUpdateInput={this.handleUpdateSubjectInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.subjectList}
-          dataSourceConfig={dataSourceConfig}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-          style={styles.div}
-        />-[
-        <AutoComplete
-          hintText={this.state.hintTextRel}
-          searchText={this.state.searchRelText}
-          onUpdateInput={this.handleUpdateRelInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.nodeRelations}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-          style={styles.div}
-        />]-->
-        <AutoComplete
-          hintText={this.state.hintTextObject}
-          searchText={this.state.searchObjectText}
-          onUpdateInput={this.handleUpdateObjectInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.objectList}
-          dataSourceConfig={dataSourceConfig}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-          style={styles.div}
-        />
-      <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
-      <Dialog
-          title="Edit"
-          actions={actions}
-          modal={true}
-          open={this.state.modalOpen}
-        >
-        {relObjects}
-        </Dialog>
-        <DomainTable/>
-        <div className="treeGraph">
-          <TreeGraph/>
-        </div>
-      </div>
-    );
-  }
-}
+    getSubjects(domainName) {
+        let url = `domain/${domainName}/domain/${domainName}/objects`;
+        Request.get(url).end((err, res) => {
+            if (err) {
+                // res.send(err);
+                this.setState({errmsg: res.body, loading: 'hide'});
+            } else {
+                // console.log('Response on show: ', JSON.parse(res.text));
+                // let domainList1=this.state.domainList;
+                let response = JSON.parse(res.text);
+                if (response.length === 0) {
+                    this.setState({hintTextObject: "No Results"})
+                } else {
+                    var listSubjects = [];
+                    for (let each in response) {
+                        if (response.hasOwnProperty(each))
+                            listSubjects.push({nodeKey: each, nodeValue: response[each]});
+                        }
+                    listSubjects.push({
+                        nodeKey: 'D:' + domainName,
+                        nodeValue: 'D:' + domainName
+                    });
+                    this.setState({subjectList: listSubjects, searchObjectText: '', loading: 'hide'});
+                }
+            }
+        });
+    }
+    getObjects(nodeType, searchText) {
+        let url = '';
+        switch (nodeType) {
+            case 'D':
+                url = `domain/${searchText}/domain/${searchText}/objects`;
+                break;
+            case 'C':
+                url = `domain/${searchText}/concept/${searchText}/objects`;
+                break;
+            case 'I':
+                url = `domain/${searchText}/intent/${searchText}/objects`;
+                break;
+        }
+        Request.get(url).end((err, res) => {
+            if (err) {
+                // res.send(err);
+                this.setState({errmsg: res.body, loading: 'hide'});
+            } else {
+                // console.log('Response on show: ', JSON.parse(res.text));
+                // let domainList1=this.state.domainList;
+                let response = JSON.parse(res.text);
+                if (response.length === 0) {
+                    this.setState({hintTextObject: "No Results"})
+                } else {
+                    var listObjects = [];
+                    for (let each in response) {
+                        if (response.hasOwnProperty(each))
+                            listObjects.push({nodeKey: each, nodeValue: response[each]});
+                        }
+                    this.setState({objectList: listObjects, searchRelText: '', loading: 'hide'});
+                }
+            }
+        });
+    }
+    getDomains() {
+        let url = `/domain/`;
+        Request.get(url).end((err, res) => {
+            if (err) {
+                this.setState({errmsg: res.body, loading: 'hide'});
+            } else {
+                let response = JSON.parse(res.text);
+                if (response.length === 0) {
+                    this.setState({subjectList: [], loading: 'hide'});
+                } else {
+                    var listDomain = [];
+                    for (let each in response) {
+                        listDomain.push(response[each]['name']);
+                    }
+                    this.setState({domainList: listDomain, loading: 'hide'});
+                }
+            }
+        });
+    }
+    handleUpdateDomainInput = (searchText) => {
+        this.getSubjects(searchText);
+        this.setState({addLabel: 'Add Intent', hintTextSubject: 'Subjects loaded'});
+    };
+    handleUpdateSubjectInput = (searchText) => {
+        console.log(searchText);
+        this.getObjects(searchText.charAt(0), searchText.substr(2, searchText.length));
+        this.setState({addLabel: 'Add Intent', hintTextObject: 'Objects loaded'});
+    };
+    handleUpdateObjectInput = (searchText) => {
+        for (var key in this.state.objectList) {
+            if (this.state.objectList[key]['nodeKey'] == searchText) {
+                this.setState({nodeRelations: this.state.objectList[key]['nodeValue'], hintTextRel: 'Relations Loaded'});
+                break;
+            }
+        }
+    };
+
+    handleTabChange = (tabValue) => {
+        this.setState({tabValue: tabValue});
+    };
+
+    handleChange = (event, index, value) => this.setState({value});
+    handleNewRequest = () => {
+        this.setState({searchSubjectText: '', searchObjectText: '', searchRelText: ''});
+    };
+    handleModalOpen = () => {
+        this.setState({modalOpen: true});
+    };
+    handleModalClose = () => {
+        this.setState({modalOpen: false});
+    };
+    render() {
+        const actions = [ < FlatButton label = "Cancel" primary = {
+                true
+            }
+            onTouchTap = {
+                this.handleModalClose
+            } />, < FlatButton label = "Submit" primary = {
+                true
+            }
+            onTouchTap = {
+                this.handleModalClose
+            } />
+        ];
+        let relObjects = [];
+        let relTerm = [];
+        let that = this;
+        Object.keys(this.state.relObjects).map(function(key) {
+            relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
+        });
+        return (
+            <div styles={styles.div}>
+                <div style={{
+                    width: "50%",
+                    margin: 'auto'
+                }}>
+                    <AutoComplete hintText={this.state.hintTextDomain} searchText={this.state.searchDomainText} onUpdateInput={this.handleUpdateDomainInput} onNewRequest={this.handleNewRequest} dataSource={this.state.domainList} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} style={styles.div}/>
+                </div>
+                <AutoComplete hintText={this.state.hintTextSubject} searchText={this.state.searchSubjectText} onUpdateInput={this.handleUpdateSubjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.subjectList} dataSourceConfig={dataSourceConfig} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} style={styles.div}/>-[
+                <AutoComplete hintText={this.state.hintTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdateRelInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} style={styles.div}/>]-->
+                <AutoComplete hintText={this.state.hintTextObject} searchText={this.state.searchObjectText} onUpdateInput={this.handleUpdateObjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.objectList} dataSourceConfig={dataSourceConfig} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} style={styles.div}/>
+                <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
+                <Dialog title="Edit" actions={actions} modal={true} open={this.state.modalOpen}>
+                    {relObjects}
+                </Dialog>
+
+                <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
+                    <Tab label="List View" value="l">
+                        <div>
+                            <DomainTable/>
+                        </div>
+                    </Tab>
+                    <Tab label="Graph View" value="g">
+                        <div>
+                            <div className="treeGraph">
+                                <TreeGraph/>
+                            </div>
+                        </div>
+                    </Tab>
+                </Tabs>
+            </div>
+          );
+        }
+      }
