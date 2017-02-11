@@ -24,15 +24,15 @@ export default class TreeGraph extends React.Component {
         this.state = {
             graph: 'Loading...',
             data: {},
-            domainName: 'Java Web Application Development',
+            domainName: this.props.domainName,
             expandable: false
         }
     }
     componentDidMount() {
-        this.getTreeGraphOfDomain();
+        this.getTreeGraphOfDomain(this.state.domainName);
     }
-    getTreeGraphOfDomain() {
-        let url = `/domain/domainhomeview/Java Web Application Development`;
+    getTreeGraphOfDomain(domainName) {
+        let url = `/domain/domainhomeview/${domainName}`;
         Request.get(url).end((err, res) => {
             if (!err) {
                 let treeData = JSON.parse(res.text);

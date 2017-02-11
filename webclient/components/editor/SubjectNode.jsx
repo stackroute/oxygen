@@ -89,7 +89,7 @@ export default class SubjectNode extends React.Component {
     }
 
     getSubjects(domainName) {
-        let url = `domain/${domainName}/subjects`;//domain/${domainName}/domain/${domainName}/objects
+        let url = `domain/${domainName}/subjects`;
         Request.get(url).end((err, res) => {
             if (err) {
                 // res.send(err);
@@ -505,7 +505,7 @@ handleModalPredAddOpen =()=>{
                     <Tab label="Graph View" value="g">
                         <div>
                             <div className="treeGraph">
-                                <TreeGraph/>
+                                <TreeGraph domainName={this.state.selectedDomain}/>
                             </div>
                         </div>
                     </Tab>
