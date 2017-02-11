@@ -243,7 +243,6 @@ export default class TreeGraph extends React.Component {
         return (
               <Card>
                   <CardHeader
-                  title="Graph View"
                     actAsExpander={true}
                     showExpandableButton={true}
                   />
