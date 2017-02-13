@@ -1,8 +1,6 @@
 import React from 'react';
 import Request from 'superagent';
-import Paper from 'material-ui/Paper';
 import ReactFauxDOM from 'react-faux-dom';
-import $ from 'jquery';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 import d3 from 'd3';
@@ -24,9 +22,9 @@ export default class SunburstView extends React.Component {
             this.getTreeOfDomain();
         // })
         // promise.then(function() {
-            
+
         // })
-    }
+    };
 
     // componentWillReceiveProps(nextProps) {
     //     let th = this;
@@ -58,7 +56,7 @@ export default class SunburstView extends React.Component {
                 }
         });
     }
-  
+
     drawChart(data) {
         let th = this;
         const div = new ReactFauxDOM.Element('div')
@@ -97,7 +95,7 @@ export default class SunburstView extends React.Component {
             .append("xhtml:div")
             .attr("id", "words")
             .attr("class", "wordsDiv");
-        
+
         let partition = d3.layout.partition()
             .size([2 * Math.PI, radius * radius])
             .value(function(d) { return d.size; });
@@ -107,7 +105,7 @@ export default class SunburstView extends React.Component {
             .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))) })
             .innerRadius(function(d) { return Math.sqrt(d.y); })
             .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
-        
+
         let path = vis.selectAll("path")
                       .data(partition.nodes(data))
                       .enter().append("path")
@@ -130,11 +128,11 @@ export default class SunburstView extends React.Component {
             path.transition()
                 .duration(750)
                 .attrTween("d", arcTween(d));
-                
+
             th.props.sunSelectedConcept(d.name);
             th.setState({expandable: true});
         }
-        
+
         d3.select(self.frameElement).style("height", height + "px");
 
         function arcTween(d) {
@@ -154,7 +152,7 @@ export default class SunburstView extends React.Component {
                 .text(d.name);
             d3.select(div)
                 .style("visibility", "");
-      
+
             let sequenceArray = getAncestors(d);
             let targetAttr = $(this).find('div.mouseover').prevObject.attr('style');
             let breadCrumColor = targetAttr.fill;
@@ -266,5 +264,5 @@ export default class SunburstView extends React.Component {
 }
 
 SunburstView.propTypes = {
-    
+
 };

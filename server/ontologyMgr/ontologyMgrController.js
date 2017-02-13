@@ -16,19 +16,20 @@ let getAllDomainDetails = function(domain) {
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
-                    ontologyMgrNeo4jController.getAllDomainDetailsCallback(
-                        domain,
-                        callback)
-                }
-            ],
+                            domainMongoController.checkDomainCallback(domain.name,
+                                callback);
+                            },function(checkedDomain,callback){
+                              ontologyMgrNeo4jController.getAllDomainDetailsCallback(domain,callback)
+                            },
+                          ],
             function(err, retrivedRelations) {
                 if (err) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
-              });
-  });
-  return promise;
+            });
+    });
+    return promise;
 }
 
 let getSubjectObjects = function(nodeObj) {
@@ -50,9 +51,9 @@ let getSubjectObjects = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
-              });
-  });
-  return promise;
+            });
+    });
+    return promise;
 }
 
 let publishAddNode = function(subject, object) {
