@@ -512,19 +512,22 @@ let getAllOrphans = function(subject) {
         var subjectDomainname = subject.domainname;
         var subjectNodeType = subject.nodetype;
         var subjectNodeName = subject.nodename;
-
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
-        query += 'return s, r, o'
+        query = 'MATCH (c:'+subjectNodeType+')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) = 1 WITH c, collect(allRelatedNodes) as allRelatedNodes UNWIND allRelatedNodes as node'
+        query += ' return allRelatedNodes as orphanNodes'
         params = {
             subjectNodeType: subjectNodeType,
             subjectNodeName: subjectNodeName
         }
-        session.run(query, params).then(function(result) {
+ session.run(query, params).then(function(result) {
                 if (result) {
-                    logger.debug(result);
+                    let orphanNodes=[];
+                    for(let i=0;i<result.records[0]._fields[0].length;i++){
+                      orphanNodes.push(result.records[0]._fields[0][i]['properties']);
+                    }
+                    //logger.debug(result.records[0].keys[0]);
+                    session.close();
+                    resolve(orphanNodes);
                 }
-                session.close();
-                resolve(result);
             })
             .catch(function(error) {
                 logger.error("Error in deleting the query: ", error, ' query is: ', query);
@@ -585,7 +588,7 @@ let getAllRelationsCallback = function(subject, callback) {
 
 let getAllOrphansCallback = function(subject, callback) {
     logger.debug("from the callback : " + subject.nodename);
-    getAllRelations(subject).then(function(nodename) {
+    getAllOrphans(subject).then(function(nodename) {
         callback(null, nodename);
     }, function(err) {
         callback(err, null);
@@ -661,6 +664,9 @@ module.exports = {
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
     getAllRelationsCallback: getAllRelationsCallback,
-    getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
-    modifySubjectPropertiesCallback: modifySubjectPropertiesCallback
+
+    getPublishSubjectObjectAttributesCallback:getPublishSubjectObjectAttributesCallback,
+    modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
+    getAllOrphansCallback: getAllOrphansCallback
+
 };
