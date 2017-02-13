@@ -330,17 +330,17 @@ export default class SubjectNode extends React.Component {
                 </Paper>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
-                    <Tab label="List View" value="l">
-                        <div>
-                            <DomainTable domainName={this.state.selectedDomain}/>
-                        </div>
+                    <Tab label="Graph View" value="l">
+                      <div>
+                          <div className="treeGraph">
+                              <TreeGraph domainName={this.state.selectedDomain}/>
+                          </div>
+                      </div>
                     </Tab>
-                    <Tab label="Graph View" value="g">
-                        <div>
-                            <div className="treeGraph">
-                                <TreeGraph domainName={this.state.selectedDomain}/>
-                            </div>
-                        </div>
+                    <Tab label="List View" value="g">
+                      <div>
+                          <DomainTable domainName={this.state.selectedDomain}/>
+                      </div>
                     </Tab>
                 </Tabs>
             </div>
