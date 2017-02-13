@@ -101,7 +101,7 @@ export default class TreeGraph extends React.Component {
             let nodeUpdate = node.transition().duration(duration).attr("transform", function(d) {
                 return "translate(" + d.y + "," + d.x + ")";
             });
-            nodeUpdate.select("circle").attr("r", 10).style("fill", function(d) {
+            nodeUpdate.select("circle").attr("r", 13).style("fill", function(d) {
                 let sam = d.parent
                     ? color(d.parent.id)
                     : color();

@@ -92,13 +92,12 @@ export default class AddSubject extends React.Component {
           ]
         }
 
-        requestObj.attribute = attributesValue;
-        requestObj.objects[i].name = objectName;
-        requestObj.objects[i].predicates[i].name = data.predicateName;
-        requestObj.objects[i].predicates[i].direction = data.direction;
-
         var objectName = `/domain/${this.state.domain}/object/${data.objectType}/${data.object}`;
-        var attributesValue = `${data.attributesName}:${data.attributesValue}`;
+
+        requestObj.attributes[data.attributesName] = data.attributesValue;
+        requestObj.objects[0]['name'] = objectName;
+        requestObj.objects[0].predicates[0]['name'] = data.predicateName;
+        requestObj.objects[0].predicates[0]['direction'] = data.direction;
 
         console.log(JSON.stringify(requestObj, null, 4));
 
@@ -107,7 +106,9 @@ export default class AddSubject extends React.Component {
 
         let url = `/domain/${this.state.domain}/subject/${this.subjectType}/${this.subject}`;
         console.log(url);
-        Request.put(url).end((err, res) => {
+        Request.put(url)
+        .send(requestObj)
+        .end((err, res) => {
           if (err) {
             console.log("err");
               this.setState({errmsg: res.body, loading: 'hide'});

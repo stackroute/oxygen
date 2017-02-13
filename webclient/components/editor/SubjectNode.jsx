@@ -86,6 +86,7 @@ export default class SubjectNode extends React.Component {
             stepNumber:0,
             objectPredicates: [],
             nodeDetails: null,
+            openAddSubject: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -177,6 +178,10 @@ export default class SubjectNode extends React.Component {
       });
     };
 
+    handleModalAddOpen = () => {
+           this.setState({openAddSubject: true});
+       }
+       
     getDomains() {
         let url = `/domain/`;
         Request.get(url).end((err, res) => {
@@ -346,9 +351,9 @@ export default class SubjectNode extends React.Component {
                     </div>
                 </Paper>
 
+                <AddSubject open = {this.state.openAddSubject} domain={this.state.selectedDomain}/>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
                 <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
-                <AddSubject open={this.state.openEdit} domain={this.state.selectedDomain}/>
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label="Graph View" value="l">
