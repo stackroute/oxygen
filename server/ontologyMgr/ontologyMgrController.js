@@ -27,9 +27,9 @@ let getAllDomainDetails = function(domain) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
-              });
-  });
-  return promise;
+            });
+    });
+    return promise;
 }
 
 let getSubjectObjects = function(nodeObj) {
@@ -51,9 +51,9 @@ let getSubjectObjects = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
-              });
-  });
-  return promise;
+            });
+    });
+    return promise;
 }
 
 let publishAddNode = function(subject, object) {

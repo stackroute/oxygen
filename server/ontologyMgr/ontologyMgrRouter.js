@@ -274,7 +274,7 @@ router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req, res
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
-                res.send(err);
+              res.send(err)
                 return;
             })
     } catch (err) {

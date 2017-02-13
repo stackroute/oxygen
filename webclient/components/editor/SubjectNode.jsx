@@ -9,8 +9,7 @@ import NodeRelationEditor from './NodeRelationEditor.jsx';
 import DomainTable from './DomainTable.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
-import Graph from './TreeGraph.jsx';
-
+import TreeGraph from './TreeGraph.jsx';
 const styles = {
   div: {
     margin: 30
@@ -19,7 +18,6 @@ const styles = {
     width: '50%'
   }
 };
-
 const dataSourceConfig = {
   text: 'nodeKey',
   value: 'nodeValue',
@@ -49,7 +47,6 @@ export default class SubjectNode extends React.Component{
     };
     this.getDomains();
   }
-
   getSubjects(domainName){
     let url = `domain/${domainName}/domain/${domainName}/objects`;
     Request
@@ -83,7 +80,6 @@ export default class SubjectNode extends React.Component{
       }
     });
   }
-
   getObjects(nodeType,searchText){
     let url = '';
     switch(nodeType){
@@ -97,7 +93,6 @@ export default class SubjectNode extends React.Component{
         url = `domain/${searchText}/intent/${searchText}/objects`;
         break;
     }
-
     Request
     .get(url)
     .end((err, res) => {
@@ -128,7 +123,6 @@ export default class SubjectNode extends React.Component{
       }
     });
   }
-
   getDomains(){
     let url = `/domain/`;
     Request
@@ -153,7 +147,6 @@ export default class SubjectNode extends React.Component{
       }
     });
   }
-
   handleUpdateDomainInput = (searchText) => {
     this.getSubjects(searchText);
     this.setState({
@@ -161,7 +154,6 @@ export default class SubjectNode extends React.Component{
       hintTextSubject: 'Subjects loaded'
     });
   };
-
   handleUpdateSubjectInput = (searchText) => {
     console.log(searchText);
     this.getObjects(searchText.charAt(0),searchText.substr(2,searchText.length));
@@ -170,7 +162,6 @@ export default class SubjectNode extends React.Component{
       hintTextObject: 'Objects loaded'
     });
   };
-
   handleUpdateObjectInput = (searchText) => {
     for (var key in this.state.objectList) {
       if(this.state.objectList[key]['nodeKey'] == searchText){
@@ -182,9 +173,7 @@ export default class SubjectNode extends React.Component{
       }
     }
   };
-
   handleChange = (event, index, value) => this.setState({value});
-
   handleNewRequest = () => {
     this.setState({
       searchSubjectText: '',
@@ -192,17 +181,12 @@ export default class SubjectNode extends React.Component{
       searchRelText: '',
     });
   };
-
   handleModalOpen = () => {
     this.setState({modalOpen: true});
   };
-
   handleModalClose = () => {
     this.setState({modalOpen: false});
   };
-
-
-
   render() {
     const actions = [
           <FlatButton
@@ -222,7 +206,6 @@ export default class SubjectNode extends React.Component{
     Object.keys(this.state.relObjects).map(function(key) {
           relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
       });
-
     return (
       <div styles={styles.div}>
         <div style={{width : "50%",margin: 'auto'}}>
@@ -283,6 +266,9 @@ export default class SubjectNode extends React.Component{
         {relObjects}
         </Dialog>
         <DomainTable/>
+        <div className="treeGraph">
+          <TreeGraph/>
+        </div>
       </div>
     );
   }
