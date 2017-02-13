@@ -3,6 +3,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
   from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
+import Request from 'superagent';
 
 const styles = {
   propContainer: {
@@ -66,7 +67,7 @@ export default class TableExampleComplex extends React.Component {
       height: '300px',
       tableData: null,
     };
-    getDomainDetails('Java Web Application Development');
+    this.getSubjects('Java Web Application Development');
   }
 
   getSubjects(domainName){

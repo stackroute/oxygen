@@ -9,11 +9,7 @@ import NodeRelationEditor from './NodeRelationEditor.jsx';
 import DomainTable from './DomainTable.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
-import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import Paper from 'material-ui/Paper';
-import Graph from './TreeGraph.jsx';
-
+import TreeGraph from './TreeGraph.jsx';
 const styles = {
   div: {
     margin: 30
@@ -22,16 +18,10 @@ const styles = {
     width: '50%'
   }
 };
-
-const style = {
-  margin : 30
-}
-
 const dataSourceConfig = {
   text: 'nodeKey',
   value: 'nodeValue',
 };
-
 export default class SubjectNode extends React.Component{
   constructor(props){
     super(props);
@@ -54,11 +44,9 @@ export default class SubjectNode extends React.Component{
       addLabel : 'Add Domain',
       relObjects: {},
       modalOpen: false,
-      stepNumber: 0,
     };
     this.getDomains();
   }
-
   getSubjects(domainName){
     let url = `domain/${domainName}/domain/${domainName}/objects`;
     Request
@@ -92,7 +80,6 @@ export default class SubjectNode extends React.Component{
       }
     });
   }
-
   getObjects(nodeType,searchText){
     let url = '';
     switch(nodeType){
@@ -106,7 +93,6 @@ export default class SubjectNode extends React.Component{
         url = `domain/${searchText}/intent/${searchText}/objects`;
         break;
     }
-
     Request
     .get(url)
     .end((err, res) => {
@@ -137,7 +123,6 @@ export default class SubjectNode extends React.Component{
       }
     });
   }
-
   getDomains(){
     let url = `/domain/`;
     Request
@@ -162,7 +147,6 @@ export default class SubjectNode extends React.Component{
       }
     });
   }
-
   handleUpdateDomainInput = (searchText) => {
     this.getSubjects(searchText);
     this.setState({
@@ -170,33 +154,26 @@ export default class SubjectNode extends React.Component{
       hintTextSubject: 'Subjects loaded'
     });
   };
-
   handleUpdateSubjectInput = (searchText) => {
     console.log(searchText);
     this.getObjects(searchText.charAt(0),searchText.substr(2,searchText.length));
     this.setState({
       addLabel: 'Add Intent',
-      hintTextObject: 'Objects loaded',
-      stepNumber: 1
+      hintTextObject: 'Objects loaded'
     });
   };
-
   handleUpdateObjectInput = (searchText) => {
     for (var key in this.state.objectList) {
       if(this.state.objectList[key]['nodeKey'] == searchText){
         this.setState({
           nodeRelations: this.state.objectList[key]['nodeValue'],
           hintTextRel: 'Relations Loaded',
-          stepNumber:2
         });
         break;
       }
     }
   };
-
-
   handleChange = (event, index, value) => this.setState({value});
-
   handleNewRequest = () => {
     this.setState({
       searchSubjectText: '',
@@ -204,15 +181,12 @@ export default class SubjectNode extends React.Component{
       searchRelText: '',
     });
   };
-
   handleModalOpen = () => {
     this.setState({modalOpen: true});
   };
-
   handleModalClose = () => {
     this.setState({modalOpen: false});
   };
-
   render() {
     const actions = [
           <FlatButton
@@ -232,7 +206,6 @@ export default class SubjectNode extends React.Component{
     Object.keys(this.state.relObjects).map(function(key) {
           relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
       });
-
     return (
       <div styles={styles.div}>
         <div style={{width : "50%",margin: 'auto'}}>
@@ -247,9 +220,7 @@ export default class SubjectNode extends React.Component{
             maxSearchResults={5}
             style={styles.div}
           />
-        <HorizontalLinearStepper stepNumber = {this.state.stepNumber}/>
         </div>
-        <Paper style={style}>
         <AutoComplete
           hintText={this.state.hintTextSubject}
           searchText={this.state.searchSubjectText}
@@ -261,9 +232,7 @@ export default class SubjectNode extends React.Component{
           openOnFocus={true}
           maxSearchResults={5}
           style={styles.div}
-        />
-      <ContentAdd onClick={this.handleModalOpen} />
-      -[
+        />-[
         <AutoComplete
           hintText={this.state.hintTextRel}
           searchText={this.state.searchRelText}
@@ -287,20 +256,18 @@ export default class SubjectNode extends React.Component{
           maxSearchResults={5}
           style={styles.div}
         />
-      </Paper>
       <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
-      <Graph/>
       <Dialog
-          title="Add"
+          title="Edit"
           actions={actions}
-          modal={false}
+          modal={true}
           open={this.state.modalOpen}
         >
         {relObjects}
         </Dialog>
         <DomainTable/>
-        <div class="treeGraph">
-          <Graph/>
+        <div className="treeGraph">
+          <TreeGraph/>
         </div>
       </div>
     );

@@ -18,11 +18,14 @@ function two(){
       // Completed!
       session.close();
     },
-    onError: function(error) {
+    onError: function(error, callback) {
       console.log(error);
+      callback=()=>{ two()
+      }
     }
   });
 
 }
 
 two();
+module.exports.two=two;
