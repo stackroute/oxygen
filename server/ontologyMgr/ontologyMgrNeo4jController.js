@@ -513,23 +513,22 @@ let getAllOrphans = function(subject) {
         var subjectNodeName = subject.nodename;
 
         query = 'MATCH (c:'+subjectNodeType+')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) = 1 WITH c, collect(allRelatedNodes) as allRelatedNodes UNWIND allRelatedNodes as node'
-       query += ' return allRelatedNodes as orphanNodes'
-       params = {
-           subjectNodeType: subjectNodeType,
-           subjectNodeName: subjectNodeName
-       }
-session.run(query, params).then(function(result) {
-               if (result) {
-                   let orphanNodes=[];
-                   if(result.records.length > 0){
-                     for(let i=0;i<result.records[0]._fields[0].length;i++){
-                       orphanNodes.push(result.records[0]._fields[0][i]['properties']);
-                     }
-                   }
-                   session.close();
-                   resolve(orphanNodes);
-               }
-           })
+        query += ' return allRelatedNodes as orphanNodes'
+        params = {
+            subjectNodeType: subjectNodeType,
+            subjectNodeName: subjectNodeName
+        }
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    let orphanNodes=[];
+                    for(let i=0;i<result.records[0]._fields[0].length;i++){
+                      orphanNodes.push(result.records[0]._fields[0][i]['properties']);
+                    }
+                    //logger.debug(result.records[0].keys[0]);
+                    session.close();
+                    resolve(orphanNodes);
+                }
+            })
             .catch(function(error) {
                 logger.error("Error in deleting the query: ", error, ' query is: ', query);
                 reject(error);
@@ -668,4 +667,5 @@ module.exports = {
     getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback
+
 };
