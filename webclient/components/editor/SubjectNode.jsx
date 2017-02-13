@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -15,7 +14,6 @@ import {Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import ArrowForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import {cyan500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
-import {Tabs, Tab} from 'material-ui/Tabs';
 import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import Add from './Add.jsx';
@@ -27,6 +25,10 @@ import Edit from './edit.jsx';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
 import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
+import TreeGraph from './TreeGraph.jsx';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import DeleteNode from './DeleteNode.jsx';
+import DomainTable from './DomainTable.jsx';
 
 const style = {
   margin: 30,
@@ -62,9 +64,6 @@ export default class SubjectNode extends React.Component {
         super(props);
         this.state = {
             canSubmit: false,
-            searchSubjectText: '',
-            searchObjectText: '',
-            searchRelText: '',
             nodeRelations: [],
             value: 1,
             floatingLabelTextSubject: "Subjects",
@@ -73,6 +72,9 @@ export default class SubjectNode extends React.Component {
             errmsg: null,
             loading: null,
             selectedDomain: this.props.params.domainName,
+            selectedSubject: '',
+            selectedObject: '',
+            selectedPredicate: '',
             domainList: [],
             subjectList: [],
             objectList: [],
@@ -80,15 +82,16 @@ export default class SubjectNode extends React.Component {
             addLabel: 'Add Domain',
             relObjects: {},
             editmodalopen: false,
+            deleteModalOpen: false,
             stepNumber:0,
-            objectPredicates: []
+            objectPredicates: [],
+            nodeDetails: null,
         };
-        console.log(this.state.selectedDomain);
         this.getSubjects(this.state.selectedDomain);
     }
 
     getSubjects(domainName) {
-        let url = `domain/${domainName}/subjects`;//domain/${domainName}/domain/${domainName}/objects
+        let url = `domain/${domainName}/subjects`;
         Request.get(url).end((err, res) => {
             if (err) {
                 // res.send(err);
@@ -174,21 +177,6 @@ export default class SubjectNode extends React.Component {
       });
     };
 
-    getEditor() {
-        let url = `/domain/edit/` + this.props.domainName;
-        Request.get(url).end((err, res) => {
-            if (!err) {
-                let editor = JSON.parse(res.text);
-                let chart = this.drawChart(editor)
-                this.setState({domainName: editor.Domain, data: editor, chart: chart})
-            }
-        });
-    }
-
-    componentDidMount() {
-        this.getEditor();
-    }
-
     getDomains() {
         let url = `/domain/`;
         Request.get(url).end((err, res) => {
@@ -222,6 +210,7 @@ export default class SubjectNode extends React.Component {
         this.setState({
            addLabel: 'Add Intent',
            floatingLabelTextObject: 'Objects',
+           selectedSubject: searchText,
            stepNumber:1
          });
     };
@@ -231,9 +220,45 @@ export default class SubjectNode extends React.Component {
        console.log(predicates);
         this.setState({
           nodeRelations: predicates,
+          searchObjectText: searchText,
+          selectedObject: searchText,
           stepNumber:2
         });
     };
+
+    handleDeleteSubject = () => {
+      if(this.state.selectedSubject.length == 0){
+
+      }else{
+        let nodetype = '';
+        let nodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+        //console.log(nodename);
+        if(this.state.selectedSubject.charAt(0) == 'I'){
+          nodetype = 'Intent';
+        }else{
+          nodetype = 'Concept';
+        }
+        let nodeDetails = {
+          domainName : this.state.selectedDomain,
+          nodetype: nodetype,
+          nodename: nodename
+        };
+
+        this.setState({
+          nodeDetails: nodeDetails,
+          deleteModalOpen : true
+        });
+      }
+    };
+
+    handleDeleteObject = () => {
+      if(this.state.selectedObject.length == 0){
+
+      }else{
+
+      }
+    };
+
 
     handleChange = (event, index, value) => this.setState({value});
 
@@ -241,130 +266,9 @@ export default class SubjectNode extends React.Component {
         this.setState({searchSubjectText: '', searchObjectText: '', searchRelText: ''});
     };
 
-    handleModalAddOpen = () => {
-        this.setState({addmodalopen: true, canSubmit: false});
-    }
-handleModalObjAddOpen = () =>{
-  this.setState({addmodalobjopen: true, canSubmit: false});
-}
-handleModalPredAddOpen =()=>{
-  this.setState({addmodalpredopen: true, canSubmit: false});
-}
-    handleModalDeleteOpen = () => {
-        this.setState({deletemodalopen: true});
-    }
-
-    handleModalEditOpen = () => {
-        this.setState({editmodalopen: true});
-    };
-
-    handleModalClose = () => {
-      this.setState({addmodalobjopen:false});
-      this.setState({addmodalpredopen:false});
-        this.setState({addmodalopen: false});
-        this.setState({editmodalopen: false});
-        this.setState({deletemodalopen: false});
-    };
-
-    handleNext() {
-        const {stepIndex} = this.state;
-
-        if (stepIndex < 2) {
-            this.setState({
-                stepIndex: stepIndex + 1
-            });
-        }
-    }
-
-    enableButton() {
-      this.setState({
-        canSubmit: true,
-      });
-    }
-
-    disableButton() {
-      this.setState({
-        canSubmit: false,
-      });
-    }
-
-
-    notifyFormError(data) {
-      console.error('Form error:', data);
-    }
-
-    handleClose = () => {
-      this.setState({openDialog : true});
-    };
-
-    handlePrev() {
-        const {stepIndex} = this.state;
-
-        if (stepIndex > 0) {
-            this.setState({
-                stepIndex: stepIndex - 1
-            });
-        }
-    }
-
     render() {
       let {paperStyle, switchStyle, submitStyle } = styles;
-        const {stepIndex} = this.state;
-        const actions = [< div > <FlatButton label="Cancel" primary={true} onTouchTap={this.handleModalClose}/> < FlatButton label = "Submit" primary = {
-                true
-            }
-            onTouchTap = {
-                this.handleModalClose
-            } /> </div>];
-        const addactions = [< div > <FlatButton label="Cancel"
-         primary={true}
-         onTouchTap={this.handleModalClose}/>
-
-
-       <FlatButton label = "Add"
-         primary = {true}
-         disabled = {
-                !this.state.canSubmit
-            }
-            onTouchTap = {
-                this.handleModalClose
-            } /> </div>];
-
-            const addobjactions = [< div > <FlatButton label="Cancel"
-             primary={true}
-             onTouchTap={this.handleModalClose}/>
-
-
-            <FlatButton label = "Add"
-             primary = {true}
-             disabled = {
-                    !this.state.canSubmit
-                }
-                onTouchTap = {
-                    this.handleModalClose
-                } /> </div>];
-
-            const addpredactions = [< div > <FlatButton label="Cancel"
-             primary={true}
-             onTouchTap={this.handleModalClose}/>
-
-
-           <FlatButton label = "Add"
-             primary = {true}
-             disabled = {
-                    !this.state.canSubmit
-                }
-                onTouchTap = {
-                    this.handleModalClose
-                } /> </div>];
-
-        let relObjects = [];
-        let relTerm = [];
-        let that = this;
-        Object.keys(this.state.relObjects).map(function(key) {
-            relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
-        });
-
+      const {stepIndex} = this.state;
         return (
             <div styles={styles.div}>
                 <div style={{
@@ -374,7 +278,6 @@ handleModalPredAddOpen =()=>{
                 </div>
                 <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
                 <Paper style={style}>
-
                     <div>
                         <AutoComplete
                           floatingLabelText={this.state.floatingLabelTextSubject}
@@ -388,7 +291,7 @@ handleModalPredAddOpen =()=>{
                           maxSearchResults={5}
                           style={styles.div}/>
                         <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
 
@@ -403,7 +306,7 @@ handleModalPredAddOpen =()=>{
                           maxSearchResults={5}
                           style={styles.div}/>
                         <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer',color:'red'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
 
@@ -425,76 +328,22 @@ handleModalPredAddOpen =()=>{
                     </div>
 
                 </Paper>
-
-                <Dialog
-                  title="Add"
-                  titleStyle={{
-                    color: "#858586",
-                    fontSize: 30,
-                    backgroundColor: "#c7c7c7"
-                }}
-                  actions={addactions}
-                  modal={true}
-                  open={this.state.addmodalopen}>
-                    {relObjects}
-                    <Add selectedDomain = {this.state.selectedDomain}/>
-                </Dialog>
-
-                <Dialog
-                  title="Add Predicate"
-                  titleStyle={{
-                    color: "#858586",
-                    fontSize: 30,
-                    backgroundColor: "#c7c7c7"
-                }}
-                  actions={addpredactions}
-                  modal={true}
-                  open={this.state.addmodalpredopen}>
-                    {relObjects}
-                    <AddPredicate />
-                </Dialog>
-
-                <Dialog
-                  title="Add Objects"
-                  titleStyle={{
-                    color: "#858586",
-                    fontSize: 30,
-                    backgroundColor: "#c7c7c7"
-                }}
-                  actions={addobjactions}
-                  modal={true}
-                  open={this.state.addmodalobjopen}>
-                    {relObjects}
-                    <AddObjects />
-                </Dialog>
-
-                <Dialog
-                  title="Delete"
-                  titleStyle={{
-                    color: "#858586",
-                    fontSize: 30,
-                    backgroundColor: "#c7c7c7"
-                }}
-                  actions={actions}
-                  modal={true}
-                  open={this.state.deletemodalopen}>
-                    {relObjects}
-                    <Delete />
-                </Dialog>
-
-                <Dialog title="Edit"
-                  titleStyle={{
-                    color: "#858586",
-                    fontSize: 30,
-                    backgroundColor: "#c7c7c7"
-                }}
-                  actions={actions}
-                  modal={true}
-                  open={this.state.editmodalopen}>
-                    {relObjects}
-                    <Edit />
-                </Dialog>
+                <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
+                <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
+                    <Tab label="Graph View" value="l">
+                      <div>
+                          <div className="treeGraph">
+                              <TreeGraph domainName={this.state.selectedDomain}/>
+                          </div>
+                      </div>
+                    </Tab>
+                    <Tab label="List View" value="g">
+                      <div>
+                          <DomainTable domainName={this.state.selectedDomain}/>
+                      </div>
+                    </Tab>
+                </Tabs>
             </div>
-        );
-    }
-}
+        );//End of Return
+    }//End of Render
+}//End of Class

@@ -513,13 +513,14 @@ let getAllOrphans = function(subject) {
         var subjectDomainname = subject.domainname;
         var subjectNodeType = subject.nodetype;
         var subjectNodeName = subject.nodename;
+
         query = 'MATCH (c:'+subjectNodeType+')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) = 1 WITH c, collect(allRelatedNodes) as allRelatedNodes UNWIND allRelatedNodes as node'
         query += ' return allRelatedNodes as orphanNodes'
         params = {
             subjectNodeType: subjectNodeType,
             subjectNodeName: subjectNodeName
         }
- session.run(query, params).then(function(result) {
+        session.run(query, params).then(function(result) {
                 if (result) {
                     let orphanNodes=[];
                     for(let i=0;i<result.records[0]._fields[0].length;i++){
@@ -665,7 +666,11 @@ module.exports = {
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
 
-    getPublishSubjectObjectAttributesCallback:getPublishSubjectObjectAttributesCallback,
+
+
+    getAllRelationsCallback: getAllRelationsCallback,
+    getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
+
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback
 
