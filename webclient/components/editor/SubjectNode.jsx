@@ -9,15 +9,13 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import NodeRelationEditor from './NodeRelationEditor.jsx';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
-import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import ArrowForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import {cyan500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import Slider from 'material-ui/Slider';
+import Paper from 'material-ui/Paper';
 import Add from './Add.jsx';
 import AddPredicate from './AddPredicate.jsx';
 import DeletePredicate from './deletePredicate.jsx';
@@ -30,15 +28,6 @@ import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
 import TreeGraph from './TreeGraph.jsx';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import DomainTable from './DomainTable.jsx';
-
-const styles = {
-  div: {
-    margin: 30
-  },
-  domainDiv: {
-    width: '50%'
-  }
-};
 
 const style = {
   margin: 30,
@@ -256,47 +245,6 @@ export default class SubjectNode extends React.Component {
     handleModalAddOpen = () => {
         this.setState({addmodalopen: true, canSubmit: false});
     }
-
-  };
-
-
-  handleChange = (event, index, value) => this.setState({value});
-
-  handleNewRequest = () => {
-    this.setState({
-      searchSubjectText: '',
-      searchObjectText: '',
-      searchRelText: '',
-    });
-  };
-
-  handleModalOpen = () => {
-    this.setState({modalOpen: true});
-  };
-
-  handleModalClose = () => {
-    this.setState({modalOpen: false});
-  };
-
-  render() {
-    const actions = [
-          <FlatButton
-            label="Cancel"
-            primary={true}
-            onTouchTap={this.handleModalClose}
-          />,
-          <FlatButton
-            label="Submit"
-            primary={true}
-            onTouchTap={this.handleModalClose}
-          />,
-      ];
-    let relObjects = [];
-    let relTerm = [];
-    let that = this;
-    Object.keys(this.state.relObjects).map(function(key) {
-          relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
-
 handleModalObjAddOpen = () =>{
   this.setState({addmodalobjopen: true, canSubmit: false});
 }
@@ -332,87 +280,8 @@ handleModalPredAddOpen =()=>{
     enableButton() {
       this.setState({
         canSubmit: true,
-
       });
     }
-
-
-    return (
-      <div styles={styles.div}>
-        <div style={{width : "50%",margin: 'auto'}}>
-          <AutoComplete
-            hintText={this.state.hintTextDomain}
-            searchText={this.state.searchDomainText}
-            onUpdateInput={this.handleUpdateDomainInput}
-            onNewRequest={this.handleNewRequest}
-            dataSource={this.state.domainList}
-            filter={AutoComplete.caseInsensitiveFilter}
-            openOnFocus={true}
-            maxSearchResults={5}
-            style={styles.div}
-          />
-        <HorizontalLinearStepper stepNumber = {this.state.stepNumber}/>
-        </div>
-        <Paper style={style}>
-        <AutoComplete
-          hintText={this.state.hintTextSubject}
-          searchText={this.state.searchSubjectText}
-          onUpdateInput={this.handleUpdateSubjectInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.subjectList}
-          dataSourceConfig={dataSourceConfig}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-          style={styles.div}
-        />
-      <ContentAdd onClick={this.handleModalOpen} />
-      -[
-        <AutoComplete
-          hintText={this.state.hintTextRel}
-          searchText={this.state.searchRelText}
-          onUpdateInput={this.handleUpdateRelInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.nodeRelations}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-          style={styles.div}
-        />]-->
-        <AutoComplete
-          hintText={this.state.hintTextObject}
-          searchText={this.state.searchObjectText}
-          onUpdateInput={this.handleUpdateObjectInput}
-          onNewRequest={this.handleNewRequest}
-          dataSource={this.state.objectList}
-          dataSourceConfig={dataSourceConfig}
-          filter={AutoComplete.caseInsensitiveFilter}
-          openOnFocus={true}
-          maxSearchResults={5}
-          style={styles.div}
-        />
-
-      </Paper>
-
-      <FlatButton label={this.state.addLabel} primary={true} onTouchTap={this.handleModalOpen}/>
-      <Graph/>
-
-      <Dialog
-          title="Add"
-          actions={actions}
-          modal={false}
-          open={this.state.modalOpen}
-        >
-        {relObjects}
-        </Dialog>
-        <DomainTable/>
-        <div class="treeGraph">
-          <Graph/>
-        </div>
-      </div>
-    );
-  }
-}
 
     disableButton() {
       this.setState({
@@ -451,8 +320,6 @@ handleModalPredAddOpen =()=>{
         const addactions = [< div > <FlatButton label="Cancel"
          primary={true}
          onTouchTap={this.handleModalClose}/>
-
-
        <FlatButton label = "Add"
          primary = {true}
          disabled = {
@@ -461,12 +328,9 @@ handleModalPredAddOpen =()=>{
             onTouchTap = {
                 this.handleModalClose
             } /> </div>];
-
             const addobjactions = [< div > <FlatButton label="Cancel"
              primary={true}
              onTouchTap={this.handleModalClose}/>
-
-
             <FlatButton label = "Add"
              primary = {true}
              disabled = {
@@ -475,12 +339,9 @@ handleModalPredAddOpen =()=>{
                 onTouchTap = {
                     this.handleModalClose
                 } /> </div>];
-
             const addpredactions = [< div > <FlatButton label="Cancel"
              primary={true}
              onTouchTap={this.handleModalClose}/>
-
-
            <FlatButton label = "Add"
              primary = {true}
              disabled = {
@@ -489,14 +350,12 @@ handleModalPredAddOpen =()=>{
                 onTouchTap = {
                     this.handleModalClose
                 } /> </div>];
-
         let relObjects = [];
         let relTerm = [];
         let that = this;
         Object.keys(this.state.relObjects).map(function(key) {
             relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
         });
-
         return (
             <div styles={styles.div}>
                 <div style={{
@@ -506,7 +365,6 @@ handleModalPredAddOpen =()=>{
                 </div>
                 <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
                 <Paper style={style}>
-
                     <div>
                         <AutoComplete
                           floatingLabelText={this.state.floatingLabelTextSubject}
@@ -523,7 +381,6 @@ handleModalPredAddOpen =()=>{
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
-
                     <div>
                         <AutoComplete floatingLabelText={this.state.floatingLabelTextObject}
                           searchText={this.state.searchObjectText}
@@ -538,7 +395,6 @@ handleModalPredAddOpen =()=>{
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer',color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
-
                     <div>
                         <AutoComplete
                           floatingLabelText={this.state.floatingLabelTextRel}
@@ -555,9 +411,7 @@ handleModalPredAddOpen =()=>{
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
-
                 </Paper>
-
                 <Dialog
                   title="Add"
                   titleStyle={{
@@ -571,7 +425,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <Add selectedDomain = {this.state.selectedDomain}/>
                 </Dialog>
-
                 <Dialog
                   title="Add Predicate"
                   titleStyle={{
@@ -585,7 +438,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <AddPredicate />
                 </Dialog>
-
                 <Dialog
                   title="Add Objects"
                   titleStyle={{
@@ -599,7 +451,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <AddObjects />
                 </Dialog>
-
                 <Dialog
                   title="Delete"
                   titleStyle={{
@@ -613,7 +464,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <Delete />
                 </Dialog>
-
                 <Dialog title="Edit"
                   titleStyle={{
                     color: "#858586",
@@ -626,7 +476,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <Edit />
                 </Dialog>
-
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label="Graph View" value="l">
                       <div>
@@ -645,3 +494,5 @@ handleModalPredAddOpen =()=>{
         );//End of Return
     }//End of Render
 }//End of Class
+
+  
