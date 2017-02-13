@@ -320,8 +320,6 @@ handleModalPredAddOpen =()=>{
         const addactions = [< div > <FlatButton label="Cancel"
          primary={true}
          onTouchTap={this.handleModalClose}/>
-
-
        <FlatButton label = "Add"
          primary = {true}
          disabled = {
@@ -330,12 +328,9 @@ handleModalPredAddOpen =()=>{
             onTouchTap = {
                 this.handleModalClose
             } /> </div>];
-
             const addobjactions = [< div > <FlatButton label="Cancel"
              primary={true}
              onTouchTap={this.handleModalClose}/>
-
-
             <FlatButton label = "Add"
              primary = {true}
              disabled = {
@@ -344,12 +339,9 @@ handleModalPredAddOpen =()=>{
                 onTouchTap = {
                     this.handleModalClose
                 } /> </div>];
-
             const addpredactions = [< div > <FlatButton label="Cancel"
              primary={true}
              onTouchTap={this.handleModalClose}/>
-
-
            <FlatButton label = "Add"
              primary = {true}
              disabled = {
@@ -358,14 +350,12 @@ handleModalPredAddOpen =()=>{
                 onTouchTap = {
                     this.handleModalClose
                 } /> </div>];
-
         let relObjects = [];
         let relTerm = [];
         let that = this;
         Object.keys(this.state.relObjects).map(function(key) {
             relObjects.push(<NodeRelationEditor relation={that.state.relObjects[key]} name={key}/>);
         });
-
         return (
             <div styles={styles.div}>
                 <div style={{
@@ -375,7 +365,6 @@ handleModalPredAddOpen =()=>{
                 </div>
                 <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
                 <Paper style={style}>
-
                     <div>
                         <AutoComplete
                           floatingLabelText={this.state.floatingLabelTextSubject}
@@ -392,7 +381,6 @@ handleModalPredAddOpen =()=>{
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
-
                     <div>
                         <AutoComplete floatingLabelText={this.state.floatingLabelTextObject}
                           searchText={this.state.searchObjectText}
@@ -407,7 +395,6 @@ handleModalPredAddOpen =()=>{
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer',color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
-
                     <div>
                         <AutoComplete
                           floatingLabelText={this.state.floatingLabelTextRel}
@@ -424,9 +411,7 @@ handleModalPredAddOpen =()=>{
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
-
                 </Paper>
-
                 <Dialog
                   title="Add"
                   titleStyle={{
@@ -440,7 +425,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <Add selectedDomain = {this.state.selectedDomain}/>
                 </Dialog>
-
                 <Dialog
                   title="Add Predicate"
                   titleStyle={{
@@ -454,7 +438,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <AddPredicate />
                 </Dialog>
-
                 <Dialog
                   title="Add Objects"
                   titleStyle={{
@@ -468,7 +451,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <AddObjects />
                 </Dialog>
-
                 <Dialog
                   title="Delete"
                   titleStyle={{
@@ -482,7 +464,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <Delete />
                 </Dialog>
-
                 <Dialog title="Edit"
                   titleStyle={{
                     color: "#858586",
@@ -495,7 +476,6 @@ handleModalPredAddOpen =()=>{
                     {relObjects}
                     <Edit />
                 </Dialog>
-
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label="Graph View" value="l">
                       <div>
