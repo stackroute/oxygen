@@ -35,7 +35,7 @@ ReactDOM.render(
             <Route path="/crawl" component={Crawler}/>
             <Route path="/jobResult/:jobID" component={JobResult}/>
             <Route path="/dashboard" component={Dashboard}/>
-            <Route path="/edit" component={SubjectNode}/>
+            <Route path="/edit/:domainName" component={SubjectNode}/>
             <Route path="/graph/:domainName" component={Graph}/>
             <Route path="/domainhome/:domainName" component={DomainHome}/>
         </Route>

@@ -3,6 +3,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
   from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
+import Request from 'superagent';
 
 const styles = {
   propContainer: {
@@ -65,8 +66,9 @@ export default class TableExampleComplex extends React.Component {
       showCheckboxes: true,
       height: '300px',
       tableData: null,
+      selectedDomain: this.props.domainName
     };
-    getDomainDetails('Java Web Application Development');
+    this.getSubjects(this.props.domainName);
   }
 
   getSubjects(domainName){
@@ -76,11 +78,13 @@ export default class TableExampleComplex extends React.Component {
     .end((err, res) => {
       if(err) {
       // res.send(err);
+
       this.setState({errmsg: res.body, loading: 'hide'});
       }else {
         // console.log('Response on show: ', JSON.parse(res.text));
         // let domainList1=this.state.domainList;
         let response = JSON.parse(res.text);
+        //console.log(response);
         if(response.length === 0){
           this.setState({
             hintTextObject: "No Results",

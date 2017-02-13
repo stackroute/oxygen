@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
+import ImageEdit from 'material-ui/svg-icons/image/edit';
 import MenuItem from 'material-ui/MenuItem';
 import MoreHorzIcon from 'material-ui/svg-icons/navigation/more-horiz';
 import {Card, CardTitle, CardMedia} from 'material-ui/Card';
@@ -333,6 +334,10 @@ export default class DomainShow extends React.Component {
 			<MenuItem primaryText="ReIndex"
 			leftIcon={<NavigationRefresh/>}
 			onTouchTap={this.handleOpen}/>
+		 <MenuItem primaryText="Edit"
+			 containerElement={<Link to={'/edit/'+ this.props.item.name}/>}
+			leftIcon={<ImageEdit/>}
+			onTouchTap={this.handleEdit}/>
 			<MenuItem primaryText="Delete"
 			leftIcon={<Delete/>}
 			onTouchTap={this.handleDelete}/>
