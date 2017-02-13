@@ -499,7 +499,7 @@ handleModalPredAddOpen =()=>{
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label="List View" value="l">
                         <div>
-                            <DomainTable/>
+                            <DomainTable domainName={this.state.selectedDomain}/>
                         </div>
                     </Tab>
                     <Tab label="Graph View" value="g">
@@ -511,6 +511,6 @@ handleModalPredAddOpen =()=>{
                     </Tab>
                 </Tabs>
             </div>
-        );
-    }
-}
+        );//End of Return
+    }//End of Render
+}//End of Class
