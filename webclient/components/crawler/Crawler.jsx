@@ -100,7 +100,7 @@ export default class Crawler extends React.Component {
 					    <TableBody displayRowCheckbox={false}>
 							{weights}
 					    </TableBody>
-					</Table>				
+					</Table>
 				</Paper>
 			</div>
 		)

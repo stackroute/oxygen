@@ -25,9 +25,10 @@ export default class DomainTable extends React.Component {
       showCheckboxes: true,
       tableData: null,
       tableFilteredData: null,
-      searchTable: ''
+      searchTable: '',
+      selectedDomain: this.props.domainName
     };
-    this.getSubjects('Java Web Application Development');
+    this.getSubjects(this.props.domainName);
   }
 
   getSubjects(domainName){
@@ -37,6 +38,7 @@ export default class DomainTable extends React.Component {
     .end((err, res) => {
       if(err) {
       // res.send(err);
+
       this.setState({errmsg: res.body, loading: 'hide'});
       }else {
         let response = res.body;
@@ -91,6 +93,7 @@ export default class DomainTable extends React.Component {
       tableFilteredData: rows
     });
   };
+
   render() {
     let tableRowData = '';
     if(this.state.tableFilteredData !== null){

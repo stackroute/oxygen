@@ -130,6 +130,8 @@ let getPublishAddNode = function(subject, object) {
                 } else if (predicateDirection == 'O') {
 
                     relationWithDirectionAndWeight = '<-[r:' + predicateName + predicateWeight + ']-'
+                } else{
+                  relationWithDirectionAndWeight = '-[r:' + predicateName + predicateWeight + ']->'
                 }
 
                 if (subjectNodeType == graphConsts.NODE_DOMAIN) {
@@ -510,19 +512,24 @@ let getAllOrphans = function(subject) {
         var subjectNodeType = subject.nodetype;
         var subjectNodeName = subject.nodename;
 
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
-        query += 'return s, r, o'
-        params = {
-            subjectNodeType: subjectNodeType,
-            subjectNodeName: subjectNodeName
-        }
-        session.run(query, params).then(function(result) {
-                if (result) {
-                    logger.debug(result);
-                }
-                session.close();
-                resolve(result);
-            })
+        query = 'MATCH (c:'+subjectNodeType+')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) = 1 WITH c, collect(allRelatedNodes) as allRelatedNodes UNWIND allRelatedNodes as node'
+       query += ' return allRelatedNodes as orphanNodes'
+       params = {
+           subjectNodeType: subjectNodeType,
+           subjectNodeName: subjectNodeName
+       }
+session.run(query, params).then(function(result) {
+               if (result) {
+                   let orphanNodes=[];
+                   if(result.records.length > 0){
+                     for(let i=0;i<result.records[0]._fields[0].length;i++){
+                       orphanNodes.push(result.records[0]._fields[0][i]['properties']);
+                     }
+                   }
+                   session.close();
+                   resolve(orphanNodes);
+               }
+           })
             .catch(function(error) {
                 logger.error("Error in deleting the query: ", error, ' query is: ', query);
                 reject(error);
@@ -582,7 +589,7 @@ let getAllRelationsCallback = function(subject, callback) {
 
 let getAllOrphansCallback = function(subject, callback) {
     logger.debug("from the callback : " + subject.nodename);
-    getAllRelations(subject).then(function(nodename) {
+    getAllOrphans(subject).then(function(nodename) {
         callback(null, nodename);
     }, function(err) {
         callback(err, null);
@@ -659,5 +666,6 @@ module.exports = {
     getRelationsCallback: getRelationsCallback,
     getAllRelationsCallback: getAllRelationsCallback,
     getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
-    modifySubjectPropertiesCallback: modifySubjectPropertiesCallback
+    modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
+    getAllOrphansCallback: getAllOrphansCallback
 };
