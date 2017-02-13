@@ -4,56 +4,15 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 import Request from 'superagent';
+import FlatButton from 'material-ui/FlatButton';
 
-const styles = {
-  propContainer: {
-    width: 200,
-    overflow: 'hidden',
-    margin: '20px auto 0',
-  },
-  propToggleHeader: {
-    margin: '20px auto 10px',
-  },
-};
 
-const tableData = [
-  {
-    name: 'John Smith',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Randal White',
-    status: 'Unemployed',
-  },
-  {
-    name: 'Stephanie Sanders',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Steve Brown',
-    status: 'Employed',
-  },
-  {
-    name: 'Joyce Whitten',
-    status: 'Employed',
-  },
-  {
-    name: 'Samuel Roberts',
-    status: 'Employed',
-  },
-  {
-    name: 'Adam Moore',
-    status: 'Employed',
-  },
-];
-
-export default class TableExampleComplex extends React.Component {
+export default class DomainTable extends React.Component {
 
   constructor(props) {
     super(props);
-
+    this.onRowSelection = this.onRowSelection.bind(this);
+    this.handleExport = this.handleExport.bind(this);
     this.state = {
       fixedHeader: true,
       fixedFooter: true,
@@ -64,8 +23,9 @@ export default class TableExampleComplex extends React.Component {
       enableSelectAll: false,
       deselectOnClickaway: true,
       showCheckboxes: true,
-      height: '300px',
       tableData: null,
+      tableFilteredData: null,
+      searchTable: '',
       selectedDomain: this.props.domainName
     };
     this.getSubjects(this.props.domainName);
@@ -81,60 +41,95 @@ export default class TableExampleComplex extends React.Component {
 
       this.setState({errmsg: res.body, loading: 'hide'});
       }else {
-        // console.log('Response on show: ', JSON.parse(res.text));
-        // let domainList1=this.state.domainList;
-        let response = JSON.parse(res.text);
-        //console.log(response);
-        if(response.length === 0){
-          this.setState({
-            hintTextObject: "No Results",
-          })
-        }
-        else {
-          var listSubjects = [];
-          for(let each in response){
-            if(response.hasOwnProperty(each))
-              listSubjects.push({nodeKey: each,nodeValue: response[each]});
-          }
-          listSubjects.push({nodeKey: 'D:'+ domainName,nodeValue: 'D:'+domainName});
-          this.setState({
-            subjectList: listSubjects,
-            searchObjectText: '',
-            loading: 'hide'
-          });
-        }
+        let response = res.body;
+               if (response['subjects'].length == 0) {
+                   this.setState({floatingLabelTextObject: "No Results"})
+               } else {
+                   var listSubjects = [];
+                   //var domain = response['attributes']['name'];
+                   for(let each in response['subjects']){
+                     let nodekey = response['subjects'][each].label;
+                     let nodename = response['subjects'][each].name;
+                     let predicates = response['subjects'][each].predicates;
+                     listSubjects.push({
+                       //name: domain,
+                       type: nodekey,
+                       SubName: nodename,
+                       predicate: predicates.toString()
+                      });
+                   }
+                   this.setState({
+                     tableData: listSubjects,
+                     tableFilteredData: listSubjects,
+                   })
+               }
       }
     });
   }
 
-  handleToggle = (event, toggled) => {
-    this.setState({
-      [event.target.name]: toggled,
-    });
-  };
+  handleExport(){
+    download(JSON.stringify(this.state.tableFilteredData), "domain.json", "text/json");
+  }
 
   handleChange = (event) => {
     this.setState({height: event.target.value});
   };
 
+  onRowSelection(index) {
+    console.log(this.state.tableFilteredData[index[0]]);
+  }
+
+  handleTextFieldChange = (event) => {
+    let rows = [];
+    let search = event.target.value;
+    this.state.tableData.map(function(row){
+      if(Object.values(row).indexOf(search) > -1){
+        rows.push(row);
+      }
+    });
+
+    this.setState({
+      searchTable: event.target.value,
+      tableFilteredData: rows
+    });
+  };
+
   render() {
+    let tableRowData = '';
+    if(this.state.tableFilteredData !== null){
+      //console.log(this.state.tableFilteredData);
+      tableRowData = this.state.tableFilteredData.slice(0,10).map( (row, index) => (
+        <TableRow key={index}>
+          <TableRowColumn>{row.type}</TableRowColumn>
+          <TableRowColumn>{row.SubName}</TableRowColumn>
+          <TableRowColumn>{row.predicate}</TableRowColumn>
+        </TableRow>
+      ));
+    }
+
     return (
       <div>
         <Table
-          height={this.state.height}
           fixedHeader={this.state.fixedHeader}
+          fixedFooter={this.state.fixedFooter}
+          selectable={this.state.selectable}
           multiSelectable={this.state.multiSelectable}
+          onRowSelection={this.onRowSelection}
         >
           <TableHeader>
             <TableRow>
-              <TableHeaderColumn colSpan="3" tooltip="Super Header" style={{textAlign: 'center'}}>
-                Super Header
+              <TableHeaderColumn colSpan="3" style={{textAlign: 'center'}}>
+                <TextField
+                  value={this.state.searchTable}
+                  onChange={this.handleTextFieldChange}
+                  floatingLabelText="Enter concept/intent"
+                />
               </TableHeaderColumn>
             </TableRow>
             <TableRow>
-              <TableHeaderColumn tooltip="The ID">Domain Name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Name">Node Type</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Status">Node Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Node Type">Node Type</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Node Name">Node Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Predicate">Predicate?s</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody
@@ -143,15 +138,10 @@ export default class TableExampleComplex extends React.Component {
             showRowHover={this.state.showRowHover}
             stripedRows={this.state.stripedRows}
           >
-            {tableData.map( (row, index) => (
-              <TableRow key={index} selected={row.selected}>
-                <TableRowColumn>{index}</TableRowColumn>
-                <TableRowColumn>{row.name}</TableRowColumn>
-                <TableRowColumn>{row.status}</TableRowColumn>
-              </TableRow>
-              ))}
+            {tableRowData}
           </TableBody>
         </Table>
+        <FlatButton label="Export" secondary={true} onTouchTap={this.handleExport.bind(this)}/>
       </div>
     );
   }
