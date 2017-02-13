@@ -130,6 +130,8 @@ let getPublishAddNode = function(subject, object) {
                 } else if (predicateDirection == 'O') {
 
                     relationWithDirectionAndWeight = '<-[r:' + predicateName + predicateWeight + ']-'
+                } else{
+                  relationWithDirectionAndWeight = '-[r:' + predicateName + predicateWeight + ']->'
                 }
 
                 if (subjectNodeType == graphConsts.NODE_DOMAIN) {
