@@ -1,8 +1,9 @@
 const neo4jDriver = require('neo4j-driver').v1;
+const amqp = require('amqplib/callback_api');
 const config = require('./../../config');
 const logger = require('./../../applogger');
-const check = require('./checkconnection')
 var client = '';
+var amqpConn = null;
 let count = 0;
 var instance;
 var SingletonNeo4j = (function() {
@@ -14,8 +15,7 @@ var SingletonNeo4j = (function() {
         );
         driver.onCompleted = function(error,callback) {
           logger.debug("Connection retrieved Successfully");
-          // callback=()=>{ check.two()
-          // }
+
 
         };
         driver.onError = function(error, callback) {
@@ -30,8 +30,6 @@ var SingletonNeo4j = (function() {
             logger.debug("Connection exhausted");
             process.exit(0);
           }
-
-
         };
         let session = null;
         logger.debug("Session "+session);
@@ -44,15 +42,16 @@ var SingletonNeo4j = (function() {
 
     return {
         getInstance: function() {
-
           instance = init();
-
             return instance;
         }
     };
 }());
 let connectneo4j = SingletonNeo4j.getInstance();
 
+module.exports = {
+    connectneo4j: connectneo4j
+};
 
 /*// Connecting with mongoose
 function setupMongooseConnections() {
@@ -101,15 +100,3 @@ var SingletonRedis = (function() {
 
 })();
 let connectRedis = SingletonRedis.getInstance();*/
-
-module.exports = {
-    connectneo4j: connectneo4j
-    // connectRedis: connectRedis,
-    // setupMongooseConnections: setupMongooseConnections
-};
-
-
-
-let reconnect = function() {
-
-}
