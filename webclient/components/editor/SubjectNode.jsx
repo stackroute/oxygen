@@ -87,7 +87,8 @@ export default class SubjectNode extends React.Component {
             objectPredicates: [],
             nodeDetails: null,
             openAddSubject: false,
-            openAddObject: false
+            openAddObject: false,
+            openAddPredicate: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -179,10 +180,17 @@ export default class SubjectNode extends React.Component {
       });
     };
 
-    handleModalAddOpen = () => {
+    handleSubModalAddOpen = () => {
            this.setState({openAddSubject: true});
-           this.setState({openAddObject: true});
-       };
+    };
+
+    handleObjModalAddOpen = () => {
+      this.setState({openAddObject: true});
+    };
+
+    handlePredModalAddOpen = () => {
+      this.setState({openAddPredicate: true});
+    };
 
     getDomains() {
         let url = `/domain/`;
@@ -317,7 +325,7 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
+                        <ContentAdd onTouchTap={this.handleSubModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
                         <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
@@ -332,7 +340,7 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
+                        <ContentAdd onTouchTap={this.handleObjModalAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
                         <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleEditO} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
@@ -349,7 +357,7 @@ export default class SubjectNode extends React.Component {
                           maxSearchResults={5}
                           style={styles.div}
                           />
-                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
+                        <ContentAdd onTouchTap={this.handlePredModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
                         <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
@@ -357,6 +365,7 @@ export default class SubjectNode extends React.Component {
 
                 <AddSubject open = {this.state.openAddSubject} domain={this.state.selectedDomain}/>
                 <AddObject open = {this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
+                <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
                 <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
 

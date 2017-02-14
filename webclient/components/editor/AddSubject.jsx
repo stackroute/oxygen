@@ -122,17 +122,9 @@ export default class AddSubject extends React.Component {
         console.error('Form error:', data);
     }
 
-    handleModalOpen = () => {
-        this.setState({addmodalopen: true, canSubmit: false});
-    }
-
     handleModalClose = () => {
       this.setState({addmodalopen: false});
     }
-
-    handleClose = () => {
-        this.setState({openDialog: true});
-    };
 
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
