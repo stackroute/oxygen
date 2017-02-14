@@ -290,9 +290,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
 
                     <div>
@@ -305,9 +305,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{cursor:'pointer',color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
 
                     <div>
@@ -322,9 +322,9 @@ export default class SubjectNode extends React.Component {
                           maxSearchResults={5}
                           style={styles.div}
                           />
-                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
 
                 </Paper>
