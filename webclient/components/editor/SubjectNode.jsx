@@ -307,7 +307,7 @@ export default class SubjectNode extends React.Component {
                           style={styles.div}/>
                         <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{cursor:'pointer',color:'grey'}}/>
                         <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'grey'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'greys'}}/>
                     </div>
 
                     <div>

@@ -161,7 +161,7 @@ let getPublishAddNode = function(subject, object) {
                             logger.debug(result);
                         }
                         session.close();
-                        resolve(result);
+                        resolve("Added");
                     })
                     .catch(function(error) {
                         logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
