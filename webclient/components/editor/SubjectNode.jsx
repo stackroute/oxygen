@@ -19,7 +19,7 @@ import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
 import DeletePredicate from './deletePredicate.jsx';
-import AddObjects from './AddObjects.jsx';
+import AddObject from './AddObject.jsx';
 import Delete from './delete.jsx';
 import Edit from './edit.jsx';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
@@ -58,7 +58,7 @@ const dataSourceConfig = {
     value: 'nodeValue'
 };
 
-
+//let subjectValue = '';
 export default class SubjectNode extends React.Component {
     constructor(props) {
         super(props);
@@ -86,7 +86,8 @@ export default class SubjectNode extends React.Component {
             stepNumber:0,
             objectPredicates: [],
             nodeDetails: null,
-            openAddSubject: false
+            openAddSubject: false,
+            openAddObject: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -180,8 +181,9 @@ export default class SubjectNode extends React.Component {
 
     handleModalAddOpen = () => {
            this.setState({openAddSubject: true});
-       }
-       
+           this.setState({openAddObject: true});
+       };
+
     getDomains() {
         let url = `/domain/`;
         Request.get(url).end((err, res) => {
@@ -208,6 +210,7 @@ export default class SubjectNode extends React.Component {
           floatingLabelTextSubject: 'Subjects loaded'});
     };
 
+    //Use this to send for object creation line 220
     handleUpdateSubjectInput = (searchText) => {
         console.log(searchText);
         this.getObjects(searchText.charAt(0),
@@ -218,6 +221,7 @@ export default class SubjectNode extends React.Component {
            selectedSubject: searchText,
            stepNumber:1
          });
+
     };
 
     handleUpdateObjectInput = (searchText) => {
@@ -328,9 +332,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
+                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
                         <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'blue'}}/>
+                        <ImageEdit onTouchTap={this.handleEditO} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
 
                     <div>
@@ -352,6 +356,7 @@ export default class SubjectNode extends React.Component {
                 </Paper>
 
                 <AddSubject open = {this.state.openAddSubject} domain={this.state.selectedDomain}/>
+                <AddObject open = {this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
                 <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
 
