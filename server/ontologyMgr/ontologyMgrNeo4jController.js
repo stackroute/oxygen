@@ -450,7 +450,7 @@ let getPublishSubjectObjectAttributes = function(editTermRelation) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result.records[0]._fields);
+                resolve(result);
 
             })
             .catch(function(error) {
