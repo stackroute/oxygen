@@ -100,24 +100,24 @@ let deleteObject = function(deleteObj) {
 };
 
 let deleteOrphans = function(deleteObj) {
-    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
-    let promise = new Promise(function(resolve, reject) {
-        async.waterfall([function(callback) {
-                domainMongoController.checkDomainCallback(deleteObj.domainName,callback);
-              },function(checkedDomain, callback){
-                ontologyMgrNeo4jController.deleteOrphansCallback(deleteObj, callback);
-              }
-            ],
-            function(err, result) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
+  logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
+  let promise = new Promise(function(resolve, reject) {
+     async.waterfall([function(callback) {
+             domainMongoController.checkDomainCallback(deleteObj.domainName,callback);
+           },function(checkedDomain, callback){
+             ontologyMgrNeo4jController.deleteOrphansCallback(deleteObj, callback);
+           }
+         ],
+         function(err, result) {
+             if (err) {
+                 reject(err);
+             }
+             resolve(result);
 
-            }); //end of async.waterfall
-    });
-    return promise;
-};
+         }); //end of async.waterfall
+  });
+  return promise;
+}
 
 let publishRelations = function(subject) {
     logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
