@@ -160,7 +160,7 @@ let getPublishAddNode = function(subject, object) {
                             logger.debug(result);
                         }
                         session.close();
-                        resolve(result);
+                        resolve("Added");
                     })
                     .catch(function(error) {
                         logger.error("Error in NODE_CONCEPT query: ", error, ' query is: ', query);
@@ -458,7 +458,7 @@ let getPublishSubjectObjectAttributes = function(editTermRelation) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result.records[0]._fields);
+                resolve(result);
 
             })
             .catch(function(error) {
