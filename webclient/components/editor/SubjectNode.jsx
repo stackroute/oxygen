@@ -220,7 +220,7 @@ export default class SubjectNode extends React.Component {
        console.log(predicates);
         this.setState({
           nodeRelations: predicates,
-          searchObjectText: searchText,
+        
           selectedObject: searchText,
           stepNumber:2
         });
@@ -258,6 +258,8 @@ export default class SubjectNode extends React.Component {
 
       }
     };
+
+
 
 
     handleChange = (event, index, value) => this.setState({value});

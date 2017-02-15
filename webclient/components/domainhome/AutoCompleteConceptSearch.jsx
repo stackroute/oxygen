@@ -67,7 +67,7 @@ export default class AutoCompleteConceptSearch extends React.Component {
     console.log("hhhh");
     this.props.searchDocument;
   }
-  
+
   render() {
     return(
       <div>
@@ -76,7 +76,7 @@ export default class AutoCompleteConceptSearch extends React.Component {
             <Row style={{padding:"0 20px"}}>
               <Col xs={9} sm={9} md={9} lg={9} xl={9} style={{paddingTop:10}} >
                 <AutoComplete
-                hintText="What you want to search"
+                hintText="Search Concepts"
                 filter={this.filterFunc}
                 dataSource={this.props.concepts}
                 fullWidth={true}
@@ -97,7 +97,7 @@ export default class AutoCompleteConceptSearch extends React.Component {
             </Row>
           </Paper>
         </div>
-      </div>                
+      </div>
     );
   }
 }

@@ -50,7 +50,7 @@ export default class DocResultCard extends React.Component {
               />
               <CardText style={{textAlign: "left",padding:"0px 16px"}}>
                 <p style={{color:"gray"}}><b>Description :
-                  </b>{this.props.webDoc.description}
+                </b>{this.props.webDoc.description}
                 </p>
                 <p style={{color: 'grey'}}>
                   <b>Link : </b>
@@ -58,7 +58,7 @@ export default class DocResultCard extends React.Component {
                     <a href={this.props.webDoc.url} target="_blank">
                     {
                       this.props.webDoc.url.length < 70 ?
-                      this.props.webDoc.url: 
+                      this.props.webDoc.url:
                       this.props.webDoc.url.substring(0,65)+"..."
                     }
                     </a>
@@ -94,4 +94,3 @@ export default class DocResultCard extends React.Component {
 DocResultCard.propTypes = {
   webDoc: React.PropTypes.object
 };
-

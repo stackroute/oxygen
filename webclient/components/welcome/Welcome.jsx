@@ -60,7 +60,16 @@ class Welcome extends React.Component {
                             }}/></MenuItem>
                     </Link>
                 </Drawer>
-                <AppBar onLeftIconButtonTouchTap={this.handleToggle} title='Oxygen' style={{
+                <AppBar
+                  onLeftIconButtonTouchTap={this.handleToggle}
+                  title={<span>
+                    <Link to = {'/dashboard'}
+                      style = {{textDecoration: 'none', color: 'white'}}>
+                      Oxygen 2.0
+                    </Link>
+                    </span>}
+
+                  style={{
                     position: 'fixed',
                     top: 0
                 }} iconElementRight={< span > <Link to='/dashboard'>

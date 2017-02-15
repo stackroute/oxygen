@@ -14,7 +14,8 @@ const defaultImgURL='./../../assets/images/bulb.png';
 const style = {
   position:'fixed',
   top: '10%',
-  right:'5%'
+  right:'5%',
+  radius:'2'
 };
 
 const tfont={
@@ -159,14 +160,14 @@ export default class AddDomain extends React.Component {
     domainAr.forEach(function(domain){
       domainArr.push(domain.name);
     })
-    
+
     console.log('The domain arr '+domainArr);
     Formsy.addValidationRule('isIn', function (values, value) {
       return domainArr.indexOf(value) < 0;
     });
     return (
       <div>
-      <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
+      <FloatingActionButton mini={true} style={style} onTouchTap={this.handleOpen}>
       <ContentAdd />
       </FloatingActionButton>
       <Dialog
