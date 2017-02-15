@@ -16,10 +16,10 @@ import {cyan500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
-import Add from './Add.jsx';
+import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
 import DeletePredicate from './deletePredicate.jsx';
-import AddObjects from './AddObjects.jsx';
+import AddObject from './AddObject.jsx';
 import Delete from './delete.jsx';
 import Edit from './edit.jsx';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
@@ -58,7 +58,7 @@ const dataSourceConfig = {
     value: 'nodeValue'
 };
 
-
+//let subjectValue = '';
 export default class SubjectNode extends React.Component {
     constructor(props) {
         super(props);
@@ -86,6 +86,9 @@ export default class SubjectNode extends React.Component {
             stepNumber:0,
             objectPredicates: [],
             nodeDetails: null,
+            openAddSubject: false,
+            openAddObject: false,
+            openAddPredicate: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -177,6 +180,18 @@ export default class SubjectNode extends React.Component {
       });
     };
 
+    handleSubModalAddOpen = () => {
+           this.setState({openAddSubject: true});
+    };
+
+    handleObjModalAddOpen = () => {
+      this.setState({openAddObject: true});
+    };
+
+    handlePredModalAddOpen = () => {
+      this.setState({openAddPredicate: true});
+    };
+
     getDomains() {
         let url = `/domain/`;
         Request.get(url).end((err, res) => {
@@ -203,6 +218,7 @@ export default class SubjectNode extends React.Component {
           floatingLabelTextSubject: 'Subjects loaded'});
     };
 
+    //Use this to send for object creation line 220
     handleUpdateSubjectInput = (searchText) => {
         console.log(searchText);
         this.getObjects(searchText.charAt(0),
@@ -213,6 +229,7 @@ export default class SubjectNode extends React.Component {
            selectedSubject: searchText,
            stepNumber:1
          });
+
     };
 
     handleUpdateObjectInput = (searchText) => {
@@ -220,7 +237,7 @@ export default class SubjectNode extends React.Component {
        console.log(predicates);
         this.setState({
           nodeRelations: predicates,
-        
+          searchObjectText: searchText,
           selectedObject: searchText,
           stepNumber:2
         });
@@ -251,6 +268,24 @@ export default class SubjectNode extends React.Component {
       }
     };
 
+    handleEditSubject = () => {
+        if (this.state.selectedSubject.length === 0) {} else {
+            let nodeType = '',
+                nodeName = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+            if (this.state.selectedSubject.charAt(0) == 'I') {
+                nodeType = "Intent";
+            } else {
+                nodeType = "Concept";
+            }
+            let nodeDetails = {
+                domainName: this.state.selectedDomain,
+                nodeType: nodeType,
+                nodeName: nodeName
+            };
+            this.setState({nodeDetails: nodeDetails, openEdit:true});
+        }
+    }
+
     handleDeleteObject = () => {
       if(this.state.selectedObject.length == 0){
 
@@ -258,8 +293,6 @@ export default class SubjectNode extends React.Component {
 
       }
     };
-
-
 
 
     handleChange = (event, index, value) => this.setState({value});
@@ -292,9 +325,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
+                        <ContentAdd onTouchTap={this.handleSubModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
                         <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
 
                     <div>
@@ -307,9 +340,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
+                        <ContentAdd onTouchTap={this.handleObjModalAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
                         <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ImageEdit onTouchTap={this.handleEditO} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
 
                     <div>
@@ -324,13 +357,18 @@ export default class SubjectNode extends React.Component {
                           maxSearchResults={5}
                           style={styles.div}
                           />
-                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
+                        <ContentAdd onTouchTap={this.handlePredModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
                         <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'blue'}}/>
                     </div>
-
                 </Paper>
+
+                <AddSubject open = {this.state.openAddSubject} domain={this.state.selectedDomain}/>
+                <AddObject open = {this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
+                <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
+                <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
+
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label="Graph View" value="l">
                       <div>
