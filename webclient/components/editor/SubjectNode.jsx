@@ -16,8 +16,11 @@ import {cyan500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
+import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './DeletePredicate.jsx';
+import DeletePredicate from './deletePredicate.jsx';
+import AddObject from './AddObject.jsx';
+import Delete from './delete.jsx';
 import Edit from './edit.jsx';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
@@ -29,8 +32,26 @@ import DomainTable from './DomainTable.jsx';
 
 const style = {
   margin: 30,
-  fontFamily: 'sans-serif',
-  textAlign: 'center'
+  // fontFamily: 'sans-serif',
+  // textAlign: 'center',
+  // fontweight: 'bold',
+  // color: 'rgb(25, 118, 210)'
+
+  textAlign: "center",
+  	fontFamily: "sans-serif",
+    // fontweight: 'bold',
+  	// color: " rgb(25, 118, 210)"
+
+}
+
+const styless = {
+
+  //  textAlign: "center",
+    	fontFamily: "sans-serif",
+    //  fontweight: 'bold',
+    	color: " rgb(25, 118, 210)"
+
+
 }
 
 const styles = {
@@ -48,6 +69,8 @@ const styles = {
     underlineStyle: {
         borderColor: cyan500
     }
+
+
 };
 
 const dataSourceConfig = {
@@ -55,7 +78,7 @@ const dataSourceConfig = {
     value: 'nodeValue'
 };
 
-
+//let subjectValue = '';
 export default class SubjectNode extends React.Component {
     constructor(props) {
         super(props);
@@ -80,11 +103,13 @@ export default class SubjectNode extends React.Component {
             relObjects: {},
             editmodalopen: false,
             deleteModalOpen: false,
-            deletePredicateModalOpen: false,
             stepNumber:0,
             objectPredicates: [],
             nodeDetails: null,
-            nodePredicateDetails: null
+            openAddSubject: false,
+            openAddObject: false,
+            openAddPredicate: false
+
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -176,6 +201,12 @@ export default class SubjectNode extends React.Component {
       });
     };
 
+    handleModalAddOpen = () => {
+           this.setState({openAddSubject: true});
+           this.setState({openAddObject: true});
+            this.setState({openAddPredicate: true});
+       };
+
     getDomains() {
         let url = `/domain/`;
         Request.get(url).end((err, res) => {
@@ -199,34 +230,54 @@ export default class SubjectNode extends React.Component {
     handleUpdateDomainInput = (searchText) => {
         this.getSubjects(searchText);
         this.setState({addLabel: 'Add Intent',
-          floatingLabelTextSubject: 'Subjects loaded'});
+        floatingLabelTextSubject: 'Subjects loaded',
+
+        //stepNumber:0
+      });
+
+
     };
 
+    //Use this to send for object creation line 220
     handleUpdateSubjectInput = (searchText) => {
+        console.log(searchText);
         this.getObjects(searchText.charAt(0),
         searchText.substr(3, searchText.length));
+        if(searchText.length == 0){
+          this.setState({
+             stepNumber: 0
+           });
+           console.log("Herer" + this.state.stepNumber);
+        }else{
+
         this.setState({
            addLabel: 'Add Intent',
            floatingLabelTextObject: 'Objects',
            selectedSubject: searchText,
-           stepNumber:1
+           stepNumber:1,
+
+            //onTouchTap={this.handlePrev}
          });
+       }
+
     };
 
     handleUpdateObjectInput = (searchText) => {
        let predicates = this.state.predicateList[searchText.substr(3, searchText.length)];
-        this.setState({
-          nodeRelations: predicates,
-          selectedObject: searchText,
-          stepNumber:2
-        });
-    };
-
-    handleUpdatePredicateInput = (searchText) => {
-        this.setState({
-          selectedPredicate: searchText,
-          stepNumber:3
-        });
+       console.log(this.state.selectedObject);
+       if(searchText.length == 0){
+         this.setState({
+            stepNumber: 1
+          });
+          console.log("Herer" + this.state.stepNumber);
+       }else{
+         this.setState({
+           nodeRelations: predicates,
+           selectedObject: searchText,
+           stepNumber: 2
+         });
+         console.log('asdasd' + this.state.stepNumber);
+       }
     };
 
     handleDeleteSubject = () => {
@@ -254,74 +305,32 @@ export default class SubjectNode extends React.Component {
       }
     };
 
+    handleEditSubject = () => {
+        if (this.state.selectedSubject.length === 0) {} else {
+            let nodeType = '',
+                nodeName = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+            if (this.state.selectedSubject.charAt(0) == 'I') {
+                nodeType = "Intent";
+            } else {
+                nodeType = "Concept";
+            }
+            let nodeDetails = {
+                domainName: this.state.selectedDomain,
+                nodeType: nodeType,
+                nodeName: nodeName
+            };
+            this.setState({nodeDetails: nodeDetails, openEdit:true});
+        }
+    }
+
     handleDeleteObject = () => {
       if(this.state.selectedObject.length == 0){
 
       }else{
-        let nodetype = '';
-        let nodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-        //console.log(nodename);
-        if(this.state.selectedObject.charAt(0) == 'T'){
-          nodetype = 'Term';
-        }else{
-          nodetype = 'Concept';
-        }
-        let nodeDetails = {
-          domainName : this.state.selectedDomain,
-          nodetype: nodetype,
-          nodename: nodename
-        };
 
-        this.setState({
-          nodeDetails: nodeDetails,
-          deleteModalOpen : true
-        });
       }
     };
 
-    handleDeletePredicate = () => {
-      if(this.state.selectedObject.length == 0 || this.state.selectedSubject.length == 0 || this.state.selectedPredicate.length == 0){
-
-      }else{
-        let subnodetype = '';
-        let objnodetype = '';
-        let subnodename = this.state.selectedSubject.substr(3, this.state.selectedObject.length);
-        let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-        //console.log(nodename);
-        if(this.state.selectedObject.charAt(0) == 'T'){
-          objnodetype = 'Term';
-        }else{
-          objnodetype = 'Concept';
-        }
-        if(this.state.selectedSubject.charAt(0) == 'I'){
-          subnodetype = 'Intent';
-        }else{
-          subnodetype = 'Concept';
-        }
-        let nodePredicateDetails = {
-          domainName : this.state.selectedDomain,
-          subnodetype: subnodetype,
-          subnodename: subnodename,
-          objnodetype: objnodetype,
-          objnodename: objnodename,
-          predicate: this.state.selectedPredicate
-        };
-
-        this.setState({
-          nodePredicateDetails: nodePredicateDetails,
-          deletePredicateModalOpen : true
-        });
-      }
-    }
-
-    handleDeleteModal = () => {
-      this.setState({
-        nodeDetails: null,
-        nodepredicateDetails: null,
-        deleteModalOpen : false,
-        deletePredicateModalOpen : false
-      });
-    }
 
     handleChange = (event, index, value) => this.setState({value});
 
@@ -335,8 +344,13 @@ export default class SubjectNode extends React.Component {
         return (
             <div styles={styles.div}>
                 <div style={{
-                    textAlign: "center"
+                    textAlign: "center",
+                    fontFamily: "sans-serif",
+                    //fontweight: 'bold',
+                    color: " rgb(25, 118, 210)"
+
                 }}>
+
                 <h1 styles= {style}>{this.state.selectedDomain}</h1>
                 </div>
                 <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
@@ -353,9 +367,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
 
                     <div>
@@ -368,16 +382,16 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer',color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditO} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
 
                     <div>
                         <AutoComplete
                           floatingLabelText={this.state.floatingLabelTextRel}
-                          searchText={this.state.searchPredicateText}
-                          onUpdateInput={this.handleUpdatePredicateInput}
+                          searchText={this.state.searchRelText}
+                          onUpdateInput={this.handleUpdateRelInput}
                           onNewRequest={this.handleNewRequest}
                           dataSource={this.state.nodeRelations}
                           filter={AutoComplete.caseInsensitiveFilter}
@@ -385,14 +399,18 @@ export default class SubjectNode extends React.Component {
                           maxSearchResults={5}
                           style={styles.div}
                           />
-                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleDeletePredicate} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleModalEditOpen} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
-
                 </Paper>
-                <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails} handleModal = {this.handleDeleteModal}/>
-                <DeletePredicate open = {this.state.deletePredicateModalOpen} predicateDetails = {this.state.nodePredicateDetails} handleModal = {this.handleDeleteModal}/>
+
+                <AddSubject open = {this.state.openAddSubject} domain={this.state.selectedDomain}/>
+                <AddObject open = {this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
+                <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject}  object={this.state.selectedObject}/>
+                <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
+                <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
+
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label="Graph View" value="l">
                       <div>
