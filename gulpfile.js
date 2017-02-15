@@ -61,7 +61,7 @@ gulp.task('eslint', function() {
   return gulp.src([
     //  'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
     //  'webclient/**/*.jsx', '!dist/**/*'
-    'server/ontologyMgr/rabbitConnectCheck.js'
+    'server/ontologyMgr/ontologyMgrController.js'
     ])
   .pipe(eslint())
   .pipe(eslint.format())
