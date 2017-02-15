@@ -16,10 +16,8 @@ import {cyan500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
-import Add from './Add.jsx';
 import AddPredicate from './AddPredicate.jsx';
 import DeletePredicate from './DeletePredicate.jsx';
-import AddObjects from './AddObjects.jsx';
 import Edit from './edit.jsx';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';

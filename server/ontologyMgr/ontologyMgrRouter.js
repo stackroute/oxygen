@@ -3,7 +3,6 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 const ontologyMgrCtrl = require('./ontologyMgrController');
 
-
 router.get('/:domainName/subjects', function(req, res) {
     let domain = {
         name: req.params.domainName
@@ -118,9 +117,6 @@ router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
    }
  });
 
-
-
-
 router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1/predicates/:predicatename", function(req, res) {
     //logger.debug("am I getting displayed?", req.params.predicatename)
     let subject = {
@@ -185,9 +181,6 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
     }
 });
 
-//Editing relation attributes
-//Yogee codes
-
 router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodename2/predicate/:predicatename', function(req, res) {
     let props = req.body;
     let editTermRelation = {
@@ -226,37 +219,6 @@ router.put('/:domainname/subject/:nodetype1/:nodename1/object/:nodetype2/:nodena
     }
 });
 
-
-//Finding number of orphaned nodes in the given nodes
-
-router.get("/:domainname/subject/:nodetype/:nodename", function(req, res) {
-    //logger.debug("am I getting displayed?", req.params.predicatename)
-    let subject = {
-        domainname: req.params.domainname,
-        nodetype: req.params.nodetype,
-        nodename: req.params.nodename
-    }
-
-    try {
-        ontologyMgrCtrl.publishAllOrphanedNodes(subject).then(function(nodename) {
-            logger.info("Got requests from :" + req.params.domainname);
-            res.send(nodename);
-            return;
-        }, function(err) {
-            logger.error("Encountered error in publishing the predicates: ", err);
-            res.send(err);
-
-            return;
-        });
-    } catch (err) {
-        logger.error("Caught a error in publishing orphans: ", err);
-        res.status(500).send({
-            error: "Something went wrong, please try later..!"
-        });
-        return;
-    }
-});
-
 router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req, res) {
     let reqObj = {
         domainname: req.params.domainname,
@@ -275,7 +237,7 @@ router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req, res
                 logger.error(
                     "Encountered error in retrieved concept(s) of domain: ",
                     err);
-              res.send(err)
+                res.send(err)
                 return;
             })
     } catch (err) {
@@ -287,37 +249,96 @@ router.get('/:domainname/subject/:nodetype/:nodename/objects', function(req, res
     }
 });
 
-
-router.patch('/:domainName/subject/:nodetype/:nodename', function (req,res){
-  try {
-    let props = req.body;
-    let subject = {
-      domain: req.params.domainName,
-      nodetype: req.params.nodetype,
-      nodename: req.params.nodename,
-      properties: props
+router.patch('/:domainName/subject/:nodetype/:nodename', function(req, res) {
+    try {
+        let props = req.body;
+        let subject = {
+            domain: req.params.domainName,
+            nodetype: req.params.nodetype,
+            nodename: req.params.nodename,
+            properties: props
+        }
+        ontologyMgrCtrl.modifySubjectProperties(subject)
+            .then(function(modifiedProperties) {
+                    logger.debug("Successfully added/modified props", modifiedProperties);
+                    res.send(modifiedProperties);
+                    return;
+                },
+                function(err) {
+                    logger.error("Posting properties error",
+                        err);
+                    res.status(200).send({
+                        error: 'Failed to complete operation...!'
+                    });
+                    return;
+                });
+    } catch (err) {
+        logger.error("Caught a error in editing properties", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
     }
-    ontologyMgrCtrl.modifySubjectProperties(subject)
-          .then(function(modifiedProperties){
-            logger.debug("Successfully added/modified props",modifiedProperties);
-            res.send(modifiedProperties);
-            return;
-          },
-          function (err) {
-              logger.error("Posting properties error",
-                  err);
-              res.status(200).send({
-                  error: 'Failed to complete operation...!'
-              });
-              return;
-          });
-  } catch(err){
-    logger.error("Caught a error in editing properties", err);
-    res.status(500).send({
-        error: "Something went wrong, please try later..!"
-    });
-    return;
-  }
+});
+
+router.get('/:domainName/subject/:nodetype/:nodename', function(req, res) {
+    try {
+        let props = req.body;
+        let subject = {
+            domain: req.params.domainName,
+            nodetype: req.params.nodetype,
+            nodename: req.params.nodename,
+            properties: props
+        }
+        ontologyMgrCtrl.getAllOrphans(subject)
+            .then(function(modifiedProperties) {
+                    logger.debug("Successfully added/modified props", modifiedProperties);
+                    res.send(modifiedProperties);
+                    return;
+                },
+                function(err) {
+                    logger.error("Posting properties error",
+                        err);
+                    res.status(200).send({
+                        error: 'Failed to complete operation...!'
+                    });
+                    return;
+                });
+    } catch (err) {
+        logger.error("Caught a error in editing properties", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+router.get('/:domainname/search', function(req, res) {
+    let reqObj = {
+        domainname: req.params.domainname,
+    }
+    try {
+        ontologyMgrCtrl.getSearch(reqObj).then(function(Obj) {
+                logger.debug(
+                    "Successfully retrieved all details to show length----->",
+                    Obj.length);
+                res.send(Obj);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered error in retrieved concept(s) of domain: ",
+                    err);
+                res.send(err)
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in retrieved concept(s) of domain ", err);
+        res.status(500).send({
+            error: "Something went wrong, please try later..!"
+        });
+        return;
+    }
 });
 
 

@@ -13,33 +13,29 @@ var SingletonNeo4j = (function() {
                 encrypted: false
             }
         );
-        driver.onCompleted = function(error,callback) {
-          logger.debug("Connection retrieved Successfully");
-
-
+        driver.onCompleted = function(error, callback) {
+          logger.debug('Connection retrieved Successfully');
         };
         driver.onError = function(error, callback) {
-          console.log('Driver instantiation failed', error);
+        logger.debug('Driver instantiation failed', error);
           if(count < 6) {
-            logger.debug("while count"+count);
-          setTimeout(callback=()=>{ SingletonNeo4j.getInstance()
+            logger.debug('while count' + count);
+          setTimeout(callback =()=> { SingletonNeo4j.getInstance();
             logger.debug('Connection retrying after 5 seconds');
               count++;
-          },20000);}
-          if(count == 6){
-            logger.debug("Connection exhausted");
+          }, 20000);}
+          if (count == 6) {
+            logger.debug('Connection exhausted');
             process.exit(0);
           }
         };
         let session = null;
-        logger.debug("Session "+session);
+      //  logger.debug('Session' + session);
         session = driver.session();
-        logger.debug("Session "+session);
-        logger.debug("Driver "+driver);
+        logger.debug('Session ' + session);
+        logger.debug('Driver ' + driver);
         return session;
-
     }
-
     return {
         getInstance: function() {
           instance = init();
@@ -53,14 +49,14 @@ module.exports = {
     connectneo4j: connectneo4j
 };
 
-/*// Connecting with mongoose
+/*
+// Connecting with mongoose
 function setupMongooseConnections() {
     mongoose.connect(config.MONGO.mongoURL);
 
     mongoose.connection.on('connected', function() {
         logger.debug('Mongoose is now connected to ', config.MONGO.mongoURL);
     });
-
     mongoose.connection.on('error', function(err) {
         logger.error('Error in Mongoose connection: ', err);
     });
