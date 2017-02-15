@@ -58,6 +58,7 @@ export default class AddSubject extends React.Component {
             domain: this.props.domain,
             subject: this.props.subject,
             object: this.props.object,
+            openAddDialog: false,
             subjectType:"",
             subjectNode:"",
             objectNode:"",
@@ -88,20 +89,13 @@ export default class AddSubject extends React.Component {
     submitForm(data) {
         console.log("Inside Add Subject Submit Form");
 
-        // if(this.state.subject == undefined){
-        //   console.log(this.state.subject);
-        // }
         let strSub = ''
         strSub = this.state.subject;
-        //console.log("Str"+str);
         strSub = strSub.substr(3,strSub.length-1);
-        //console.log("Str"+str);
 
         let strObj = '';
         strObj = this.state.object;
-        //console.log("Str"+str);
         strObj = strObj.substr(3,strObj.length-1);
-        //console.log("Str"+str);
 
         let i = 0;
         let requestObj = {
@@ -146,6 +140,7 @@ export default class AddSubject extends React.Component {
               this.setState({errmsg: res.body, loading: 'hide'});
           } else {
             console.log("Passing");
+            this.setState({openAddDialog: true});
           }
         });
     }
@@ -156,6 +151,10 @@ export default class AddSubject extends React.Component {
 
     handleModalClose = () => {
       this.setState({openAddPredicate: false});
+    }
+
+    handleDialogModalClose = () => {
+      this.setState({openAddDialog: false});
     }
 
     render() {
@@ -199,6 +198,26 @@ export default class AddSubject extends React.Component {
                         }
                     />
               </Formsy.Form>
+                </Dialog>
+
+                <Dialog
+                title="Object"
+                titleStyle={{
+                  color: "#858586",
+                  fontSize: 30,
+                  backgroundColor: "#c7c7c7"
+              }}
+                modal={true}
+                open={this.state.openAddDialog}
+                autoScrollBodyContent={true}>
+                <h1>Subject Added Successfully</h1>
+                  <FlatButton label = "OK"
+                     primary = {true}
+                     style={submitStyle}
+                     onTouchTap = {
+                           this.handleDialogModalClose
+                       }
+                   />
                 </Dialog>
             </div>
         );
