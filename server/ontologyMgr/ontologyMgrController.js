@@ -1,8 +1,7 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
-const domainMongoController = require('../domains/domainMongoController');
 const logger = require('./../../applogger');
-//const domainMongoController = require('../domains/domainMongoController');
+
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
@@ -16,12 +15,11 @@ let getAllDomainDetails = function(domain) {
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
-                            domainMongoController.checkDomainCallback(domain.name,
-                                callback);
-                            },function(checkedDomain,callback){
-                              ontologyMgrNeo4jController.getAllDomainDetailsCallback(domain,callback)
-                            },
-                          ],
+                    ontologyMgrNeo4jController.getAllDomainDetailsCallback(
+                        domain,
+                        callback)
+                }
+            ],
             function(err, retrivedRelations) {
                 if (err) {
                     reject(err);
@@ -100,23 +98,23 @@ let deleteObject = function(deleteObj) {
 };
 
 let deleteOrphans = function(deleteObj) {
-    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
-    let promise = new Promise(function(resolve, reject) {
-        async.waterfall([function(callback) {
-                domainMongoController.checkDomainCallback(deleteObj.domainName,callback);
-              },function(checkedDomain, callback){
-                ontologyMgrNeo4jController.deleteOrphansCallback(deleteObj, callback);
-              }
-            ],
-            function(err, result) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
+  logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
+  let promise = new Promise(function(resolve, reject) {
+     async.waterfall([function(callback) {
+             domainMongoController.checkDomainCallback(deleteObj.domainName,callback);
+           },function(checkedDomain, callback){
+             ontologyMgrNeo4jController.deleteOrphansCallback(deleteObj, callback);
+           }
+         ],
+         function(err, result) {
+             if (err) {
+                 reject(err);
+             }
+             resolve(result);
 
-            }); //end of async.waterfall
-    });
-    return promise;
+         }); //end of async.waterfall
+  });
+  return promise;
 };
 
 let publishRelations = function(subject) {
@@ -155,38 +153,11 @@ let publishAllRelations = function(subject) {
     return promise;
 };
 
-
-let publishEditedSubjectObjectAttributes = function(editTermRelation) {
-    logger.debug("Received request for publishing Edited Intent term relation: " + editTermRelation.intentName);
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug(editTermRelation.intentName);
-        if (!editTermRelation.subjectName || !editTermRelation.objectName) {
-            reject({
-                error: 'Invalid Intent or term name..!'
-            });
-        }
-        async.waterfall([
-                function(callback) {
-                    ontologyMgrNeo4jController.getPublishSubjectObjectAttributesCallback(editTermRelation, callback);
-                }
-            ],
-            function(err, objectName) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(objectName);
-            }); //end of async.waterfall
-    });
-    return promise;
-}
-
-//orphaned nodes
-let publishAllOrphanedNodes = function(subject) {
-    logger.debug("Received request for retreiving orphans of :", subject.nodetype);
+let getAllOrphans = function(nodeObj) {
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
-                    ontologyMgrNeo4jController.getAllOrphansCallback(subject, callback);
+                    ontologyMgrNeo4jController.getAllOrphansCallback(nodeObj, callback);
                 }
             ],
             function(err, retrievedObjects) {
@@ -199,28 +170,29 @@ let publishAllOrphanedNodes = function(subject) {
     return promise;
 };
 
+let getSearch = function(nodeObj) {
+    logger.debug("Received request for retriving Objects",
+        nodeObj.nodename);
+    //Save to Mongo DB
+    //Save to Neo4j
 
-let modifySubjectProperties = function(subject){
-  logger.debug("Editing Properties for ", subject.nodename);
-  let promise = new Promise(function(resolve, reject){
-        async.waterfall([function(callback) {
-                    domainMongoController.checkDomainCallback(subject.domain,
-                        callback);
-                    },function(checkedDomain,callback){
-                      ontologyMgrNeo4jController.modifySubjectPropertiesCallback(subject,callback)
-                    },
-                  ],
-      function(err, modifiedProperties){
-        if(err){
-          reject(err)
-        }
-        resolve(modifiedProperties);
-      });
-  });
-  return promise;
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getSearchCallback(
+                        nodeObj,
+                        callback)
+                }
+            ],
+            function(err, retrivedRelations) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrivedRelations);
+            });
+    });
+    return promise;
 }
-
-
 
 module.exports = {
     publishAddNode: publishAddNode,
@@ -228,10 +200,9 @@ module.exports = {
     deleteOrphans: deleteOrphans,
     publishAllRelations: publishAllRelations,
     publishRelations: publishRelations,
-    publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes,
-    publishAllOrphanedNodes:publishAllOrphanedNodes,
     getAllDomainDetails: getAllDomainDetails,
     getSubjectObjects: getSubjectObjects,
-    getSubjectObjects: getSubjectObjects,
-    modifySubjectProperties: modifySubjectProperties
+    getSearch: getSearch,
+    getAllOrphans: getAllOrphans
+
 }

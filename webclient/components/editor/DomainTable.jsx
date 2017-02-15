@@ -19,7 +19,7 @@ export default class DomainTable extends React.Component {
       stripedRows: false,
       showRowHover: false,
       selectable: true,
-      multiSelectable: false,
+      multiSelectable: true,
       enableSelectAll: false,
       deselectOnClickaway: true,
       showCheckboxes: true,
@@ -42,27 +42,26 @@ export default class DomainTable extends React.Component {
       this.setState({errmsg: res.body, loading: 'hide'});
       }else {
         let response = res.body;
-               if (response['subjects'].length == 0) {
-                   this.setState({floatingLabelTextObject: "No Results"})
-               } else {
-                   var listSubjects = [];
-                   //var domain = response['attributes']['name'];
-                   for(let each in response['subjects']){
-                     let nodekey = response['subjects'][each].label;
-                     let nodename = response['subjects'][each].name;
-                     let predicates = response['subjects'][each].predicates;
-                     listSubjects.push({
-                       //name: domain,
-                       type: nodekey,
-                       SubName: nodename,
-                       predicate: predicates.toString()
-                      });
-                   }
-                   this.setState({
-                     tableData: listSubjects,
-                     tableFilteredData: listSubjects,
-                   })
-               }
+         if (response['subjects'].length == 0) {
+             this.setState({floatingLabelTextObject: "No Results"})
+         } else {
+             var listSubjects = [];
+             for(let each in response['subjects']){
+               let nodekey = response['subjects'][each].label;
+               let nodename = response['subjects'][each].name;
+               let predicates = response['subjects'][each].predicates;
+               listSubjects.push({
+                 //name: domain,
+                 type: nodekey,
+                 SubName: nodename,
+                 predicate: predicates.toString()
+                });
+             }
+             this.setState({
+               tableData: listSubjects,
+               tableFilteredData: listSubjects,
+             })
+         }
       }
     });
   }
