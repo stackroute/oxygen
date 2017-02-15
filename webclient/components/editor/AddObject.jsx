@@ -57,6 +57,7 @@ export default class AddSubject extends React.Component {
             addmodalopen: false,
             domain: this.props.domain,
             subject: this.props.subject,
+            openAddDialog: false,
             subjectType:"",
             subjectNode:"",
             objectNode:"",
@@ -137,16 +138,13 @@ export default class AddSubject extends React.Component {
               this.setState({errmsg: res.body, loading: 'hide'});
           } else {
             console.log("Passing");
+            this.setState({openAddDialog: true});
           }
         });
     }
 
     notifyFormError(data) {
         console.error('Form error:', data);
-    }
-
-    handleModalOpen = () => {
-        this.setState({addmodalopen: true, canSubmit: false});
     }
 
     handleModalClose = () => {
@@ -156,6 +154,10 @@ export default class AddSubject extends React.Component {
     handleClose = () => {
         this.setState({openDialog: true});
     };
+
+    handleDialogModalClose = () => {
+      this.setState({openAddDialog: false});
+    }
 
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
@@ -180,11 +182,6 @@ export default class AddSubject extends React.Component {
                   >
                     <FormsyText name="object" validations="isWords" validationsError = {wordsError} hintText="object name" floatingLabelText="Object name"/>
                     <br/>
-                      <FormsySelect name="objectType" required floatingLabelText="Select the object type" menuItems={this.selectFieldItems}>
-                         <MenuItem value={'Intent'} primaryText="Intent"/>
-                         <MenuItem value={'Concept'} primaryText="Concept"/>
-                     </FormsySelect>
-                     <br/>
                      <FormsyText name="attributesName" validations="isWords" validationsError = {wordsError} hintText="attributes name" floatingLabelText="attributes name"/>
                      <br/>
                     <FormsyText name="attributesValue" validations="isWords" validationsError = {wordsError} hintText="attributes value" floatingLabelText="attributes value"/>
@@ -209,6 +206,26 @@ export default class AddSubject extends React.Component {
                         }
                     />
               </Formsy.Form>
+                </Dialog>
+
+                <Dialog
+                title="Object"
+                titleStyle={{
+                  color: "#858586",
+                  fontSize: 30,
+                  backgroundColor: "#c7c7c7"
+              }}
+                modal={true}
+                open={this.state.openAddDialog}
+                autoScrollBodyContent={true}>
+                <h1>Subject Added Successfully</h1>
+                  <FlatButton label = "OK"
+                     primary = {true}
+                     style={submitStyle}
+                     onTouchTap = {
+                           this.handleDialogModalClose
+                       }
+                   />
                 </Dialog>
             </div>
         );

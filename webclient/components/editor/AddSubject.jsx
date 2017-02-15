@@ -55,6 +55,7 @@ export default class AddSubject extends React.Component {
             canSubmit: false,
             openDialog: false,
             addmodalopen: false,
+            openAddDialog: false,
             domain: this.props.domain
         };
     }
@@ -114,6 +115,7 @@ export default class AddSubject extends React.Component {
               this.setState({errmsg: res.body, loading: 'hide'});
           } else {
             console.log("Passing");
+            this.setState({openAddDialog: true});
           }
         });
     }
@@ -122,17 +124,13 @@ export default class AddSubject extends React.Component {
         console.error('Form error:', data);
     }
 
-    handleModalOpen = () => {
-        this.setState({addmodalopen: true, canSubmit: false});
-    }
-
     handleModalClose = () => {
       this.setState({addmodalopen: false});
     }
 
-    handleClose = () => {
-        this.setState({openDialog: true});
-    };
+    handleDialogModalClose = () => {
+      this.setState({openAddDialog: false});
+    }
 
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
@@ -186,6 +184,26 @@ export default class AddSubject extends React.Component {
                         }
                     />
               </Formsy.Form>
+                </Dialog>
+
+                <Dialog
+                title="Subject"
+                titleStyle={{
+                  color: "#858586",
+                  fontSize: 30,
+                  backgroundColor: "#c7c7c7"
+              }}
+                modal={true}
+                open={this.state.openAddDialog}
+                autoScrollBodyContent={true}>
+                <h1>Subject Added Successfully</h1>
+                  <FlatButton label = "OK"
+                     primary = {true}
+                     style={submitStyle}
+                     onTouchTap = {
+                           this.handleDialogModalClose
+                       }
+                   />
                 </Dialog>
             </div>
         );

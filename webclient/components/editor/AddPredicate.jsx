@@ -57,7 +57,7 @@ export default class AddSubject extends React.Component {
             addmodalopen: false,
             domain: this.props.domain,
             subject: this.props.subject,
-            //object: this.props.object,
+            object: this.props.object,
             subjectType:"",
             subjectNode:"",
             objectNode:"",
