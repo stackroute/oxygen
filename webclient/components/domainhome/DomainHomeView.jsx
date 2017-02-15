@@ -14,6 +14,8 @@ import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import ImageEdit from 'material-ui/svg-icons/image/edit';
+import {Link} from 'react-router';
 // import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
   const iPanel = {
@@ -278,6 +280,10 @@ export default class DomainHomeView extends React.Component {
    this.getIntentsAndConcepts();
   }
 
+  handleEdit = () => {
+
+  };
+
   componentWillMount() {
     selectedConceptName.onNewSelect = (clickedConceptName) => {
       console.log('On outside variable change ', clickedConceptName);
@@ -348,9 +354,15 @@ export default class DomainHomeView extends React.Component {
                 <Col md={10} sm={10} xs={10}>
                   <ScreenClassRender style={styleFunction}>
                     <h1>
-                      {this.state.domainName}
+                      {this.state.domainName} 
+                      <MenuItem
+                 			 containerElement={<Link to={'/edit/'+ this.state.domainName}/>}
+                 			leftIcon={<ImageEdit/>}
+                 			onTouchTap={this.handleEdit}/>
                     </h1>
+
                   </ScreenClassRender>
+
                 </Col>
               </Row>
               <div id="main">
@@ -365,7 +377,7 @@ export default class DomainHomeView extends React.Component {
               {//showSunburst
               }
               <Row style={{padding:"0 20px"}}>
-                 <Col sm={5} xs={5} md={5} style={{float:'left'}}>
+                 <Col sm={6} xs={12} md={6} style={{float:'left'}}>
                     <AutoCompleteConceptSearch concepts={this.state.concepts}
                       searchDocument={this.searchDocuments.bind(this)}
                       getConcept={this.getConcepts.bind(this)}
@@ -375,14 +387,14 @@ export default class DomainHomeView extends React.Component {
                         <Col sm={12} xs={12} md={12}>
                           {
                             this.state.selectedConcept.length===0?
-                            <h4 style={{color:'#8aa6bd'}}>Please Select Concepts</h4>:
+                            <h4 style={{color:'#8aa6bd'}}></h4>:
                             <SelectedConcepts conceptChips={this.state.selectedConcept}
                             deleteConcept={this.deleteConcepts.bind(this)} />
                           }
                         </Col>
                       </Row>
                  </Col>
-                <Col sm={5} xs={5} md={5} style={{float:'right'}}>
+                <Col sm={6} xs={12} md={6} style={{float:'right'}}>
                   <AutoCompleteIntentSearch intents={this.state.intents}
                     searchDocument={this.searchDocuments.bind(this)}
                     getIntent={this.getIntents.bind(this)}
@@ -392,7 +404,7 @@ export default class DomainHomeView extends React.Component {
                       <Col sm={12} xs={12} md={12}>
                         {
                           this.state.selectedIntent.length===0?
-                          <h4 style={{color:'#8aa6bd'}}>Please Select Intents</h4>:
+                          <h4 style={{color:'#8aa6bd'}}></h4>:
                           <SelectedIntents intentChips={this.state.selectedIntent}
                           deleteIntent={this.deleteIntents.bind(this)} />
                         }

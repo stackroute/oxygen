@@ -33,7 +33,7 @@ paper: {
  textAlign: 'left',
  padding: '20 0 5px '
 }
-};  
+};
 
 export default class AutoCompleteIntentSearch extends React.Component {
   constructor(props) {
@@ -88,7 +88,7 @@ filterFunc(searchText,key) {
         <Row style={{padding:"0 20px"}}>
             <Col xs={9} sm={9} md={9} lg={9} xl={9} style={{paddingTop:10}}>
               <AutoComplete
-                hintText="What intent you want to search for"
+                hintText="Search Intents"
                 filter={this.filterFunc}
                 dataSource={this.props.intents}
                 fullWidth={true}
