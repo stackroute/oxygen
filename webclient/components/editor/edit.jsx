@@ -60,7 +60,10 @@ export default class Edit extends React.Component {
     }
     getProperties = (nodeDetails) => {
         if (nodeDetails !== null) {
-            this.setState({domainName: nodeDetails.domainName, nodeType: nodeDetails.nodeType, nodeName: nodeDetails.nodeName});
+            this.setState({domainName: nodeDetails.domainName,
+              nodeType: nodeDetails.nodeType,
+              nodeName: nodeDetails.nodeName
+            });
             let url = `/domain/${nodeDetails.domainName}/subject/${nodeDetails.nodeType}/${nodeDetails.nodeName}/objects`;
             Request.get(url).end((err, res) => {
                 if (err) {
@@ -73,6 +76,7 @@ export default class Edit extends React.Component {
             });
         }
     }
+    
     handleModalClose = () => {
         this.setState({editModalOpen: false});
     }
@@ -102,10 +106,20 @@ export default class Edit extends React.Component {
             keys = Object.keys(propertyList);
             keys.forEach(function(key) {
                 if (key === 'desc' || key === 'context') {
-                    formText.push(<FormsyText name={key} value={propertyList[key]} validations='isWords' validationsError={wordsError} floatingLabelText={key}/>);
+                    formText.push(<FormsyText
+                      name={key}
+                      value={propertyList[key]}
+                      validations='isWords'
+                      validationsError={wordsError}
+                      floatingLabelText={key}/>);
                     formText.push(<br/>);
                 } else {
-                    formText.push(<FormsyText name={key} value={propertyList[key]} validationsError={wordsError} disabled floatingLabelText={key}/>);
+                    formText.push(<FormsyText
+                      name={key}
+                      value={propertyList[key]}
+                      validationsError={wordsError}
+                      disabled
+                      floatingLabelText={key}/>);
                     formText.push(<br/>);
                 }
             });

@@ -19,20 +19,11 @@ import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
 import DeletePredicate from './deletePredicate.jsx';
-import AddObjects from './AddObject.jsx';
+import AddObject from './AddObject.jsx';
 import Delete from './delete.jsx';
 import Edit from './edit.jsx';
-import {
-    FormsyCheckbox,
-    FormsyDate,
-    FormsyRadio,
-    FormsyRadioGroup,
-    FormsySelect,
-    FormsyText,
-    FormsyTime,
-    FormsyToggle,
-    FormsyAutoComplete
-} from 'formsy-material-ui/lib';
+import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
+    FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
 import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
 import TreeGraph from './TreeGraph.jsx';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -40,9 +31,9 @@ import DeleteNode from './DeleteNode.jsx';
 import DomainTable from './DomainTable.jsx';
 
 const style = {
-    margin: 30,
-    fontFamily: 'sans-serif',
-    textAlign: 'center'
+  margin: 30,
+  fontFamily: 'sans-serif',
+  textAlign: 'center'
 }
 
 const styles = {
@@ -67,6 +58,7 @@ const dataSourceConfig = {
     value: 'nodeValue'
 };
 
+//let subjectValue = '';
 export default class SubjectNode extends React.Component {
     constructor(props) {
         super(props);
@@ -86,15 +78,17 @@ export default class SubjectNode extends React.Component {
             domainList: [],
             subjectList: [],
             objectList: [],
-            predicateList: [],
+            predicateList:[],
             addLabel: 'Add Domain',
             relObjects: {},
-            editModalOpen: false,
+            editmodalopen: false,
             deleteModalOpen: false,
-            stepNumber: 0,
+            stepNumber:0,
             objectPredicates: [],
             nodeDetails: null,
-            openAddSubject: false
+            openAddSubject: false,
+            openAddObject: false,
+            openAddPredicate: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -114,12 +108,12 @@ export default class SubjectNode extends React.Component {
                 } else {
                     var listSubjects = [];
 
-                    for (let each in response['subjects']) {
-                        let nodekey = response['subjects'][each].label;
-                        listSubjects.push({
-                            nodeKey: nodekey.charAt(0) + ': ' + response['subjects'][each]['name'],
-                            nodeValue: nodekey.charAt(0) + ': ' + response['subjects'][each]['name']
-                        });
+                    for(let each in response['subjects']){
+                      let nodekey = response['subjects'][each].label ;
+                      listSubjects.push({
+                         nodeKey: nodekey.charAt(0) +': '+ response['subjects'][each]['name'],
+                         nodeValue: nodekey.charAt(0) +': '+ response['subjects'][each]['name']
+                       });
                     }
                     this.setState({subjectList: listSubjects, searchObjectText: '', loading: 'hide'});
                 }
@@ -149,36 +143,54 @@ export default class SubjectNode extends React.Component {
                 console.log(response);
                 if (response['objects'].length == 0) {
                     this.setState({floatingLabelTextObject: "No Results"});
-                } else {
+                }
+                else {
                     var listObjects = [];
                     var listPredicates = [];
-                    for (let each in response['objects']) {
-                        let label;
-                        if (nodeType == "C") {
-                            label = "C";
-                        } else {
-                            label = "T";
-                        }
-                        let nodekey = response['objects'][each]['name'];
+                    for(let each in response['objects']){
+                      let label;
+                      if(nodeType == "C"){
+                        label = "C";
+                      }
+                      else {
+                        label = "T";
+                      }
+              let nodekey = response['objects'][each]['name'] ;
 
-                        listObjects.push(label + ': ' + response['objects'][each]['name']);
+                       listObjects.push(label +': '+ response['objects'][each]['name']);
 
-                        console.log(nodekey);
-                        listPredicates[response['objects'][each]['name']] = response['objects'][each]['predicates'];
+                       console.log(nodekey);
+                       listPredicates[response['objects'][each]['name']] = response['objects'][each]['predicates'];
                     }
-                    this.setState({predicateList: listPredicates, objectList: listObjects, searchRelText: '', loading: 'hide'});
+                    this.setState(
+                      {
+                        predicateList:listPredicates,
+                        objectList: listObjects,
+                        searchRelText: '',
+                        loading: 'hide'
+                      });
                 }
             }
         });
     }
 
     enableButton() {
-        this.setState({canSubmit: true});
+      this.setState({
+        canSubmit: true,
+      });
     };
 
-    handleModalAddOpen = () => {
-        this.setState({openAddSubject: true});
-    }
+    handleSubModalAddOpen = () => {
+           this.setState({openAddSubject: true});
+    };
+
+    handleObjModalAddOpen = () => {
+      this.setState({openAddObject: true});
+    };
+
+    handlePredModalAddOpen = () => {
+      this.setState({openAddPredicate: true});
+    };
 
     getDomains() {
         let url = `/domain/`;
@@ -202,39 +214,56 @@ export default class SubjectNode extends React.Component {
 
     handleUpdateDomainInput = (searchText) => {
         this.getSubjects(searchText);
-        this.setState({addLabel: 'Add Intent', floatingLabelTextSubject: 'Subjects loaded'});
+        this.setState({addLabel: 'Add Intent',
+          floatingLabelTextSubject: 'Subjects loaded'});
     };
 
+    //Use this to send for object creation line 220
     handleUpdateSubjectInput = (searchText) => {
         console.log(searchText);
-        this.getObjects(searchText.charAt(0), searchText.substr(3, searchText.length));
-        this.setState({addLabel: 'Add Intent', floatingLabelTextObject: 'Objects', selectedSubject: searchText, stepNumber: 1});
+        this.getObjects(searchText.charAt(0),
+        searchText.substr(3, searchText.length));
+        this.setState({
+           addLabel: 'Add Intent',
+           floatingLabelTextObject: 'Objects',
+           selectedSubject: searchText,
+           stepNumber:1,
+         });
     };
 
     handleUpdateObjectInput = (searchText) => {
-        let predicates = this.state.predicateList[searchText.substr(3, searchText.length)];
-        console.log(predicates);
-        this.setState({nodeRelations: predicates, searchObjectText: searchText, selectedObject: searchText, stepNumber: 2});
+       let predicates = this.state.predicateList[searchText.substr(3, searchText.length)];
+       console.log(predicates);
+        this.setState({
+          nodeRelations: predicates,
+          selectedObject: searchText,
+          stepNumber:2,
+        });
     };
 
     handleDeleteSubject = () => {
-        if (this.state.selectedSubject.length == 0) {} else {
-            let nodetype = '';
-            let nodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-            //console.log(nodename);
-            if (this.state.selectedSubject.charAt(0) == 'I') {
-                nodetype = 'Intent';
-            } else {
-                nodetype = 'Concept';
-            }
-            let nodeDetails = {
-                domainName: this.state.selectedDomain,
-                nodetype: nodetype,
-                nodename: nodename
-            };
+      if(this.state.selectedSubject.length == 0){
 
-            this.setState({nodeDetails: nodeDetails, deleteModalOpen: true});
+      }else{
+        let nodetype = '';
+        let nodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+        //console.log(nodename);
+        if(this.state.selectedSubject.charAt(0) == 'I'){
+          nodetype = 'Intent';
+        }else{
+          nodetype = 'Concept';
         }
+        let nodeDetails = {
+          domainName : this.state.selectedDomain,
+          nodetype: nodetype,
+          nodename: nodename
+        };
+
+        this.setState({
+          nodeDetails: nodeDetails,
+          deleteModalOpen : true
+        });
+      }
     };
 
     handleEditNode = () => {
@@ -255,9 +284,15 @@ export default class SubjectNode extends React.Component {
         }
     }
 
+
     handleDeleteObject = () => {
-        if (this.state.selectedObject.length == 0) {} else {}
+      if(this.state.selectedObject.length == 0){
+
+      }else{
+
+      }
     };
+
 
     handleChange = (event, index, value) => this.setState({value});
 
@@ -266,84 +301,84 @@ export default class SubjectNode extends React.Component {
     };
 
     render() {
-        let {paperStyle, switchStyle, submitStyle} = styles;
-        const {stepIndex} = this.state;
+      let {paperStyle, switchStyle, submitStyle } = styles;
+      const {stepIndex} = this.state;
         return (
             <div styles={styles.div}>
                 <div style={{
                     textAlign: "center"
                 }}>
-                    <h1 styles={style}>{this.state.selectedDomain}</h1>
+                <h1 styles= {style}>{this.state.selectedDomain}</h1>
                 </div>
                 <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
                 <Paper style={style}>
-                    <div>
-                        <AutoComplete floatingLabelText={this.state.floatingLabelTextSubject} searchText={this.state.searchSubjectText} onUpdateInput={this.handleUpdateSubjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.subjectList} dataSourceConfig={dataSourceConfig} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{
-                            cursor: 'pointer',
-                            color: '#09F415'
-                        }}/>
-                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{
-                            cursor: 'pointer',
-                            color: 'red'
-                        }}/>
-                      <ImageEdit onTouchTap={this.handleEditNode} style={{
-                            cursor: 'pointer',
-                            color: 'blue'
-                        }}/>
-                    </div>
 
-                    <div>
-                        <AutoComplete floatingLabelText={this.state.floatingLabelTextObject} searchText={this.state.searchObjectText} onUpdateInput={this.handleUpdateObjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.objectList} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalObjAddOpen} style={{
-                            cursor: 'pointer',
-                            color: '#09F415'
-                        }}/>
-                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{
-                            cursor: 'pointer',
-                            color: 'red'
-                        }}/>
-                      <ImageEdit onTouchTap={this.handleEditNode} style={{
-                            cursor: 'pointer',
-                            color: 'blue'
-                        }}/>
-                    </div>
+                        <AutoComplete
+                          floatingLabelText={this.state.floatingLabelTextSubject}
+                          searchText={this.state.searchSubjectText}
+                          onUpdateInput={this.handleUpdateSubjectInput}
+                          onNewRequest={this.handleNewRequest}
+                          dataSource={this.state.subjectList}
+                          dataSourceConfig={dataSourceConfig}
+                          filter={AutoComplete.caseInsensitiveFilter}
+                          openOnFocus={true}
+                          maxSearchResults={5}
+                          style={styles.div}/>
+                        <ContentAdd onTouchTap={this.handleSubModalAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditNode} style={{cursor:'pointer', color:'grey'}}/>
 
-                    <div>
-                        <AutoComplete floatingLabelText={this.state.floatingLabelTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdateRelInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{
-                            cursor: 'pointer',
-                            color: '#09F415'
-                        }}/>
-                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{
-                            cursor: 'pointer',
-                            color: 'red'
-                        }}/>
-                        <ImageEdit onTouchTap={this.handleEditSubject} style={{
-                            cursor: 'pointer',
-                            color: 'blue'
-                        }}/>
-                    </div>
-                    <AddSubject open={this.state.openAddSubject} domain={this.state.selectedDomain}/>
-                    <DeleteNode open={this.state.deleteModalOpen} nodeDetails={this.state.nodeDetails}/>
-                    <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
+                        <AutoComplete floatingLabelText={this.state.floatingLabelTextObject}
+                          searchText={this.state.searchObjectText}
+                          onUpdateInput={this.handleUpdateObjectInput}
+                          onNewRequest={this.handleNewRequest}
+                          dataSource={this.state.objectList}
+                          filter={AutoComplete.caseInsensitiveFilter}
+                          openOnFocus={true}
+                          maxSearchResults={5}
+                          style={styles.div}/>
+                        <ContentAdd onTouchTap={this.handleObjModalAddOpen} style={{cursor:'pointer',color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditNode} style={{cursor:'pointer', color:'grey'}}/>
 
-                    <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
-                        <Tab label="Graph View" value="l">
-                            <div>
-                                <div className="treeGraph">
-                                    <TreeGraph domainName={this.state.selectedDomain}/>
-                                </div>
-                            </div>
-                        </Tab>
-                        <Tab label="List View" value="g">
-                            <div>
-                                <DomainTable domainName={this.state.selectedDomain}/>
-                            </div>
-                        </Tab>
-                    </Tabs>
+                        <AutoComplete
+                          floatingLabelText={this.state.floatingLabelTextRel}
+                          searchText={this.state.searchRelText}
+                          onUpdateInput={this.handleUpdateRelInput}
+                          onNewRequest={this.handleNewRequest}
+                          dataSource={this.state.nodeRelations}
+                          filter={AutoComplete.caseInsensitiveFilter}
+                          openOnFocus={true}
+                          maxSearchResults={5}
+                          style={styles.div}
+                          />
+                        <ContentAdd onTouchTap={this.handlePredModalAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditNode} style={{cursor:'pointer', color:'grey'}}/>
+
                 </Paper>
+
+                <AddSubject open = {this.state.openAddSubject} domain={this.state.selectedDomain}/>
+                <AddObject open = {this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
+                <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
+                <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
+                <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
+
+                <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
+                    <Tab label="Graph View" value="l">
+                      <div>
+                          <div className="treeGraph">
+                              <TreeGraph domainName={this.state.selectedDomain}/>
+                          </div>
+                      </div>
+                    </Tab>
+                    <Tab label="List View" value="g">
+                      <div>
+                          <DomainTable domainName={this.state.selectedDomain}/>
+                      </div>
+                    </Tab>
+                </Tabs>
             </div>
-        ); //End of Return
-    } //End of Render
-} //End of Class
+        );//End of Return
+    }//End of Render
+}//End of Class
