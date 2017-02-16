@@ -410,7 +410,7 @@ export default class SubjectNode extends React.Component {
                 <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject}  object={this.state.selectedObject}/>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
               //  <DeletePredicate open= {this.state.deletePredicateModalOpen} predicateDetails = {this.state.nodePredicateDetails} handleModal = {this.handleDeleteModal}/>
-              <DeletePredicate open = {this.state.deletePredicateModalOpen} predicateDetails = {this.state.nodePredicateDetails} handleModal = {this.handleDeleteModal}/>
+              //<DeletePredicate open = {this.state.deletePredicateModalOpen} predicateDetails = {this.state.nodePredicateDetails} handleModal = {this.handleDeleteModal}/>
                 <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>

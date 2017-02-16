@@ -28,7 +28,7 @@ export default class HorizontalLinearStepper extends React.Component {
       stepIndex: props.stepNumber
     });
   }
-  
+
 
 
   render() {
