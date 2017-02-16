@@ -128,7 +128,7 @@ export default class DomainTable extends React.Component {
             <TableRow>
               <TableHeaderColumn tooltip="Node Type">Node Type</TableHeaderColumn>
               <TableHeaderColumn tooltip="Node Name">Node Name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Predicate">Predicate?s</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Predicate">Predicates</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody

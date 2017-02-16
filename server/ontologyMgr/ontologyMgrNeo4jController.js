@@ -130,8 +130,10 @@ let getPublishAddNode = function(subject, object) {
                 } else if (predicateDirection == 'O') {
 
                     relationWithDirectionAndWeight = '<-[r:' + predicateName + predicateWeight + ']-'
+
                 } else {
                     relationWithDirectionAndWeight = '-[r:' + predicateName + predicateWeight + ']->'
+
                 }
 
                 if (subjectNodeType == graphConsts.NODE_DOMAIN) {
@@ -707,8 +709,12 @@ module.exports = {
     deleteObjectCallback: deleteObjectCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
+
+
+
     getAllRelationsCallback: getAllRelationsCallback,
     getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
+
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback,
     getSearchCallback: getSearchCallback

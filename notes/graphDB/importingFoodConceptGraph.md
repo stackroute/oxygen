@@ -1,6 +1,7 @@
 CREATE CONSTRAINT ON (c:Concept) ASSERT c.name IS UNIQUE;
 
 ##Creating all the nodes from CSV file
+
 USING PERIODIC COMMIT 50
 LOAD CSV WITH HEADERS FROM "file:///food.csv" AS Line
 WITH Line
@@ -10,6 +11,7 @@ SET c.conceptid = Line.`node id`
 SET c.context = Line.context
 SET c.desc = Line.description
 SET c.parent = Line.`parent node id`
+
 #---End of creating nodes---
 
 ## create a relationship between nodes dynamically
