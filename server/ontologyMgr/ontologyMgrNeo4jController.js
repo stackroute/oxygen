@@ -126,8 +126,10 @@ let getPublishAddNode = function(subject, object) {
                 } else if (predicateDirection == 'O') {
 
                     relationWithDirectionAndWeight = '<-[r:' + predicateName + predicateWeight + ']-'
+
                 } else {
                     relationWithDirectionAndWeight = '-[r:' + predicateName + predicateWeight + ']->'
+
                 }
 
                 if (subjectNodeType == graphConsts.NODE_DOMAIN) {
@@ -167,7 +169,6 @@ let getPublishAddNode = function(subject, object) {
     });
     return promise;
 };
-
 
 let getSubjectObjects = function(nodeObj) {
     let promise = new Promise(function(resolve, reject) {
@@ -313,56 +314,56 @@ let deleteObject = function(deleteObj) {
 
 let deleteOrphans = function(deleteObj) {
     let nodeType = deleteObj.nodeType.toLowerCase();
-    let nodeRef = nodeType.charAt(0);
-    let promise = new Promise(function(resolve, reject) {
-        logger.info("Now proceeding to delete the orphaned node:",
-            deleteObj
-        );
-        logger.info("nodeRef is",
-            nodeRef
-        );
-        let cypher = require('cypher-stream')(config.NEO4J.neo4jURL, config.NEO4J.usr,
-            config.NEO4J.pwd);
-        let fs = require('fs');
+  let nodeRef = nodeType.charAt(0);
+  let promise = new Promise(function(resolve, reject) {
+     logger.info("Now proceeding to delete the orphaned node:",
+         deleteObj
+     );
+     logger.info("nodeRef is",
+         nodeRef
+     );
+     let cypher = require('cypher-stream')(config.NEO4J.neo4jURL, config.NEO4J.usr,
+         config.NEO4J.pwd);
+     let fs = require('fs');
 
-        logger.debug(deleteObj.nodeName);
+     logger.debug(deleteObj.nodeName);
 
-        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
-                encrypted: false
-            });
-        let session = driver.session();
-        logger.debug("obtained connection with neo4j");
-        let query = '';
-        let params = {};
-        if (parseInt(deleteObj.cascade) == 1) {
-            query += 'match (s:' + deleteObj.nodeType + ')-[r]-(allRelatedNodes)'
-            query += 'WHERE s.name = {nodeName}'
-            query += 'AND size((allRelatedNodes)--()) = 1 '
-            query += 'DETACH DELETE allRelatedNodes,s';
-            params = {
-                nodeName: deleteObj.nodeName
-            };
-        } else {
+     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+         neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+             encrypted: false
+         });
+     let session = driver.session();
+     logger.debug("obtained connection with neo4j");
+     let query = '';
+     let params = {};
+     if (parseInt(deleteObj.cascade) == 1) {
+         query += 'match (s:' + deleteObj.nodeType + ')-[r]-(allRelatedNodes)'
+         query += 'WHERE s.name = {nodeName}'
+         query += 'AND size((allRelatedNodes)--()) = 1 '
+         query += 'DETACH DELETE allRelatedNodes,s';
+         params = {
+             nodeName: deleteObj.nodeName
+         };
+     } else {
 
-            query += 'match (s:' + deleteObj.nodeType + ' {name : {nodeName}})'
-            query += 'detach delete s return count(s)';
-            params = {
-                nodeName: deleteObj.nodeName
-            };
-        }
+         query += 'match (s:' + deleteObj.nodeType + ' {name : {nodeName}})'
+         query += 'detach delete s return count(s)';
+         params = {
+             nodeName: deleteObj.nodeName
+         };
+     }
 
-        session.run(query, params).then(function(result) {
-                logger.debug(result);
-                session.close();
-                resolve(result.summary.counters);
-            })
-            .catch(function(error) {
-                logger.error("Error in query: ", error, ' query is: ', query);
-                reject(error);
-            });
-    });
-    return promise;
+     session.run(query, params).then(function(result) {
+             logger.debug(result);
+             session.close();
+             resolve(result.summary.counters);
+         })
+         .catch(function(error) {
+             logger.error("Error in query: ", error, ' query is: ', query);
+             reject(error);
+         });
+  });
+  return promise;
 };
 
 let getRelations = function(subject) {
@@ -513,20 +514,26 @@ let getAllOrphans = function(subject) {
         var subjectDomainname = subject.domainname;
         var subjectNodeType = subject.nodetype;
         var subjectNodeName = subject.nodename;
-
-        query = 'MATCH (c:' + subjectNodeType + ')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) = 1 WITH c, collect(allRelatedNodes) as allRelatedNodes UNWIND allRelatedNodes as node'
-        query += ' return allRelatedNodes as orphanNodes'
+        query = 'MATCH (c:'+subjectNodeType+')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) >= 1'
+        query += ' return allRelatedNodes, size((allRelatedNodes)--()) as Count';
         params = {
             subjectNodeType: subjectNodeType,
             subjectNodeName: subjectNodeName
         }
         session.run(query, params).then(function(result) {
                 if (result) {
-                    let orphanNodes = [];
-                    for (let i = 0; i < result.records[0]._fields[0].length; i++) {
-                        orphanNodes.push(result.records[0]._fields[0][i]['properties']);
-                    }
-                    //logger.debug(result.records[0].keys[0]);
+                    let orphanNodes=[];
+                    result.records.forEach(function(record){
+                      let obj = {
+                        name: null,
+                        label: null,
+                        count: null
+                      }
+                      obj.name = record._fields[0]['properties']['name'];
+                      obj.label = record._fields[0]['labels'][0];
+                      obj.count = record._fields[1]['low'];
+                      orphanNodes.push(obj);
+                    });
                     session.close();
                     resolve(orphanNodes);
                 }
@@ -699,8 +706,12 @@ module.exports = {
     deleteObjectCallback: deleteObjectCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
+
+
+
     getAllRelationsCallback: getAllRelationsCallback,
     getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
+
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback,
     getSearchCallback: getSearchCallback

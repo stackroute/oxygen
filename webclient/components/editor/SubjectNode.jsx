@@ -32,8 +32,26 @@ import DomainTable from './DomainTable.jsx';
 
 const style = {
   margin: 30,
-  fontFamily: 'sans-serif',
-  textAlign: 'center'
+  // fontFamily: 'sans-serif',
+  // textAlign: 'center',
+  // fontweight: 'bold',
+  // color: 'rgb(25, 118, 210)'
+
+  textAlign: "center",
+  	fontFamily: "sans-serif",
+    // fontweight: 'bold',
+  	// color: " rgb(25, 118, 210)"
+
+}
+
+const styless = {
+
+  //  textAlign: "center",
+    	fontFamily: "sans-serif",
+    //  fontweight: 'bold',
+    	color: " rgb(25, 118, 210)"
+
+
 }
 
 const styles = {
@@ -51,6 +69,8 @@ const styles = {
     underlineStyle: {
         borderColor: cyan500
     }
+
+
 };
 
 const dataSourceConfig = {
@@ -89,6 +109,7 @@ export default class SubjectNode extends React.Component {
             openAddSubject: false,
             openAddObject: false,
             openAddPredicate: false
+
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -180,17 +201,11 @@ export default class SubjectNode extends React.Component {
       });
     };
 
-    handleSubModalAddOpen = () => {
+    handleModalAddOpen = () => {
            this.setState({openAddSubject: true});
-    };
-
-    handleObjModalAddOpen = () => {
-      this.setState({openAddObject: true});
-    };
-
-    handlePredModalAddOpen = () => {
-      this.setState({openAddPredicate: true});
-    };
+           this.setState({openAddObject: true});
+            this.setState({openAddPredicate: true});
+       };
 
     getDomains() {
         let url = `/domain/`;
@@ -215,7 +230,12 @@ export default class SubjectNode extends React.Component {
     handleUpdateDomainInput = (searchText) => {
         this.getSubjects(searchText);
         this.setState({addLabel: 'Add Intent',
-          floatingLabelTextSubject: 'Subjects loaded'});
+        floatingLabelTextSubject: 'Subjects loaded',
+
+        //stepNumber:0
+      });
+
+
     };
 
     //Use this to send for object creation line 220
@@ -223,24 +243,41 @@ export default class SubjectNode extends React.Component {
         console.log(searchText);
         this.getObjects(searchText.charAt(0),
         searchText.substr(3, searchText.length));
+        if(searchText.length == 0){
+          this.setState({
+             stepNumber: 0
+           });
+           console.log("Herer" + this.state.stepNumber);
+        }else{
+
         this.setState({
            addLabel: 'Add Intent',
            floatingLabelTextObject: 'Objects',
            selectedSubject: searchText,
-           stepNumber:1
+           stepNumber:1,
+
+            //onTouchTap={this.handlePrev}
          });
+       }
 
     };
 
     handleUpdateObjectInput = (searchText) => {
        let predicates = this.state.predicateList[searchText.substr(3, searchText.length)];
-       console.log(predicates);
-        this.setState({
-          nodeRelations: predicates,
-          searchObjectText: searchText,
-          selectedObject: searchText,
-          stepNumber:2
-        });
+       console.log(this.state.selectedObject);
+       if(searchText.length == 0){
+         this.setState({
+            stepNumber: 1
+          });
+          console.log("Herer" + this.state.stepNumber);
+       }else{
+         this.setState({
+           nodeRelations: predicates,
+           selectedObject: searchText,
+           stepNumber: 2
+         });
+         console.log('asdasd' + this.state.stepNumber);
+       }
     };
 
     handleDeleteSubject = () => {
@@ -307,8 +344,13 @@ export default class SubjectNode extends React.Component {
         return (
             <div styles={styles.div}>
                 <div style={{
-                    textAlign: "center"
+                    textAlign: "center",
+                    fontFamily: "sans-serif",
+                    //fontweight: 'bold',
+                    color: " rgb(25, 118, 210)"
+
                 }}>
+
                 <h1 styles= {style}>{this.state.selectedDomain}</h1>
                 </div>
                 <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
@@ -325,9 +367,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleSubModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteSubject} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
 
                     <div>
@@ -340,9 +382,9 @@ export default class SubjectNode extends React.Component {
                           openOnFocus={true}
                           maxSearchResults={5}
                           style={styles.div}/>
-                        <ContentAdd onTouchTap={this.handleObjModalAddOpen} style={{cursor:'pointer',color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleEditO} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalAddOpen} style={{cursor:'pointer',color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleDeleteObject} style={{cursor:'pointer',color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditO} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
 
                     <div>
@@ -357,15 +399,15 @@ export default class SubjectNode extends React.Component {
                           maxSearchResults={5}
                           style={styles.div}
                           />
-                        <ContentAdd onTouchTap={this.handlePredModalAddOpen} style={{cursor:'pointer', color:'#09F415'}}/>
-                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'red'}}/>
-                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'blue'}}/>
+                        <ContentAdd onTouchTap={this.handleModalPredAddOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ActionDelete onTouchTap={this.handleModalDeleteOpen} style={{cursor:'pointer', color:'grey'}}/>
+                        <ImageEdit onTouchTap={this.handleEditSubject} style={{cursor:'pointer', color:'grey'}}/>
                     </div>
                 </Paper>
 
                 <AddSubject open = {this.state.openAddSubject} domain={this.state.selectedDomain}/>
                 <AddObject open = {this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
-                <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
+                <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject}  object={this.state.selectedObject}/>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
                 <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
 

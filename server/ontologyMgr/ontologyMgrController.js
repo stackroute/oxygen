@@ -98,20 +98,23 @@ let deleteObject = function(deleteObj) {
 };
 
 let deleteOrphans = function(deleteObj) {
-    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodename);
-    let promise = new Promise(function(resolve, reject) {
-        async.waterfall([function(callback) {
-                ontologyMgrNeo4jCtrl.deleteOrphansCallback(deleteObj, callback);
-            }],
-            function(err, result) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
+  logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
+  let promise = new Promise(function(resolve, reject) {
+     async.waterfall([function(callback) {
+             domainMongoController.checkDomainCallback(deleteObj.domainName,callback);
+           },function(checkedDomain, callback){
+             ontologyMgrNeo4jController.deleteOrphansCallback(deleteObj, callback);
+           }
+         ],
+         function(err, result) {
+             if (err) {
+                 reject(err);
+             }
+             resolve(result);
 
-            }); //end of async.waterfall
-    });
-    return promise;
+         }); //end of async.waterfall
+  });
+  return promise;
 };
 
 let publishRelations = function(subject) {
@@ -138,6 +141,23 @@ let publishAllRelations = function(subject) {
         async.waterfall([
                 function(callback) {
                     ontologyMgrNeo4jController.getAllRelationsCallback(subject, callback);
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+};
+
+let getAllOrphans = function(nodeObj) {
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getAllOrphansCallback(nodeObj, callback);
                 }
             ],
             function(err, retrievedObjects) {
@@ -182,6 +202,7 @@ module.exports = {
     publishRelations: publishRelations,
     getAllDomainDetails: getAllDomainDetails,
     getSubjectObjects: getSubjectObjects,
-    getSearch: getSearch
+    getSearch: getSearch,
+    getAllOrphans: getAllOrphans
 
 }

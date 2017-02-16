@@ -10,6 +10,7 @@ import {List, ListItem} from 'material-ui/List';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
 import Request from 'superagent';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
    const styles = {
      div: {
@@ -23,6 +24,13 @@ import Request from 'superagent';
      submitStyle: {
        marginTop: 32,
      },
+     closeButton: {
+       align: 'right',
+       margin: 5
+     },
+     redBorder: {
+       fontColor: 'red'
+     }
    }
 export default class DeleteNode extends React.Component {
   constructor(props) {
@@ -31,26 +39,45 @@ export default class DeleteNode extends React.Component {
     this.enableButton = this.enableButton.bind(this);
     this.disableButton = this.disableButton.bind(this);
     this.getOrphans = this.getOrphans.bind(this);
+    this.onRowSelection = this.onRowSelection.bind(this);
+    this.deleteSubject = this.deleteSubject.bind(this);
     this.state =  {
       errMsg:'',
       open: false,
       canSubmit: false,
       openDialog: false,
       nodeDetails: null,
-      orphans: []
+      orphans: [],
+      fixedHeader: true,
+      fixedFooter: true,
+      stripedRows: false,
+      showRowHover: false,
+      selectable: true,
+      multiSelectable: true,
+      enableSelectAll: false,
+      deselectOnClickaway: true,
+      showCheckboxes: true,
+      deleteNode: null,
+      deleteNodeType: null,
+      selectedDomain: null,
+      deleteOrphans: 0,
     };
   }
 
   componentWillReceiveProps(nextProps){
     this.setState({
       open: nextProps.open,
-      //nodeDetails: nextProps.nodeDetails
     });
     this.getOrphans(nextProps.nodeDetails);
   }
 
   getOrphans(nodeDetails){
     if(nodeDetails !== null){
+      this.setState({
+        selectedDomain: nodeDetails.domainName,
+        deleteNode: nodeDetails.nodename,
+        deleteNodeType: nodeDetails.nodetype
+      })
       let url = `domain/${nodeDetails.domainName}/subject/${nodeDetails.nodetype}/${nodeDetails.nodename}`;
       Request.get(url).end((err, res) => {
         if(err){
@@ -81,54 +108,91 @@ export default class DeleteNode extends React.Component {
     });
   }
 
-  submitForm(data) {
-    alert(JSON.stringify(data, null, 4));
-  }
-
-  notifyFormError(data) {
-    console.error('Form error:', data);
-  }
-
   handleClose = () => {
-    this.setState({open : false});
+    this.props.handleModal();
   };
 
-  deleteSubject(){
-
+  onRowSelection(index) {
+    if(index == 'all'){
+      this.setState({
+        deleteOrphans: 1
+      })
+    }
   }
 
-  deleteSubjectWithOrphans(){
+  deleteSubject(){
+    let url = `domain/${this.state.selectedDomain}/subject/${this.state.deleteNodeType}/${this.state.deleteNode}?cascade=${this.state.deleteOrphans}`;
+    console.log(url);
+    Request.delete(url).end((err, res) => {
+      if(err){
 
+      }else{
+        let response = res.body;
+        console.log(response['_stats']['nodesDeleted']);
+        if(response.length == 0){
+
+        }else{
+          this.handleClose();
+        }
+      }
+    });
   }
 
   render() {
-    let orphans = 'No nodes are getting orphaned Go ahead and delete';
     let {paperStyle, switchStyle, submitStyle } = styles;
+    let orphans = '';
     if(this.state.orphans.length > 0){
-      orphans = 'List of orphans If delted';
-      orphans = this.state.orphans.map((orphan,i) =>
-              <ListItem>{orphan.name}</ListItem>
-            );
+      orphans = this.state.orphans.map( (row, index) => (
+                    <TableRow key={index}>
+                      <TableRowColumn>{row.label}</TableRowColumn>
+                      <TableRowColumn>{row.name}</TableRowColumn>
+                      <TableRowColumn>{row.count}</TableRowColumn>
+                    </TableRow>
+            ));
     }
 
     return (
-
         <div>
           <Dialog
-            title="Delete Subject"
+            title="List of Nodes Connected"
             modal={true}
             open={this.state.open}
+            autoScrollBodyContent={true}
           >
+          <Table
+            fixedHeader={this.state.fixedHeader}
+            fixedFooter={this.state.fixedFooter}
+            selectable={this.state.selectable}
+            multiSelectable={this.state.multiSelectable}
+            onRowSelection={this.onRowSelection}
+            style = {styles.switchStyle}
+          >
+            <TableHeader>
+              <TableRow>
+                <TableHeaderColumn tooltip="Node Type">Node Type</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Node Name">Node Name</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Count">Count</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={this.state.showCheckboxes}
+              deselectOnClickaway={this.state.deselectOnClickaway}
+              showRowHover={this.state.showRowHover}
+              stripedRows={this.state.stripedRows}
+            >
             {orphans}
+            </TableBody>
+          </Table>
             <RaisedButton
-                label="Delete only Subject"
-                primary={true}
+                label="Delete"
+                secondary={true}
                 onTouchTap={this.deleteSubject}
                 />
             <RaisedButton
-                label="Delete with Orphans"
-                secondary={true}
-                onTouchTap={this.deleteSubjectWithOrphans}
+                label="Close"
+                default={true}
+                onTouchTap={this.handleClose}
+                styles = {styles.closeButton}
                 />
           </Dialog>
         </div>
