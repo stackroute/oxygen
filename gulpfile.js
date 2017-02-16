@@ -34,7 +34,7 @@ gulp.task('usemin', ['clean', 'webpack'], function() {
   })).pipe(gulp.dest('dist/server/public'));
 });
 
-gulp.task('copy:fonts', ['clean'], function() {
+gulp.task('copy: fonts', ['clean'], function() {
   return gulp.src('webclient/**/*.ttf')
   .pipe(flatten())
   .pipe(gulp.dest('dist/server/public/fonts'));
@@ -59,8 +59,9 @@ gulp.task('clean', function() {
 
 gulp.task('eslint', function() {
   return gulp.src([
-     'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
-     'webclient/**/*.jsx', '!dist/**/*'
+    //  'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
+    //  'webclient/**/*.jsx', '!dist/**/*'
+    'server/ontologyMgr/rabbitConnectCheck.js'
     ])
   .pipe(eslint())
   .pipe(eslint.format())

@@ -54,7 +54,7 @@ export default class AddSubject extends React.Component {
             open: false,
             canSubmit: false,
             openDialog: false,
-            openAddPredicate: false,
+            addmodalopen: false,
             domain: this.props.domain,
             subject: this.props.subject,
             object: this.props.object,
@@ -69,10 +69,11 @@ export default class AddSubject extends React.Component {
       //console.log(this.props.domain);
       //console.log(this.props.subject);
       this.setState({
-        openAddPredicate: nextProps.open,
+        addmodalopen: nextProps.open,
         domain: nextProps.domain,
         subject: nextProps.subject,
-        object: this.props.object
+        object: nextProps.object
+
       });
 
     }
@@ -91,18 +92,11 @@ export default class AddSubject extends React.Component {
         // if(this.state.subject == undefined){
         //   console.log(this.state.subject);
         // }
-        let strSub = ''
-        strSub = this.state.subject;
-        //console.log("Str"+str);
-        strSub = strSub.substr(3,strSub.length-1);
-        //console.log("Str"+str);
-
-        let strObj = '';
-        strObj = this.state.object;
-        //console.log("Str"+str);
-        strObj = strObj.substr(3,strObj.length-1);
-        //console.log("Str"+str);
-
+        let str = ''
+        str = this.state.subject;
+        console.log("Str"+str);
+        str = str.substr(3,str.length-1);
+        console.log("Str"+str);
         let i = 0;
         let requestObj = {
           attributes : {},
@@ -125,8 +119,8 @@ export default class AddSubject extends React.Component {
           this.objectType = "Term";
         }
 
-        this.subjectNode = strSub;
-        this.objectNode = strObj;
+        this.subjectNode = str;
+        this.objectNode = data.object
         var objectName = `/domain/${this.state.domain}/object/${this.objectType}/${this.objectNode}`;
 
         requestObj.attributes[data.attributesName] = data.attributesValue;
@@ -154,9 +148,17 @@ export default class AddSubject extends React.Component {
         console.error('Form error:', data);
     }
 
-    handleModalClose = () => {
-      this.setState({openAddPredicate: false});
+    handleModalOpen = () => {
+        this.setState({addmodalopen: true, canSubmit: false});
     }
+
+    handleModalClose = () => {
+      this.setState({addmodalopen: false});
+    }
+
+    handleClose = () => {
+        this.setState({openDialog: true});
+    };
 
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
@@ -171,7 +173,7 @@ export default class AddSubject extends React.Component {
                 backgroundColor: "#c7c7c7"
             }}
               modal={true}
-              open={this.state.openAddPredicate}
+              open={this.state.addmodalopen}
               autoScrollBodyContent={true}>
                 <Formsy.Form
                   onValid={this.enableButton}
@@ -179,6 +181,17 @@ export default class AddSubject extends React.Component {
                   onValidSubmit={this.submitForm}
                   onInvalidSubmit={this.notifyFormError}
                   >
+                    <FormsyText name="object" validations="isWords" validationsError = {wordsError} hintText="object name" floatingLabelText="Object name"/>
+                    <br/>
+                      <FormsySelect name="objectType" required floatingLabelText="Select the object type" menuItems={this.selectFieldItems}>
+                         <MenuItem value={'Intent'} primaryText="Intent"/>
+                         <MenuItem value={'Concept'} primaryText="Concept"/>
+                     </FormsySelect>
+                     <br/>
+                     <FormsyText name="attributesName" validations="isWords" validationsError = {wordsError} hintText="attributes name" floatingLabelText="attributes name"/>
+                     <br/>
+                    <FormsyText name="attributesValue" validations="isWords" validationsError = {wordsError} hintText="attributes value" floatingLabelText="attributes value"/>
+                     <br/>
                     <FormsyText name="predicateName" validations="isWords" validationsError = {wordsError} hintText="Predicate Name" floatingLabelText="Predicate Name"/>
                     <br/>
                     <FormsyText name="direction" validations="isWords" validationsError = {wordsError} hintText="Direction" floatingLabelText="Direction"/>

@@ -14,7 +14,8 @@ const defaultImgURL='./../../assets/images/bulb.png';
 const style = {
   position:'fixed',
   top: '10%',
-  right:'5%'
+  right:'5%',
+  radius:'2'
 };
 
 const tfont={
@@ -166,7 +167,7 @@ export default class AddDomain extends React.Component {
     });
     return (
       <div>
-      <FloatingActionButton style={style} onTouchTap={this.handleOpen}>
+      <FloatingActionButton mini={true} style={style} onTouchTap={this.handleOpen}>
       <ContentAdd />
       </FloatingActionButton>
       <Dialog
