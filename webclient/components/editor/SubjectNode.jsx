@@ -18,9 +18,9 @@ import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './deletePredicate.jsx';
+import DeletePredicate from './DeletePredicate.jsx';
 import AddObject from './AddObject.jsx';
-import Delete from './delete.jsx';
+//import Delete from './delete.jsx';
 import Edit from './edit.jsx';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
