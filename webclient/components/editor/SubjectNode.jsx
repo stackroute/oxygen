@@ -347,7 +347,7 @@ export default class SubjectNode extends React.Component {
                     textAlign: "center",
                     fontFamily: "sans-serif",
                     //fontweight: 'bold',
-                    color: " rgb(25, 118, 210)"
+                    color: " rgb(229,57,53)"
 
                 }}>
 
