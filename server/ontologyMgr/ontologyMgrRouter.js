@@ -341,5 +341,4 @@ router.get('/:domainname/search', function(req, res) {
     }
 });
 
-
 module.exports = router;

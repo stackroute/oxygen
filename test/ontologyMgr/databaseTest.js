@@ -3,20 +3,14 @@ var expect = require('chai').expect;
 var assert = require('chai').assert;
 var request = require("supertest");
 var logger = require('./../../applogger');
+
 request = request(app);
+
 const neo4jDriver = require('neo4j-driver').v1;
 const config = require('./../../config');
-describe('driver', function(done) {
+describe('driver', function() {
   var driver;
-  beforeEach(function() {
-    driver = null;
-  })
-  afterEach(function() {
-    if(driver) {
-      driver.close();
-    }
-  })
-  it('should expose sessions', function(done) {
+  it('should expose sessions', function() {
     // Given
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
@@ -28,9 +22,9 @@ describe('driver', function(done) {
     var session = driver.session();
 
     // Then
-    should.not.equal(session, null);
+    expect(session).to.exist;
+    // done();
     driver.close();
-    done();
   });
 
   it('should handle connection errors', function(done) {

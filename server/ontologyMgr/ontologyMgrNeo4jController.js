@@ -401,7 +401,7 @@ let getRelations = function(subject) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result.records[0]._fields[0]['properties']['weight']);
+                resolve(result.records[0]._fields[0]['properties']);
             })
             .catch(function(error) {
                 logger.error("Error in query: ", error, ' query is: ', query);
@@ -482,7 +482,7 @@ let getAllRelations = function(subject) {
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
 
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s, r, o'
         params = {
             subjectNodeType: subjectNodeType,
@@ -547,7 +547,6 @@ let getAllOrphans = function(subject) {
     });
     return promise;
 };
-
 
 let getPublishAddNodeCallback = function(subject, object, callback) {
     logger.debug("from the callback : " + subject.nodename);
