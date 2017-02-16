@@ -2,7 +2,6 @@ const neo4jDriver = require('neo4j-driver').v1;
 const logger = require('./../../applogger');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
-
 let cypher = require('cypher-stream')(config.NEO4J.neo4jURL, config.NEO4J.usr,
     config.NEO4J.pwd);
 let fs = require('fs');
@@ -10,7 +9,7 @@ let fs = require('fs');
 let getAllDomainDetails = function(nodeObj) {
 
     let promise = new Promise(function(resolve, reject) {
-        logger.debug("Now proceeding to retrive objects for node name: ",
+        logger.debug('Now proceeding to retrive objects for node name: ',
             nodeObj.name);
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
@@ -19,7 +18,7 @@ let getAllDomainDetails = function(nodeObj) {
         );
 
         let session = driver.session();
-        logger.debug("obtained connection with neo4j");
+        logger.debug('obtained connection with neo4j');
         let query = 'MATCH (d:' + graphConsts.NODE_DOMAIN +
             '{name:{nodeName}})-[r]-(c) return d as Domain,type(r) as Relation,c as RelNodes';
         let params = {
@@ -38,31 +37,31 @@ let getAllDomainDetails = function(nodeObj) {
                     });
                 }
                 result.records.forEach(function(record) {
-                    if (obj.attributes == null) {
-                        obj.attributes = record._fields[0]['properties'];
+                    if (obj.attributes === null) {
+                        obj.attributes = record.fields[0].properties;
                     }
-                    if (obj['subjects'].length == 0) {
+                    if (obj.subjects.length == 0) {
                         let tempObj = {
-                            name: record._fields[2]['properties']['name'],
-                            label: record._fields[2]['labels'][0],
-                            predicates: [record._fields[1]]
+                            name: record.fields[2].properties.name,
+                            label: record.fields[2].labels[0],
+                            predicates: [record.fields[1]]
                         };
                         obj.subjects.push(tempObj);
                     } else {
                         let found = false;
                         for (let each in obj.subjects) {
-                            if (obj.subjects[each]['name'] == record._fields[2]['properties']['name']) {
-                                obj.subjects[each]['predicates'].push(record._fields[1]);
+                            if (obj.subjects[each].name == record.fields[2].properties.name) {
+                                obj.subjects[each].predicates.push(record.fields[1]);
                                 found = true;
                                 break;
                             }
                         }
                         if (!found) {
                             let tempObj = {
-                                name: record._fields[2]['properties']['name'],
-                                label: record._fields[2]['labels'][0],
-                                predicates: [record._fields[1]]
-                            }
+                                name: record.fields[2].properties.name,
+                                label: record.fields[2].labels[0],
+                                predicates: [record.fields[1]]
+                            };
                             obj.subjects.push(tempObj);
                         }
                     }
@@ -71,19 +70,19 @@ let getAllDomainDetails = function(nodeObj) {
                 resolve(obj);
             })
             .catch(function(err) {
-                logger.error("Error in neo4j query: ", err, ' query is: ',
+                logger.error('Error in neo4j query: ', err, ' query is: ',
                     query);
                 reject(err);
             });
     });
     return promise;
-}
+};
 
 let getPublishAddNode = function(subject, object) {
 
     logger.debug(subject.nodeName);
     let promise = new Promise(function(resolve, reject) {
-        logger.debug("Now proceeding to publish subject: ", subject.nodeName);
+        logger.debug('Now proceeding to publish subject: ', subject.nodeName);
 
         let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
@@ -108,13 +107,10 @@ let getPublishAddNode = function(subject, object) {
         let params = {};
 
         for (var i = 0; i < object.objects.length; i++) {
-
             splitArray = object.objects[i].name.split('/');
-
             var objectDomainname = splitArray[2];
             var objectNodeType = splitArray[4];
             var objectNodeName = splitArray[5];
-
             for (j = 0; j < object.objects[i].predicates.length; j++) {
                 var predicateName = object.objects[i].predicates[j].name;
                 var predicateDirection = object.objects[i].predicates[j].direction;
