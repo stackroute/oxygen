@@ -59,9 +59,8 @@ gulp.task('clean', function() {
 
 gulp.task('eslint', function() {
   return gulp.src([
-    //  'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
-    //  'webclient/**/*.jsx', '!dist/**/*'
-    'server/ontologyMgr/rabbitConnectCheck.js'
+    'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
+    'webclient/**/*.jsx', '!dist/**/*'
     ])
   .pipe(eslint())
   .pipe(eslint.format())
