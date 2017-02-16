@@ -356,9 +356,12 @@ export default class DomainHomeView extends React.Component {
                     <h1>
                       {this.state.domainName} 
                       <MenuItem
-                 			 containerElement={<Link to={'/edit/'+ this.state.domainName}/>}
-                 			leftIcon={<ImageEdit/>}
-                 			onTouchTap={this.handleEdit}/>
+                        primaryText="[edit]"
+                 			  containerElement={<Link to={'/edit/'+ this.state.domainName}/>}
+                        leftIcon={<ImageEdit />}
+                 			  onTouchTap={this.handleEdit}
+                        style={{width:"13%"}}
+                      />
                     </h1>
 
                   </ScreenClassRender>
