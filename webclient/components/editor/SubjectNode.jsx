@@ -18,9 +18,9 @@ import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './deletePredicate.jsx';
+import DeletePredicate from './DeletePredicate.jsx';
 import AddObject from './AddObject.jsx';
-import Delete from './delete.jsx';
+//import Delete from './elete.jsx';
 import Edit from './edit.jsx';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
@@ -347,7 +347,7 @@ export default class SubjectNode extends React.Component {
                     textAlign: "center",
                     fontFamily: "sans-serif",
                     //fontweight: 'bold',
-                    color: " rgb(25, 118, 210)"
+                    color: " rgb(130, 119, 23)"
 
                 }}>
 
@@ -409,6 +409,8 @@ export default class SubjectNode extends React.Component {
                 <AddObject open = {this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
                 <AddPredicate open = {this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject}  object={this.state.selectedObject}/>
                 <DeleteNode open = {this.state.deleteModalOpen} nodeDetails = {this.state.nodeDetails}/>
+              //  <DeletePredicate open= {this.state.deletePredicateModalOpen} predicateDetails = {this.state.nodePredicateDetails} handleModal = {this.handleDeleteModal}/>
+              <DeletePredicate open = {this.state.deletePredicateModalOpen} predicateDetails = {this.state.nodePredicateDetails} handleModal = {this.handleDeleteModal}/>
                 <Edit open={this.state.openEdit} domainName={this.state.selectedDomain} selectedSubject={this.state.selectedSubject}/>
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
