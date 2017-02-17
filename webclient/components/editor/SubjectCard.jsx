@@ -22,6 +22,32 @@ const styles = {
   }
 }
 export default class SubjectCard extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+        subjectCard: {},
+        login: false,
+        value: 0
+      };
+    }
+componentWillReceiveProps(props){
+  this.setState({
+    login:props.login
+  });
+  let subjectCard={};
+  if(this.state.login){
+      subjectCard['name'] = props.detail['name'],
+      subjectCard['type'] = props.detail['type']
+    }
+  else{
+      subjectCard['name'] = '',
+      subjectCard['type'] = '';
+      subjectCard['attributes'] = '';
+  }
+  this.setState({
+    subjectCard:subjectCard
+  });
+}
 
 render() {
   return (
@@ -33,15 +59,17 @@ render() {
   titleStyle={{fontSize:20, marginLeft:'50%'}}/>
 <CardActions>
 <DropDownMenu
+  value={this.state.value}
   onChange={this.handleChange}
   style={styles.customWidth}
   autoWidth={false}
 >
-<MenuItem value={1} primaryText="Intent" />
-<MenuItem value={2} primaryText="Concept" />
+<MenuItem value={0} primaryText={this.state.subjectCard['type']}/>
+<MenuItem value={1} primaryText="Intent"/>
+<MenuItem value={2} primaryText="Concept"/>
 </DropDownMenu>
 
-    <TextField floatingLabelText="Name" style={styles.textWidth}/>
+    <TextField floatingLabelText="Name"  value={this.state.subjectCard['name']} style={styles.textWidth}/>
     <br/>
     <TextField floatingLabelText="key" style={{
         width: '40%',

@@ -80,13 +80,12 @@ const styles = {
     },
 
     customWidth: {
-      width: 400,
+        width: 400
     },
 
     textWidth: {
-      width: 375,
-    },
-
+        width: 375
+    }
 };
 
 const dataSourceConfig = {
@@ -123,8 +122,11 @@ export default class SubjectNode extends React.Component {
             nodeDetails: null,
             openAddSubject: false,
             openAddObject: false,
-            openAddPredicate: false
-
+            openAddPredicate: false,
+            selectedSubjectDetails: {},
+            selectedObjectDetails: {},
+            selectedPredicateDetails: {},
+            login: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -151,7 +153,11 @@ export default class SubjectNode extends React.Component {
                             nodeValue: nodekey.charAt(0) + ': ' + response['subjects'][each]['name']
                         });
                     }
-                    this.setState({subjectList: listSubjects, searchObjectText: '', loading: 'hide'});
+
+                    this.setState({
+                      selectedSubjectDetails: response.attributes,
+                      subjectList: listSubjects,
+                      searchObjectText: '', loading: 'hide'});
                 }
             }
         });
@@ -176,12 +182,12 @@ export default class SubjectNode extends React.Component {
                 // console.log('Response on show: ', JSON.parse(res.text));
                 // let domainList1=this.state.domainList;
                 let response = JSON.parse(res.text);
-                console.log(response);
                 if (response['objects'].length == 0) {
                     this.setState({floatingLabelTextObject: "No Results"});
                 } else {
                     var listObjects = [];
                     var listPredicates = [];
+                    let nodeDetails = {};
                     for (let each in response['objects']) {
                         let label;
                         if (nodeType == "C") {
@@ -196,7 +202,12 @@ export default class SubjectNode extends React.Component {
                         console.log(nodekey);
                         listPredicates[response['objects'][each]['name']] = response['objects'][each]['predicates'];
                     }
-                    this.setState({predicateList: listPredicates, objectList: listObjects, searchRelText: '', loading: 'hide'});
+                    this.setState({
+                      predicateList: listPredicates,
+                      objectList: listObjects,
+                      searchRelText: '',
+                      loading: 'hide',
+                    });
                 }
             }
         });
@@ -245,26 +256,129 @@ export default class SubjectNode extends React.Component {
     //Use this to send for object creation line 220
     handleUpdateSubjectInput = (searchText) => {
         console.log(searchText);
+        let selectedSubjectDetails = {};
         this.getObjects(searchText.charAt(0), searchText.substr(3, searchText.length));
         if (searchText.length == 0) {
             this.setState({stepNumber: 0});
             console.log("Herer" + this.state.stepNumber);
         } else {
-            this.setState({addLabel: 'Add Intent', floatingLabelTextObject: 'Objects', selectedSubject: searchText, stepNumber: 1})
+            this.setState({
+              addLabel: 'Add Intent',
+              floatingLabelTextObject: 'Objects',
+              selectedSubject: searchText,
+              stepNumber: 1});
+              //console.log('kowsik '+this.state.selectedSubject);
+              let nodeName = searchText.substr(3, searchText.length);
+              let url = '';
+              let nodeType = '';
+              switch (searchText.charAt(0)) {
+                  case 'C':
+                      nodeType = 'Concept'
+                      url = `/domain/${this.state.selectedDomain}/subject/concept/${nodeName}/objects`;
+                      break;
+                  case 'I':
+                      nodeType = 'Intent'
+                      url = `/domain/${this.state.selectedDomain}/subject/intent/${nodeName}/objects`;
+                      break;
+              }
+
+              Request.get(url).end((err, res) => {
+                  if (err) {
+                      this.setState({
+                        errmsg: res.body,
+                        loading: 'hide'});
+                  } else {
+                      let response = JSON.parse(res.text);
+                      if (response.length == 0) {
+                          this.setState({floatingLabelTextObject: "No Results"});
+                      } else {
+                        selectedSubjectDetails['name'] = nodeName;
+                        selectedSubjectDetails['type'] = nodeType;
+                        selectedSubjectDetails['attributes'] = response.attributes;
+
+                        this.setState({
+                          selectedSubjectDetails: selectedSubjectDetails,
+                          login: true
+                          });
+                      }
+                  }
+              });
         }
     };
 
     handleUpdateObjectInput = (searchText) => {
+        let selectedObjectDetails = {};
         let predicates = this.state.predicateList[searchText.substr(3, searchText.length)];
-        console.log(this.state.selectedObject);
+        console.log('Kowsik = ' + searchText);
+
+        console.log(this.state.selectedSubject);
         if (searchText.length == 0) {
             this.setState({stepNumber: 1});
             console.log("Herer" + this.state.stepNumber);
         } else {
             this.setState({nodeRelations: predicates, selectedObject: searchText, stepNumber: 2});
             console.log('asdasd' + this.state.stepNumber);
+
+            let nodeName1 = this.state.selectedSubject.substr(3, this.state.selectedSubject.length - 1);
+            let nodeName2 = searchText.substr(3, searchText.length - 1);
+            let nodeType = '';
+            let url = '';
+            switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
+                case 'C':
+                    nodeType = 'Concept';
+                    url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}`;
+                    break;
+                case 'I':
+                    nodeType = 'Term';
+                    url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}`;
+                    console.log(url);
+                    break;
+            }
+            Request.get(url).end((err, res) => {
+                if (err) {
+                    this.setState({errmsg: res.body, loading: 'hide'});
+                } else {
+                    let response = JSON.parse(res.text);
+                    selectedObjectDetails['name'] = nodeName2;
+                    selectedObjectDetails['type'] = nodeType;
+                    selectedObjectDetails['attributes'] = response;
+
+                    this.setState({
+                      selectedObjectDetails: selectedObjectDetails
+                      });
+                }
+            });
         }
     };
+
+    handleUpdateRelInput = (searchText) => {
+        let selectedPredicateDetails = {};
+
+        let nodeName1 = this.state.selectedSubjectDetails['name'];
+        let nodeName2 = this.state.selectedObjectDetails['name'];
+        let url = '';
+        switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
+            case 'C':
+                url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}/predicates/${searchText}`;
+                break;
+            case 'I':
+                url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}/predicates/${searchText}`;
+                break;
+        }
+        Request.get(url).end((err, res) => {
+            if (err) {
+                this.setState({errmsg: res.body, loading: 'hide'});
+            } else {
+                let response = JSON.parse(res.text);
+                selectedPredicateDetails['name'] = searchText;
+                selectedPredicateDetails['properties'] = response;
+
+                this.setState({
+                  selectedPredicateDetails: selectedPredicateDetails
+                  });
+            }
+        });
+    }
 
     handleDeleteSubject = () => {
         if (this.state.selectedSubject.length == 0) {} else {
@@ -329,7 +443,9 @@ export default class SubjectNode extends React.Component {
                 </div>
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
-                    <Row style={{marginRight:'80%'}}>C - Concept, I - Intent, T - Term</Row>
+                    <Row style={{
+                        marginRight: '80%'
+                    }}>C - Concept, I - Intent, T - Term</Row>
 
                     <Row>
 
@@ -340,7 +456,9 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label="Add New" labelStyle={{fontSize:10}}/>
+                                <FlatButton label="Add New" labelStyle={{
+                                    fontSize: 10
+                                }}/>
                             </Row>
                         </Col>
                         <Col lg={1} xl={1} md={1} sm={1} xs={1}>
@@ -371,28 +489,32 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label="Add New" labelStyle={{fontSize:10}}/>
+                                <FlatButton label="Add New" labelStyle={{
+                                    fontSize: 10
+                                }}/>
                             </Row>
                         </Col>
 
                     </Row>
                     <br/>
                     <Divider/>
-<br/>
+                    <br/>
                     <Row style={{
                         marginLeft: '80%'
                     }}>
-                        <RaisedButton label="Dissolve" style={{marginRight:10}}/>
+                        <RaisedButton label="Dissolve" style={{
+                            marginRight: 10
+                        }}/>
 
                         <RaisedButton label="Apply"/>
                     </Row>
-<br/>
+                    <br/>
                     <Row >
                         <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <SubjectCard />
+                            <SubjectCard detail={this.state.selectedSubjectDetails} login={this.state.login}/>
                         </Col>
                         <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <PredicateCard />
+                            <PredicateCard/>
                         </Col>
                         <Col lg={4} xl={4} md={4} sm={4} xs={4}>
                             <ObjectCard />

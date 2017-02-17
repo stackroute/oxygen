@@ -191,6 +191,24 @@ let getSearch = function(nodeObj) {
     return promise;
 };
 
+let publishAllAttributes = function(subject) {
+    logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getPublishAllAttributesCallback(subject, callback);
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+};
+
 //Yogee
 let publishEditedSubjectObjectAttributes = function(nodeObj) {
     let promise = new Promise(function(resolve, reject) {
@@ -219,6 +237,7 @@ module.exports = {
     getSubjectObjects: getSubjectObjects,
     getSearch: getSearch,
     getAllOrphans: getAllOrphans,
-    publishEditedSubjectObjectAttributes: publishEditedSubjectObjectAttributes
+    publishEditedSubjectObjectAttributes: publishEditedSubjectObjectAttributes,
+    publishAllAttributes: publishAllAttributes
 
 };

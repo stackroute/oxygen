@@ -700,22 +700,61 @@ let getSearch = function(nodeObj) {
     });
     return promise;
 };
+let getPublishAllAttributes = function(subject) {
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(subject.nodename);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            });
+        let session = driver.session();
+        var subjectDomainname = subject.domainname;
+        var subjectNodeType = subject.nodetype;
+        var subjectNodeName = subject.nodename;
+        var objectNodeType = subject.nodetype1;
+        var objectNodeName = subject.nodename1;
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+        query += 'return s,o,r'
+        params = {
+            subjectNodeType: subjectNodeType,
+            subjectNodeName: subjectNodeName,
+            objectNodeType: objectNodeType,
+            objectNodeName: objectNodeName
+        }
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    logger.debug(result);
+                }
+                session.close();
+                resolve(result.records[0]._fields[1]['properties']);
+            })
+            .catch(function(error) {
+                logger.error("Error in deleting the query: ", error, ' query is: ', query);
+                reject(error);
+            });
+    });
+    return promise;
+};
 
+let getPublishAllAttributesCallback = function(subject, callback) {
+    logger.debug("from the callback : " + subject.nodename);
+    getPublishAllAttributes(subject).then(function(nodename) {
+        callback(null, nodename);
+    }, function(err) {
+        callback(err, null);
+    });
+};
 module.exports = {
-
     getAllDomainDetailsCallback: getAllDomainDetailsCallback,
     getSubjectObjectsCallback: getSubjectObjectsCallback,
     getPublishAddNodeCallback: getPublishAddNodeCallback,
     deleteObjectCallback: deleteObjectCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
-
-
-
     getAllRelationsCallback: getAllRelationsCallback,
     getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
-
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback,
-    getSearchCallback: getSearchCallback
+    getSearchCallback: getSearchCallback,
+    getPublishAllAttributesCallback: getPublishAllAttributesCallback
 };
