@@ -49,29 +49,29 @@ export default class ObjectCard extends React.Component {
                     marginLeft: 10,
                     marginRight: 10
                 }}>
-                    <CardHeader title="Object" titleStyle={{
+                    <CardHeader title='Object' titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'
                     }}/>
                     <CardActions>
                         <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
-                            <MenuItem value={0} primaryText="Select Type"/>
-                            <MenuItem value={1} primaryText="Intent"/>
-                            <MenuItem value={2} primaryText="Concept"/>
+                            <MenuItem value={0} primaryText='Select Type'/>
+                            <MenuItem value={1} primaryText='Intent'/>
+                            <MenuItem value={2} primaryText='Concept'/>
                             <MenuItem value={3} primaryText={this.state.objectCard['type']}/>
                         </DropDownMenu>
                         <br/>
-                        <TextField floatingLabelText="Name" value={this.state.objectCard['name']} style={{
+                        <TextField floatingLabelText='Name' value={this.state.objectCard['name']} style={{
                             fullWidth: 'true'
                         }}/>
                         <br/>
-                        <TextField floatingLabelText="key" style={{
+                        <TextField floatingLabelText='key' style={{
                             width: '40%',
                             float: 'left',
                             overflow: 'hidden'
                         }}/>
 
-                        <TextField floatingLabelText="value" style={{
+                        <TextField floatingLabelText='value' style={{
                             width: '40%'
                         }}/>
                         <ContentRemove style={{
@@ -91,10 +91,10 @@ export default class ObjectCard extends React.Component {
                         <Divider/>
 
                         <Row >
-                            <FlatButton label="Delete" style={{
+                            <FlatButton label='Delete' style={{
                                 float: 'right'
                             }}/>
-                            <FlatButton label="Edit" style={{
+                            <FlatButton label='Edit' style={{
                                 float: 'right'
                             }}/>
                         </Row>
