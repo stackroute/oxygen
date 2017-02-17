@@ -406,7 +406,8 @@ export default class SubjectNode extends React.Component {
                 selectedPredicateDetails['properties'] = response;
 
                 this.setState({
-                  selectedPredicateDetails: selectedPredicateDetails
+                  selectedPredicateDetails: selectedPredicateDetails,
+                  predicateCardJsx: true
                   });
             }
         });
