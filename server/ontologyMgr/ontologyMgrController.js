@@ -241,5 +241,4 @@ module.exports = {
     getAllOrphans: getAllOrphans,
     publishAllAttributes: publishAllAttributes,
     publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes
-
 }
