@@ -40,13 +40,13 @@ export default class HorizontalLinearStepper extends React.Component {
 
         <Stepper activeStep={stepIndex}>
           <Step>
-            <StepLabel> Select Subject</StepLabel>
+            <StepLabel> Select a Subject</StepLabel>
           </Step>
           <Step>
-            <StepLabel> Select Object</StepLabel>
+            <StepLabel> Select an Object</StepLabel>
           </Step>
           <Step>
-            <StepLabel> Select Predicate</StepLabel>
+            <StepLabel> Select a Predicate</StepLabel>
           </Step>
         </Stepper>
 

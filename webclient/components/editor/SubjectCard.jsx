@@ -13,13 +13,9 @@ import {Container, Col, Row, Visible} from 'react-grid-system';
 
 const styles = {
     customWidth: {
-        width: 400
-    },
-
-    textWidth: {
-        width: 375
-    }
+width: 300
 }
+};
 export default class SubjectCard extends React.Component {
     constructor(props) {
         super(props);
@@ -27,9 +23,10 @@ export default class SubjectCard extends React.Component {
         this.state = {
             subjectCard: {},
             subjectCardJsx: false,
-            value: 0
+            value: 3
         };
     }
+    handleChange = (event, index, value) => this.setState({value});
 
     componentWillReceiveProps(nextProps) {
 
@@ -50,8 +47,11 @@ export default class SubjectCard extends React.Component {
 
     render() {
         return (
+          <Col lg={4} xl={4} md={4} sm={12} xs={12}>
+
             <Card style={{
-                marginLeft: 10
+                marginLeft: 10,
+                marginRight: 10
             }}>
                 <CardHeader title="Subject" titleStyle={{
                     fontSize: 20,
@@ -59,10 +59,15 @@ export default class SubjectCard extends React.Component {
                 }}/>
                 <CardActions>
                     <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth} autoWidth={false}>
-                        <MenuItem value={0} primaryText={this.state.subjectCard['type']}/>
+                          <MenuItem value={0} primaryText="Select Type"/>
+                          <MenuItem value={1} primaryText="Intent"/>
+                          <MenuItem value={2} primaryText="Concept"/>
+                          <MenuItem value={3} primaryText={this.state.subjectCard['type']}/>
                     </DropDownMenu>
 
-                    <TextField floatingLabelText="Name" value={this.state.subjectCard['name']} style={styles.textWidth}/>
+                    <TextField floatingLabelText="Name" value={this.state.subjectCard['name']} style={{
+                        fullWidth: 'true'
+                    }}/>
                     <br/>
                     <TextField floatingLabelText="key" value='key' style={{
                         width: '40%',
@@ -70,29 +75,36 @@ export default class SubjectCard extends React.Component {
                         overflow: 'hidden'
                     }}/>
 
-                    <TextField floatingLabelText="value" value='value' style={{
+                    <TextField floatingLabelText="value" style={{
                         width: '40%'
                     }}/>
                     <ContentRemove style={{
-                        marginLeft: 28
+                        float: 'right',
+                        marginTop: '10%'
                     }}/>
                     <FloatingActionButton mini={true} style={{
-                        marginLeft: 345
+                        float: 'right',
+                        overflow: 'hidden'
                     }}>
                         <ContentAdd/>
                     </FloatingActionButton>
                     <br/>
                     <br/>
+                    <br/>
+                    <br/>
                     <Divider/>
 
-                    <Row style={{
-                        marginLeft: '50%'
-                    }}>
-                        <FlatButton label="Edit"/>
-                        <FlatButton label="Delete"/>
+                    <Row >
+                        <FlatButton label="Delete" style={{
+                            float: 'right'
+                        }}/>
+                        <FlatButton label="Edit" style={{
+                            float: 'right'
+                        }}/>
                     </Row>
                 </CardActions>
             </Card>
+        </Col>
         );
     }
 }

@@ -13,9 +13,6 @@ import {Container, Col, Row, Visible} from 'react-grid-system';
 
 
 const styles = {
-  customWidth: {
-    width: 400,
-  },
 
   textWidth: {
     width: 375,
@@ -25,38 +22,50 @@ export default class PredicateCard extends React.Component {
 
 render() {
   return (
-<Card >
+    <Col lg={4} xl={4} md={4} sm={12} xs={12}>
+      <Card style={{
+          marginLeft: 10,
+          marginRight: 10
+      }}>
   <CardHeader
     title="Predicate"
     titleStyle={{fontSize:20, marginLeft:'50%'}}/>
   <CardActions>
-    <TextField floatingLabelText="Name" style={styles.textWidth}/>
-      <br/>
-        <TextField floatingLabelText="key" style={{
-            width: '40%',
-            float:'left',
-            overflow:'hidden'
-        }}/>
+    <TextField floatingLabelText="Name" style={{
+        fullWidth: 'true'
+    }}/>
+    <br/>
+    <TextField floatingLabelText="key" style={{
+        width: '40%',
+        float: 'left',
+        overflow: 'hidden'
+    }}/>
 
-        <TextField floatingLabelText="value" style={{
-            width: '40%',
-        }}/>
-      <ContentRemove style={{marginLeft: 28}}/>
-      <FloatingActionButton mini={true} style={{
-          marginLeft: 355
-      }}>
-          <ContentAdd/>
-      </FloatingActionButton>
-      <br/>
-      <br/>
-      <Divider/>
+    <TextField floatingLabelText="value" style={{
+        width: '40%'
+    }}/>
+    <ContentRemove style={{
+        float: 'right',
+        marginTop: '10%'
+    }}/>
+    <FloatingActionButton mini={true} style={{
+        float: 'right',
+        overflow: 'hidden'
+    }}>
+        <ContentAdd/>
+    </FloatingActionButton>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <Divider/>
 
-      <Row style={{
-          marginLeft: '75%'
-      }}>
-          <FlatButton label="Edit" />
-      </Row>
-    </CardActions>
-</Card>
+    <Row>
+        <FlatButton label="Edit" style={{float:'right'}}/>
+    </Row>
+  </CardActions>
+  </Card>
+  </Col>
 );
-}}
+}
+}
