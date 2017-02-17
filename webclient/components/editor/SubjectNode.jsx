@@ -53,9 +53,9 @@ import {ScreenClassRender} from 'react-grid-system';
 
 const style = {
     margin: 30,
-    textAlign: "center",
-    fontFamily: "sans-serif",
-    overflowX: "hidden"
+    textAlign: 'center',
+    fontFamily: 'sans-serif',
+    overflowX: 'hidden'
 }
 
 const styles = {
@@ -101,9 +101,9 @@ export default class SubjectNode extends React.Component {
             canSubmit: false,
             nodeRelations: [],
             value: 1,
-            floatingLabelTextSubject: "Subject",
-            floatingLabelTextObject: "Object",
-            floatingLabelTextRel: "Predicate",
+            floatingLabelTextSubject: 'Subject',
+            floatingLabelTextObject: 'Object',
+            floatingLabelTextRel: 'Predicate',
             errmsg: null,
             loading: null,
             selectedDomain: this.props.params.domainName,
@@ -145,7 +145,7 @@ export default class SubjectNode extends React.Component {
                 // let domainList1=this.state.domainList;
                 let response = res.body;
                 if (response['subjects'].length == 0) {
-                    this.setState({floatingLabelTextObject: "No Results"})
+                    this.setState({floatingLabelTextObject: 'No Results'})
                 } else {
                     var listSubjects = [];
 
@@ -186,17 +186,17 @@ export default class SubjectNode extends React.Component {
                 // let domainList1=this.state.domainList;
                 let response = JSON.parse(res.text);
                 if (response['objects'].length == 0) {
-                    this.setState({floatingLabelTextObject: "No Results"});
+                    this.setState({floatingLabelTextObject: 'No Results'});
                 } else {
                     var listObjects = [];
                     var listPredicates = [];
                     let nodeDetails = {};
                     for (let each in response['objects']) {
                         let label;
-                        if (nodeType == "C") {
-                            label = "C";
+                        if (nodeType == 'C') {
+                            label = 'C';
                         } else {
-                            label = "T";
+                            label = 'T';
                         }
                         let nodekey = response['objects'][each]['name'];
 
@@ -263,7 +263,7 @@ export default class SubjectNode extends React.Component {
         this.getObjects(searchText.charAt(0), searchText.substr(3, searchText.length));
         if (searchText.length == 0) {
             this.setState({stepNumber: 0});
-            console.log("Herer" + this.state.stepNumber);
+            console.log('Herer' + this.state.stepNumber);
         } else {
             this.setState({
               addLabel: 'Add Intent',
@@ -293,7 +293,7 @@ export default class SubjectNode extends React.Component {
                   } else {
                       let response = JSON.parse(res.text);
                       if (response.length == 0) {
-                          this.setState({floatingLabelTextObject: "No Results"});
+                          this.setState({floatingLabelTextObject: 'No Results'});
                       } else {
                         selectedSubjectDetails['name'] = nodeName;
                         selectedSubjectDetails['type'] = nodeType;
@@ -317,7 +317,7 @@ export default class SubjectNode extends React.Component {
         console.log(this.state.selectedSubject);
         if (searchText.length == 0) {
             this.setState({stepNumber: 1});
-            console.log("Herer" + this.state.stepNumber);
+            console.log('Herer' + this.state.stepNumber);
         } else {
             this.setState({nodeRelations: predicates, selectedObject: searchText, stepNumber: 2});
             console.log('asdasd' + this.state.stepNumber);
@@ -345,7 +345,7 @@ export default class SubjectNode extends React.Component {
                 } else {
                     let response = JSON.parse(res.text);
                     if(response.length == 0){
-                      this.setState({floatingLabelTextObject: "No Results"});
+                      this.setState({floatingLabelTextObject: 'No Results'});
                     }else{
                       selectedObjectDetails['name'] = nodeName2;
                       selectedObjectDetails['type'] = nodeType;
@@ -419,9 +419,9 @@ export default class SubjectNode extends React.Component {
             let nodeType = '',
                 nodeName = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
             if (this.state.selectedSubject.charAt(0) == 'I') {
-                nodeType = "Intent";
+                nodeType = 'Intent';
             } else if (this.state.selectedSubject.charAt(0) == 'C') {
-                nodeType = "concept";
+                nodeType = 'concept';
             }
             let nodeDetails = {
                 domainName: this.state.selectedDomain,
@@ -449,16 +449,16 @@ export default class SubjectNode extends React.Component {
         return (
             <div styles={styles.div}>
                 <div style={{
-                    textAlign: "center",
-                    fontFamily: "sans-serif",
-                    color: " rgb(25, 118, 210)"
+                    textAlign: 'center',
+                    fontFamily: 'sans-serif',
+                    color: ' rgb(25, 118, 210)'
                 }}>
                     <h1 styles={style}>{this.state.selectedDomain}</h1>
                 </div>
 
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
-                    
+
                     <Row style={{
 
                         marginRight: '75%'
@@ -472,7 +472,7 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label="Add New" labelStyle={{
+                                <FlatButton label='Add New' labelStyle={{
                                     fontSize: 10
                                 }}/>
                             </Row>
@@ -492,7 +492,7 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label="Add New" labelStyle={{
+                                <FlatButton label='Add New' labelStyle={{
                                     fontSize: 10
                                 }}/>
                             </Row>
@@ -506,12 +506,12 @@ export default class SubjectNode extends React.Component {
                         marginLeft: '80%'
                     }}>
 
-                        <RaisedButton label="Apply" style={{
+                        <RaisedButton label='Apply' style={{
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
                         }}/>
-                        <RaisedButton label="Dissolve" style={{
+                        <RaisedButton label='Dissolve' style={{
                             float: 'left'
                         }}/>
                     </Row>
@@ -532,14 +532,14 @@ export default class SubjectNode extends React.Component {
                 <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
-                    <Tab label="Graph View" value="l">
+                    <Tab label='Graph View' value='l'>
                         <div>
-                            <div className="treeGraph">
+                            <div className='treeGraph'>
                                 <TreeGraph domainName={this.state.selectedDomain}/>
                             </div>
                         </div>
                     </Tab>
-                    <Tab label="List View" value="g">
+                    <Tab label='List View' value='g'>
                         <div>
                             <DomainTable domainName={this.state.selectedDomain}/>
                         </div>

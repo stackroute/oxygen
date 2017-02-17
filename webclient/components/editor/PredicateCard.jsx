@@ -47,20 +47,20 @@ render() {
           marginRight: 10
       }}>
   <CardHeader
-    title="Predicate"
+    title='Predicate'
     titleStyle={{fontSize:20, marginLeft:'50%'}}/>
   <CardActions>
-    <TextField floatingLabelText="Name" value={this.state.predicateCard['name']} style={{
+    <TextField floatingLabelText='Name' value={this.state.predicateCard['name']} style={{
         fullWidth: 'true'
     }}/>
     <br/>
-    <TextField floatingLabelText="key" style={{
+    <TextField floatingLabelText='key' style={{
         width: '40%',
         float: 'left',
         overflow: 'hidden'
     }}/>
 
-    <TextField floatingLabelText="value" style={{
+    <TextField floatingLabelText='value' style={{
         width: '40%'
     }}/>
     <ContentRemove style={{
@@ -80,7 +80,7 @@ render() {
     <Divider/>
 
     <Row>
-        <FlatButton label="Edit" style={{float:'right'}}/>
+        <FlatButton label='Edit' style={{float:'right'}}/>
     </Row>
   </CardActions>
   </Card>

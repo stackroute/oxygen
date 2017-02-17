@@ -23,14 +23,14 @@ export default class NodeRelationEditor extends React.Component{
     var relationList = this.state.relations.map((eachRelation,i) =>
             <div>
               <ListItem primaryText={eachRelation}/>
-              <FlatButton label="Edit"/>
-              <FlatButton label="Delete"/>
+              <FlatButton label='Edit'/>
+              <FlatButton label='Delete'/>
             </div>
            );
     return (
       <div>
       <TextField
-          id="text-field-controlled"
+          id='text-field-controlled'
           value={this.state.value}
           onChange={this.handleChange}
         />

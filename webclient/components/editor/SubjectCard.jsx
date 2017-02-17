@@ -53,29 +53,29 @@ export default class SubjectCard extends React.Component {
                 marginLeft: 10,
                 marginRight: 10
             }}>
-                <CardHeader title="Subject" titleStyle={{
+                <CardHeader title='Subject' titleStyle={{
                     fontSize: 20,
                     marginLeft: '50%'
                 }}/>
                 <CardActions>
                     <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth} autoWidth={false}>
-                          <MenuItem value={0} primaryText="Select Type"/>
-                          <MenuItem value={1} primaryText="Intent"/>
-                          <MenuItem value={2} primaryText="Concept"/>
+                          <MenuItem value={0} primaryText='Select Type'/>
+                          <MenuItem value={1} primaryText='Intent'/>
+                          <MenuItem value={2} primaryText='Concept'/>
                           <MenuItem value={3} primaryText={this.state.subjectCard['type']}/>
                     </DropDownMenu>
 
-                    <TextField floatingLabelText="Name" value={this.state.subjectCard['name']} style={{
+                    <TextField floatingLabelText='Name' value={this.state.subjectCard['name']} style={{
                         fullWidth: 'true'
                     }}/>
                     <br/>
-                    <TextField floatingLabelText="key" value='key' style={{
+                    <TextField floatingLabelText='key' value='key' style={{
                         width: '40%',
                         float: 'left',
                         overflow: 'hidden'
                     }}/>
 
-                    <TextField floatingLabelText="value" style={{
+                    <TextField floatingLabelText='value' style={{
                         width: '40%'
                     }}/>
                     <ContentRemove style={{
@@ -95,10 +95,10 @@ export default class SubjectCard extends React.Component {
                     <Divider/>
 
                     <Row >
-                        <FlatButton label="Delete" style={{
+                        <FlatButton label='Delete' style={{
                             float: 'right'
                         }}/>
-                        <FlatButton label="Edit" style={{
+                        <FlatButton label='Edit' style={{
                             float: 'right'
                         }}/>
                     </Row>
