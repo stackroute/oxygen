@@ -227,6 +227,41 @@ let publishEditedSubjectObjectAttributes = function(nodeObj) {
     return promise;
 };
 
+let publishAllAttributes = function(subject) {
+    logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getPublishAllAttributesCallback(subject, callback);
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+};
+//Yogee
+let publishEditedSubjectObjectAttributes = function(nodeObj) {
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.getPublishSubjectObjectAttributesCallback(nodeObj, callback);
+                }
+            ],
+            function(err, retrievedObjects) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(retrievedObjects);
+            });
+    });
+    return promise;
+};
+
 module.exports = {
     publishAddNode: publishAddNode,
     deleteObject: deleteObject,
@@ -237,7 +272,6 @@ module.exports = {
     getSubjectObjects: getSubjectObjects,
     getSearch: getSearch,
     getAllOrphans: getAllOrphans,
-    publishEditedSubjectObjectAttributes: publishEditedSubjectObjectAttributes,
-    publishAllAttributes: publishAllAttributes
-
-};
+    publishAllAttributes: publishAllAttributes,
+    publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes
+}

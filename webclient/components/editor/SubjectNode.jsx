@@ -13,7 +13,6 @@ import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Step, Stepper, StepLabel} from 'material-ui/Stepper';
-import ArrowForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import {cyan500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import Slider from 'material-ui/Slider';
@@ -50,11 +49,13 @@ import IconButton from 'material-ui/IconButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import ObjectCard from './ObjectCard.jsx';
 import PredicateCard from './PredicateCard.jsx';
+import {ScreenClassRender} from 'react-grid-system';
 
 const style = {
     margin: 30,
     textAlign: "center",
-    fontFamily: "sans-serif"
+    fontFamily: "sans-serif",
+    overflowX: "hidden"
 }
 
 const styles = {
@@ -126,7 +127,9 @@ export default class SubjectNode extends React.Component {
             selectedSubjectDetails: {},
             selectedObjectDetails: {},
             selectedPredicateDetails: {},
-            login: false
+            subjectCardJsx: false,
+            objectCardJsx: false,
+            predicateCardJsx: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -298,7 +301,7 @@ export default class SubjectNode extends React.Component {
 
                         this.setState({
                           selectedSubjectDetails: selectedSubjectDetails,
-                          login: true
+                          subjectCardJsx: true
                           });
                       }
                   }
@@ -331,7 +334,6 @@ export default class SubjectNode extends React.Component {
                 case 'I':
                     nodeType = 'Term';
                     url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}`;
-                    console.log(url);
                     break;
             }
             Request.get(url).end((err, res) => {
@@ -339,13 +341,18 @@ export default class SubjectNode extends React.Component {
                     this.setState({errmsg: res.body, loading: 'hide'});
                 } else {
                     let response = JSON.parse(res.text);
-                    selectedObjectDetails['name'] = nodeName2;
-                    selectedObjectDetails['type'] = nodeType;
-                    selectedObjectDetails['attributes'] = response;
-
-                    this.setState({
-                      selectedObjectDetails: selectedObjectDetails
-                      });
+                    if(response.length == 0){
+                      this.setState({floatingLabelTextObject: "No Results"});
+                    }else{
+                      selectedObjectDetails['name'] = nodeName2;
+                      selectedObjectDetails['type'] = nodeType;
+                      selectedObjectDetails['attributes'] = response;
+                      console.log('inside '+selectedObjectDetails['attributes']['name']);
+                      this.setState({
+                        selectedObjectDetails: selectedObjectDetails,
+                        objectCardJsx: true
+                        });
+                    }
                 }
             });
         }
@@ -429,6 +436,7 @@ export default class SubjectNode extends React.Component {
     };
 
     render() {
+
         let {paperStyle, switchStyle, submitStyle} = styles;
         const {stepIndex} = this.state;
         return (
@@ -438,18 +446,17 @@ export default class SubjectNode extends React.Component {
                     fontFamily: "sans-serif",
                     color: " rgb(25, 118, 210)"
                 }}>
-
                     <h1 styles={style}>{this.state.selectedDomain}</h1>
                 </div>
+
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
                     <Row style={{
-                        marginRight: '80%'
+                        marginRight: '75%'
                     }}>C - Concept, I - Intent, T - Term</Row>
 
                     <Row>
-
-                        <Col lg={3} xl={3} md={3} sm={3} xs={3}>
+                        <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
                                 <AutoComplete floatingLabelText={this.state.floatingLabelTextSubject} searchText={this.state.searchSubjectText} onUpdateInput={this.handleUpdateSubjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.subjectList} dataSourceConfig={dataSourceConfig} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
                             </Row>
@@ -461,28 +468,15 @@ export default class SubjectNode extends React.Component {
                                 }}/>
                             </Row>
                         </Col>
-                        <Col lg={1} xl={1} md={1} sm={1} xs={1}>
-                            <IconButton iconStyle={styles.largeIcon}>
-                                <ContentRemove style={{
-                                    marginTop: '50%'
-                                }}/>
-                            </IconButton>
-                        </Col>
 
-                        <Col lg={3} xl={3} md={3} sm={3} xs={3}>
+                        <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
                                 <AutoComplete floatingLabelText={this.state.floatingLabelTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdateRelInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
 
                             </Row>
                         </Col>
-                        <Col lg={1} xl={1} md={1} sm={1} xs={1}>
-                            <IconButton iconStyle={styles.largeIcon}>
-                                <NavigationArrowForward style={{
-                                    marginTop: '50%'
-                                }}/>
-                            </IconButton>
-                        </Col>
-                        <Col lg={3} xl={3} md={3} sm={3} xs={3}>
+
+                        <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
                                 <AutoComplete floatingLabelText={this.state.floatingLabelTextObject} searchText={this.state.searchObjectText} onUpdateInput={this.handleUpdateObjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.objectList} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
                             </Row>
@@ -502,27 +496,25 @@ export default class SubjectNode extends React.Component {
                     <Row style={{
                         marginLeft: '80%'
                     }}>
-                        <RaisedButton label="Dissolve" style={{
-                            marginRight: 10
+                        <RaisedButton label="Apply" style={{
+                            float: 'left',
+                            marginRight: 10,
+                            marginBottom: 10
                         }}/>
-
-                        <RaisedButton label="Apply"/>
+                        <RaisedButton label="Dissolve" style={{
+                            float: 'left'
+                        }}/>
                     </Row>
                     <br/>
-                    <Row >
-                        <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <SubjectCard detail={this.state.selectedSubjectDetails} login={this.state.login}/>
-                        </Col>
-                        <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <PredicateCard/>
-                        </Col>
-                        <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <ObjectCard />
-                        </Col>
+                    <Row>
+                          <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
+                          <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx}/>
+                          <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx}/>
                     </Row>
                     <br/>
 
                 </Paper>
+
                 <AddSubject open={this.state.openAddSubject} domain={this.state.selectedDomain}/>
                 <AddObject open={this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
                 <AddPredicate open={this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>

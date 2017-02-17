@@ -190,6 +190,7 @@ router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
         nodetype1: req.params.nodetype1,
         nodename1: req.params.nodename1
     }
+
     try {
         ontologyMgrCtrl.publishAllAttributes(subject).then(function(nodename) {
             logger.info("Got requests from :" + req.params.domainname);
