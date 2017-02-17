@@ -11,65 +11,78 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 
-
 const styles = {
-  customWidth: {
-    width: 400,
-  },
+    customWidth: {
+        width: 300
+    }
+};
 
-  textWidth: {
-    width: 375,
-  }
+export default class SubjectCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: 0
+        };
+    }
+    handleChange = (event, index, value) => this.setState({value});
+    render() {
+        return (
+            <Col lg={4} xl={4} md={4} sm={12} xs={12}>
+                <Card style={{
+                    marginLeft: 10,
+                    marginRight: 10
+                }}>
+                    <CardHeader title="Object" titleStyle={{
+                        fontSize: 20,
+                        marginLeft: '50%'
+                    }}/>
+                    <CardActions>
+                        <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
+                            <MenuItem value={0} primaryText="Select Type"/>
+                            <MenuItem value={1} primaryText="Term"/>
+                            <MenuItem value={2} primaryText="Concept"/>
+                        </DropDownMenu>
+                        <br/>
+                        <TextField floatingLabelText="Name" style={{
+                            fullWidth: 'true'
+                        }}/>
+                        <br/>
+                        <TextField floatingLabelText="key" style={{
+                            width: '40%',
+                            float: 'left',
+                            overflow: 'hidden'
+                        }}/>
+
+                        <TextField floatingLabelText="value" style={{
+                            width: '40%'
+                        }}/>
+                        <ContentRemove style={{
+                            float: 'right',
+                            marginTop: '10%'
+                        }}/>
+                        <FloatingActionButton mini={true} style={{
+                            float: 'right',
+                            overflow: 'hidden'
+                        }}>
+                            <ContentAdd/>
+                        </FloatingActionButton>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <Divider/>
+
+                        <Row >
+                            <FlatButton label="Delete" style={{
+                                float: 'right'
+                            }}/>
+                            <FlatButton label="Edit" style={{
+                                float: 'right'
+                            }}/>
+                        </Row>
+                    </CardActions>
+                </Card>
+            </Col>
+        );
+    }
 }
-export default class ObjectCard extends React.Component {
-
-render() {
-  return (
-
-<Card style={{
-    marginRight: 10
-}}>
-<CardHeader
-  title="Object"
-  titleStyle={{fontSize:20, marginLeft:'50%'}}/>
-<CardActions>
-<DropDownMenu
-  onChange={this.handleChange}
-  style={styles.customWidth}
-  autoWidth={false}
->
-<MenuItem value={1} primaryText="Intent" />
-<MenuItem value={2} primaryText="Concept" />
-</DropDownMenu>
-
-    <TextField floatingLabelText="Name" style={styles.textWidth}/>
-    <br/>
-      <TextField floatingLabelText="key" style={{
-          width: '40%',
-          float:'left',
-          overflow:'hidden'
-      }}/>
-
-      <TextField floatingLabelText="value" style={{
-          width: '40%',
-      }}/>
-    <ContentRemove style={{marginLeft: 28}}/>
-    <FloatingActionButton mini={true} style={{
-        marginLeft: 345
-    }}>
-        <ContentAdd/>
-    </FloatingActionButton>
-    <br/>
-    <br/>
-    <Divider/>
-
-    <Row style={{
-        marginLeft: '50%'
-    }}>
-        <FlatButton label="Edit"  />
-        <FlatButton label="Delete" />
-    </Row>
-  </CardActions>
-</Card>
-);
-}}
