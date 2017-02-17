@@ -350,7 +350,7 @@ export default class SubjectNode extends React.Component {
                       selectedObjectDetails['name'] = nodeName2;
                       selectedObjectDetails['type'] = nodeType;
                       selectedObjectDetails['attributes'] = response;
-
+                      console.log('inside '+selectedObjectDetails['attributes']['name']);
                       this.setState({
                         selectedObjectDetails: selectedObjectDetails,
                         objectCardJsx: true
@@ -517,8 +517,8 @@ export default class SubjectNode extends React.Component {
                     <br/>
                     <Row>
                           <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
-                          <PredicateCard predicateCard={this.state.selectedPredicateDetails} objectCardJsx={this.state.objectCardJsx}/>
-                          <ObjectCard objectCard={this.state.selectedObjectDetails} predicateCardJsx={this.state.predicateCardJsx}/>
+                          <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx}/>
+                          <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx}/>
                     </Row>
                     <br/>
 
