@@ -19,7 +19,8 @@ import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './DeletePredicate.jsx';
+import DeletePredicate from './DissolveRelation.jsx';
+//import DeletePredicate from './DissolveRelation.jsx';
 import AddObject from './AddObject.jsx';
 import Delete from './DeleteNode.jsx';
 import Edit from './edit.jsx';
@@ -118,18 +119,21 @@ export default class SubjectNode extends React.Component {
             relObjects: {},
             editmodalopen: false,
             deleteModalOpen: false,
+            deletePredicateModalOpen: false,
             stepNumber: 0,
             objectPredicates: [],
             nodeDetails: null,
             openAddSubject: false,
             openAddObject: false,
             openAddPredicate: false,
+            nodePredicateDetails:null,
             selectedSubjectDetails: {},
             selectedObjectDetails: {},
             selectedPredicateDetails: {},
             subjectCardJsx: false,
             objectCardJsx: false,
             predicateCardJsx: false
+
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -312,12 +316,12 @@ export default class SubjectNode extends React.Component {
     handleUpdateObjectInput = (searchText) => {
         let selectedObjectDetails = {};
         let predicates = this.state.predicateList[searchText.substr(3, searchText.length)];
+
         console.log('Kowsik = ' + searchText);
 
         console.log(this.state.selectedSubject);
         if (searchText.length == 0) {
             this.setState({stepNumber: 1});
-            console.log('Herer' + this.state.stepNumber);
         } else {
             this.setState({nodeRelations: predicates, selectedObject: searchText, stepNumber: 2});
             console.log('asdasd' + this.state.stepNumber);
@@ -361,6 +365,21 @@ export default class SubjectNode extends React.Component {
         }
     };
 
+
+    handleUpdatePredicateInput = (searchText) => {
+
+      if (searchText.length == 0) {
+          this.setState({stepNumber: 2});
+          console.log('Herer' + this.state.stepNumber);
+      } else {
+       this.setState({
+         selectedPredicate: searchText,
+         stepNumber:3
+       });
+     }
+   };
+
+
     handleUpdateRelInput = (searchText) => {
         let selectedPredicateDetails = {};
 
@@ -393,6 +412,7 @@ export default class SubjectNode extends React.Component {
             }
         });
     }
+
 
     handleDeleteSubject = () => {
         if (this.state.selectedSubject.length == 0) {} else {
@@ -433,8 +453,62 @@ export default class SubjectNode extends React.Component {
     }
 
     handleDeleteObject = () => {
-        if (this.state.selectedObject.length == 0) {} else {}
+        if (this.state.selectedObject.length == 0) {} else {
+          let nodetype = '';
+              let nodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
+              //console.log(nodename);
+              if(this.state.selectedObject.charAt(0) == 'T'){
+                nodetype = 'Term';
+              }else{
+                nodetype = 'Concept';
+              }
+              let nodeDetails = {
+                domainName : this.state.selectedDomain,
+                nodetype: nodetype,
+                nodename: nodename
+              };
+              this.setState({
+                nodeDetails: nodeDetails,
+                deleteModalOpen : true
+              });
+            }
     };
+
+
+    handleDeletePredicate = () => {
+      console.log(this.state.selectedObject);
+      console.log(this.state.selectedSubject);
+      console.log(this.state.selectedPredicate);
+     if(this.state.selectedObject.length == 0 || this.state.selectedSubject.length == 0 || this.state.selectedPredicate.length == 0){
+     }
+     else{
+       let subnodetype = '';
+       let objnodetype = '';
+       let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+       let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
+       if(this.state.selectedObject.charAt(0) == 'T'){
+         objnodetype = 'Term';
+       }else{
+         objnodetype = 'Concept';
+       }
+       if(this.state.selectedSubject.charAt(0) == 'I'){
+         subnodetype = 'Intent';
+       }else{
+         subnodetype = 'Concept';
+       }
+       let nodePredicateDetails = {
+         domainName : this.state.selectedDomain,
+         subnodetype: subnodetype,
+         subnodename: subnodename,
+         objnodetype: objnodetype,
+         objnodename: objnodename,
+         predicate: this.state.selectedPredicate
+       };
+       this.setState({
+           nodePredicateDetails: nodePredicateDetails,
+         });
+   }
+ }
 
     handleChange = (event, index, value) => this.setState({value});
 
@@ -480,7 +554,9 @@ export default class SubjectNode extends React.Component {
 
                         <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
-                                <AutoComplete floatingLabelText={this.state.floatingLabelTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdateRelInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
+                                <AutoComplete
+                                  floatingLabelText={this.state.floatingLabelTextRel}
+                                  searchText={this.state.searchRelText} onUpdateInput={this.handleUpdatePredicateInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
 
                             </Row>
                         </Col>
@@ -505,14 +581,21 @@ export default class SubjectNode extends React.Component {
                     <Row style={{
                         marginLeft: '80%'
                     }}>
+                  <RaisedButton label='Dissolve'
+                          style={{marginRight:10}}
+
+                          onTouchTap={
+
+                            this.handleDeletePredicate
+                          }
+
+
+                         />
 
                         <RaisedButton label='Apply' style={{
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
-                        }}/>
-                        <RaisedButton label='Dissolve' style={{
-                            float: 'left'
                         }}/>
                     </Row>
                     <br/>
@@ -530,6 +613,7 @@ export default class SubjectNode extends React.Component {
                 <AddPredicate open={this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
                 <DeleteNode open={this.state.deleteModalOpen} nodeDetails={this.state.nodeDetails}/>
                 <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
+                <DeletePredicate predicateDetails = {this.state.nodePredicateDetails} />
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label='Graph View' value='l'>
