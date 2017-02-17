@@ -81,13 +81,12 @@ const styles = {
     },
 
     customWidth: {
-      width: 400,
+        width: 400
     },
 
     textWidth: {
-      width: 375,
-    },
-
+        width: 375
+    }
 };
 
 const dataSourceConfig = {
@@ -390,7 +389,9 @@ export default class SubjectNode extends React.Component {
                 </div>
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
-                    <Row style={{marginRight:'80%'}}>C - Concept, I - Intent, T - Term</Row>
+                    <Row style={{
+                        marginRight: '80%'
+                    }}>C - Concept, I - Intent, T - Term</Row>
 
                     <Row>
 
@@ -401,7 +402,9 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label="Add New" labelStyle={{fontSize:10}}/>
+                                <FlatButton label="Add New" labelStyle={{
+                                    fontSize: 10
+                                }}/>
                             </Row>
                         </Col>
                         <Col lg={1} xl={1} md={1} sm={1} xs={1}>
@@ -434,17 +437,20 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label="Add New" labelStyle={{fontSize:10}}/>
+                                <FlatButton label="Add New" labelStyle={{
+                                    fontSize: 10
+                                }}/>
                             </Row>
                         </Col>
 
                     </Row>
                     <br/>
                     <Divider/>
-<br/>
+                    <br/>
                     <Row style={{
                         marginLeft: '80%'
                     }}>
+
                         <RaisedButton label="Dissolve"
                           style={{marginRight:10}}
 
@@ -456,18 +462,19 @@ export default class SubjectNode extends React.Component {
 
                          />
 
+
                         <RaisedButton label="Apply"/>
                     </Row>
-<br/>
+                    <br/>
                     <Row >
                         <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <SubjectCard />
+                            <SubjectCard/>
                         </Col>
                         <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <PredicateCard />
+                            <PredicateCard/>
                         </Col>
                         <Col lg={4} xl={4} md={4} sm={4} xs={4}>
-                            <ObjectCard />
+                            <ObjectCard/>
                         </Col>
                     </Row>
                     <br/>
