@@ -21,10 +21,27 @@ export default class SubjectCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 0
+            objectCard: {},
+            objectCardJsx: false,
+            value: 3
         };
     }
     handleChange = (event, index, value) => this.setState({value});
+    componentWillReceiveProps(nextProps) {
+
+        this.setState({objectCardJsx: nextProps.objectCardJsx});
+        let objectCard = {};
+        if (this.state.objectCardJsx) {
+            objectCard['name'] = nextProps.objectCard['name'],
+            objectCard['type'] = nextProps.objectCard['type']
+        } else {
+            objectCard['name'] = '',
+            objectCard['type'] = '';
+            objectCard['attributes'] = {};
+        }
+        this.setState({objectCard: objectCard});
+    }
+
     render() {
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
@@ -39,11 +56,12 @@ export default class SubjectCard extends React.Component {
                     <CardActions>
                         <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
                             <MenuItem value={0} primaryText="Select Type"/>
-                            <MenuItem value={1} primaryText="Term"/>
+                            <MenuItem value={1} primaryText="Intent"/>
                             <MenuItem value={2} primaryText="Concept"/>
+                            <MenuItem value={3} primaryText={this.state.objectCard['type']}/>
                         </DropDownMenu>
                         <br/>
-                        <TextField floatingLabelText="Name" style={{
+                        <TextField floatingLabelText="Name" value={this.state.objectCard['name']} style={{
                             fullWidth: 'true'
                         }}/>
                         <br/>
