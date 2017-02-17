@@ -332,6 +332,7 @@ export default class SubjectNode extends React.Component {
                     <Row style={{
                         marginRight: '75%'
                     }}>C - Concept, I - Intent, T - Term</Row>
+
                     <Row>
                         <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
@@ -348,7 +349,7 @@ export default class SubjectNode extends React.Component {
 
                         <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
-                                <AutoComplete floatingLabelText={this.state.floatingLabelTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdateRelInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5} />
+                                <AutoComplete floatingLabelText={this.state.floatingLabelTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdateRelInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
 
                             </Row>
                         </Col>
@@ -370,11 +371,9 @@ export default class SubjectNode extends React.Component {
                     <br/>
                     <Divider/>
                     <br/>
-
                     <Row style={{
                         marginLeft: '80%'
                     }}>
-
                         <RaisedButton label="Apply" style={{
                             float: 'left',
                             marginRight: 10,
