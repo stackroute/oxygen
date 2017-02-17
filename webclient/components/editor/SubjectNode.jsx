@@ -457,7 +457,7 @@ export default class SubjectNode extends React.Component {
 
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
-<a onClick={this.scrollTo}>Scroll to Graph view from the top</a>
+                    
                     <Row style={{
 
                         marginRight: '75%'

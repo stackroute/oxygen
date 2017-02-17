@@ -17,7 +17,7 @@ const styles = {
     }
 };
 
-export default class SubjectCard extends React.Component {
+export default class ObjectCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,6 +40,7 @@ export default class SubjectCard extends React.Component {
             objectCard['attributes'] = {};
         }
         this.setState({objectCard: objectCard});
+        console.log("yogee"+this.state.objectCard['name']);
     }
 
     render() {
