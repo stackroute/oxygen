@@ -61,8 +61,8 @@ export default class DeletePredicate extends React.Component {
     if(predicateDetails !== null){
       let url = `domain/${predicateDetails.domainName}/subject/${predicateDetails.subnodetype}/${predicateDetails.subnodename}/object/${predicateDetails.objnodetype}/${predicateDetails.objnodename}/predicate/${predicateDetails.predicate}`;
       console.log(url);
-      Request.put(url)
-      .send(requestObj)
+      Request.delete(url)
+
       .end((err, res) => {
         if (err) {
           console.log("err");

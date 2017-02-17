@@ -289,10 +289,16 @@ let deleteObject = function(deleteObj) {
             });
         let session = driver.session();
         logger.debug("Obtained connection with neo4j");
+        // let query = 'match(d:Domain{name:{domainName}})'
+        // query += 'match(d)<-[r1]-( sub:' + deleteObj.subNodeType + '{name:{subNodeName}})'
+        // query += 'match(sub)-[r2:' + deleteObj.predicateName + ']-(obj:' + deleteObj.objNodeType + '{name:{objNodeName}})'
+        // query += 'detach delete(r2)';
+
         let query = 'match(d:Domain{name:{domainName}})'
-        query += 'match(d)<-[r1]-(sub:' + deleteObj.subNodeType + '{name:{subNodeName}})'
-        query += 'match(sub)-[r2:' + deleteObj.predicateName + ']-(obj:' + deleteObj.objNodeType + '{name:{objNodeName}})'
-        query += 'detach delete(r2)';
+               query += 'match(d)<-[r1]-( sub:' + deleteObj.subNodeType + '{name:{subNodeName}})'
+               query += 'match(sub)-[r2:' + deleteObj.predicateName + ']-(obj:' + deleteObj.objNodeType + '{name:{objNodeName}})'
+               query += 'detach delete(r2)';
+
 
         let params = {
             domainName: deleteObj.domainName,
@@ -304,7 +310,7 @@ let deleteObject = function(deleteObj) {
             .then(function(result) {
                 if (result) {
                     session.close();
-                    resolve(deleteObj) ;
+                    resolve(deleteObj);
                 }
             })
             .catch(function(err) {
