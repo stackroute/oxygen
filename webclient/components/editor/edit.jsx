@@ -76,7 +76,7 @@ export default class Edit extends React.Component {
             });
         }
     }
-    
+
     handleModalClose = () => {
         this.setState({editModalOpen: false});
     }
