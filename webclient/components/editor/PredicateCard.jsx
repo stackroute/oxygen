@@ -19,7 +19,26 @@ const styles = {
   }
 }
 export default class PredicateCard extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+          predicateCard: {},
+          predicateCardJsx: false
+      };
+  }
 
+  componentWillReceiveProps(nextProps) {
+
+      this.setState({predicateCardJsx: nextProps.predicateCardJsx});
+      let predicateCard = {};
+      if (this.state.predicateCardJsx) {
+          predicateCard['name'] = nextProps.predicateCard['name']
+      } else {
+          predicateCard['name'] = '',
+          predicateCard['attributes'] = {};
+      }
+      this.setState({predicateCard: predicateCard});
+  }
 render() {
   return (
     <Col lg={4} xl={4} md={4} sm={12} xs={12}>
@@ -31,7 +50,7 @@ render() {
     title="Predicate"
     titleStyle={{fontSize:20, marginLeft:'50%'}}/>
   <CardActions>
-    <TextField floatingLabelText="Name" style={{
+    <TextField floatingLabelText="Name" value={this.state.predicateCard['name']} style={{
         fullWidth: 'true'
     }}/>
     <br/>
