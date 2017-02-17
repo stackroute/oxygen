@@ -17,7 +17,7 @@ const styles = {
     }
 };
 
-export default class SubjectCard extends React.Component {
+export default class ObjectCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
