@@ -53,58 +53,36 @@ export default class DeletePredicate extends React.Component {
         predicateDetails: nextProps.predicateDetails,
         open: nextProps.open
       });
+      this.deletePredicate(nextProps.predicateDetails);
     }
   }
 
-  deletePredicate(){
-    let url = `domain/${this.state.predicateDetails.domainName}/subject/${this.state.predicateDetails.subnodetype}/${this.state.predicateDetails.subnodename}/object/${this.state.predicateDetails.objnodetype}/${this.state.predicateDetails.objnodename}/predicate/${this.state.predicateDetails.predicate}`;
-    console.log(url);
+  deletePredicate(predicateDetails){
+    if(predicateDetails !== null){
+      let url = `domain/${predicateDetails.domainName}/subject/${predicateDetails.subnodetype}/${predicateDetails.subnodename}/object/${predicateDetails.objnodetype}/${predicateDetails.objnodename}/predicate/${predicateDetails.predicate}`;
+      console.log(url);
+      Request.put(url)
+      .send(requestObj)
+      .end((err, res) => {
+        if (err) {
+          console.log("err");
+            this.setState({errmsg: res.body, loading: 'hide'});
+        } else {
+          console.log("Passing");
+          this.setState({openAddDialog: true});
+        }
+      });
+
+
+    }
   }
 
   render(){
     let textFields = null;
-    if(this.state.predicateDetails !== null){
-    }
+
     return (
-      <Dialog
-        title="Predicate to be deleted"
-        modal={true}
-        open={this.state.open}
-        autoScrollBodyContent={true}
-      >
-      {this.state.predicateDetails !== null &&
-        <div>
-        <TextField
-          defaultValue={this.state.predicateDetails.subnodename}
-          floatingLabelText="selected Subject"
-          fullWidth={true}
-          readOnly={true}
-        />
-       <TextField
-          defaultValue={this.state.predicateDetails.predicate}
-          floatingLabelText="selected Predicate"
-          fullWidth={true}
-          readOnly={true}
-        />
-      <TextField
-          defaultValue={this.state.predicateDetails.objnodename}
-          floatingLabelText="selected Object"
-          fullWidth={true}
-          readOnly={true}
-        />
-    </div>
-      }
-        <RaisedButton
-            label="Delete"
-            secondary={true}
-            onTouchTap={this.deletePredicate}
-            />
-        <RaisedButton
-            label="Close"
-            default={true}
-            onTouchTap={this.handleClose}
-            styles = {styles.closeButton}
-            />
+      <Dialog>
+
       </Dialog>
     );
   }
