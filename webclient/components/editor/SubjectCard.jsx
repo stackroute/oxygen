@@ -92,7 +92,6 @@ export default class SubjectCard extends React.Component {
                             <MenuItem value={2} primaryText='Concept'/>
                             <MenuItem value={3} primaryText={this.state.subjectCard['type']}/>
                         </DropDownMenu>
-
                         <TextField floatingLabelText='Name' value={this.state.subjectCard['name']} style={{
                             fullWidth: 'true'
                         }}/>
