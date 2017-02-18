@@ -62,7 +62,9 @@ gulp.task('eslint', function() {
 
     //  'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
     //  'webclient/**/*.jsx', '!dist/**/*'
-    'server/ontologyMgr/ontologyMgrNeo4jController.js'
+
+    'server/ontologyMgr/noe4jConnection.js'
+
 
     'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
     'webclient/**/*.jsx', '!dist/**/*'
