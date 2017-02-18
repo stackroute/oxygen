@@ -7,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 
@@ -23,10 +23,10 @@ export default class ObjectCard extends React.Component {
         this.state = {
             objectCard: {},
             objectCardJsx: false,
-            value: 3
+            value: 0
         };
     }
-    handleChange = (event, index, value) => this.setState({value});
+    handleChange = (event, index, value) => this.setState({value:3});
     componentWillReceiveProps(nextProps) {
 
         this.setState({objectCardJsx: nextProps.objectCardJsx});
@@ -79,12 +79,10 @@ export default class ObjectCard extends React.Component {
                             float: 'right',
                             marginTop: '10%'
                         }}/>
-                        <FloatingActionButton mini={true} style={{
-                            float: 'right',
-                            overflow: 'hidden'
-                        }}>
-                            <ContentAdd/>
-                        </FloatingActionButton>
+                        <br/>
+                            <ContentAddCircleOutline style={{
+                                float: 'right',
+                            }}/>
                         <br/>
                         <br/>
                         <br/>

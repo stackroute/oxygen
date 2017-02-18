@@ -7,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 
@@ -39,8 +39,8 @@ export default class PredicateCard extends React.Component {
       }
       this.setState({predicateCard: predicateCard});
   }
-render() {
-  return (
+  render() {
+      return (
     <Col lg={4} xl={4} md={4} sm={12} xs={12}>
       <Card style={{
           marginLeft: 10,
@@ -67,12 +67,10 @@ render() {
         float: 'right',
         marginTop: '10%'
     }}/>
-    <FloatingActionButton mini={true} style={{
-        float: 'right',
-        overflow: 'hidden'
-    }}>
-        <ContentAdd/>
-    </FloatingActionButton>
+    <br/>
+        <ContentAddCircleOutline style={{
+            float: 'right',
+        }}/>
     <br/>
     <br/>
     <br/>

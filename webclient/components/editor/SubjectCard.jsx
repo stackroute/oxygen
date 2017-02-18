@@ -7,9 +7,9 @@ import TextField from 'material-ui/TextField';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
+import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
 
 const styles = {
     customWidth: {
@@ -19,14 +19,13 @@ width: 300
 export default class SubjectCard extends React.Component {
     constructor(props) {
         super(props);
-        //this.enableButton = this.enableButton.bind(this);
         this.state = {
             subjectCard: {},
             subjectCardJsx: false,
-            value: 3
+            value:3
         };
     }
-    handleChange = (event, index, value) => this.setState({value});
+    handleChange = (event, index, value) => this.setState({value:3});
 
     componentWillReceiveProps(nextProps) {
 
@@ -41,7 +40,8 @@ export default class SubjectCard extends React.Component {
             subjectCard['attributes'] = {};
         }
         this.setState({
-          subjectCard: subjectCard
+          subjectCard: subjectCard,
+
         });
     }
 
@@ -58,7 +58,7 @@ export default class SubjectCard extends React.Component {
                     marginLeft: '50%'
                 }}/>
                 <CardActions>
-                    <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth} autoWidth={false}>
+                    <DropDownMenu placeholder='hey' value={this.state.value} onChange={this.handleChange} style={styles.customWidth} autoWidth={false}>
                           <MenuItem value={0} primaryText='Select Type'/>
                           <MenuItem value={1} primaryText='Intent'/>
                           <MenuItem value={2} primaryText='Concept'/>
@@ -82,12 +82,10 @@ export default class SubjectCard extends React.Component {
                         float: 'right',
                         marginTop: '10%'
                     }}/>
-                    <FloatingActionButton mini={true} style={{
-                        float: 'right',
-                        overflow: 'hidden'
-                    }}>
-                        <ContentAdd/>
-                    </FloatingActionButton>
+                    <br/>
+                        <ContentAddCircleOutline style={{
+                            float: 'right',
+                        }}/>
                     <br/>
                     <br/>
                     <br/>
