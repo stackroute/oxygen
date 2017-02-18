@@ -681,17 +681,32 @@ let getSearch = function(nodeObj) {
         let query = '';
         logger.debug("obtained connection with neo4j");
         //  let query = 'match (n) where n.name =~ {search} return n';
-        query = 'match (d: Domain {name: {subjectDomainname}})-[]-(n)-[]-(p) return p , n';
+        query = 'match (d: Domain {name: {subjectDomainname}})-[r1]-(n)-[r]-(p) return p , n,r,r1 ';
         let params = {
             subjectDomainname: subjectDomainname,
         };
 
-
+let listDetail = [];
         session.run(query, params)
             .then(function(result) {
                 if (result.records.length == 0) {}
+                else{
+
+                  result.records.forEach(function(record){
+                    let obj = {
+                      name : null,
+                      label : null
+                      }
+                    obj.name = record._fields[0]['properties']['name'];
+                    obj.label = record._fields[0]['labels'][0];
+                  //  obj.label = record._fields[0]['labels'][1];
+                      //obj.label = record._fields[0]['type'][0];
+                    listDetail.push(obj);
+                  });
+                }
                 session.close();
-                resolve(result);
+                resolve(listDetail);
+
             })
             .catch(function(err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
@@ -710,12 +725,8 @@ module.exports = {
     deleteObjectCallback: deleteObjectCallback,
     deleteOrphansCallback: deleteOrphansCallback,
     getRelationsCallback: getRelationsCallback,
-
-
-
     getAllRelationsCallback: getAllRelationsCallback,
     getPublishSubjectObjectAttributesCallback: getPublishSubjectObjectAttributesCallback,
-
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback,
     getSearchCallback: getSearchCallback

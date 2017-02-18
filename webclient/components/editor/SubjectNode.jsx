@@ -20,7 +20,7 @@ import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './DeletePredicate.jsx';
+import DeletePredicate from './dissolveRelation.jsx';
 //import DeletePredicate from './DissolveRelation.jsx';
 import AddObject from './AddObject.jsx';
 import Delete from './DeleteNode.jsx';
