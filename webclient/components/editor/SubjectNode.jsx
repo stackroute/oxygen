@@ -198,7 +198,8 @@ export default class SubjectNode extends React.Component {
 
     handleUpdateDomainInput = (searchText) => {
         this.getSubjects(searchText);
-        this.setState({addLabel: 'Add Intent',
+        this.setState({
+          addLabel: 'Add Intent',
           floatingLabelTextSubject: 'Subjects loaded'});
     };
 
@@ -285,7 +286,7 @@ export default class SubjectNode extends React.Component {
       }else{
         let subnodetype = '';
         let objnodetype = '';
-        let subnodename = this.state.selectedSubject.substr(3, this.state.selectedObject.length);
+        let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
         let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
         //console.log(nodename);
         if(this.state.selectedObject.charAt(0) == 'T'){

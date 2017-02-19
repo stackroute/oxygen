@@ -341,5 +341,64 @@ router.get('/:domainname/search', function(req, res) {
     }
 });
 
+router.post('/:domainname/resource', function(req, res) {
+    let reqObj = {
+        domainname: req.params.domainname,
+        resourceDetails: req.body
+    }
+    try {
+        ontologyMgrCtrl.createResource(reqObj).then(function(Obj) {
+                logger.debug(
+                    "Successfully Posted all details to show length----->",
+                    reqObj.length);
+                res.send(Obj);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered Error Creating Resource of domain: ",
+                    err);
+                res.send(err);
+                return;
+            });
+    } catch (err) {
+        logger.error("Caught a error in creating resource for a domain ", err);
+        res.status(200).send({
+            err: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
+
+router.post('/:domainname/subject/:nodetype/:nodename/object', function(req, res) {
+    let reqObj = {
+        domainname: req.params.domainname,
+        subname: req.params.nodename,
+        subtype: req.params.nodetype,
+        resourceDetails: req.body
+    }
+    try {
+        ontologyMgrCtrl.formStatement(reqObj).then(function(Obj) {
+                logger.debug(
+                    "Successfully Posted all details to show length----->",
+                    reqObj.length);
+                res.send(Obj);
+                return;
+            },
+            function(err) {
+                logger.error(
+                    "Encountered Error Creating Resource of domain: ",
+                    err);
+                res.send(err)
+                return;
+            })
+    } catch (err) {
+        logger.error("Caught a error in creating resource for a domain ", err);
+        res.status(200).send({
+            err: "Something went wrong, please try later..!"
+        });
+        return;
+    }
+});
 
 module.exports = router;
