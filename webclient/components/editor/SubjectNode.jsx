@@ -138,6 +138,7 @@ export default class SubjectNode extends React.Component {
         this.getSubjects(this.state.selectedDomain);
     }
 
+
     getSubjects(domainName) {
         let url = `domain/${domainName}/subjects`;
         Request.get(url).end((err, res) => {
