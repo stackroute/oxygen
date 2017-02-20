@@ -85,13 +85,10 @@ export default class ObjectCard extends React.Component {
                         marginLeft: '50%'
                     }}/>
                     <CardActions>
-                        <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
-                            <MenuItem value={0} primaryText='Select Type'/>
-                            <MenuItem value={1} primaryText='Intent'/>
-                            <MenuItem value={2} primaryText='Concept'/>
-                            <MenuItem value={3} primaryText={this.state.objectCard['type']}/>
-                        </DropDownMenu>
-                        <br/>
+
+                        <TextField floatingLabelText='Type' value={this.state.objectCard['type']} style={{
+                              fullWidth: 'true'
+                          }}/>
                         <TextField floatingLabelText='Name' value={this.state.objectCard['name']} style={{
                             fullWidth: 'true'
                         }}/>
