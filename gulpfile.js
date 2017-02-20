@@ -60,9 +60,6 @@ gulp.task('clean', function() {
 gulp.task('eslint', function() {
   return gulp.src([
 
-    //  'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
-    //  'webclient/**/*.jsx', '!dist/**/*'
-
     'server/ontologyMgr/noe4jConnection.js'
 
 

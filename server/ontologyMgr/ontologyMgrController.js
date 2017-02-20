@@ -194,6 +194,48 @@ let getSearch = function(nodeObj) {
     return promise;
 }
 
+let createResource = function(nodeObj) {
+    logger.debug("Received request for retriving Objects",
+        nodeObj);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.createResourceCallback(
+                        nodeObj,
+                        callback)
+                }
+            ],
+            function(err, createdResource) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(createdResource);
+            });
+    });
+    return promise;
+}
+
+let formStatement = function(nodeObj) {
+    logger.debug("Received request for retriving Objects",
+        nodeObj.nodename);
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    ontologyMgrNeo4jController.formStatementCallback(
+                        nodeObj,
+                        callback)
+                }
+            ],
+            function(err, statement) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(statement);
+            });
+    });
+    return promise;
+}
+
 let publishAllAttributes = function(subject) {
     logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
     let promise = new Promise(function(resolve, reject) {
@@ -239,6 +281,9 @@ module.exports = {
     getSubjectObjects: getSubjectObjects,
     getSearch: getSearch,
     getAllOrphans: getAllOrphans,
+    createResource: createResource,
+    formStatement: formStatement,
     publishAllAttributes: publishAllAttributes,
     publishEditedSubjectObjectAttributes:publishEditedSubjectObjectAttributes
+
 }
