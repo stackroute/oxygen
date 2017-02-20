@@ -29,19 +29,18 @@ export default class ObjectCard extends React.Component {
     }
     handleChange = (event, index, value) => this.setState({value});
     componentWillReceiveProps(nextProps) {
-
         this.setState({objectCardJsx: nextProps.objectCardJsx});
         let objectCard = {};
-        if (this.state.objectCardJsx) {
+        if (nextProps.objectCardJsx) {
             objectCard['name'] = nextProps.objectCard['name'],
             objectCard['type'] = nextProps.objectCard['type'],
             objectCard['attributes'] = nextProps.objectCard['attributes'];
-
+            console.log('Here');
+            console.log(nextProps.objectCard);
             var listAttr = [];
             for (let key in objectCard['attributes']) {
                 let keyValue = key;
                 let value = objectCard['attributes'][key];
-
                 listAttr.push({
                   key: keyValue,
                   value: value
@@ -84,13 +83,10 @@ export default class ObjectCard extends React.Component {
                         marginLeft: '50%'
                     }}/>
                     <CardActions>
-                        <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
-                            <MenuItem value={0} primaryText='Select Type'/>
-                            <MenuItem value={1} primaryText='Intent'/>
-                            <MenuItem value={2} primaryText='Concept'/>
-                            <MenuItem value={3} primaryText={this.state.objectCard['type']}/>
-                        </DropDownMenu>
-                        <br/>
+
+                        <TextField floatingLabelText='Type' value={this.state.objectCard['type']} style={{
+                              fullWidth: 'true'
+                          }}/>
                         <TextField floatingLabelText='Name' value={this.state.objectCard['name']} style={{
                             fullWidth: 'true'
                         }}/>

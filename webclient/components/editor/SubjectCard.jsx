@@ -51,7 +51,6 @@ export default class SubjectCard extends React.Component {
         } else {
             subjectCard['name'] = '',
             subjectCard['type'] = '';
-            console.log(subjectCard['attributes']);
         }
         this.setState({subjectCard: subjectCard});
     }
@@ -86,12 +85,10 @@ export default class SubjectCard extends React.Component {
                         marginLeft: '50%'
                     }}/>
                     <CardActions>
-                        <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth} autoWidth={false}>
-                            <MenuItem value={0} primaryText='Select Type'/>
-                            <MenuItem value={1} primaryText='Intent'/>
-                            <MenuItem value={2} primaryText='Concept'/>
-                            <MenuItem value={3} primaryText={this.state.subjectCard['type']}/>
-                        </DropDownMenu>
+                        
+                        <TextField floatingLabelText='Type' value={this.state.subjectCard['type']} style={{
+                            fullWidth: 'true'
+                        }}/>
                         <TextField floatingLabelText='Name' value={this.state.subjectCard['name']} style={{
                             fullWidth: 'true'
                         }}/>

@@ -28,7 +28,7 @@ describe("fetching concepts from the domain which is not present", function() {
         concept: "no_domain"
     };
     it('trying to get the Terms of domain which is not there', function() {
-      
+
         expect(Object.keys(moduleToTest(domainObj))).to.have.lengthOf(0);
     });
 }); //end of describe

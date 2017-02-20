@@ -37,6 +37,7 @@ export default class DeletePredicate extends React.Component {
   constructor(props) {
     super(props);
     this.deletePredicate = this.deletePredicate.bind(this);
+    this.constructURL = this.constructURL.bind(this);
     this.state = {
       predicateDetails: null,
       open: false
@@ -56,9 +57,23 @@ export default class DeletePredicate extends React.Component {
     }
   }
 
+  constructURL(){
+    let self = this;
+    return new Promise(
+      function(resolve, reject){
+          let url = `domain/${self.state.predicateDetails.domainName}/subject/${self.state.predicateDetails.subnodetype}/${self.state.predicateDetails.subnodename}/object/${self.state.predicateDetails.objnodetype}/${self.state.predicateDetails.objnodename}/predicate/${self.state.predicateDetails.predicate}`;
+          if(url.length > 0){
+            resolve(url);
+          }else{
+            reject(null);
+          }
+      });
+  }
+
   deletePredicate(){
-    let url = `domain/${this.state.predicateDetails.domainName}/subject/${this.state.predicateDetails.subnodetype}/${this.state.predicateDetails.subnodename}/object/${this.state.predicateDetails.objnodetype}/${this.state.predicateDetails.objnodename}/predicate/${this.state.predicateDetails.predicate}`;
-    console.log(url);
+    this.constructURL().then(result => {
+      console.log(result);
+    });
   }
 
   render(){
