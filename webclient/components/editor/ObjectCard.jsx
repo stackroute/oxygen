@@ -29,10 +29,12 @@ export default class ObjectCard extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({objectCardJsx: nextProps.objectCardJsx});
         let objectCard = {};
-        if (this.state.objectCardJsx) {
+        if (nextProps.objectCardJsx) {
             objectCard['name'] = nextProps.objectCard['name'],
             objectCard['type'] = nextProps.objectCard['type'],
             objectCard['attributes'] = nextProps.objectCard['attributes'];
+            console.log('Here');
+            console.log(nextProps.objectCard);
             var listAttr = [];
             for (let key in objectCard['attributes']) {
                 let keyValue = key;
@@ -72,7 +74,7 @@ export default class ObjectCard extends React.Component {
                     marginLeft: 10,
                     marginRight: 10
                 }}>
-                    <CardHeader title="Object" titleStyle={{
+                    <CardHeader title='Object' titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'
                     }}/>
@@ -84,7 +86,11 @@ export default class ObjectCard extends React.Component {
                             <MenuItem value={3} primaryText={this.state.objectCard['type']}/>
                         </DropDownMenu>
                         <br/>
-                        <TextField floatingLabelText="Name" value={this.state.objectCard['name']} style={{
+
+                        <TextField floatingLabelText='Type' value={this.state.objectCard['type']} style={{
+                              fullWidth: 'true'
+                          }}/>
+                        <TextField floatingLabelText='Name' value={this.state.objectCard['name']} style={{
                             fullWidth: 'true'
                         }}/>
                         <br/>
@@ -99,16 +105,17 @@ export default class ObjectCard extends React.Component {
                         }}>
                             <ContentAdd/>
                         </FloatingActionButton>
+
                         <br/>
                         <br/>
                         <br/>
                         <br/>
                         <Divider/>
                         <Row >
-                            <FlatButton label="Delete" style={{
+                            <FlatButton label='Delete' style={{
                                 float: 'right'
                             }}/>
-                            <FlatButton label="Edit" style={{
+                            <FlatButton label='Edit' style={{
                                 float: 'right'
                             }}/>
                         </Row>

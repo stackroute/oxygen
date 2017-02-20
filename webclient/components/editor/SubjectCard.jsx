@@ -100,6 +100,15 @@ export default class SubjectCard extends React.Component {
                         }}>
                             <ContentAdd/>
                         </FloatingActionButton>
+
+                        <TextField floatingLabelText='Type' value={this.state.subjectCard['type']} style={{
+                            fullWidth: 'true'
+                        }}/>
+                        <TextField floatingLabelText='Name' value={this.state.subjectCard['name']} style={{
+                            fullWidth: 'true'
+                        }}/>
+                        <br/>
+                        {keyValueDisplay}
                         <br/>
                         <br/>
                         <br/>

@@ -24,16 +24,20 @@ export default class PredicateCard extends React.Component {
             attrObj: null
         };
     }
+
     componentWillReceiveProps(nextProps) {
+
         this.setState({predicateCardJsx: nextProps.predicateCardJsx});
         let predicateCard = {};
         if (this.state.predicateCardJsx) {
             predicateCard['name'] = nextProps.predicateCard['name'];
             predicateCard['attributes'] = nextProps.predicateCard['properties'];
+
             var listAttr = [];
             for (let key in predicateCard['attributes']) {
                 let keyValue = key;
                 let value = predicateCard['attributes'][key];
+
                 listAttr.push({
                   key: keyValue,
                   value: value
@@ -55,12 +59,12 @@ export default class PredicateCard extends React.Component {
                     width: '40%',
                     float: 'left',
                     overflow: 'hidden'
-              }}/>
-              <TextField floatingLabelText='value' value={row.value} style={{
+                }}/>
 
-                  width: '40%'
-              }}/>
-            <br/>
+              <TextField floatingLabelText='value' value={row.value} style={{
+                    width: '40%'
+                }}/>
+              <br/>
               </div>
             ));
         }
@@ -80,6 +84,7 @@ export default class PredicateCard extends React.Component {
                         }}/>
                         <br/>
                         {keyValueDisplay}
+
                         <ContentRemove style={{
                             float: 'right',
                             marginTop: '10%'
