@@ -12,7 +12,6 @@ import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 
 const styles = {
-
     textWidth: {
         width: 375
     }
