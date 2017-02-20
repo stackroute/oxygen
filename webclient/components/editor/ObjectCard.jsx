@@ -23,7 +23,8 @@ export default class ObjectCard extends React.Component {
         this.state = {
             objectCard: {},
             objectCardJsx: false,
-            value: 0
+            value: 3,
+            attrObj: null
         };
     }
     handleChange = (event, index, value) => this.setState({value:3});
@@ -33,17 +34,46 @@ export default class ObjectCard extends React.Component {
         let objectCard = {};
         if (this.state.objectCardJsx) {
             objectCard['name'] = nextProps.objectCard['name'],
-            objectCard['type'] = nextProps.objectCard['type']
+            objectCard['type'] = nextProps.objectCard['type'],
+            objectCard['attributes'] = nextProps.objectCard['attributes'];
+
+            var listAttr = [];
+            for (let key in objectCard['attributes']) {
+                let keyValue = key;
+                let value = objectCard['attributes'][key];
+
+                listAttr.push({
+                  key: keyValue,
+                  value: value
+                 });
+            }
+            this.setState({attrObj: listAttr});
         } else {
             objectCard['name'] = '',
             objectCard['type'] = '';
-            objectCard['attributes'] = {};
         }
         this.setState({objectCard: objectCard});
         console.log('yogee'+this.state.objectCard['name']);
     }
 
     render() {
+      let keyValueDisplay = '';
+        if (this.state.attrObj !== null) {
+            keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
+              <div>
+                <TextField floatingLabelText='key' value={row.key} style={{
+                    width: '40%',
+                    float: 'left',
+                    overflow: 'hidden'
+                }}/>
+
+              <TextField floatingLabelText='value' value={row.value} style={{
+                    width: '40%'
+                }}/>
+              <br/>
+              </div>
+            ));
+        }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                 <Card style={{
@@ -66,23 +96,7 @@ export default class ObjectCard extends React.Component {
                             fullWidth: 'true'
                         }}/>
                         <br/>
-                        <TextField floatingLabelText='key' style={{
-                            width: '40%',
-                            float: 'left',
-                            overflow: 'hidden'
-                        }}/>
-
-                        <TextField floatingLabelText='value' style={{
-                            width: '40%'
-                        }}/>
-                        <ContentRemove style={{
-                            float: 'right',
-                            marginTop: '10%'
-                        }}/>
-                        <br/>
-                            <ContentAddCircleOutline style={{
-                                float: 'right',
-                            }}/>
+                        {keyValueDisplay}
                         <br/>
                         <br/>
                         <br/>
