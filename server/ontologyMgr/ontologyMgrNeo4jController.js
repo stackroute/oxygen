@@ -912,12 +912,7 @@ module.exports = {
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback,
     getSearchCallback: getSearchCallback,
-<<<<<<< HEAD
-getPublishAllAttributesCallback: getPublishAllAttributesCallback
-}
-=======
     createResourceCallback: createResourceCallback,
     formStatementCallback: formStatementCallback,
     getPublishAllAttributesCallback: getPublishAllAttributesCallback
 };
->>>>>>> 1fd1207a195dd90a31322ae6e32b499256deb41d
