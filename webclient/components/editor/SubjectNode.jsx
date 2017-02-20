@@ -35,6 +35,7 @@ import {
     FormsyToggle,
     FormsyAutoComplete
 } from 'formsy-material-ui/lib';
+import lime800 from 'material-ui/styles/colors';
 import SubjectCard from './SubjectCard.jsx';
 import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
 import TreeGraph from './TreeGraph.jsx';
@@ -283,7 +284,6 @@ export default class SubjectNode extends React.Component {
                       if (response.length == 0) {
                           this.setState({floatingLabelTextObject: 'No Results'});
                       } else {
->>>>>>> 1fd1207a195dd90a31322ae6e32b499256deb41d
                         selectedSubjectDetails['name'] = nodeName;
                         selectedSubjectDetails['type'] = nodeType;
                         selectedSubjectDetails['attributes'] = response.attributes;
@@ -494,7 +494,7 @@ export default class SubjectNode extends React.Component {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: ' rgb(25, 118, 210)'
+                    color: 'teal'
                 }}>
                     <h1 styles={style}>{this.state.selectedDomain}</h1>
                 </div>
@@ -562,11 +562,10 @@ export default class SubjectNode extends React.Component {
                         }}
                         onTouchTap={this.formStatement}
                         />
-
                     </Row>
                     <br/>
                     <Row>
-                        <SubjectCar subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
+                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
                         <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx}/>
                         <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx}/>
                     </Row>

@@ -41,18 +41,13 @@ export default class ObjectCard extends React.Component {
             objectCard['name'] = nextProps.objectCard['name'],
             objectCard['type'] = nextProps.objectCard['type'],
             objectCard['attributes'] = nextProps.objectCard['attributes'];
-<<<<<<< HEAD
 
             this.setState(style: {
               backgroundColor: none,
               marginLeft: 10,
               marginRight: 10,
             })
-
-=======
-            console.log('Here');
-            console.log(nextProps.objectCard);
->>>>>>> 1fd1207a195dd90a31322ae6e32b499256deb41d
+            
             var listAttr = [];
             for (let key in objectCard['attributes']) {
                 let keyValue = key;
