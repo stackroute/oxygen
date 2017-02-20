@@ -43,6 +43,10 @@ export default class DeletePredicate extends React.Component {
     }
   }
 
+
+
+
+
   handleClose = () => {
     this.props.handleModal();
   };
