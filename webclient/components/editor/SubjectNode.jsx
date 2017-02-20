@@ -135,7 +135,6 @@ export default class SubjectNode extends React.Component {
         this.getSubjects(this.state.selectedDomain);
     }
 
-
     getSubjects(domainName) {
         let url = `domain/${domainName}/subjects`;
         Request.get(url).end((err, res) => {
@@ -250,40 +249,32 @@ export default class SubjectNode extends React.Component {
     handleUpdateSubjectInput = (searchText) => {
         let selectedSubjectDetails = {};
         if (this.state.subjectList.indexOf(searchText) < 0 || searchText.length == 0) {
-            this.setState({
-              stepNumber: 0
-            });
+            this.setState({stepNumber: 0});
         } else {
-            this.setState({
-              addLabel: 'Add Intent',
-              floatingLabelTextObject: 'Objects',
-              selectedSubject: searchText,
-              stepNumber: 1});
-              this.getObjects(searchText.charAt(0),searchText.substr(3, searchText.length));
-              let nodeName = searchText.substr(3, searchText.length);
-              let url = '';
-              let nodeType = '';
-              switch (searchText.charAt(0)) {
-                  case 'C':
-                      nodeType = 'Concept'
-                      url = `/domain/${this.state.selectedDomain}/subject/concept/${nodeName}/objects`;
-                      break;
-                  case 'I':
-                      nodeType = 'Intent'
-                      url = `/domain/${this.state.selectedDomain}/subject/intent/${nodeName}/objects`;
-                      break;
-              }
+            this.setState({addLabel: 'Add Intent', floatingLabelTextObject: 'Objects', selectedSubject: searchText, stepNumber: 1});
+            this.getObjects(searchText.charAt(0), searchText.substr(3, searchText.length));
+            let nodeName = searchText.substr(3, searchText.length);
+            let url = '';
+            let nodeType = '';
+            switch (searchText.charAt(0)) {
+                case 'C':
+                    nodeType = 'Concept'
+                    url = `/domain/${this.state.selectedDomain}/subject/concept/${nodeName}/objects`;
+                    break;
+                case 'I':
+                    nodeType = 'Intent'
+                    url = `/domain/${this.state.selectedDomain}/subject/intent/${nodeName}/objects`;
+                    break;
+            }
 
-              Request.get(url).end((err, res) => {
-                  if (err) {
-                      this.setState({
-                        errmsg: res.body,
-                        loading: 'hide'});
-                  } else {
-                      let response = JSON.parse(res.text);
-                      if (response.length == 0) {
-                          this.setState({floatingLabelTextObject: 'No Results'});
-                      } else {
+            Request.get(url).end((err, res) => {
+                if (err) {
+                    this.setState({errmsg: res.body, loading: 'hide'});
+                } else {
+                    let response = JSON.parse(res.text);
+                    if (response.length == 0) {
+                        this.setState({floatingLabelTextObject: 'No Results'});
+                    } else {
                         selectedSubjectDetails['name'] = nodeName;
                         selectedSubjectDetails['type'] = nodeType;
                         selectedSubjectDetails['attributes'] = response.attributes;
@@ -321,63 +312,57 @@ export default class SubjectNode extends React.Component {
                     this.setState({errmsg: res.body, loading: 'hide'});
                 } else {
                     let response = JSON.parse(res.text);
-                    if(response.length == 0){
-                      this.setState({floatingLabelTextObject: 'No Results'});
-                    }else{
-                      selectedObjectDetails['name'] = nodeName2;
-                      selectedObjectDetails['type'] = nodeType;
-                      selectedObjectDetails['attributes'] = response;
-                      this.setState({
-                        selectedObjectDetails: selectedObjectDetails,
-                        objectCardJsx: true
-                        });
+                    if (response.length == 0) {
+                        this.setState({floatingLabelTextObject: 'No Results'});
+                    } else {
+                        selectedObjectDetails['name'] = nodeName2;
+                        selectedObjectDetails['type'] = nodeType;
+                        selectedObjectDetails['attributes'] = response;
+                        this.setState({selectedObjectDetails: selectedObjectDetails, objectCardJsx: true});
                     }
                 }
             });
         }
     };
 
-  handleUpdatePredicateInput = (searchText) => {
-      if (searchText.length == 0) {
-          this.setState({stepNumber: 2});
-          console.log('Herer' + this.state.stepNumber);
-      } else {
-       this.setState({
-         selectedPredicate: searchText,
-         stepNumber:3
-       });
-     }
-   };
+    handleUpdatePredicateInput = (searchText) => {
+        if (searchText.length == 0) {
+            this.setState({stepNumber: 2});
 
-    handleUpdateRelInput = (searchText) => {
-        let selectedPredicateDetails = {};
+        } else {
+            this.setState({selectedPredicate: searchText, stepNumber: 3});
 
-        let nodeName1 = this.state.selectedSubjectDetails['name'];
-        let nodeName2 = this.state.selectedObjectDetails['name'];
-        console.log(searchText);
-        console.log(nodeName1);
-        console.log(nodeName2);
-        let url = '';
-        switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
-            case 'C':
-                url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}/predicates/${searchText}`;
-                break;
-            case 'I':
-                url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}/predicates/${searchText}`;
-                break;
-        }
-        Request.get(url).end((err, res) => {
-            if (err) {
-                this.setState({errmsg: res.body, loading: 'hide'});
-            } else {
-                let response = JSON.parse(res.text);
-                selectedPredicateDetails['name'] = searchText;
-                selectedPredicateDetails['properties'] = response;
+            let selectedPredicateDetails = {};
 
-                this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: true});
+            let nodeName1 = this.state.selectedSubjectDetails['name'];
+            let nodeName2 = this.state.selectedObjectDetails['name'];
+
+            let url = '';
+            switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
+                case 'C':
+                    url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}/predicates/${searchText}`;
+                    break;
+                case 'I':
+                    url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}/predicates/${searchText}`;
+                    break;
             }
-        });
-    }
+            Request.get(url).end((err, res) => {
+                if (err) {
+                    this.setState({errmsg: res.body, loading: 'hide'});
+                } else {
+                    let response = JSON.parse(res.text);
+                    selectedPredicateDetails['name'] = searchText;
+                    selectedPredicateDetails['properties'] = response;
+
+                    this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: true});
+                }
+            });
+        }
+    };
+
+    // handleUpdateRelInput = (searchText) => {
+    //
+    // };
 
     handleDeleteSubject = () => {
         if (this.state.selectedSubject.length == 0) {} else {
@@ -437,46 +422,38 @@ export default class SubjectNode extends React.Component {
     };
 
     handleDeletePredicate = () => {
-      console.log(this.state.selectedObject);
-      console.log(this.state.selectedSubject);
-      console.log(this.state.selectedPredicate);
-     if(this.state.selectedObject.length == 0 || this.state.selectedSubject.length == 0 || this.state.selectedPredicate.length == 0){
-     }
-     else{
-       let subnodetype = '';
-       let objnodetype = '';
-       let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-       let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-       if(this.state.selectedObject.charAt(0) == 'T'){
-         objnodetype = 'Term';
-       }else{
-         objnodetype = 'Concept';
-       }
-       if(this.state.selectedSubject.charAt(0) == 'I'){
-         subnodetype = 'Intent';
-       }else{
-         subnodetype = 'Concept';
-       }
-       let nodePredicateDetails = {
-         domainName : this.state.selectedDomain,
-         subnodetype: subnodetype,
-         subnodename: subnodename,
-         objnodetype: objnodetype,
-         objnodename: objnodename,
-         predicate: this.state.selectedPredicate
-       };
-       this.setState({
-           nodePredicateDetails: nodePredicateDetails,
-
-         });
-     }
- }
- handleUpdateDeletePredicate = () => {
-    this.setState({
-      selectedPredicate: null,
-      stepNumber:2
-    });
-  };
+        console.log(this.state.selectedObject);
+        console.log(this.state.selectedSubject);
+        console.log(this.state.selectedPredicate);
+        if (this.state.selectedObject.length == 0 || this.state.selectedSubject.length == 0 || this.state.selectedPredicate.length == 0) {} else {
+            let subnodetype = '';
+            let objnodetype = '';
+            let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+            let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
+            if (this.state.selectedObject.charAt(0) == 'T') {
+                objnodetype = 'Term';
+            } else {
+                objnodetype = 'Concept';
+            }
+            if (this.state.selectedSubject.charAt(0) == 'I') {
+                subnodetype = 'Intent';
+            } else {
+                subnodetype = 'Concept';
+            }
+            let nodePredicateDetails = {
+                domainName: this.state.selectedDomain,
+                subnodetype: subnodetype,
+                subnodename: subnodename,
+                objnodetype: objnodetype,
+                objnodename: objnodename,
+                predicate: this.state.selectedPredicate
+            };
+            this.setState({nodePredicateDetails: nodePredicateDetails});
+        }
+    }
+    handleUpdateDeletePredicate = () => {
+        this.setState({selectedPredicate: null, stepNumber: 2});
+    };
 
     handleChange = (event, index, value) => this.setState({value});
 
@@ -485,11 +462,9 @@ export default class SubjectNode extends React.Component {
     };
 
     formStatement = () => {
-      if(this.state.selectedSubjectDetails !== null && this.state.selectedObjectDetails !== null && this.state.selectedPredicateDetails !== null){
-        this.setState({
-          statementFormed: true
-        })
-      }
+        if (this.state.selectedSubjectDetails !== null && this.state.selectedObjectDetails !== null && this.state.selectedPredicateDetails !== null) {
+            this.setState({statementFormed: true})
+        }
     }
 
     render() {
@@ -561,14 +536,11 @@ export default class SubjectNode extends React.Component {
                             marginBottom: 10
                         }} onTouchTap={this.handleDeletePredicate}/>
 
-
                         <RaisedButton label='Apply' style={{
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
-                        }}
-                        onTouchTap={this.formStatement}
-                        />
+                        }} onTouchTap={this.formStatement}/>
                     </Row>
                     <br/>
                     <Row>
@@ -585,7 +557,7 @@ export default class SubjectNode extends React.Component {
                 <AddPredicate open={this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
                 <DeleteNode open={this.state.deleteModalOpen} nodeDetails={this.state.nodeDetails}/>
                 <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
-                <DeletePredicate predicateDetails = {this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
+                <DeletePredicate predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label='Graph View' value='l'>
