@@ -1,6 +1,5 @@
 var app = require('../../server/webapp.service')();
 var expect = require('chai').expect;
-var assert = require('chai').assert;
 var request = require("supertest");
 var logger = require('./../../applogger');
 
@@ -44,13 +43,13 @@ describe('driver', function() {
 
   it('should handle wrong scheme', () => {
     expect(() => neo4jDriver.driver("tank://localhost", neo4jDriver.auth.basic("neo4j", "password")))
-      .toThrow(new Error("Unknown scheme: tank://"));
+      .to.throw(new Error('Unknown scheme: tank://'));
   });
 
   it('should handle URL parameter string', () => {
-    expect(() => neo4jDriver.driver({uri: 'bolt://localhost'})).toThrowError(TypeError);
+    expect(() => neo4jDriver.driver({uri: 'bolt://localhost'})).to.throw(Error(TypeError));
 
-    expect(() => neo4jDriver.driver(['bolt:localhost'])).toThrowError(TypeError);
+    expect(() => neo4jDriver.driver(['bolt:localhost'])).to.throw(Error(TypeError));
 
     expect(() => {
       const driver = neo4jDriver.driver(String('bolt://localhost', neo4jDriver.auth.basic("neo4j", "password")));

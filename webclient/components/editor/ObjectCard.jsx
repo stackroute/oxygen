@@ -10,39 +10,62 @@ import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
-
 const styles = {
     customWidth: {
         width: 300
     }
 };
-
 export default class ObjectCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             objectCard: {},
             objectCardJsx: false,
-            value: 3
+            value: 3,
+            attrObj: null
         };
     }
     handleChange = (event, index, value) => this.setState({value});
     componentWillReceiveProps(nextProps) {
-
         this.setState({objectCardJsx: nextProps.objectCardJsx});
         let objectCard = {};
         if (this.state.objectCardJsx) {
             objectCard['name'] = nextProps.objectCard['name'],
-            objectCard['type'] = nextProps.objectCard['type']
+            objectCard['type'] = nextProps.objectCard['type'],
+            objectCard['attributes'] = nextProps.objectCard['attributes'];
+            var listAttr = [];
+            for (let key in objectCard['attributes']) {
+                let keyValue = key;
+                let value = objectCard['attributes'][key];
+                listAttr.push({
+                  key: keyValue,
+                  value: value
+                 });
+            }
+            this.setState({attrObj: listAttr});
         } else {
             objectCard['name'] = '',
             objectCard['type'] = '';
-            objectCard['attributes'] = {};
         }
         this.setState({objectCard: objectCard});
     }
-
     render() {
+      let keyValueDisplay = '';
+        if (this.state.attrObj !== null) {
+            keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
+              <div>
+                <TextField floatingLabelText='key' value={row.key} style={{
+                    width: '40%',
+                    float: 'left',
+                    overflow: 'hidden'
+                }}/>
+              <TextField floatingLabelText='value' value={row.value} style={{
+                    width: '40%'
+                }}/>
+              <br/>
+              </div>
+            ));
+        }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                 <Card style={{
@@ -55,7 +78,7 @@ export default class ObjectCard extends React.Component {
                     }}/>
                     <CardActions>
                         <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
-                            <MenuItem value={0} primaryText="Select Type"/>
+                          <MenuItem value={0} primaryText="Select Type"/>
                             <MenuItem value={1} primaryText="Intent"/>
                             <MenuItem value={2} primaryText="Concept"/>
                             <MenuItem value={3} primaryText={this.state.objectCard['type']}/>
@@ -65,15 +88,7 @@ export default class ObjectCard extends React.Component {
                             fullWidth: 'true'
                         }}/>
                         <br/>
-                        <TextField floatingLabelText="key" style={{
-                            width: '40%',
-                            float: 'left',
-                            overflow: 'hidden'
-                        }}/>
-
-                        <TextField floatingLabelText="value" style={{
-                            width: '40%'
-                        }}/>
+                        {keyValueDisplay}
                         <ContentRemove style={{
                             float: 'right',
                             marginTop: '10%'
@@ -89,7 +104,6 @@ export default class ObjectCard extends React.Component {
                         <br/>
                         <br/>
                         <Divider/>
-
                         <Row >
                             <FlatButton label="Delete" style={{
                                 float: 'right'

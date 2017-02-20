@@ -404,7 +404,7 @@ let getRelations = function(subject) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result); //result.records[0]._fields[0]['properties']
+                resolve(result.records[0]._fields[0]['properties']); //result.records[0]._fields[0]['properties']
             })
             .catch(function(error) {
                 logger.error("Error in query: ", error, ' query is: ', query);
@@ -485,7 +485,7 @@ let getAllRelations = function(subject) {
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
 
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s, r, o'
         params = {
             subjectNodeType: subjectNodeType,
@@ -550,6 +550,7 @@ let getAllOrphans = function(subject) {
     });
     return promise;
 };
+
 
 let getPublishAddNodeCallback = function(subject, object, callback) {
     logger.debug("from the callback : " + subject.nodename);
@@ -701,41 +702,6 @@ let getSearch = function(nodeObj) {
     });
     return promise;
 };
-let getPublishAllAttributes = function(subject) {
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug(subject.nodename);
-        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
-            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
-                encrypted: false
-            });
-        let session = driver.session();
-        var subjectDomainname = subject.domainname;
-        var subjectNodeType = subject.nodetype;
-        var subjectNodeName = subject.nodename;
-        var objectNodeType = subject.nodetype1;
-        var objectNodeName = subject.nodename1;
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
-        query += 'return s,o,r'
-        params = {
-            subjectNodeType: subjectNodeType,
-            subjectNodeName: subjectNodeName,
-            objectNodeType: objectNodeType,
-            objectNodeName: objectNodeName
-        }
-        session.run(query, params).then(function(result) {
-                if (result) {
-                    logger.debug(result);
-                }
-                session.close();
-                resolve(result.records[0]._fields[1]['properties']);
-            })
-            .catch(function(error) {
-                logger.error("Error in deleting the query: ", error, ' query is: ', query);
-                reject(error);
-            });
-    });
-    return promise;
-};
 
 let getPublishAllAttributes = function(subject) {
     let promise = new Promise(function(resolve, reject) {
@@ -787,6 +753,7 @@ let getPublishAllAttributesCallback = function(subject, callback) {
 };
 
 module.exports = {
+
     getAllDomainDetailsCallback: getAllDomainDetailsCallback,
     getSubjectObjectsCallback: getSubjectObjectsCallback,
     getPublishAddNodeCallback: getPublishAddNodeCallback,

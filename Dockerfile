@@ -7,6 +7,4 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN npm install -y
-
-CMD ["npm", "run", "www"]
+RUN npm install --production
