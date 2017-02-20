@@ -5,18 +5,18 @@ import ReactFauxDOM from 'react-faux-dom';
 import $ from 'jquery';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import d3 from 'd3';
-var count = 1;
+let count = 1;
 let margin = {
-        top: 20,
-        right: 120,
-        bottom: 20,
-        left: 120
-    },
-    width = 960 - margin.right - margin.left,
-    height = 400 - margin.top - margin.bottom;
-let i = 0,
-    duration = 750,
-    root;
+    top: 20,
+    right: 120,
+    bottom: 20,
+    left: 120
+};
+let width = 960 - margin.right - margin.left;
+let height = 400 - margin.top - margin.bottom;
+let i = 0;
+let duration = 750;
+let root;
 let PAGINATION = 6;
 export default class TreeGraph extends React.Component {
     constructor(props) {
@@ -26,7 +26,7 @@ export default class TreeGraph extends React.Component {
             data: {},
             domainName: this.props.domainName,
             expandable: false
-        }
+        };
     }
     componentDidMount() {
         this.getTreeGraphOfDomain(this.state.domainName);
@@ -37,7 +37,7 @@ export default class TreeGraph extends React.Component {
             if (!err) {
                 let treeData = JSON.parse(res.text);
                 treeData = JSON.stringify(treeData);
-                treeData = treeData.replace("children", "kids");
+                treeData = treeData.replace('children', 'kids');
                 treeData = JSON.parse(treeData);
                 treeData = [treeData];
                 this.setState({data: treeData, graph: treeGraph});
@@ -51,22 +51,22 @@ export default class TreeGraph extends React.Component {
             return a.parent == b.parent
                 ? 1
                 : 3;
-        });;
+        });
         let diagonal = d3.svg.diagonal().projection(function(d) {
             return [d.y, d.x];
         });
-        let svg = d3.select(".treeGraph").append("svg").attr("width", width + margin.right + margin.left).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        let svg = d3.select('.treeGraph').append('svg').attr('width', width + margin.right + margin.left).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
         let color = d3.scale.category20();
         root = treeData[0];
         root.x0 = height / 2;
         root.y0 = 0;
-        reset(root)
+        reset(root);
         update(root);
 
         function update(source) {
             // Compute the new tree layout.
-            let nodes = tree.nodes(root).reverse(),
-                links = tree.links(nodes);
+            let nodes = tree.nodes(root).reverse();
+            let links = tree.links(nodes);
             // Normalize for fixed-depth.
 
             nodes.forEach(function(d) {
@@ -74,55 +74,55 @@ export default class TreeGraph extends React.Component {
             });
 
             // Update the nodes…
-            let node = svg.selectAll("g.node").data(nodes, function(d) {
+            let node = svg.selectAll('g.node').data(nodes, function(d) {
                 return d.id || (d.id = ++i);
             });
             // Enter any new nodes at the parent's previous position.
-            let nodeEnter = node.enter().append("g").attr("class", "node").attr("transform", function(d) {
-                return "translate(" + source.y0 + "," + source.x0 + ")";
-            }).on("click", click);
-            nodeEnter.append("circle").attr("r", 1e-6).style("fill", function(d) {
+            let nodeEnter = node.enter().append('g').attr('class', 'node').attr('transform', function(d) {
+                return 'translate(' + source.y0 + ',' + source.x0 + ')';
+            }).on('click', click);
+            nodeEnter.append('circle').attr('r', 1e-6).style('fill', function(d) {
                 return d._children
-                    ? "white"
-                    : "white";
+                    ? 'white'
+                    : 'white';
             });
-            nodeEnter.append("text").attr("x", function(d) {
+            nodeEnter.append('text').attr('x', function(d) {
                 return d.Children || d._children
                     ? -13
                     : 13;
-            }).attr("dy", ".35em").attr("text-anchor", function(d) {
+            }).attr('dy', '.35em').attr('text-anchor', function(d) {
                 return d.Children || d._children
-                    ? "end"
-                    : "start";
+                    ? 'end'
+                    : 'start';
             }).text(function(d) {
                 return d.name;
-            }).style("fill", 1e-6);
+            }).style('fill', 1e-6);
             // Transition nodes to their new position.
-            let nodeUpdate = node.transition().duration(duration).attr("transform", function(d) {
-                return "translate(" + d.y + "," + d.x + ")";
+            let nodeUpdate = node.transition().duration(duration).attr('transform', function(d) {
+                return 'translate(' + d.y + ',' + d.x + ')';
             });
-            nodeUpdate.select("circle").attr("r", 13).style("fill", function(d) {
+            nodeUpdate.select('circle').attr('r', 13).style('fill', function(d) {
                 let sam = d.parent
                     ? color(d.parent.id)
                     : color();
                 console.log(sam);
                 return d._children
-                    ? "#9B59B6"
-                    : "white";
+                    ? '#9B59B6'
+                    : 'white';
             });
-            nodeUpdate.select("text").style("fill-opacity", 1);
+            nodeUpdate.select('text').style('fill-opacity', 1);
             // Transition exiting nodes to the parent's new position.
-            let nodeExit = node.exit().transition().duration(duration).attr("transform", function(d) {
-                return "translate(" + source.y + "," + source.x + ")";
+            let nodeExit = node.exit().transition().duration(duration).attr('transform', function(d) {
+                return 'translate(' + source.y + ',' + source.x + ')';
             }).remove();
-            nodeExit.select("circle").attr("r", 1e-6).style("fill");
-            nodeExit.select("text").style("fill-opacity", 1e-6);
+            nodeExit.select('circle').attr('r', 1e-6).style('fill');
+            nodeExit.select('text').style('fill-opacity', 1e-6);
             // Update the links…
-            let link = svg.selectAll("path.link").data(links, function(d) {
+            let link = svg.selectAll('path.link').data(links, function(d) {
                 return d.target.id;
             });
             // Enter any new links at the parent's previous position.
-            link.enter().insert("path", "g").attr("class", "link").attr("d", function(d) {
+            link.enter().insert('path', 'g').attr('class', 'link').attr('d', function(d) {
                 let o = {
                     x: source.x0,
                     y: source.y0
@@ -130,14 +130,14 @@ export default class TreeGraph extends React.Component {
                 return diagonal({source: o, target: o});
             });
             // Transition links to their new position.
-            link.transition().duration(duration).attr("d", diagonal);
+            link.transition().duration(duration).attr('d', diagonal);
             // Transition exiting nodes to the parent's new position.
-            link.exit().transition().duration(duration).attr("d", function(d) {
+            link.exit().transition().duration(duration).attr('d', function(d) {
                 let o = {
                     x: source.x,
                     y: source.y
                 };
-                return diagonal({source: o, target: o});;
+                return diagonal({source: o, target: o});
             }).remove();
             // Stash the old positions for transition.
             nodes.forEach(function(d) {
@@ -149,7 +149,7 @@ export default class TreeGraph extends React.Component {
                     ? true
                     : false;
             });
-            svg.selectAll(".page").remove();
+            svg.selectAll('.page').remove();
             parents.forEach(function(p) {
                 if (p._children)
                     return;
@@ -158,45 +158,44 @@ export default class TreeGraph extends React.Component {
                 let pagingData = [];
                 if (p.page > 1) {
                     pagingData.push({
-                        type: "prev",
+                        type: 'prev',
                         parent: p,
                         no: (p.page - 1)
                     });
                 }
                 if (p.page < Math.ceil(p.kids.length / PAGINATION)) {
                     pagingData.push({
-                        type: "next",
+                        type: 'next',
                         parent: p,
                         no: (p.page + 1)
                     });
                 }
-                let pageControl = svg.selectAll(".page").data(pagingData, function(d) {
+                let pageControl = svg.selectAll('.page').data(pagingData, function(d) {
                     return (d.parent.id + d.type);
-                }).enter().append("g").attr("class", "page").attr("transform", function(d) {
-                    let x = (d.type == "next")
+                }).enter().append('g').attr('class', 'page').attr('transform', function(d) {
+                    let x = (d.type == 'next')
                         ? p2.y
                         : p1.y;
-                    let y = (d.type == "prev")
+                    let y = (d.type == 'prev')
                         ? (p2.x - 30)
                         : (p1.x + 30);
-                    return "translate(" + x + "," + y + ")";
-                }).on("click", paginate);
-                pageControl.append("circle").attr("r", 15).style("fill", function(d) {
+                    return 'translate(' + x + ',' + y + ')';
+                }).on('click', paginate);
+                pageControl.append('circle').attr('r', 15).style('fill', function(d) {
                     return d.parent
                         ? color(d.parent.id)
                         : color();
-                })
-                pageControl.append("image").attr("xlink:href", function(d) {
-                    if (d.type == "next") {
-                        return "https://dl.dropboxusercontent.com/s/p7qjclv1ulvoqw3/icon1.png"
-                    } else {
-                        return "https://dl.dropboxusercontent.com/s/mdzt36poc1z39s3/icon3.png"
+                });
+                pageControl.append('image').attr('xlink:href', function(d) {
+                    if (d.type == 'next') {
+                        return 'https://dl.dropboxusercontent.com/s/p7qjclv1ulvoqw3/icon1.png';
                     }
-                }).attr("x", -12.5).attr("y", -12.5).attr("width", 25).attr("height", 25);
+                    return 'https://dl.dropboxusercontent.com/s/mdzt36poc1z39s3/icon3.png';
+                }).attr('x', -12.5).attr('y', -12.5).attr('width', 25).attr('height', 25);
             });
         }
         function paginate(d) {
-            console.log(d, "data")
+            console.log(d, 'data');
             d.parent.page = d.no;
             setPage(d.parent);
             update(root);
@@ -208,7 +207,7 @@ export default class TreeGraph extends React.Component {
                     if (d.page === d1.pageNo) {
                         d.children.push(d1);
                     }
-                })
+                });
             }
         }
         function reset(d) {
@@ -218,15 +217,15 @@ export default class TreeGraph extends React.Component {
                 d.kids.forEach(function(d1, i) {
                     d1.pageNo = Math.ceil((i + 1) / PAGINATION);
                     if (d.page === d1.pageNo) {
-                        d.children.push(d1)
+                        d.children.push(d1);
                     }
-                    //console.log(d);
+                    //  console.log(d);
                     reset(d1);
-                })
+                });
             }
 
         }
-        // Toggle children on click.
+        //  Toggle children on click.
         function click(d) {
             if (d.children) {
                 d._children = d.children;
@@ -241,15 +240,12 @@ export default class TreeGraph extends React.Component {
     }
     render() {
         return (
-              <Card>
-                  <CardHeader
-                    actAsExpander={true}
-                    showExpandableButton={true}
-                  />
-                  <CardText expandable={this.state.expandable}>
-                      {this.state.graph}
-                  </CardText>
-              </Card>
+            <Card>
+                <CardHeader actAsExpander={true} showExpandableButton={true}/>
+                <CardText expandable={this.state.expandable}>
+                    {this.state.graph}
+                </CardText>
+            </Card>
         );
     }
 }
