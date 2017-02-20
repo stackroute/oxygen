@@ -7,7 +7,7 @@ import {Container, Col, Row, Visible} from 'react-grid-system';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
-import {blue300, lime800, lightGreen500} from 'material-ui/styles/colors';
+import {blue300,teal500, lime800, lightGreen500} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import {ScreenClassRender} from 'react-grid-system';
 
@@ -173,7 +173,7 @@ export default class Dashboard extends React.Component {
     		let intentColor=blue300;
 			let docsColor=blue300;
 
-			if(concepts < 11) { conceptColor= blue300; }
+			if(concepts < 11) { conceptColor= teal500; }
 			else if(concepts < 50){ conceptColor= lime800; }
 			else { conceptColor= lightGreen500; }
 
@@ -376,8 +376,8 @@ export default class Dashboard extends React.Component {
 
 							<Visible md sm xs>
 							{smallNav}
-							</Visible>
 
+						</Visible>
 							</div>:
 							<ScreenClassRender style={errStyle}>
 							<div style={errStyle} >

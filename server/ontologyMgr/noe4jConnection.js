@@ -20,7 +20,7 @@ var SingletonNeo4j = (function() {
         logger.debug('Driver instantiation failed', error);
           if(count < 6) {
             logger.debug('while count' + count);
-          setTimeout(callback =()=> { SingletonNeo4j.getInstance();
+          setTimeout(callback = ()=> { SingletonNeo4j.getInstance();
             logger.debug('Connection retrying after 5 seconds');
               count++;
           }, 20000);}
