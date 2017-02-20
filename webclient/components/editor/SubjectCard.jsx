@@ -59,7 +59,6 @@ export default class SubjectCard extends React.Component {
         } else {
             subjectCard['name'] = '',
             subjectCard['type'] = '';
-            console.log(subjectCard['attributes']);
         }
         this.setState({subjectCard: subjectCard});
     }

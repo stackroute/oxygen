@@ -39,7 +39,7 @@ export default class DeletePredicate extends React.Component {
     this.deletePredicate = this.deletePredicate.bind(this);
     this.state = {
       predicateDetails: null,
-      open: false
+      open: false,
     }
   }
 
