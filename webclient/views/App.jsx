@@ -12,29 +12,25 @@ import Dashboard from '../components/dashboard/';
 import SubjectNode from '../components/editor/';
 import Graph from '../components/graph';
 import DomainHome from '../components/domainhome';
-//import Colors from 'material-ui/lib/styles/colors';
 
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 injectTapEventPlugin();
 
 const muiTheme = getMuiTheme({
   palette: {
-      primary1Color:teal500,
+    primary1Color:teal500,
      primary2Color:lime800,
      accent1Color:amber500,
-     textColor: lime900,
+     textColor: teal500,
      alternateTextColor: white,
      canvasColor: white,
-     borderColor: indigo700,
+     borderColor: grey500,
    //  disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
      pickerHeaderColor: grey500,
-},
+  },
   appBar: {
     height: 50
-  },
-  menuItem: {
-    selectedTextColor: Red900,
-  },
+  }
 });
 
 ReactDOM.render(

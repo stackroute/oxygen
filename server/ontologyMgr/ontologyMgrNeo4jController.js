@@ -410,7 +410,7 @@ let getRelations = function(subject) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result); //result.records[0]._fields[0]['properties']
+                resolve(result.records[0]._fields[0]['properties']); //result.records[0]._fields[0]['properties']
             })
             .catch(function(error) {
                 logger.error("Error in query: ", error, ' query is: ', query);
@@ -702,12 +702,16 @@ let listDetail = [];
                   result.records.forEach(function(record){
                     let obj = {
                       name : null,
-                      label : null
+                      label : null,
+                      type : null,
+                      type1 : null
                       }
                     obj.name = record._fields[0]['properties']['name'];
                     obj.label = record._fields[0]['labels'][0];
-                  //  obj.label = record._fields[0]['labels'][1];
-                      //obj.label = record._fields[0]['type'][0];
+                    obj.type = record._fields[2]['type'];
+                    obj.type1 = record._fields[3]['type'];
+
+
                     listDetail.push(obj);
                   });
                 }
@@ -786,5 +790,5 @@ module.exports = {
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback,
     getSearchCallback: getSearchCallback,
-    getPublishAllAttributesCallback: getPublishAllAttributesCallback
-};
+getPublishAllAttributesCallback: getPublishAllAttributesCallback
+}
