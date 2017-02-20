@@ -20,7 +20,7 @@ import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
 import DeletePredicate from './DissolveRelation.jsx';
-//import DeletePredicate from './DissolveRelation.jsx';
+import SubjectCar from './subjectExample.jsx';
 import AddObject from './AddObject.jsx';
 import Delete from './DeleteNode.jsx';
 import Edit from './edit.jsx';
@@ -555,7 +555,7 @@ export default class SubjectNode extends React.Component {
                     </Row>
                     <br/>
                     <Row>
-                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
+                        <SubjectCar subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
                         <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx}/>
                         <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx}/>
                     </Row>

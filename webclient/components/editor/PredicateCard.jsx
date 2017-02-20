@@ -22,7 +22,13 @@ export default class PredicateCard extends React.Component {
         this.state = {
             predicateCard: {},
             predicateCardJsx: false,
-            attrObj: null
+            attrObj: null,
+            style: {
+              backgroundColor: 'black',
+              marginLeft: 10,
+              marginRight: 10,
+              opacity: 0.2
+            }
         };
     }
 
@@ -32,6 +38,12 @@ export default class PredicateCard extends React.Component {
         if (this.state.predicateCardJsx) {
             predicateCard['name'] = nextProps.predicateCard['name'];
             predicateCard['attributes'] = nextProps.predicateCard['properties'];
+
+            this.setState(style: {
+              backgroundColor: none,
+              marginLeft: 10,
+              marginRight: 10,
+            })
 
             var listAttr = [];
             for (let key in predicateCard['attributes']) {
@@ -70,10 +82,7 @@ export default class PredicateCard extends React.Component {
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
-                <Card style={{
-                    marginLeft: 10,
-                    marginRight: 10
-                }}>
+                <Card style={this.state.style}>
                     <CardHeader title="Predicate" titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'

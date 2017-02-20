@@ -24,7 +24,13 @@ export default class ObjectCard extends React.Component {
             objectCard: {},
             objectCardJsx: false,
             value: 3,
-            attrObj: null
+            attrObj: null,
+            style: {
+              backgroundColor: 'black',
+              marginLeft: 10,
+              marginRight: 10,
+              opacity: 0.2
+            }
         };
     }
     handleChange = (event, index, value) => this.setState({value:3});
@@ -36,6 +42,12 @@ export default class ObjectCard extends React.Component {
             objectCard['name'] = nextProps.objectCard['name'],
             objectCard['type'] = nextProps.objectCard['type'],
             objectCard['attributes'] = nextProps.objectCard['attributes'];
+
+            this.setState(style: {
+              backgroundColor: none,
+              marginLeft: 10,
+              marginRight: 10,
+            })
 
             var listAttr = [];
             for (let key in objectCard['attributes']) {
@@ -76,10 +88,7 @@ export default class ObjectCard extends React.Component {
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
-                <Card style={{
-                    marginLeft: 10,
-                    marginRight: 10
-                }}>
+                <Card style={this.state.style}>
                     <CardHeader title='Object' titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'
