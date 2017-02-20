@@ -19,8 +19,7 @@ import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './DissolveRelation.jsx';
-import SubjectCar from './subjectExample.jsx';
+import DeletePredicate from './dissolveRelation.jsx';
 import AddObject from './AddObject.jsx';
 import Delete from './DeleteNode.jsx';
 import Edit from './edit.jsx';
@@ -468,9 +467,16 @@ export default class SubjectNode extends React.Component {
        };
        this.setState({
            nodePredicateDetails: nodePredicateDetails,
+
          });
      }
  }
+ handleUpdateDeletePredicate = () => {
+    this.setState({
+      selectedPredicate: null,
+      stepNumber:2
+    });
+  };
 
     handleChange = (event, index, value) => this.setState({value});
 
@@ -579,7 +585,7 @@ export default class SubjectNode extends React.Component {
                 <AddPredicate open={this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
                 <DeleteNode open={this.state.deleteModalOpen} nodeDetails={this.state.nodeDetails}/>
                 <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
-                <DeletePredicate predicateDetails={this.state.nodePredicateDetails}/>
+                <DeletePredicate predicateDetails = {this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label='Graph View' value='l'>
