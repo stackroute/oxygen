@@ -28,22 +28,7 @@ export default class HorizontalLinearStepper extends React.Component {
       stepIndex: props.stepNumber
     });
   }
-  handleNext = () => {
-    const {stepIndex} = this.state;
-    this.setState({
-      stepIndex: stepIndex + 1,
-      finished: stepIndex >= 2,
-    });
 
-  };
-
-
-  handlePrev = () => {
-    const {stepIndex} = this.state;
-    if (stepIndex > 0) {
-      this.setState({stepIndex: stepIndex - 1});
-    }
-  };
 
 
   render() {
@@ -55,20 +40,18 @@ export default class HorizontalLinearStepper extends React.Component {
 
         <Stepper activeStep={stepIndex}>
           <Step>
-            <StepLabel>Subject</StepLabel>
+            <StepLabel> Select a Subject</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Object</StepLabel>
+            <StepLabel> Select an Object</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Predicate</StepLabel>
+            <StepLabel> Select a Predicate</StepLabel>
           </Step>
         </Stepper>
 
 
-
-
-      </div>
+       </div>
     );
   }
 }

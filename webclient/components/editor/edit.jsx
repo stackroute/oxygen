@@ -1,5 +1,6 @@
 import React from 'react';
 import Formsy from 'formsy-react';
+import Request from 'superagent';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
@@ -42,41 +43,43 @@ export default class Edit extends React.Component {
         this.enableButton = this.enableButton.bind(this);
         this.disableButton = this.disableButton.bind(this);
         this.state = {
-            subjectType: "",
-            subject: "",
-            object: "",
-            errMsg: "",
+            domainName: '',
+            nodeType: '',
+            nodeName: '',
+            errMsg: '',
+            propertyList: null,
             open: false,
             canSubmit: false,
             openDialog: false,
-            editmodalopen: false
+            editModalOpen: false
         };
     }
     componentWillReceiveProps(nextProps) {
-        console.log(this.nextProps);
-        this.setState({editmodalopen: nextProps.open})
+        this.setState({editModalOpen: nextProps.open});
+        this.getProperties(nextProps.nodeDetails);
     }
-    handleModalEditOpen = () => {
-        this.setState({editmodalopen: true});
-    };
+    getProperties = (nodeDetails) => {
+        if (nodeDetails !== null) {
+            this.setState({domainName: nodeDetails.domainName,
+              nodeType: nodeDetails.nodeType,
+              nodeName: nodeDetails.nodeName
+            });
+            let url = `/domain/${nodeDetails.domainName}/subject/${nodeDetails.nodeType}/${nodeDetails.nodeName}/objects`;
+            Request.get(url).end((err, res) => {
+                if (err) {
+                    this.setState({errMsg: res.body});
+                } else {
+                    let response = JSON.parse(res.text);
+                    let propertyList = response.attributes;
+                    this.setState({propertyList: propertyList});
+                }
+            });
+        }
+    }
+
     handleModalClose = () => {
-        this.setState({editmodalopen: false});
+        this.setState({editModalOpen: false});
     }
-    // handleSubmit(data) {
-    //     console.log('handling submit for adding intent');
-    //     let sub = this.state.subject;
-    //     sub = sub.replace(/\b[a-z]/g, function(f) {
-    //         return f.toUpperCase();
-    //     });
-    //
-    //     let subject = {
-    //         subject: sub,
-    //         object: this.state.object
-    //     };
-    //     this.setState({subject: subject})
-    //     this.setState({})
-    //
-    // }
     enableButton() {
         this.setState({canSubmit: true});
     }
@@ -84,47 +87,56 @@ export default class Edit extends React.Component {
         this.setState({canSubmit: false});
     }
     submitForm(data) {
-        console.log(JSON.stringify(data, null, 4));
+        let editedData = JSON.stringify(data);
+        console.log(editedData);
+        console.log('Hi', this.state.nodeName);
+        let url = `/domain/${this.state.nodeDetails.domainName}/subject/${this.state.nodeDetails.nodeType}/${this.state.nodeDetails.nodeName}`;
     }
     notifyFormError(data) {
         console.error('Form error:', data);
     }
-    handleModalOpen = () => {
-        this.setState({editmodalopen: true, canSubmit: false});
-    }
-    handleModalClose = () => {
-        this.setState({editmodalopen: false});
-    }
-    handleClose = () => {
-        this.setState({openDialog: true});
-    };
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
         let {wordsError, numericError, urlError} = errorMessages;
+        let propertyList = this.state.propertyList;
+        let keys = [];
+        let formText = [];
+        let formsyText = '';
+        if (propertyList !== null) {
+            keys = Object.keys(propertyList);
+            keys.forEach(function(key) {
+                if (key === 'desc' || key === 'context') {
+                    formText.push(<FormsyText
+                      name={key}
+                      value={propertyList[key]}
+                      validations='isWords'
+                      validationsError={wordsError}
+                      floatingLabelText={key}/>);
+                    formText.push(<br/>);
+                } else {
+                    formText.push(<FormsyText
+                      name={key}
+                      value={propertyList[key]}
+                      validationsError={wordsError}
+                      disabled
+                      floatingLabelText={key}/>);
+                    formText.push(<br/>);
+                }
+            });
+            formsyText = formText.map((element) => element);
+        }
         return (
             <div>
                 <Dialog title="Edit" titleStyle={{
                     color: "#858586",
                     fontSize: 30,
                     backgroundColor: "#c7c7c7"
-                }} modal={true} open={this.state.editmodalopen}>
+                }} modal={true} open={this.state.editModalOpen}>
                     <Formsy.Form onValid={this.enableButton} onInvalid={this.disableButton} onValidSubmit={this.submitForm} onInvalidSubmit={this.notifyFormError}>
-                        <FormsyText name="Properties"
-                          validations="isWords"
-                          validationsError={wordsError}
-                          required
-                          floatingLabelText="Properties"/>
+                        {formsyText}
                         <br/>
-                        <FlatButton label="Submit"
-                          primary={true}
-                          style={submitStyle}
-                          type="submit"
-                          disabled={!this.state.canSubmit}/>
-                        <FlatButton label="Cancel"
-                          primary={true}
-                          style={submitStyle}
-                          type="submit"
-                          onTouchTap={this.handleModalClose}/>
+                        <FlatButton label="Submit" primary={true} style={submitStyle} type="submit" disabled={!this.state.canSubmit}/>
+                        <FlatButton label="Cancel" primary={false} style={submitStyle} type="submit" onTouchTap={this.handleModalClose}/>
                     </Formsy.Form>
                 </Dialog>
             </div>

@@ -54,11 +54,10 @@ export default class AddSubject extends React.Component {
             open: false,
             canSubmit: false,
             openDialog: false,
-            openAddPredicate: false,
+            addmodalopen: false,
             domain: this.props.domain,
             subject: this.props.subject,
             object: this.props.object,
-            openAddDialog: false,
             subjectType:"",
             subjectNode:"",
             objectNode:"",
@@ -70,10 +69,11 @@ export default class AddSubject extends React.Component {
       //console.log(this.props.domain);
       //console.log(this.props.subject);
       this.setState({
-        openAddPredicate: nextProps.open,
+        addmodalopen: nextProps.open,
         domain: nextProps.domain,
         subject: nextProps.subject,
-        object: this.props.object
+        object: nextProps.object
+
       });
 
     }
@@ -89,14 +89,14 @@ export default class AddSubject extends React.Component {
     submitForm(data) {
         console.log("Inside Add Subject Submit Form");
 
-        let strSub = ''
-        strSub = this.state.subject;
-        strSub = strSub.substr(3,strSub.length-1);
-
-        let strObj = '';
-        strObj = this.state.object;
-        strObj = strObj.substr(3,strObj.length-1);
-
+        // if(this.state.subject == undefined){
+        //   console.log(this.state.subject);
+        // }
+        let str = ''
+        str = this.state.subject;
+        console.log("Str"+str);
+        str = str.substr(3,str.length-1);
+        console.log("Str"+str);
         let i = 0;
         let requestObj = {
           attributes : {},
@@ -119,8 +119,8 @@ export default class AddSubject extends React.Component {
           this.objectType = "Term";
         }
 
-        this.subjectNode = strSub;
-        this.objectNode = strObj;
+        this.subjectNode = str;
+        this.objectNode = data.object
         var objectName = `/domain/${this.state.domain}/object/${this.objectType}/${this.objectNode}`;
 
         requestObj.attributes[data.attributesName] = data.attributesValue;
@@ -140,7 +140,6 @@ export default class AddSubject extends React.Component {
               this.setState({errmsg: res.body, loading: 'hide'});
           } else {
             console.log("Passing");
-            this.setState({openAddDialog: true});
           }
         });
     }
@@ -149,13 +148,17 @@ export default class AddSubject extends React.Component {
         console.error('Form error:', data);
     }
 
-    handleModalClose = () => {
-      this.setState({openAddPredicate: false});
+    handleModalOpen = () => {
+        this.setState({addmodalopen: true, canSubmit: false});
     }
 
-    handleDialogModalClose = () => {
-      this.setState({openAddDialog: false});
+    handleModalClose = () => {
+      this.setState({addmodalopen: false});
     }
+
+    handleClose = () => {
+        this.setState({openDialog: true});
+    };
 
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
@@ -170,7 +173,7 @@ export default class AddSubject extends React.Component {
                 backgroundColor: "#c7c7c7"
             }}
               modal={true}
-              open={this.state.openAddPredicate}
+              open={this.state.addmodalopen}
               autoScrollBodyContent={true}>
                 <Formsy.Form
                   onValid={this.enableButton}
@@ -178,6 +181,17 @@ export default class AddSubject extends React.Component {
                   onValidSubmit={this.submitForm}
                   onInvalidSubmit={this.notifyFormError}
                   >
+                    <FormsyText name="object" validations="isWords" validationsError = {wordsError} hintText="object name" floatingLabelText="Object name"/>
+                    <br/>
+                      <FormsySelect name="objectType" required floatingLabelText="Select the object type" menuItems={this.selectFieldItems}>
+                         <MenuItem value={'Intent'} primaryText="Intent"/>
+                         <MenuItem value={'Concept'} primaryText="Concept"/>
+                     </FormsySelect>
+                     <br/>
+                     <FormsyText name="attributesName" validations="isWords" validationsError = {wordsError} hintText="attributes name" floatingLabelText="attributes name"/>
+                     <br/>
+                    <FormsyText name="attributesValue" validations="isWords" validationsError = {wordsError} hintText="attributes value" floatingLabelText="attributes value"/>
+                     <br/>
                     <FormsyText name="predicateName" validations="isWords" validationsError = {wordsError} hintText="Predicate Name" floatingLabelText="Predicate Name"/>
                     <br/>
                     <FormsyText name="direction" validations="isWords" validationsError = {wordsError} hintText="Direction" floatingLabelText="Direction"/>
@@ -198,26 +212,6 @@ export default class AddSubject extends React.Component {
                         }
                     />
               </Formsy.Form>
-                </Dialog>
-
-                <Dialog
-                title="Object"
-                titleStyle={{
-                  color: "#858586",
-                  fontSize: 30,
-                  backgroundColor: "#c7c7c7"
-              }}
-                modal={true}
-                open={this.state.openAddDialog}
-                autoScrollBodyContent={true}>
-                <h1>Subject Added Successfully</h1>
-                  <FlatButton label = "OK"
-                     primary = {true}
-                     style={submitStyle}
-                     onTouchTap = {
-                           this.handleDialogModalClose
-                       }
-                   />
                 </Dialog>
             </div>
         );

@@ -130,8 +130,10 @@ let getPublishAddNode = function(subject, object) {
                 } else if (predicateDirection == 'O') {
 
                     relationWithDirectionAndWeight = '<-[r:' + predicateName + predicateWeight + ']-'
+
                 } else {
                     relationWithDirectionAndWeight = '-[r:' + predicateName + predicateWeight + ']->'
+
                 }
 
                 if (subjectNodeType == graphConsts.NODE_DOMAIN) {
@@ -237,7 +239,8 @@ let getSubjectObjects = function(nodeObj) {
                     }
                 });
                 session.close();
-                resolve(obj);
+                //resolve(result);
+               resolve(obj);
             })
             .catch(function(err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
@@ -273,10 +276,10 @@ let getAllDomainDetailsCallback = function(nodeObj, callback) {
 }
 
 let deleteObject = function(deleteObj) {
-    let subType = deleteObj.subNodeType.toLowerCase(),
-        sub = subType.charAt(0),
-        objType = deleteObj.objNodeType.toLowerCase(),
-        obj = objType.charAt(0);
+    // let subType = deleteObj.subNodeType.toLowerCase(),
+    //     sub = subType.charAt(0),
+    //     objType = deleteObj.objNodeType.toLowerCase(),
+    //     obj = objType.charAt(0);
 
     let promise = new Promise(function(resolve, reject) {
         logger.debug("Now proceeding to delete " +
@@ -287,10 +290,16 @@ let deleteObject = function(deleteObj) {
             });
         let session = driver.session();
         logger.debug("Obtained connection with neo4j");
+        // let query = 'match(d:Domain{name:{domainName}})'
+        // query += 'match(d)<-[r1]-( sub:' + deleteObj.subNodeType + '{name:{subNodeName}})'
+        // query += 'match(sub)-[r2:' + deleteObj.predicateName + ']-(obj:' + deleteObj.objNodeType + '{name:{objNodeName}})'
+        // query += 'detach delete(r2)';
+
         let query = 'match(d:Domain{name:{domainName}})'
-        query += 'match(d)<-[r1]-(' + sub + ':' + deleteObj.subNodeType + '{name:{subNodeName}})'
-        query += 'match(' + sub + ')<-[r2:' + deleteObj.predicateName + ']-(' + obj + ':' + deleteObj.objNodeType + '{name:{objNodeName}})'
-        query += 'detach delete(r2)';
+               query += 'match(d)<-[r1]-( sub:' + deleteObj.subNodeType + '{name:{subNodeName}})'
+               query += 'match(sub)-[r2:' + deleteObj.predicateName + ']-(obj:' + deleteObj.objNodeType + '{name:{objNodeName}})'
+               query += 'detach delete(r2)';
+
 
         let params = {
             domainName: deleteObj.domainName,
@@ -302,7 +311,7 @@ let deleteObject = function(deleteObj) {
             .then(function(result) {
                 if (result) {
                     session.close();
-                    resolve(deleteObj.objNodeName);
+                    resolve(deleteObj);
                 }
             })
             .catch(function(err) {
@@ -386,7 +395,7 @@ let getRelations = function(subject) {
         var predicateName = subject.predicates;
         // MATCH (:Person { name: 'Oliver Stone' })-->(movie)
         // RETURN movie.title
-        query = 'match (s:' + subjectNodeType + '{name: {subjectNodeName}})<-[r:' + predicateName + ']-(o:' + objectNodeType + '{name:{objectNodeName}})'
+        query = 'match (s:' + subjectNodeType + '{name: {subjectNodeName}})-[r:' + predicateName + ']-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += ' return r'
         params = {
             subjectNodeName: subjectNodeName,
@@ -401,7 +410,7 @@ let getRelations = function(subject) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result.records[0]._fields[0]['properties']['weight']);
+                resolve(result.records[0]._fields[0]['properties']); //result.records[0]._fields[0]['properties']
             })
             .catch(function(error) {
                 logger.error("Error in query: ", error, ' query is: ', query);
@@ -697,6 +706,7 @@ let getSearch = function(nodeObj) {
     return promise;
 };
 
+
 let createResource = function(nodeObj) {
     let promise = new Promise(function(resolve, reject) {
         logger.debug("Now proceeding to retrive objects for node name: ",
@@ -744,9 +754,58 @@ let createResource = function(nodeObj) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
                     query);
                 reject(err);
+              });
+            });
+          return promise;
+};
+
+let getPublishAllAttributes = function(subject) {
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug(subject.nodename);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            });
+        let session = driver.session();
+        var subjectDomainname = subject.domainname;
+        var subjectNodeType = subject.nodetype;
+        var subjectNodeName = subject.nodename;
+        var objectNodeType = subject.nodetype1;
+        var objectNodeName = subject.nodename1;
+
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+        query += 'return s,o,r'
+        params = {
+            subjectNodeType: subjectNodeType,
+            subjectNodeName: subjectNodeName,
+            objectNodeType: objectNodeType,
+            objectNodeName: objectNodeName
+        }
+
+
+        session.run(query, params).then(function(result) {
+                if (result) {
+                    logger.debug(result);
+                }
+                session.close();
+                resolve(result.records[0]._fields[1]['properties']);
+            })
+            .catch(function(error) {
+                logger.error("Error in deleting the query: ", error, ' query is: ', query);
+                reject(error);
             });
     });
     return promise;
+};
+
+let getPublishAllAttributesCallback = function(subject, callback) {
+    logger.debug("from the callback : " + subject.nodename);
+    getPublishAllAttributes(subject).then(function(nodename) {
+        callback(null, nodename);
+
+    }, function(err) {
+        callback(err, null);
+    });
 };
 
 let createResourceCallback = function(subject, callback) {
@@ -832,5 +891,6 @@ module.exports = {
     getAllOrphansCallback: getAllOrphansCallback,
     getSearchCallback: getSearchCallback,
     createResourceCallback: createResourceCallback,
-    formStatementCallback: formStatementCallback
+    formStatementCallback: formStatementCallback,
+    getPublishAllAttributesCallback: getPublishAllAttributesCallback
 };
