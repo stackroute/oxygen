@@ -43,11 +43,14 @@ export default class PredicateCard extends React.Component {
         if (this.state.predicateCardJsx) {
             predicateCard['name'] = nextProps.predicateCard['name'];
             predicateCard['attributes'] = nextProps.predicateCard['properties'];
-
-            this.setState({style: style})
-
-            var listAttr = [];
-            for (let key in predicateCard['attributes']) {
+            this.setState({style: style});
+            if(predicateCard['attributes'] == null)
+            {
+              this.setState({attrObj: null});
+            }
+            else{
+              var listAttr = [];
+              for (let key in predicateCard['attributes']) {
                 let keyValue = key;
                 let value = predicateCard['attributes'][key];
 
@@ -57,6 +60,7 @@ export default class PredicateCard extends React.Component {
                  });
             }
             this.setState({attrObj: listAttr});
+          }
         } else {
             predicateCard['name'] = '',
             predicateCard['attributes'] = '';
