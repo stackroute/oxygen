@@ -45,16 +45,16 @@ let startDocSearcherEngine = function() {
   try {
     welcome();
 
-    //Any pre-requisites for running the engine
+    //  Any pre-requisites for running the engine
     setupMongooseConnections();
 
-    logger.info("Starting doc search engine..!");
+    logger.info('Starting doc search engine..!');
 
     docSearchPipeline.startSearcher();
     // searcherEngine.startSearcher();
   } catch (err) {
-    logger.error("Caught error in running doc searcher engine: ", err);
+    logger.error('Caught error in running doc searcher engine: ', err);
   }
-}
+};
 
 startDocSearcherEngine();

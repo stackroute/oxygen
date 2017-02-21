@@ -221,7 +221,7 @@ export default class DomainShow extends React.Component {
 		onRequestClose={this.handleRequestClose}
 		/>
 		<Card style = {styles.cardRound}>
-		<Link to = {'/domainhome/' + this.props.item.name} style = {{textDecoration: 'none'}}>
+		<Link to = {'/domainview/' + this.props.item.name} style = {{textDecoration: 'none'}}>
 		<CardMedia style = {{height: '280px', borderRadius: '2%',
 		width: '100%', backgroundColor: this.props.item.conceptColor,marginBottom:25}}
 		overlay = {<CardTitle title = {this.props.item.name} subtitle = 'Domain'
@@ -335,8 +335,8 @@ export default class DomainShow extends React.Component {
 			<MenuItem primaryText="ReIndex"
 			leftIcon={<NavigationRefresh/>}
 			onTouchTap={this.handleOpen}/>
-		 <MenuItem primaryText="Edit"
-			 containerElement={<Link to={'/edit/'+ this.props.item.name}/>}
+		<MenuItem primaryText="Browser"
+			 containerElement={<Link to={'/domainhome/'+ this.props.item.name}/>}
 			leftIcon={<ImageEdit/>}
 			onTouchTap={this.handleEdit}/>
 			<MenuItem primaryText="Delete"

@@ -5,7 +5,7 @@ module.exports = {
     path: path.resolve(__dirname, 'webclient', 'assets'),
     filename: 'bundle.js',
     publicPath: '/assets/'
-      // publicPath: path.resolve(__dirname, 'webclient', 'assets')
+      //  publicPath: path.resolve(__dirname, 'webclient', 'assets')
   },
   module: {
     loaders: [{
@@ -13,7 +13,7 @@ module.exports = {
         loader: 'json'
       },
       //  { test: /\.js$/,loader: 'babel',query: {compact: false}},
-      //{ test: /\.css$/, loader: 'style!css'},
+      //  { test: /\.css$/, loader: 'style!css'},
       {
         loader: 'babel',
         test: /\.jsx$/,

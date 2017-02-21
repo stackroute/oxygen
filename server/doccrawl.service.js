@@ -47,15 +47,15 @@ let startDocCrawlerEngine = function() {
   try {
     welcome();
 
-    //Any pre-requisites for running the engine
+    //  Any pre-requisites for running the engine
     setupMongooseConnections();
 
-    logger.info("Starting doc crawler engine..!");
+    logger.info('Starting doc crawler engine..!');
 
     crawlerEngine.startCrawler();
   } catch (err) {
-    logger.error("Caught error in running doc crawler engine: ", err);
+    logger.error('Caught error in running doc crawler engine: ', err);
   }
-}
+};
 
 startDocCrawlerEngine();

@@ -37,10 +37,8 @@ import {
 import lime800 from 'material-ui/styles/colors';
 import SubjectCard from './SubjectCard.jsx';
 import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
-import TreeGraph from './TreeGraph.jsx';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import DeleteNode from './DeleteNode.jsx';
-import DomainTable from './DomainTable.jsx';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
@@ -554,21 +552,6 @@ export default class SubjectNode extends React.Component {
                 <DeleteNode open={this.state.deleteModalOpen} nodeDetails={this.state.nodeDetails}/>
                 <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
                 <DeletePredicate predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
-
-                <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
-                    <Tab label='Graph View' value='l'>
-                        <div>
-                            <div className='treeGraph'>
-                                <TreeGraph domainName={this.state.selectedDomain}/>
-                            </div>
-                        </div>
-                    </Tab>
-                    <Tab label='List View' value='g'>
-                        <div>
-                            <DomainTable domainName={this.state.selectedDomain}/>
-                        </div>
-                    </Tab>
-                </Tabs>
             </div>
         ); //End of Return
     } //End of Render
