@@ -10,6 +10,9 @@ import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
+import LoadProps from './LoadProps';
+import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
+FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
 
 const styles = {
     customWidth: {
@@ -66,17 +69,9 @@ export default class SubjectCard extends React.Component {
     render() {
         let keyValueDisplay = '';
         if (this.state.attrObj !== null) {
-            keyValueDisplay = this.state.attrObj.slice(0, 5).map((row, index) => (
+            keyValueDisplay = this.state.attrObj.map((row, index) => (
                 <div>
-                    <TextField floatingLabelText='key' value={row.key} style={{
-                        width: '40%',
-                        float: 'left',
-                        overflow: 'hidden'
-                    }}/>
-                    <TextField floatingLabelText='value' value={row.value} style={{
-                        width: '40%'
-                    }}/>
-                    <br/>
+                    <LoadProps keyvalue = {row}/>
                 </div>
             ));
         }
@@ -88,8 +83,21 @@ export default class SubjectCard extends React.Component {
                         fontSize: 20,
                         marginLeft: '50%'
                     }}/>
-                    <CardActions>
-
+                  <CardText>
+                    <Formsy.Form
+                      onValid={this.enableButton}
+                      onValidSubmit={this.submitForm}
+                    >
+                    <FormsySelect
+                      name="subject"
+                      required
+                      floatingLabelText="Select Subject Type"
+                      menuItems={this.selectFieldItems}
+                    >
+                      <MenuItem value={'Intent'} primaryText="Intent" />
+                      <MenuItem value={'Concept'} primaryText="Concept" />
+                  </FormsySelect>
+                </Formsy.Form>
                         <TextField floatingLabelText='Type' value={this.state.subjectCard['type']} style={{
                             fullWidth: 'true'
                         }}/>
@@ -98,12 +106,8 @@ export default class SubjectCard extends React.Component {
                         }}/>
                         <br/> {keyValueDisplay}
                         <br/>
-                        <br/>
-                        <br/>
-                        <br/>
                         <Divider/>
-
-                        <Row >
+                        <Row>
                             <FlatButton label='Delete' style={{
                                 float: 'right'
                             }}/>
@@ -111,7 +115,7 @@ export default class SubjectCard extends React.Component {
                                 float: 'right'
                             }}/>
                         </Row>
-                    </CardActions>
+                    </CardText>
                 </Card>
             </Col>
         );
