@@ -410,7 +410,7 @@ let getRelations = function(subject) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result.records[0]._fields[0]['properties']); //result.records[0]._fields[0]['properties']
+                resolve(result); //result.records[0]._fields[0]['properties']
             })
             .catch(function(error) {
                 logger.error("Error in query: ", error, ' query is: ', query);
