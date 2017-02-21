@@ -396,7 +396,7 @@ let getRelations = function(subject) {
         // MATCH (:Person { name: 'Oliver Stone' })-->(movie)
         // RETURN movie.title
         query = 'match (s:' + subjectNodeType + '{name: {subjectNodeName}})-[r:' + predicateName + ']-(o:' + objectNodeType + '{name:{objectNodeName}})'
-        query += ' return r'
+        query += 'return r'
         params = {
             subjectNodeName: subjectNodeName,
             objectNodeName: objectNodeName,
@@ -410,7 +410,7 @@ let getRelations = function(subject) {
                     logger.debug(result);
                 }
                 session.close();
-                resolve(result.records[0]._fields[0]['properties']); //result.records[0]._fields[0]['properties']
+                resolve(result); //result.records[0]._fields[0]['properties']
             })
             .catch(function(error) {
                 logger.error("Error in query: ", error, ' query is: ', query);
