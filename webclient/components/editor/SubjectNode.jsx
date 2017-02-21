@@ -483,7 +483,8 @@ export default class SubjectNode extends React.Component {
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
 
                     <Row style={{
-                        marginRight: '75%'
+                        float: 'left',
+                        marginLeft: 20
                     }}>C - Concept, I - Intent, T - Term</Row>
 
                     <Row>
