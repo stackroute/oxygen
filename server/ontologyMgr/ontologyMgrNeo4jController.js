@@ -490,8 +490,8 @@ let getAllRelations = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+//Check *
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s, r, o'
         params = {
             subjectNodeType: subjectNodeType,
@@ -687,15 +687,37 @@ let getSearch = function(nodeObj) {
         let query = '';
         logger.debug("obtained connection with neo4j");
         //  let query = 'match (n) where n.name =~ {search} return n';
+
+let listDetail = [];
         query = 'match (d: Domain {name: {subjectDomainname}})-[r]-(n)-[r1]-(p) return p , n,r,r1';
         let params = {
             subjectDomainname: subjectDomainname,
         };
+
         session.run(query, params)
             .then(function(result) {
                 if (result.records.length == 0) {}
+                else{
+
+                  result.records.forEach(function(record){
+                    let obj = {
+                      name : null,
+                      label : null,
+                      type : null,
+                      type1 : null
+                      }
+                    obj.name = record._fields[0]['properties']['name'];
+                    obj.label = record._fields[0]['labels'][0];
+                    obj.type = record._fields[2]['type'];
+                    obj.type1 = record._fields[3]['type'];
+
+
+                    listDetail.push(obj);
+                  });
+                }
                 session.close();
-                resolve(result);
+                resolve(listDetail);
+
             })
             .catch(function(err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
@@ -772,8 +794,8 @@ let getPublishAllAttributes = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+//check *
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s,o,r'
         params = {
             subjectNodeType: subjectNodeType,

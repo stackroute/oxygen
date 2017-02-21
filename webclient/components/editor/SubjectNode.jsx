@@ -19,8 +19,7 @@ import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './DissolveRelation.jsx';
-//import DeletePredicate from './DissolveRelation.jsx';
+import DeletePredicate from './dissolveRelation.jsx';
 import AddObject from './AddObject.jsx';
 import Delete from './DeleteNode.jsx';
 import Edit from './edit.jsx';
@@ -35,6 +34,7 @@ import {
     FormsyToggle,
     FormsyAutoComplete
 } from 'formsy-material-ui/lib';
+import lime800 from 'material-ui/styles/colors';
 import SubjectCard from './SubjectCard.jsx';
 import HorizontalLinearStepper from './HorizontalLinearStepper.jsx';
 import TreeGraph from './TreeGraph.jsx';
@@ -123,7 +123,7 @@ export default class SubjectNode extends React.Component {
             openAddSubject: false,
             openAddObject: false,
             openAddPredicate: false,
-            nodePredicateDetails:null,
+            nodePredicateDetails: null,
             selectedSubjectDetails: {},
             selectedObjectDetails: {},
             selectedPredicateDetails: {},
@@ -134,7 +134,6 @@ export default class SubjectNode extends React.Component {
         };
         this.getSubjects(this.state.selectedDomain);
     }
-
 
     getSubjects(domainName) {
         let url = `domain/${domainName}/subjects`;
@@ -155,11 +154,7 @@ export default class SubjectNode extends React.Component {
                         let nodekey = response['subjects'][each].label;
                         listSubjects.push(nodekey.charAt(0) + ': ' + response['subjects'][each]['name']);
                     }
-
-                    this.setState({
-                      subjectList: listSubjects,
-                      searchObjectText: '', loading: 'hide'
-                    });
+                    this.setState({selectedSubjectDetails: response.attributes, subjectList: listSubjects, searchObjectText: '', loading: 'hide'});
                 }
             }
         });
@@ -204,12 +199,7 @@ export default class SubjectNode extends React.Component {
                         console.log(nodekey);
                         listPredicates[response['objects'][each]['name']] = response['objects'][each]['predicates'];
                     }
-                    this.setState({
-                      predicateList: listPredicates,
-                      objectList: listObjects,
-                      searchRelText: '',
-                      loading: 'hide',
-                    });
+                    this.setState({predicateList: listPredicates, objectList: listObjects, searchRelText: '', loading: 'hide'});
                 }
             }
         });
@@ -259,51 +249,40 @@ export default class SubjectNode extends React.Component {
     handleUpdateSubjectInput = (searchText) => {
         let selectedSubjectDetails = {};
         if (this.state.subjectList.indexOf(searchText) < 0 || searchText.length == 0) {
-            this.setState({
-              stepNumber: 0
-            });
+            this.setState({stepNumber: 0});
         } else {
-            this.setState({
-              addLabel: 'Add Intent',
-              floatingLabelTextObject: 'Objects',
-              selectedSubject: searchText,
-              stepNumber: 1});
-              this.getObjects(searchText.charAt(0),searchText.substr(3, searchText.length));
-              let nodeName = searchText.substr(3, searchText.length);
-              let url = '';
-              let nodeType = '';
-              switch (searchText.charAt(0)) {
-                  case 'C':
-                      nodeType = 'Concept'
-                      url = `/domain/${this.state.selectedDomain}/subject/concept/${nodeName}/objects`;
-                      break;
-                  case 'I':
-                      nodeType = 'Intent'
-                      url = `/domain/${this.state.selectedDomain}/subject/intent/${nodeName}/objects`;
-                      break;
-              }
+            this.setState({addLabel: 'Add Intent', floatingLabelTextObject: 'Objects', selectedSubject: searchText, stepNumber: 1});
+            this.getObjects(searchText.charAt(0), searchText.substr(3, searchText.length));
+            let nodeName = searchText.substr(3, searchText.length);
+            let url = '';
+            let nodeType = '';
+            switch (searchText.charAt(0)) {
+                case 'C':
+                    nodeType = 'Concept'
+                    url = `/domain/${this.state.selectedDomain}/subject/concept/${nodeName}/objects`;
+                    break;
+                case 'I':
+                    nodeType = 'Intent'
+                    url = `/domain/${this.state.selectedDomain}/subject/intent/${nodeName}/objects`;
+                    break;
+            }
 
-              Request.get(url).end((err, res) => {
-                  if (err) {
-                      this.setState({
-                        errmsg: res.body,
-                        loading: 'hide'});
-                  } else {
-                      let response = JSON.parse(res.text);
-                      if (response.length == 0) {
-                          this.setState({floatingLabelTextObject: 'No Results'});
-                      } else {
+            Request.get(url).end((err, res) => {
+                if (err) {
+                    this.setState({errmsg: res.body, loading: 'hide'});
+                } else {
+                    let response = JSON.parse(res.text);
+                    if (response.length == 0) {
+                        this.setState({floatingLabelTextObject: 'No Results'});
+                    } else {
                         selectedSubjectDetails['name'] = nodeName;
                         selectedSubjectDetails['type'] = nodeType;
                         selectedSubjectDetails['attributes'] = response.attributes;
 
-                        this.setState({
-                          selectedSubjectDetails: selectedSubjectDetails,
-                          subjectCardJsx: true
-                          });
-                      }
-                  }
-              });
+                        this.setState({selectedSubjectDetails: selectedSubjectDetails, subjectCardJsx: true});
+                    }
+                }
+            });
         }
     };
 
@@ -333,40 +312,29 @@ export default class SubjectNode extends React.Component {
                     this.setState({errmsg: res.body, loading: 'hide'});
                 } else {
                     let response = JSON.parse(res.text);
-                    console.log('Here after update' + response);
-                    if(response.length == 0){
-                      this.setState({floatingLabelTextObject: 'No Results'});
-                    }else{
-                      selectedObjectDetails['name'] = nodeName2;
-                      selectedObjectDetails['type'] = nodeType;
-                      selectedObjectDetails['attributes'] = response;
-                      this.setState({
-                        selectedObjectDetails: selectedObjectDetails,
-                        objectCardJsx: true
-                        });
+                    if (response.length == 0) {
+                        this.setState({floatingLabelTextObject: 'No Results'});
+                    } else {
+                        selectedObjectDetails['name'] = nodeName2;
+                        selectedObjectDetails['type'] = nodeType;
+                        selectedObjectDetails['attributes'] = response;
+                        this.setState({selectedObjectDetails: selectedObjectDetails, objectCardJsx: true});
                     }
                 }
             });
         }
     };
 
+    handleUpdatePredicateInput = (searchText) => {
+        if (searchText.length == 0) {
+            this.setState({stepNumber: 2});
 
-  handleUpdatePredicateInput = (searchText) => {
-      if (searchText.length == 0) {
-          this.setState({stepNumber: 2});
-          console.log('Herer' + this.state.stepNumber);
-      } else {
-       this.setState({
-         selectedPredicate: searchText,
-         stepNumber:3
-       });
-     }
-   };
+        } else {
+            this.setState({selectedPredicate: searchText, stepNumber: 3});
 
+            let selectedPredicateDetails = {};
 
-    handleUpdateRelInput = (searchText) => {
-        let selectedPredicateDetails = {};
-
+<<<<<<< HEAD
         let nodeName1 = this.state.selectedSubjectDetails['name'];
         let nodeName2 = this.state.selectedObjectDetails['name'];
         let url = '';
@@ -385,15 +353,35 @@ export default class SubjectNode extends React.Component {
                 let response = JSON.parse(res.text);
                 selectedPredicateDetails['name'] = searchText;
                 selectedPredicateDetails['properties'] = response;
+            let nodeName1 = this.state.selectedSubjectDetails['name'];
+            let nodeName2 = this.state.selectedObjectDetails['name'];
 
-                this.setState({
-                  selectedPredicateDetails: selectedPredicateDetails,
-                  predicateCardJsx: true
-                  });
+            let url = '';
+            switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
+                case 'C':
+                    url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}/predicates/${searchText}`;
+                    break;
+                case 'I':
+                    url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}/predicates/${searchText}`;
+                    break;
             }
-        });
-    }
+            Request.get(url).end((err, res) => {
+                if (err) {
+                    this.setState({errmsg: res.body, loading: 'hide'});
+                } else {
+                    let response = JSON.parse(res.text);
+                    selectedPredicateDetails['name'] = searchText;
+                    selectedPredicateDetails['properties'] = response;
 
+                    this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: true});
+                }
+            });
+        }
+    };
+
+    // handleUpdateRelInput = (searchText) => {
+    //
+    // };
 
     handleDeleteSubject = () => {
         if (this.state.selectedSubject.length == 0) {} else {
@@ -435,61 +423,56 @@ export default class SubjectNode extends React.Component {
 
     handleDeleteObject = () => {
         if (this.state.selectedObject.length == 0) {} else {
-          let nodetype = '';
-              let nodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-              //console.log(nodename);
-              if(this.state.selectedObject.charAt(0) == 'T'){
+            let nodetype = '';
+            let nodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
+            //console.log(nodename);
+            if (this.state.selectedObject.charAt(0) == 'T') {
                 nodetype = 'Term';
-              }else{
+            } else {
                 nodetype = 'Concept';
-              }
-              let nodeDetails = {
-                domainName : this.state.selectedDomain,
+            }
+            let nodeDetails = {
+                domainName: this.state.selectedDomain,
                 nodetype: nodetype,
                 nodename: nodename
-              };
-              this.setState({
-                nodeDetails: nodeDetails,
-                deleteModalOpen : true
-              });
-            }
+            };
+            this.setState({nodeDetails: nodeDetails, deleteModalOpen: true});
+        }
     };
 
-
     handleDeletePredicate = () => {
-      console.log(this.state.selectedObject);
-      console.log(this.state.selectedSubject);
-      console.log(this.state.selectedPredicate);
-     if(this.state.selectedObject.length == 0 || this.state.selectedSubject.length == 0 || this.state.selectedPredicate.length == 0){
-     }
-     else{
-       let subnodetype = '';
-       let objnodetype = '';
-       let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-       let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-       if(this.state.selectedObject.charAt(0) == 'T'){
-         objnodetype = 'Term';
-       }else{
-         objnodetype = 'Concept';
-       }
-       if(this.state.selectedSubject.charAt(0) == 'I'){
-         subnodetype = 'Intent';
-       }else{
-         subnodetype = 'Concept';
-       }
-       let nodePredicateDetails = {
-         domainName : this.state.selectedDomain,
-         subnodetype: subnodetype,
-         subnodename: subnodename,
-         objnodetype: objnodetype,
-         objnodename: objnodename,
-         predicate: this.state.selectedPredicate
-       };
-       this.setState({
-           nodePredicateDetails: nodePredicateDetails,
-         });
-     }
- }
+        console.log(this.state.selectedObject);
+        console.log(this.state.selectedSubject);
+        console.log(this.state.selectedPredicate);
+        if (this.state.selectedObject.length == 0 || this.state.selectedSubject.length == 0 || this.state.selectedPredicate.length == 0) {} else {
+            let subnodetype = '';
+            let objnodetype = '';
+            let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+            let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
+            if (this.state.selectedObject.charAt(0) == 'T') {
+                objnodetype = 'Term';
+            } else {
+                objnodetype = 'Concept';
+            }
+            if (this.state.selectedSubject.charAt(0) == 'I') {
+                subnodetype = 'Intent';
+            } else {
+                subnodetype = 'Concept';
+            }
+            let nodePredicateDetails = {
+                domainName: this.state.selectedDomain,
+                subnodetype: subnodetype,
+                subnodename: subnodename,
+                objnodetype: objnodetype,
+                objnodename: objnodename,
+                predicate: this.state.selectedPredicate
+            };
+            this.setState({nodePredicateDetails: nodePredicateDetails});
+        }
+    }
+    handleUpdateDeletePredicate = () => {
+        this.setState({selectedPredicate: null, stepNumber: 2});
+    };
 
     handleChange = (event, index, value) => this.setState({value});
 
@@ -498,11 +481,9 @@ export default class SubjectNode extends React.Component {
     };
 
     formStatement = () => {
-      if(this.state.selectedSubjectDetails !== null && this.state.selectedObjectDetails !== null && this.state.selectedPredicateDetails !== null){
-        this.setState({
-          statementFormed: true
-        })
-      }
+        if (this.state.selectedSubjectDetails !== null && this.state.selectedObjectDetails !== null && this.state.selectedPredicateDetails !== null) {
+            this.setState({statementFormed: true})
+        }
     }
 
     render() {
@@ -514,7 +495,7 @@ export default class SubjectNode extends React.Component {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: ' rgb(25, 118, 210)'
+                    color: 'teal'
                 }}>
                     <h1 styles={style}>{this.state.selectedDomain}</h1>
                 </div>
@@ -541,9 +522,7 @@ export default class SubjectNode extends React.Component {
 
                         <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
-                                <AutoComplete
-                                  floatingLabelText={this.state.floatingLabelTextRel}
-                                  searchText={this.state.searchRelText} onUpdateInput={this.handleUpdatePredicateInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
+                                <AutoComplete floatingLabelText={this.state.floatingLabelTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdatePredicateInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
 
                             </Row>
                         </Col>
@@ -568,32 +547,24 @@ export default class SubjectNode extends React.Component {
                     <Row style={{
                         marginLeft: '80%'
                     }}>
-                    <RaisedButton label='Dissolve'
-                          style={{marginRight:10}}
 
-                          onTouchTap={
-
-                            this.handleDeletePredicate
-                          }
-
-
-                         />
-
+                        <RaisedButton label='Dissolve' style={{
+                            float: 'left',
+                            marginRight: 10,
+                            marginBottom: 10
+                        }} onTouchTap={this.handleDeletePredicate}/>
 
                         <RaisedButton label='Apply' style={{
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
-                        }}
-                        onTouchTap={this.formStatement}
-                        />
-
+                        }} onTouchTap={this.formStatement}/>
                     </Row>
                     <br/>
                     <Row>
-                          <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
-                          <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx}/>
-                          <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx}/>
+                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
+                        <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx}/>
+                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx}/>
                     </Row>
                     <br/>
 
@@ -604,7 +575,7 @@ export default class SubjectNode extends React.Component {
                 <AddPredicate open={this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
                 <DeleteNode open={this.state.deleteModalOpen} nodeDetails={this.state.nodeDetails}/>
                 <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
-                <DeletePredicate predicateDetails = {this.state.nodePredicateDetails} />
+                <DeletePredicate predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
 
                 <Tabs value={this.state.tabValue} onChange={this.handleTabChange}>
                     <Tab label='Graph View' value='l'>

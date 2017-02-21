@@ -9,18 +9,15 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
-<<<<<<< HEAD
-=======
 import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
 
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
 const styles = {
     customWidth: {
         width: 300
     },
 
 };
-export default class SubjectCard extends React.Component {
+export default class SubjectCar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,44 +26,35 @@ export default class SubjectCard extends React.Component {
             value: 3,
             attrObj: null,
             style: {
+              backgroundColor: 'black',
               marginLeft: 10,
               marginRight: 10,
               opacity: 0.2
             }
         };
     }
-<<<<<<< HEAD
-    handleChange = (event, index, value) => this.setState({value});
-=======
     handleChange = (event, index, value) => this.setState({value: 3});
 
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
     componentWillReceiveProps(nextProps) {
         this.setState({subjectCardJsx: nextProps.subjectCardJsx});
         let subjectCard = {};
-        let style = {
-          marginLeft: 10,
-          marginRight: 10,
-          opacity: 1
-        };
         if (this.state.subjectCardJsx) {
-            this.setState({style: style});
-            subjectCard['name'] = nextProps.subjectCard['name'],
-            subjectCard['type'] = nextProps.subjectCard['type'],
+            subjectCard['name'] = 'Default Value',
+            subjectCard['type'] = 'Default Value',
             subjectCard['attributes'] = nextProps.subjectCard['attributes'];
+
+            this.setState(style: {
+              backgroundColor: none,
+              marginLeft: 10,
+              marginRight: 10,
+            })
+
             var listAttr = [];
             for (let key in subjectCard['attributes']) {
                 let keyValue = key;
                 let value = subjectCard['attributes'][key];
-<<<<<<< HEAD
-                listAttr.push({
-                  key: keyValue,
-                  value: value
-                 });
-=======
 
                 listAttr.push({key: keyValue, value: value});
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
             }
             this.setState({attrObj: listAttr});
         } else {
@@ -76,23 +64,10 @@ export default class SubjectCard extends React.Component {
         }
         this.setState({subjectCard: subjectCard});
     }
+
     render() {
         let keyValueDisplay = '';
         if (this.state.attrObj !== null) {
-<<<<<<< HEAD
-            keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
-              <div>
-                <TextField floatingLabelText='key' value={row.key} style={{
-                    width: '40%',
-                    float: 'left',
-                    overflow: 'hidden'
-                }}/>
-              <TextField floatingLabelText='value' value={row.value} style={{
-                    width: '40%'
-                }}/>
-              <br/>
-              </div>
-=======
             keyValueDisplay = this.state.attrObj.slice(0, 5).map((row, index) => (
                 <div>
                     <TextField floatingLabelText='key' value={row.key} style={{
@@ -105,49 +80,17 @@ export default class SubjectCard extends React.Component {
                     }}/>
                     <br/>
                 </div>
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
             ));
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
-<<<<<<< HEAD
-                <Card style={{
-                    marginLeft: 10,
-                    marginRight: 10
-                }}>
-=======
 
                 <Card style={this.state.style}>
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
                     <CardHeader title='Subject' titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'
                     }}/>
                     <CardActions>
-<<<<<<< HEAD
-                        <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.customWidth} autoWidth={false}>
-                            <MenuItem value={0} primaryText='Select Type'/>
-                            <MenuItem value={1} primaryText='Intent'/>
-                            <MenuItem value={2} primaryText='Concept'/>
-                            <MenuItem value={3} primaryText={this.state.subjectCard['type']}/>
-                        </DropDownMenu>
-                        <TextField floatingLabelText='Name' value={this.state.subjectCard['name']} style={{
-                            fullWidth: 'true'
-                        }}/>
-                        <br/>
-                        {keyValueDisplay}
-                        <ContentRemove style={{
-                            float: 'right',
-                            marginTop: '10%'
-                        }}/>
-                        <FloatingActionButton mini={true} style={{
-                            float: 'right',
-                            overflow: 'hidden'
-                        }}>
-                            <ContentAdd/>
-                        </FloatingActionButton>
-=======
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
 
                         <TextField floatingLabelText='Type' value={this.state.subjectCard['type']} style={{
                             fullWidth: 'true'
@@ -161,6 +104,7 @@ export default class SubjectCard extends React.Component {
                         <br/>
                         <br/>
                         <Divider/>
+
                         <Row >
                             <FlatButton label='Delete' style={{
                                 float: 'right'

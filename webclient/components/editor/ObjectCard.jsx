@@ -7,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 const styles = {
@@ -22,19 +22,30 @@ export default class ObjectCard extends React.Component {
             objectCard: {},
             objectCardJsx: false,
             value: 3,
-            attrObj: null
+            attrObj: null,
+            style: {
+              marginLeft: 10,
+              marginRight: 10,
+              opacity: 0.2
+            }
         };
     }
-    handleChange = (event, index, value) => this.setState({value});
+    handleChange = (event, index, value) => this.setState({value:3});
     componentWillReceiveProps(nextProps) {
         this.setState({objectCardJsx: nextProps.objectCardJsx});
         let objectCard = {};
+        let style = {
+          marginLeft: 10,
+          marginRight: 10,
+          opacity: 1
+        };
         if (nextProps.objectCardJsx) {
             objectCard['name'] = nextProps.objectCard['name'],
             objectCard['type'] = nextProps.objectCard['type'],
             objectCard['attributes'] = nextProps.objectCard['attributes'];
-            console.log('Here');
-            console.log(nextProps.objectCard);
+
+            this.setState({style: style})
+
             var listAttr = [];
             for (let key in objectCard['attributes']) {
                 let keyValue = key;
@@ -50,6 +61,7 @@ export default class ObjectCard extends React.Component {
             objectCard['type'] = '';
         }
         this.setState({objectCard: objectCard});
+        console.log('yogee'+this.state.objectCard['name']);
     }
     render() {
       let keyValueDisplay = '';
@@ -70,10 +82,7 @@ export default class ObjectCard extends React.Component {
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
-                <Card style={{
-                    marginLeft: 10,
-                    marginRight: 10
-                }}>
+                <Card style={this.state.style}>
                     <CardHeader title='Object' titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'
