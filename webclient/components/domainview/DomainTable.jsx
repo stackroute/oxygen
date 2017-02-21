@@ -32,7 +32,7 @@ export default class DomainTable extends React.Component {
   }
 
   getSubjects(domainName){
-    let url = `domain/${domainName}/subjects`;
+    let url = `/domain/${domainName}/subjects`;
     Request
     .get(url)
     .end((err, res) => {

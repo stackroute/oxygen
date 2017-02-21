@@ -8,17 +8,17 @@ import d3 from 'd3';
 let count = 1;
 let margin = {
     top: 20,
-    right: 120,
+    right: 80,
     bottom: 20,
-    left: 120
+    left: 80
 };
-let width = 960 - margin.right - margin.left;
-let height = 400 - margin.top - margin.bottom;
+let width = 1330 - margin.right - margin.left;
+let height = 600 - margin.top - margin.bottom;
 let i = 0;
 let duration = 750;
 let root;
 let PAGINATION = 6;
-export default class TreeGraph extends React.Component {
+export default class DomainMindMapGraph extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,7 +55,7 @@ export default class TreeGraph extends React.Component {
         let diagonal = d3.svg.diagonal().projection(function(d) {
             return [d.y, d.x];
         });
-        let svg = d3.select('.treeGraph').append('svg').attr('width', width + margin.right + margin.left).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        let svg = d3.select('.domainView').append('svg').attr('width', width + margin.right + margin.left).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
         let color = d3.scale.category20();
         root = treeData[0];
         root.x0 = height / 2;
@@ -240,12 +240,9 @@ export default class TreeGraph extends React.Component {
     }
     render() {
         return (
-            <Card>
-                <CardHeader actAsExpander={true} showExpandableButton={true}/>
-                <CardText expandable={this.state.expandable}>
-                    {this.state.graph}
-                </CardText>
-            </Card>
+          <div className="domainView">
+            {this.state.graph}
+          </div>
         );
     }
 }
