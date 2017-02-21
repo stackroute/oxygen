@@ -490,8 +490,8 @@ let getAllRelations = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+//Check *
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s, r, o'
         params = {
             subjectNodeType: subjectNodeType,
@@ -794,8 +794,8 @@ let getPublishAllAttributes = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+//check *
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s,o,r'
         params = {
             subjectNodeType: subjectNodeType,

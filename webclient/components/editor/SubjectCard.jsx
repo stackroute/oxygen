@@ -25,7 +25,6 @@ export default class SubjectCard extends React.Component {
             value: 3,
             attrObj: null,
             style: {
-              backgroundColor: 'black',
               marginLeft: 10,
               marginRight: 10,
               opacity: 0.2
@@ -37,12 +36,13 @@ export default class SubjectCard extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({subjectCardJsx: nextProps.subjectCardJsx});
         let subjectCard = {};
+        let style = {
+          marginLeft: 10,
+          marginRight: 10,
+          opacity: 1
+        };
         if (this.state.subjectCardJsx) {
-            this.setState(style: {
-              backgroundColor: none,
-              marginLeft: 10,
-              marginRight: 10,
-            }),
+            this.setState({style: style});
             subjectCard['name'] = nextProps.subjectCard['name'],
             subjectCard['type'] = nextProps.subjectCard['type'],
             subjectCard['attributes'] = nextProps.subjectCard['attributes'];

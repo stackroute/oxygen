@@ -26,7 +26,6 @@ export default class ObjectCard extends React.Component {
             value: 3,
             attrObj: null,
             style: {
-              backgroundColor: 'black',
               marginLeft: 10,
               marginRight: 10,
               opacity: 0.2
@@ -37,17 +36,18 @@ export default class ObjectCard extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({objectCardJsx: nextProps.objectCardJsx});
         let objectCard = {};
+        let style = {
+          marginLeft: 10,
+          marginRight: 10,
+          opacity: 1
+        };
         if (nextProps.objectCardJsx) {
             objectCard['name'] = nextProps.objectCard['name'],
             objectCard['type'] = nextProps.objectCard['type'],
             objectCard['attributes'] = nextProps.objectCard['attributes'];
 
-            this.setState(style: {
-              backgroundColor: none,
-              marginLeft: 10,
-              marginRight: 10,
-            })
-            
+            this.setState({style: style})
+
             var listAttr = [];
             for (let key in objectCard['attributes']) {
                 let keyValue = key;
