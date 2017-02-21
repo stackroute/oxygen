@@ -490,8 +490,8 @@ let getAllRelations = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+//Check *
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})<-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s, r, o'
         params = {
             subjectNodeType: subjectNodeType,
@@ -674,7 +674,6 @@ let modifySubjectPropertiesCallback = function(subject, callback) {
 }
 
 let getSearch = function(nodeObj) {
-
     let promise = new Promise(function(resolve, reject) {
         logger.debug("Now proceeding to retrive objects for node name: ",
             nodeObj.name);
@@ -688,17 +687,37 @@ let getSearch = function(nodeObj) {
         let query = '';
         logger.debug("obtained connection with neo4j");
         //  let query = 'match (n) where n.name =~ {search} return n';
-        query = 'match (d: Domain {name: {subjectDomainname}})-[]-(n)-[]-(p) return p , n';
+
+let listDetail = [];
+        query = 'match (d: Domain {name: {subjectDomainname}})-[r]-(n)-[r1]-(p) return p , n,r,r1';
         let params = {
             subjectDomainname: subjectDomainname,
         };
 
-
         session.run(query, params)
             .then(function(result) {
                 if (result.records.length == 0) {}
+                else{
+
+                  result.records.forEach(function(record){
+                    let obj = {
+                      name : null,
+                      label : null,
+                      type : null,
+                      type1 : null
+                      }
+                    obj.name = record._fields[0]['properties']['name'];
+                    obj.label = record._fields[0]['labels'][0];
+                    obj.type = record._fields[2]['type'];
+                    obj.type1 = record._fields[3]['type'];
+
+
+                    listDetail.push(obj);
+                  });
+                }
                 session.close();
-                resolve(result);
+                resolve(listDetail);
+
             })
             .catch(function(err) {
                 logger.error("Error in neo4j query: ", err, ' query is: ',
@@ -707,6 +726,59 @@ let getSearch = function(nodeObj) {
             });
     });
     return promise;
+};
+
+
+let createResource = function(nodeObj) {
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug("Now proceeding to retrive objects for node name: ",
+            nodeObj.name);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+        let domainName = nodeObj.domainname;
+        let subname = nodeObj.resourceDetails['subname'];
+        let subtype = nodeObj.resourceDetails['subtype'];
+        let props = nodeObj.resourceDetails['props'];
+        let defaultPredicate = null;
+        if(nodeObj.resourceDetails['subtype'] == 'Intent'){
+          defaultPredicate = 'intentOf';
+        }else{
+          defaultPredicate = 'conceptOf';
+        }
+        let session = driver.session();
+        let query = '';
+        logger.debug("obtained connection with neo4j");
+        //  let query = 'match (n) where n.name =~ {search} return n';
+        query = 'match (d:Domain {name:{domainName}})'
+        query += ' merge (s:'+ subtype+' {name:{subname}})-[r:'+ defaultPredicate +']->(d)'
+        query += ' set s += {props}'
+        query += ' return s';
+        let params = {
+            domainName: domainName,
+            subtype: subtype,
+            subname: subname,
+            defaultPredicate: defaultPredicate,
+            props: props
+        };
+        session.run(query, params)
+            .then(function(result) {
+                session.close();
+                if (result.records.length == 0) {
+                  resolve({err : "No Domain"});
+                }else{
+                  resolve({name : result.records[0]['_fields'][0]['properties']['name']});
+                }
+            })
+            .catch(function(err) {
+                logger.error("Error in neo4j query: ", err, ' query is: ',
+                    query);
+                reject(err);
+              });
+            });
+          return promise;
 };
 
 let getPublishAllAttributes = function(subject) {
@@ -722,8 +794,8 @@ let getPublishAllAttributes = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+//check *
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s,o,r'
         params = {
             subjectNodeType: subjectNodeType,
@@ -758,8 +830,77 @@ let getPublishAllAttributesCallback = function(subject, callback) {
     });
 };
 
-module.exports = {
+let createResourceCallback = function(subject, callback) {
+    logger.debug("from the callback : " + subject);
+    createResource(subject).then(function(result) {
+        callback(null, result);
+    }, function(err) {
+        callback(err, null);
+    });
+}
 
+let formStatement = function(nodeObj) {
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug("Now proceeding to retrive objects for node name: ",
+            nodeObj.name);
+        let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
+            neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
+                encrypted: false
+            }
+        );
+        let domainName = nodeObj.domainname;
+        let subname = nodeObj['subname'];
+        let subtype = nodeObj['subtype'];
+        let objtype = nodeObj.resourceDetails['objtype'];
+        let objname = nodeObj.resourceDetails['objname'];
+        let objProps = nodeObj.resourceDetails['attributes'];
+        let predicate = nodeObj.resourceDetails['predicate']['name'];
+        let predicateProps = nodeObj.resourceDetails['predicate']['attributes'];
+        let session = driver.session();
+        let query = '';
+        logger.debug("obtained connection with neo4j");
+
+        query = ' match (s:'+ subtype+' {name:{subname}})'
+        query += 'merge (o:'+ objtype+' {name:{objname}})-[r:'+ predicate +']->(s)'
+        query += ' set r += {predicateProps}'
+        query += ' set o += {objProps}'
+        query += ' return o';
+        let params = {
+            domainName: domainName,
+            subtype: subtype,
+            subname: subname,
+            objname: objname,
+            objProps: objProps,
+            predicateProps: predicateProps
+        };
+        session.run(query, params)
+            .then(function(result) {
+                session.close();
+                if (result.records.length == 0) {
+                    resolve({err : "No Subject"});
+                }else{
+                  resolve(result.records[0]['_fields'][0]['properties']['name']);
+                }
+            })
+            .catch(function(err) {
+                logger.error("Error in neo4j query: ", err, ' query is: ',
+                    query);
+                reject(err);
+            });
+    });
+    return promise;
+};
+
+let formStatementCallback = function(subject, callback) {
+    logger.debug("from the callback : " + subject);
+    formStatement(subject).then(function(result) {
+        callback(null, result);
+    }, function(err) {
+        callback(err, null);
+    });
+}
+
+module.exports = {
     getAllDomainDetailsCallback: getAllDomainDetailsCallback,
     getSubjectObjectsCallback: getSubjectObjectsCallback,
     getPublishAddNodeCallback: getPublishAddNodeCallback,
@@ -771,5 +912,7 @@ module.exports = {
     modifySubjectPropertiesCallback: modifySubjectPropertiesCallback,
     getAllOrphansCallback: getAllOrphansCallback,
     getSearchCallback: getSearchCallback,
+    createResourceCallback: createResourceCallback,
+    formStatementCallback: formStatementCallback,
     getPublishAllAttributesCallback: getPublishAllAttributesCallback
 };

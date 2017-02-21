@@ -173,7 +173,7 @@ export default class Dashboard extends React.Component {
     		let intentColor=blue300;
 			let docsColor=blue300;
 
-			if(concepts < 11) { conceptColor= teal500; }
+			if(concepts < 11) { conceptColor= blue300; }
 			else if(concepts < 50){ conceptColor= lime800; }
 			else { conceptColor= lightGreen500; }
 

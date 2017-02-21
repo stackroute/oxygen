@@ -240,9 +240,9 @@ export default class DomainMindMapGraph extends React.Component {
     }
     render() {
         return (
-          <div className="domainView">
-            {this.state.graph}
-          </div>
+            <div className="domainView">
+                {this.state.graph}
+            </div>
         );
     }
 }
