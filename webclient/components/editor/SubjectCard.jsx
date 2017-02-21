@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Paper from 'material-ui/Paper';
 import AutoComplete from 'material-ui/AutoComplete';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -13,12 +14,13 @@ import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-ou
 import LoadProps from './LoadProps';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
 FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
+import IconButton from 'material-ui/IconButton';
+import AddButton from 'material-ui/svg-icons/content/add';
 
 const styles = {
     customWidth: {
         width: 300
     },
-
 };
 export default class SubjectCard extends React.Component {
     constructor(props) {
@@ -32,7 +34,8 @@ export default class SubjectCard extends React.Component {
               marginLeft: 10,
               marginRight: 10,
               opacity: 0.2
-            }
+            },
+            propertyCount: 0,
         };
     }
     handleChange = (event, index, value) => this.setState({value: 3});
@@ -66,46 +69,50 @@ export default class SubjectCard extends React.Component {
         this.setState({subjectCard: subjectCard});
     }
 
+    addProperty(){
+      let propertyCount = this.state.propertyCount;
+      this.setState({
+        propertyCount: propertyCount + 1
+      });
+    }
+
     render() {
-        let keyValueDisplay = '';
-        if (this.state.attrObj !== null) {
-            keyValueDisplay = this.state.attrObj.map((row, index) => (
-                <div>
-                    <LoadProps keyvalue = {row}/>
-                </div>
-            ));
-        }
+
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
-
-                <Card style={this.state.style}>
-                    <CardHeader title='Subject' titleStyle={{
-                        fontSize: 20,
-                        marginLeft: '50%'
-                    }}/>
+              <Card>
+                  <CardHeader title='Subject' titleStyle={{
+                      fontSize: 20,
+                      marginLeft: '50%'
+                  }}/>
                   <CardText>
                     <Formsy.Form
                       onValid={this.enableButton}
                       onValidSubmit={this.submitForm}
                     >
                     <FormsySelect
-                      name="subject"
+                      name="subtype"
                       required
-                      floatingLabelText="Select Subject Type"
+                      floatingLabelText="Select Type"
                       menuItems={this.selectFieldItems}
+                      style={{
+                          fullWidth: 'true'
+                      }}
                     >
                       <MenuItem value={'Intent'} primaryText="Intent" />
                       <MenuItem value={'Concept'} primaryText="Concept" />
                   </FormsySelect>
+                  <FormsyText
+                    name="subname"
+                    required
+                    hintText="A Subject Name"
+                    floatingLabelText="Subject Name"
+                    style={{
+                        fullWidth: 'true'
+                    }}
+                  />
+                  <AddButton onTouchTap = {this.addProperty}/>
                 </Formsy.Form>
-                        <TextField floatingLabelText='Type' value={this.state.subjectCard['type']} style={{
-                            fullWidth: 'true'
-                        }}/>
-                        <TextField floatingLabelText='Name' value={this.state.subjectCard['name']} style={{
-                            fullWidth: 'true'
-                        }}/>
-                        <br/> {keyValueDisplay}
-                        <br/>
                         <Divider/>
                         <Row>
                             <FlatButton label='Delete' style={{

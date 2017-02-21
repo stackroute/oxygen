@@ -488,6 +488,7 @@ export default class SubjectNode extends React.Component {
                     }}>C - Concept, I - Intent, T - Term</Row>
 
                     <Row>
+                      <br/>
                         <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
                                 <AutoComplete floatingLabelText={this.state.floatingLabelTextSubject} searchText={this.state.searchSubjectText} onUpdateInput={this.handleUpdateSubjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.subjectList} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
