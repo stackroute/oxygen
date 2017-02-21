@@ -15,7 +15,6 @@ const styles = {
     customWidth: {
         width: 300
     },
-
 };
 export default class SubjectCard extends React.Component {
     constructor(props) {
