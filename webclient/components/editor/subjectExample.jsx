@@ -1,6 +1,5 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import Paper from 'material-ui/Paper';
 import AutoComplete from 'material-ui/AutoComplete';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -16,8 +15,9 @@ const styles = {
     customWidth: {
         width: 300
     },
+
 };
-export default class SubjectCard extends React.Component {
+export default class SubjectCar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,6 +26,7 @@ export default class SubjectCard extends React.Component {
             value: 3,
             attrObj: null,
             style: {
+              backgroundColor: 'black',
               marginLeft: 10,
               marginRight: 10,
               opacity: 0.2
@@ -37,16 +38,16 @@ export default class SubjectCard extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({subjectCardJsx: nextProps.subjectCardJsx});
         let subjectCard = {};
-        let style = {
-          marginLeft: 10,
-          marginRight: 10,
-          opacity: 1
-        };
         if (this.state.subjectCardJsx) {
-            this.setState({style: style});
-            subjectCard['name'] = nextProps.subjectCard['name'],
-            subjectCard['type'] = nextProps.subjectCard['type'],
+            subjectCard['name'] = 'Default Value',
+            subjectCard['type'] = 'Default Value',
             subjectCard['attributes'] = nextProps.subjectCard['attributes'];
+
+            this.setState(style: {
+              backgroundColor: none,
+              marginLeft: 10,
+              marginRight: 10,
+            })
 
             var listAttr = [];
             for (let key in subjectCard['attributes']) {
@@ -59,6 +60,7 @@ export default class SubjectCard extends React.Component {
         } else {
             subjectCard['name'] = '',
             subjectCard['type'] = '';
+            console.log(subjectCard['attributes']);
         }
         this.setState({subjectCard: subjectCard});
     }
@@ -69,7 +71,6 @@ export default class SubjectCard extends React.Component {
             keyValueDisplay = this.state.attrObj.slice(0, 5).map((row, index) => (
                 <div>
                     <TextField floatingLabelText='key' value={row.key} style={{
-                        marginLeft: 10,
                         width: '40%',
                         float: 'left',
                         overflow: 'hidden'
@@ -84,11 +85,13 @@ export default class SubjectCard extends React.Component {
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
 
-                <Paper style={this.state.style}>
+                <Card style={this.state.style}>
                     <CardHeader title='Subject' titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'
                     }}/>
+                    <CardActions>
+
                         <TextField floatingLabelText='Type' value={this.state.subjectCard['type']} style={{
                             fullWidth: 'true'
                         }}/>
@@ -110,7 +113,8 @@ export default class SubjectCard extends React.Component {
                                 float: 'right'
                             }}/>
                         </Row>
-                </Paper>
+                    </CardActions>
+                </Card>
             </Col>
         );
     }

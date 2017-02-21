@@ -5,14 +5,14 @@ import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
-
+import Pagination from 'rc-pagination';
 
 export default class DomainTable extends React.Component {
-
   constructor(props) {
     super(props);
     this.onRowSelection = this.onRowSelection.bind(this);
     this.handleExport = this.handleExport.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.state = {
       fixedHeader: true,
       fixedFooter: true,
@@ -26,13 +26,15 @@ export default class DomainTable extends React.Component {
       tableData: null,
       tableFilteredData: null,
       searchTable: '',
-      selectedDomain: this.props.domainName
+      selectedDomain: this.props.domainName,
+      pageNumber: 0,
+      totalPages: 0
     };
     this.getSubjects(this.props.domainName);
   }
 
   getSubjects(domainName){
-    let url = `domain/${domainName}/subjects`;
+    let url = `/domain/${domainName}/subjects`;
     Request
     .get(url)
     .end((err, res) => {
@@ -59,7 +61,9 @@ export default class DomainTable extends React.Component {
              }
              this.setState({
                tableData: listSubjects,
-               tableFilteredData: listSubjects,
+               totalPages: listSubjects % 10,
+               pageNumber: 1,
+               tableFilteredData: listSubjects.slice(0,10),
              })
          }
       }
@@ -76,6 +80,14 @@ export default class DomainTable extends React.Component {
 
   onRowSelection(index) {
     console.log(this.state.tableFilteredData[index[0]]);
+  }
+
+  onChange(page){
+    let data = this.state.tableData.slice(page,page+10)
+    this.setState({
+      pageNumber: page,
+      tableFilteredData: data
+    });
   }
 
   handleTextFieldChange = (event) => {
@@ -97,7 +109,7 @@ export default class DomainTable extends React.Component {
     let tableRowData = '';
     if(this.state.tableFilteredData !== null){
       //console.log(this.state.tableFilteredData);
-      tableRowData = this.state.tableFilteredData.slice(0,10).map( (row, index) => (
+      tableRowData = this.state.tableFilteredData.map( (row, index) => (
         <TableRow key={index}>
           <TableRowColumn>{row.type}</TableRowColumn>
           <TableRowColumn>{row.SubName}</TableRowColumn>
@@ -140,6 +152,7 @@ export default class DomainTable extends React.Component {
             {tableRowData}
           </TableBody>
         </Table>
+        <Pagination className="ant-pagination" onChange={this.onChange} defaultCurrent={this.state.pageNumber} total={this.state.totalPages} />
         <FlatButton label="Export" secondary={true} onTouchTap={this.handleExport.bind(this)}/>
       </div>
     );

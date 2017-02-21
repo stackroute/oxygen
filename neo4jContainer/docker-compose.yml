@@ -6,6 +6,8 @@ services:
     restart: always
     environment:
       - NEO4J_AUTH=neo4j/password
+      - dbms.memory.heap.initial_size=8192
+      - dbms.memory.heap.max_size=4096
     cap_add:
       - SYS_RESOURCE
     ports:
