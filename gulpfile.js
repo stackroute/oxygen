@@ -1,7 +1,7 @@
 const path = require('path');
 const gulp = require('gulp');
-// const gutil = require('gulp-util');
-//const logger = require('./applogger');
+//  const gutil = require('gulp-util');
+//  const logger = require('./applogger');
 const usemin = require('gulp-usemin');
 const minifyHtml = require('gulp-minify-html');
 const uglify = require('gulp-uglify');
@@ -60,12 +60,15 @@ gulp.task('clean', function() {
 gulp.task('eslint', function() {
   return gulp.src([
 
-     'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
-     'webclient/**/*.jsx', '!dist/**/*'
+    //  'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
+    //  'webclient/**/*.jsx', '!dist/**/*'
+    'server/ontologyMgr/noe4jConnection.js',
+    'gulpfile.js', 'webpack.config.js', '.eslintrc.js', 'server/**/*',
+    'webclient/**/*.jsx', '!dist/**/*'
 
     ])
   .pipe(eslint())
-  .pipe(eslint.format())
+  .pipe(eslint.format());
   // .pipe(eslint.failAfterError())
   // .pipe(eslint.result(result => {
   //       // Called for each ESLint result.
@@ -103,7 +106,7 @@ gulp.task('htmlhint', function() {
 });
 
 gulp.task('test', function() {
-  return gulp.src(['test/**/*spec.js', 'test/**/*test.js','test/*spec.js','test/**/*test.js', '!node_modules/**/*',
+  return gulp.src(['test/**/*spec.js', 'test/**/*test.js', 'test/*spec.js', 'test/**/*test.js', '!node_modules/**/*',
     '!bower_components/**/*'
     ], {
       read: false

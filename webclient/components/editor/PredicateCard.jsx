@@ -7,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 
@@ -22,17 +22,29 @@ export default class PredicateCard extends React.Component {
         this.state = {
             predicateCard: {},
             predicateCardJsx: false,
-            attrObj: null
+            attrObj: null,
+            style: {
+              marginLeft: 10,
+              marginRight: 10,
+              opacity: 0.2
+            }
         };
     }
 
     componentWillReceiveProps(nextProps) {
-
-        this.setState({predicateCardJsx: nextProps.predicateCardJsx});
+        let predicateCardJsx = nextProps.predicateCardJsx;
+        this.setState({predicateCardJsx: predicateCardJsx});
         let predicateCard = {};
+        let style = {
+          marginLeft: 10,
+          marginRight: 10,
+          opacity: 1
+        };
         if (this.state.predicateCardJsx) {
             predicateCard['name'] = nextProps.predicateCard['name'];
             predicateCard['attributes'] = nextProps.predicateCard['properties'];
+
+            this.setState({style: style})
 
             var listAttr = [];
             for (let key in predicateCard['attributes']) {
@@ -71,10 +83,7 @@ export default class PredicateCard extends React.Component {
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
-                <Card style={{
-                    marginLeft: 10,
-                    marginRight: 10
-                }}>
+                <Card style={this.state.style}>
                     <CardHeader title="Predicate" titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'

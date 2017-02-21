@@ -17,7 +17,7 @@ let margin = {
 let i = 0,
     duration = 750,
     root;
-let PAGINATION = 6;
+let PAGINATION = 20;
 export default class TreeGraph extends React.Component {
     constructor(props) {
         super(props);

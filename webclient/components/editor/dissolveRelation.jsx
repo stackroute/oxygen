@@ -39,16 +39,16 @@ export default class DeletePredicate extends React.Component {
     this.deletePredicate = this.deletePredicate.bind(this);
     this.state = {
       predicateDetails: null,
-      open: false,
+      open: false
     }
   }
 
-
-
-
-
   handleClose = () => {
     this.props.handleModal();
+  };
+
+  handleDeletePredicate = () => {
+    this.props.handleUpdateDeletePredicate();
   };
 
   componentWillReceiveProps(nextProps){
@@ -73,7 +73,7 @@ export default class DeletePredicate extends React.Component {
             this.setState({errmsg: res.body, loading: 'hide'});
         } else {
           console.log("Passing");
-          this.setState({openAddDialog: true});
+          this.handleDeletePredicate();
         }
       });
 

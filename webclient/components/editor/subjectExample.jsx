@@ -17,7 +17,7 @@ const styles = {
     },
 
 };
-export default class SubjectCard extends React.Component {
+export default class SubjectCar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,6 +26,7 @@ export default class SubjectCard extends React.Component {
             value: 3,
             attrObj: null,
             style: {
+              backgroundColor: 'black',
               marginLeft: 10,
               marginRight: 10,
               opacity: 0.2
@@ -37,16 +38,16 @@ export default class SubjectCard extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({subjectCardJsx: nextProps.subjectCardJsx});
         let subjectCard = {};
-        let style = {
-          marginLeft: 10,
-          marginRight: 10,
-          opacity: 1
-        };
         if (this.state.subjectCardJsx) {
-            this.setState({style: style});
-            subjectCard['name'] = nextProps.subjectCard['name'],
-            subjectCard['type'] = nextProps.subjectCard['type'],
+            subjectCard['name'] = 'Default Value',
+            subjectCard['type'] = 'Default Value',
             subjectCard['attributes'] = nextProps.subjectCard['attributes'];
+
+            this.setState(style: {
+              backgroundColor: none,
+              marginLeft: 10,
+              marginRight: 10,
+            })
 
             var listAttr = [];
             for (let key in subjectCard['attributes']) {
@@ -59,6 +60,7 @@ export default class SubjectCard extends React.Component {
         } else {
             subjectCard['name'] = '',
             subjectCard['type'] = '';
+            console.log(subjectCard['attributes']);
         }
         this.setState({subjectCard: subjectCard});
     }
