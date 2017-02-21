@@ -396,7 +396,7 @@ let getRelations = function(subject) {
         // MATCH (:Person { name: 'Oliver Stone' })-->(movie)
         // RETURN movie.title
         query = 'match (s:' + subjectNodeType + '{name: {subjectNodeName}})-[r:' + predicateName + ']-(o:' + objectNodeType + '{name:{objectNodeName}})'
-        query += ' return r'
+        query += 'return r'
         params = {
             subjectNodeName: subjectNodeName,
             objectNodeName: objectNodeName,

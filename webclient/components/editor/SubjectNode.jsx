@@ -474,7 +474,7 @@ export default class SubjectNode extends React.Component {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: 'teal'
+                    color: 'rgb(25,118, 210)'
                 }}>
                     <h1 styles={style}>{this.state.selectedDomain}</h1>
                 </div>
@@ -483,10 +483,12 @@ export default class SubjectNode extends React.Component {
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
 
                     <Row style={{
-                        marginRight: '75%'
+                        float: 'left',
+                        marginLeft: 20
                     }}>C - Concept, I - Intent, T - Term</Row>
 
                     <Row>
+                      <br/>
                         <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
                                 <AutoComplete floatingLabelText={this.state.floatingLabelTextSubject} searchText={this.state.searchSubjectText} onUpdateInput={this.handleUpdateSubjectInput} onNewRequest={this.handleNewRequest} dataSource={this.state.subjectList} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
