@@ -7,7 +7,7 @@ let logger = require('../applogger');
 let redisClient = undefined;
 
 io.on('connection', function(socket) {
-  logger.debug("subscribing to client socket connection..!");
+  logger.debug('subscribing to client socket connection..!');
 
   if (!redisClient) {
     redisClient = redis.createClient({
@@ -16,7 +16,7 @@ io.on('connection', function(socket) {
     });
   }
 
-  //subscribe to common updates from all the services (actors) of Oxygen
+  // subscribe to common updates from all the services (actors) of Oxygen
   redisClient.subscribe('oxygen:onServiceUpdate');
 
   redisClient.on('message', function(channel, chDataStr) {
@@ -30,10 +30,10 @@ io.on('connection', function(socket) {
     };
 
 
-    logger.debug("Got message from channel ", channel, " data is: ", chData);
+    logger.debug('Got message from channel ', channel, ' data is: ', chData);
 
-    //create socketEvent
-    // var socketEventName = 'oxygen::progressUpdate' + '::' + chData.domainName;
+    // create socketEvent
+    //  var socketEventName = 'oxygen::progressUpdate' + '::' + chData.domainName;
 
 
     logger.debug('Emiting Socket event: ', socketEventName, ' data: ', socketEventData);

@@ -47,15 +47,15 @@ let startIntentParserEngine = function() {
   try {
     welcome();
 
-    //Any pre-requisites for running the engine
+    //  Any pre-requisites for running the engine
     setupMongooseConnections();
 
-    logger.info("Starting doc intentParser engine..!");
+    logger.info('Starting doc intentParser engine..!');
 
     intentParserEngine.startIntentParser();
   } catch (err) {
-    logger.error("Caught error in running doc intentParser engine: ", err);
+    logger.error('Caught error in running doc intentParser engine: ', err);
   }
-}
+};
 
 startIntentParserEngine();
