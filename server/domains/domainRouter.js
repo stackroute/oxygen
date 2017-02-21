@@ -3,7 +3,6 @@ const logger = require('./../../applogger');
 const router = require('express').Router();
 
 const domainCtrl = require('./domainController');
-const subjectObjectCtrl = require('./subjectObjectController');
 
 // Mounted at mount point /domain/
 
