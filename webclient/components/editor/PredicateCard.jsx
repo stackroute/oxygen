@@ -30,12 +30,9 @@ export default class PredicateCard extends React.Component {
         };
     }
     componentWillReceiveProps(nextProps) {
-<<<<<<< HEAD
         this.setState({predicateCardJsx: nextProps.predicateCardJsx});
-=======
         let predicateCardJsx = nextProps.predicateCardJsx;
         this.setState({predicateCardJsx: predicateCardJsx});
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
         let predicateCard = {};
         let style = {
           marginLeft: 10,
@@ -45,12 +42,7 @@ export default class PredicateCard extends React.Component {
         if (this.state.predicateCardJsx) {
             predicateCard['name'] = nextProps.predicateCard['name'];
             predicateCard['attributes'] = nextProps.predicateCard['properties'];
-<<<<<<< HEAD
-=======
-
             this.setState({style: style})
-
->>>>>>> 07558c027432c522ddb209016f43445e400ab404
             var listAttr = [];
             for (let key in predicateCard['attributes']) {
                 let keyValue = key;
@@ -70,7 +62,7 @@ export default class PredicateCard extends React.Component {
     render() {
       let keyValueDisplay = '';
         if (this.state.attrObj !== null) {
-            keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
+              keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
               <div>
                 <TextField floatingLabelText='key' value={row.key} style={{
                     width: '40%',
