@@ -350,8 +350,11 @@ export default class SubjectNode extends React.Component {
                 } else {
                     let response = JSON.parse(res.text);
                     selectedPredicateDetails['name'] = searchText;
-                    selectedPredicateDetails['properties'] = response;
-
+                    try{
+                      selectedPredicateDetails['properties'] = response.records[0]._fields[0]['properties'];
+                    } catch(e){
+                      selectedPredicateDetails['properties'] = null;
+                    }
                     this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: true});
                 }
             });
