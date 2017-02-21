@@ -773,7 +773,7 @@ let getPublishAllAttributes = function(subject) {
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
 
-        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r*]-(o:' + objectNodeType + '{name:{objectNodeName}})'
+        query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s,o,r'
         params = {
             subjectNodeType: subjectNodeType,
