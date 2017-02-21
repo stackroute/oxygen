@@ -65,6 +65,7 @@ export default class PredicateCard extends React.Component {
               keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
               <div>
                 <TextField floatingLabelText='key' value={row.key} style={{
+                    marginLeft: 10,
                     width: '40%',
                     float: 'left',
                     overflow: 'hidden'
