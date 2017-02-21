@@ -474,7 +474,7 @@ export default class SubjectNode extends React.Component {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: 'teal'
+                    color: 'rgb(25,118, 210)'
                 }}>
                     <h1 styles={style}>{this.state.selectedDomain}</h1>
                 </div>
@@ -483,7 +483,8 @@ export default class SubjectNode extends React.Component {
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
 
                     <Row style={{
-                        marginRight: '75%'
+                        float: 'left',
+                        marginLeft: 20
                     }}>C - Concept, I - Intent, T - Term</Row>
 
                     <Row>
