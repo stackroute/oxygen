@@ -428,4 +428,34 @@ router.post('/:domainname/subject/:nodetype/:nodename/object', function(req, res
     }
 });
 
+router.get('/domainview/:domainName', function(req, res) {
+    logger.debug('in Ontology Router');
+    try {
+        let reqObj = {
+            domainName: req.params.domainName
+        };
+
+        var collection = ontologyMgrCtrl.getTreeOfDomain(reqObj);
+        // logger.debug('coll',collection);
+        collection.then(function(jsonTree) {
+            logger.debug("getting data into API");
+                // logger.info(jsonTree);
+            res.send(jsonTree);
+            return;
+        }, function(err) {
+            logger.error(
+                "Encountered error in retrieved details of domain: ",
+                err);
+            res.send(err);
+            return;
+        });
+
+    } catch (err) {
+        logger.error("Caught a error in posting URLs manually ", err);
+        res.status(500).send({
+            error: "Error: Failed get the tree structure"
+        });
+    }
+});
+
 module.exports = router;

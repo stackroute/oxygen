@@ -17,7 +17,7 @@ let height = 600 - margin.top - margin.bottom;
 let i = 0;
 let duration = 750;
 let root;
-let PAGINATION = 6;
+let PAGINATION = 10;
 export default class DomainMindMapGraph extends React.Component {
     constructor(props) {
         super(props);
