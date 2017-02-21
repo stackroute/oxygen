@@ -331,34 +331,35 @@ export default class SubjectNode extends React.Component {
             this.setState({selectedPredicate: searchText, stepNumber: 3});
 
             let selectedPredicateDetails = {};
-        let nodeName1 = this.state.selectedSubjectDetails['name'];
-        let nodeName2 = this.state.selectedObjectDetails['name'];
-        let url = '';
-        switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
-            case 'C':
-                url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}/predicates/${searchText}`;
-                break;
-            case 'I':
-                url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}/predicates/${searchText}`;
-                break;
-        }
-        Request.get(url).end((err, res) => {
-            if (err) {
-                this.setState({errmsg: res.body, loading: 'hide'});
-            } else {
-                let response = JSON.parse(res.text);
-                selectedPredicateDetails['name'] = searchText;
-                if(response.records[0].length == 0){
-                  selectedPredicateDetails['properties'] = '';
-                }
-                else{
-                  selectedPredicateDetails['properties'] = response.records[0]._fields[0]['properties'];
-                }
+
+            let nodeName1 = this.state.selectedSubjectDetails['name'];
+            let nodeName2 = this.state.selectedObjectDetails['name'];
+
+            let url = '';
+            switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
+                case 'C':
+                    url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}/predicates/${searchText}`;
+                    break;
+                case 'I':
+                    url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}/predicates/${searchText}`;
+                    break;
+            }
+            Request.get(url).end((err, res) => {
+                if (err) {
+                    this.setState({errmsg: res.body, loading: 'hide'});
+                } else {
+                    let response = JSON.parse(res.text);
+                    selectedPredicateDetails['name'] = searchText;
+                    try{
+                      selectedPredicateDetails['properties'] = response.records[0]._fields[0]['properties'];
+                    } catch(e){
+                      selectedPredicateDetails['properties'] = null;
+                    }
                     this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: true});
                 }
             });
         }
-    }
+    };
 
     // handleUpdateRelInput = (searchText) => {
     //
@@ -378,7 +379,7 @@ export default class SubjectNode extends React.Component {
                 domainName: this.state.selectedDomain,
                 nodetype: nodetype,
                 nodename: nodename
-          }
+            };
 
             this.setState({nodeDetails: nodeDetails, deleteModalOpen: true});
         }
@@ -483,6 +484,7 @@ export default class SubjectNode extends React.Component {
 
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
+
                     <Row style={{
                         float: 'left',
                         marginLeft: 20

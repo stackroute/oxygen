@@ -30,7 +30,6 @@ export default class PredicateCard extends React.Component {
         };
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({predicateCardJsx: nextProps.predicateCardJsx});
         let predicateCardJsx = nextProps.predicateCardJsx;
         this.setState({predicateCardJsx: predicateCardJsx});
         let predicateCard = {};
@@ -42,9 +41,14 @@ export default class PredicateCard extends React.Component {
         if (this.state.predicateCardJsx) {
             predicateCard['name'] = nextProps.predicateCard['name'];
             predicateCard['attributes'] = nextProps.predicateCard['properties'];
-            this.setState({style: style})
-            var listAttr = [];
-            for (let key in predicateCard['attributes']) {
+            this.setState({style: style});
+            if(predicateCard['attributes'] == null)
+            {
+              this.setState({attrObj: null});
+            }
+            else{
+              var listAttr = [];
+              for (let key in predicateCard['attributes']) {
                 let keyValue = key;
                 let value = predicateCard['attributes'][key];
                 listAttr.push({
@@ -53,6 +57,7 @@ export default class PredicateCard extends React.Component {
                  });
             }
             this.setState({attrObj: listAttr});
+          }
         } else {
             predicateCard['name'] = '',
             predicateCard['attributes'] = '';
@@ -62,19 +67,18 @@ export default class PredicateCard extends React.Component {
     render() {
       let keyValueDisplay = '';
         if (this.state.attrObj !== null) {
-              keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
+            keyValueDisplay = this.state.attrObj.slice(0,5).map( (row, index) => (
               <div>
                 <TextField floatingLabelText='key' value={row.key} style={{
                     marginLeft: 10,
                     width: '40%',
                     float: 'left',
                     overflow: 'hidden'
-              }}/>
+                }}/>
               <TextField floatingLabelText='value' value={row.value} style={{
-
-                  width: '40%'
-              }}/>
-            <br/>
+                    width: '40%'
+                }}/>
+              <br/>
               </div>
             ));
         }
@@ -91,16 +95,6 @@ export default class PredicateCard extends React.Component {
                         }}/>
                         <br/>
                         {keyValueDisplay}
-                        <ContentRemove style={{
-                            float: 'right',
-                            marginTop: '10%'
-                        }}/>
-                        <FloatingActionButton mini={true} style={{
-                            float: 'right',
-                            overflow: 'hidden'
-                        }}>
-                            <ContentAdd/>
-                        </FloatingActionButton>
                         <br/>
                         <br/>
                         <br/>
