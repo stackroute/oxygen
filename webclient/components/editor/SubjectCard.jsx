@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Paper from 'material-ui/Paper';
 import AutoComplete from 'material-ui/AutoComplete';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -68,6 +69,7 @@ export default class SubjectCard extends React.Component {
             keyValueDisplay = this.state.attrObj.slice(0, 5).map((row, index) => (
                 <div>
                     <TextField floatingLabelText='key' value={row.key} style={{
+                        marginLeft: 10,
                         width: '40%',
                         float: 'left',
                         overflow: 'hidden'
@@ -82,13 +84,11 @@ export default class SubjectCard extends React.Component {
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
 
-                <Card style={this.state.style}>
+                <Paper style={this.state.style}>
                     <CardHeader title='Subject' titleStyle={{
                         fontSize: 20,
                         marginLeft: '50%'
                     }}/>
-                    <CardActions>
-
                         <TextField floatingLabelText='Type' value={this.state.subjectCard['type']} style={{
                             fullWidth: 'true'
                         }}/>
@@ -110,8 +110,7 @@ export default class SubjectCard extends React.Component {
                                 float: 'right'
                             }}/>
                         </Row>
-                    </CardActions>
-                </Card>
+                </Paper>
             </Col>
         );
     }
