@@ -80,8 +80,9 @@ let getIntents = function (data) {
 let parseText = function (dataObj) {
     let promise = new Promise(function (resolve, reject) {
         request.get(dataObj.url, function (error, response, body) {
+            logger.debug('Kowsik in add doc parseText: ', body);
                 if (!error && response.statusCode === 200) {
-                    // logger.debug('parseText: ', body);
+                     logger.debug('Kowsik in add doc parseText: ', body);
                     let page = cheerio.load(body);
                     if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined') {
                         let meta = page('meta'),

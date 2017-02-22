@@ -126,13 +126,13 @@ const urlIndexing = function(data) {
       highland(dataArr)
       .pipe(highland.pipeline.apply(null, processors))
       .each(function(res) {
-        let redisCrawl={       
-          domain: dataObj.domain,        
-          actor: 'crawler',        
-          message: dataObj.url,        
-          status: 'crawling completed for the url'        
-        }        
-        datapublisher.processFinished(redisCrawl);        
+        let redisCrawl={
+          domain: dataObj.domain,
+          actor: 'crawler',
+          message: dataObj.url,
+          status: 'crawling completed for the url'
+        }
+        datapublisher.processFinished(redisCrawl);
 
 
         logger.debug('At consupmtion Intent : ');
@@ -147,12 +147,12 @@ const urlIndexing = function(data) {
           logger.debug('printing the msg to send to parser');
           logger.debug(obj);
 
-          let redisIntent={        
-            domain: obj.domain,        
-            actor: 'intent parser',        
-            message: obj.intent,        
-            status: 'intent parsing started for the particular intent'        
-          }        
+          let redisIntent={
+            domain: obj.domain,
+            actor: 'intent parser',
+            message: obj.intent,
+            status: 'intent parsing started for the particular intent'
+          }
           datapublisher.processStart(redisIntent);
           startIntentParser(obj);
         });

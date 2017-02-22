@@ -35,9 +35,9 @@ const startSearcher = function() {
 
                         push(null, msg)
                         next();
-                    }, 
-                    { 
-                        noAck: true 
+                    },
+                    {
+                        noAck: true
                     });
                 });
         });
@@ -93,7 +93,7 @@ const startSearcher = function() {
         result.forEach( function(res, i) {
             startCrawlerMQ(res);
         });
-        
+
     })
 }
 
