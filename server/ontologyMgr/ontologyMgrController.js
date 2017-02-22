@@ -270,6 +270,29 @@ let publishEditedSubjectObjectAttributes = function(nodeObj) {
     return promise;
 };
 
+let getIntentOfDomain = function(domain) {
+    logger.debug('ontologyMgrCtrl', domain);
+    logger.debug("Received request for retriving domain details ", domain.domainName);
+
+    let promise = new Promise(function(resolve, reject) {
+        async.waterfall([
+                function(callback) {
+                    logger.debug("inside the waterfall ", domain)
+                    ontologyMgrNeo4jController.getIntentOfDomainCallback(domain,
+                        callback);
+                }
+            ],
+            function(err, tree) {
+                logger.debug("got the domain collection", domain)
+                if (!err) {
+                    resolve(tree)
+                }
+                reject(err)
+            }); //end of async.waterfall
+    });
+    return promise;
+}
+
 module.exports = {
     publishAddNode: publishAddNode,
     deleteObject: deleteObject,
@@ -283,6 +306,6 @@ module.exports = {
     createResource: createResource,
     formStatement: formStatement,
     publishAllAttributes: publishAllAttributes,
-    publishEditedSubjectObjectAttributes: publishEditedSubjectObjectAttributes
-
+    publishEditedSubjectObjectAttributes: publishEditedSubjectObjectAttributes,
+    getIntentOfDomain: getIntentOfDomain
 }
