@@ -428,14 +428,14 @@ router.post('/:domainname/subject/:nodetype/:nodename/object', function(req, res
     }
 });
 
-router.get('/domainview/:domainName', function(req, res) {
+router.get('/domainview/:domainName/intents', function(req, res) {
     logger.debug('in Ontology Router');
     try {
         let reqObj = {
             domainName: req.params.domainName
         };
 
-        var collection = ontologyMgrCtrl.getTreeOfDomain(reqObj);
+        var collection = ontologyMgrCtrl.getIntentOfDomain(reqObj);
         // logger.debug('coll',collection);
         collection.then(function(jsonTree) {
             logger.debug("getting data into API");

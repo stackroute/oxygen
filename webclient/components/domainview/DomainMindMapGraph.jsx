@@ -13,11 +13,11 @@ let margin = {
     left: 80
 };
 let width = 1330 - margin.right - margin.left;
-let height = 600 - margin.top - margin.bottom;
+let height = 500 - margin.top - margin.bottom;
 let i = 0;
 let duration = 750;
 let root;
-let PAGINATION = 10;
+let PAGINATION = 2;
 export default class DomainMindMapGraph extends React.Component {
     constructor(props) {
         super(props);
@@ -32,13 +32,10 @@ export default class DomainMindMapGraph extends React.Component {
         this.getTreeGraphOfDomain(this.state.domainName);
     }
     getTreeGraphOfDomain(domainName) {
-        let url = `/domain/domainhomeview/${domainName}`;
+        let url = `/domain/domainview/${domainName}/intents`;
         Request.get(url).end((err, res) => {
             if (!err) {
                 let treeData = JSON.parse(res.text);
-                treeData = JSON.stringify(treeData);
-                treeData = treeData.replace('children', 'kids');
-                treeData = JSON.parse(treeData);
                 treeData = [treeData];
                 this.setState({data: treeData, graph: treeGraph});
                 let treeGraph = this.drawTreeGraph(this.state.data);
@@ -58,6 +55,7 @@ export default class DomainMindMapGraph extends React.Component {
         let svg = d3.select('.domainView').append('svg').attr('width', width + margin.right + margin.left).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
         let color = d3.scale.category20();
         root = treeData[0];
+        console.log('Checking root',root);
         root.x0 = height / 2;
         root.y0 = 0;
         reset(root);
@@ -88,9 +86,9 @@ export default class DomainMindMapGraph extends React.Component {
             });
             nodeEnter.append('text').attr('x', function(d) {
                 return d.Children || d._children
-                    ? -13
-                    : 13;
-            }).attr('dy', '.35em').attr('text-anchor', function(d) {
+                    ? 20
+                    : -20;
+            }).attr('dy', '2em').attr('text-anchor', function(d) {
                 return d.Children || d._children
                     ? 'end'
                     : 'start';
@@ -105,9 +103,9 @@ export default class DomainMindMapGraph extends React.Component {
                 let sam = d.parent
                     ? color(d.parent.id)
                     : color();
-                console.log(sam);
+                console.log('uygwiuuesx',sam);
                 return d._children
-                    ? '#9B59B6'
+                    ? '#A3E4D7'
                     : 'white';
             });
             nodeUpdate.select('text').style('fill-opacity', 1);
@@ -177,14 +175,14 @@ export default class DomainMindMapGraph extends React.Component {
                         ? p2.y
                         : p1.y;
                     let y = (d.type == 'prev')
-                        ? (p2.x - 30)
-                        : (p1.x + 30);
+                        ? (p2.x - 45)
+                        : (p1.x + 45);
                     return 'translate(' + x + ',' + y + ')';
                 }).on('click', paginate);
                 pageControl.append('circle').attr('r', 15).style('fill', function(d) {
                     return d.parent
-                        ? color(d.parent.id)
-                        : color();
+                        ? '#009688'
+                        : '#009688';
                 });
                 pageControl.append('image').attr('xlink:href', function(d) {
                     if (d.type == 'next') {
@@ -195,7 +193,6 @@ export default class DomainMindMapGraph extends React.Component {
             });
         }
         function paginate(d) {
-            console.log(d, 'data');
             d.parent.page = d.no;
             setPage(d.parent);
             update(root);

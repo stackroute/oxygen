@@ -270,7 +270,7 @@ let publishEditedSubjectObjectAttributes = function(nodeObj) {
     return promise;
 };
 
-let getTreeOfDomain = function(domain) {
+let getIntentOfDomain = function(domain) {
     logger.debug('ontologyMgrCtrl', domain);
     logger.debug("Received request for retriving domain details ", domain.domainName);
 
@@ -278,7 +278,7 @@ let getTreeOfDomain = function(domain) {
         async.waterfall([
                 function(callback) {
                     logger.debug("inside the waterfall ", domain)
-                    ontologyMgrNeo4jController.getTreeOfDomainCallback(domain,
+                    ontologyMgrNeo4jController.getIntentOfDomainCallback(domain,
                         callback);
                 }
             ],
@@ -307,5 +307,5 @@ module.exports = {
     formStatement: formStatement,
     publishAllAttributes: publishAllAttributes,
     publishEditedSubjectObjectAttributes: publishEditedSubjectObjectAttributes,
-    getTreeOfDomain: getTreeOfDomain
+    getIntentOfDomain: getIntentOfDomain
 }

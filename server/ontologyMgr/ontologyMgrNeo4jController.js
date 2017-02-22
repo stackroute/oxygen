@@ -557,63 +557,6 @@ let getAllOrphans = function(subject) {
     return promise;
 };
 
-let getTreeOfDomain = function(data) {
-    logger.debug('In ontologyMgrNeo4jController', data);
-
-    let promise = new Promise(function(resolve, reject) {
-        logger.debug("Start: tree structure of domain : ", data.domainName);
-        var treeData = [];
-        var tree = {
-            'name': data.domainName,
-            'children': [{
-                'name': 'Concepts',
-                'children': []
-            }, {
-                'name': 'Intents',
-                'children': []
-            }]
-        };
-
-        logger.debug("Data In getTreeOfDomain in Neo4j", data)
-        cypher('match (d:' + graphConsts.NODE_DOMAIN +
-                '{name:"' + data.domainName + '"})'+
-                'match(d)-[]-(node) ' +
-                'return node.name AS name,node.parent AS parent,labels(node) AS nodeType'
-            )
-            .on('data', function(result) {
-                logger.debug("Result from Neo4j", result)
-                treeData.push(result);
-            })
-            .on('end', function() {
-                // console.log('all done');
-                var dataMap = treeData.reduce(function(map, node) {
-                    map[node.conceptid] = node;
-                    return map;
-                }, {});
-                treeData.forEach(function(node) {
-                    var parent = dataMap[node.parent];
-                    node.size = 1;
-                    if (parent) {
-                        (parent.children || (parent.children = []))
-                        .push(node);
-                    } else {
-                        tree.children.push(node);
-                    }
-                });
-            })
-            .on('end', function() {
-                let p3 = JSON.stringify(tree);
-                p3 = p3.replace("[", "[\n\t");
-                p3 = p3.replace(/},/g, "},\n\t");
-                p3 = p3.replace(/\\"/g, "");
-                p3 = p3.replace(/,/g, ",\n\t");
-                resolve(p3);
-            });
-
-    });
-    return promise;
-}
-
 let deleteDomain = function(domain) {
     var neo4j = require('neo4j-driver').v1;
     var driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j",
@@ -636,15 +579,6 @@ let deleteDomain = function(domain) {
                 console.log(err);
             }
         });
-}
-
-let getTreeOfDomainCallback = function(domain, callback) {
-    logger.debug("from the getTree callback : ",domain);
-    getTreeOfDomain(domain).then(function(indexedDomain) {
-        callback(null, indexedDomain);
-    }, function(err) {
-        callback(err, null);
-    });
 }
 
 let getPublishAddNodeCallback = function(subject, object, callback) {
@@ -994,6 +928,64 @@ let formStatementCallback = function(subject, callback) {
     });
 }
 
+let getIntentOfDomain = function(data) {
+    logger.debug('In ontologyMgrNeo4jController', data);
+    let promise = new Promise(function(resolve, reject) {
+        logger.debug("Start: tree structure of domain : ", data.domainName);
+        let intents = [];
+        let tree = {
+            'name': data.domainName,
+            'kids': [{
+                'name': 'Intents',
+                'kids': []
+            }, {
+                'name': 'Concepts',
+                'kids': []
+            }]
+        };
+
+        logger.debug("Data In getIntentOfDomain in Neo4j", data)
+        cypher('match (d:' + graphConsts.NODE_DOMAIN +
+                '{name:"' + data.domainName + '"})' +
+                'match(d)-[]-(i:' + graphConsts.NODE_INTENT + ')-[]-(t:' + graphConsts.NODE_TERM + ')' +
+                'return i.name as name, collect({name: t.name}) as kids'
+            )
+            .on('data', function(result) {
+                tree.kids[0].kids.push(result);
+            })
+            .on('end', function() {
+                logger.debug(tree);
+            });
+
+        cypher('match (d:' + graphConsts.NODE_DOMAIN +
+                '{name:"' + data.domainName + '"})' +
+                'match(d)-[]-(c:' + graphConsts.NODE_CONCEPT + ')-[]-(sc:' + graphConsts.NODE_CONCEPT + ')' +
+                'return c.name as name, collect({name: sc.name}) as kids'
+            )
+            .on('data', function(result) {
+                tree.kids[1].kids.push(result);
+            })
+            .on('end', function() {
+                let p3 = JSON.stringify(tree);
+                p3 = p3.replace("[", "[\n\t");
+                p3 = p3.replace(/},/g, "},\n\t");
+                p3 = p3.replace(/\\"/g, "");
+                p3 = p3.replace(/,/g, ",\n\t");
+                resolve(p3);
+            });
+    });
+    return promise;
+}
+
+let getIntentOfDomainCallback = function(domain, callback) {
+    logger.debug("from the getTree callback : ", domain);
+    getIntentOfDomain(domain).then(function(indexedDomain) {
+        callback(null, indexedDomain);
+    }, function(err) {
+        callback(err, null);
+    });
+}
+
 module.exports = {
     getAllDomainDetailsCallback: getAllDomainDetailsCallback,
     getSubjectObjectsCallback: getSubjectObjectsCallback,
@@ -1009,5 +1001,5 @@ module.exports = {
     createResourceCallback: createResourceCallback,
     formStatementCallback: formStatementCallback,
     getPublishAllAttributesCallback: getPublishAllAttributesCallback,
-    getTreeOfDomainCallback: getTreeOfDomainCallback
+    getIntentOfDomainCallback: getIntentOfDomainCallback
 };
