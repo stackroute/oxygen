@@ -549,7 +549,7 @@ let getTreeOfDomain = function(data) {
         };
 
         logger.debug("Data In getTreeOfDomain in Neo4j", data)
-            // cypher('match (n:' + graphConsts.NODE_CONCEPT + ') return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
+        // cypher('match (n:' + graphConsts.NODE_CONCEPT + ') return n.context AS context,n.name AS name,n.conceptid AS conceptid,n.desc as desc,n.parent AS parent')
         cypher('match (d:' + graphConsts.NODE_DOMAIN +
                 '{name:"' + data.domainName + '"}) -[]- ' +
                 '(c:' + graphConsts.NODE_CONCEPT + ') ' +
@@ -682,22 +682,22 @@ let getWebDocumentsCallback = function(domainObj, callback) {
 }
 
 module.exports = {
-  indexNewDomain: indexNewDomain,
-  getDomainConcept: getDomainConcept,
-  getDomainConceptWithDoc: getDomainConceptWithDoc,
-  getDomainIntent: getDomainIntent,
-  getAllDomainConcept: getAllDomainConcept,
-  indexNewDomainCallBack: indexNewDomainCallBack,
-  getDomainConceptCallback: getDomainConceptCallback,
-  getDomainConceptWithDocCallback: getDomainConceptWithDocCallback,
-  getDomainIntentCallback: getDomainIntentCallback,
-  getAllDomainConceptCallback: getAllDomainConceptCallback,
-  getDomainCardDetailsCallback: getDomainCardDetailsCallback,
-  getDomainCardDetails: getDomainCardDetails,
-  getWebDocumentsCallback: getWebDocumentsCallback,
-  getWebDocuments: getWebDocuments,
-  getIntentforDocument: getIntentforDocument,
-  getTreeOfDomain: getTreeOfDomain,
-  getTreeOfDomainCallback: getTreeOfDomainCallback,
-  deleteDomainCallback: deleteDomainCallback
+    indexNewDomain: indexNewDomain,
+    getDomainConcept: getDomainConcept,
+    getDomainConceptWithDoc: getDomainConceptWithDoc,
+    getDomainIntent: getDomainIntent,
+    getAllDomainConcept: getAllDomainConcept,
+    indexNewDomainCallBack: indexNewDomainCallBack,
+    getDomainConceptCallback: getDomainConceptCallback,
+    getDomainConceptWithDocCallback: getDomainConceptWithDocCallback,
+    getDomainIntentCallback: getDomainIntentCallback,
+    getAllDomainConceptCallback: getAllDomainConceptCallback,
+    getDomainCardDetailsCallback: getDomainCardDetailsCallback,
+    getDomainCardDetails: getDomainCardDetails,
+    getWebDocumentsCallback: getWebDocumentsCallback,
+    getWebDocuments: getWebDocuments,
+    getIntentforDocument: getIntentforDocument,
+    getTreeOfDomain: getTreeOfDomain,
+    getTreeOfDomainCallback: getTreeOfDomainCallback,
+    deleteDomainCallback: deleteDomainCallback
 }
