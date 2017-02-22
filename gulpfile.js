@@ -34,7 +34,7 @@ gulp.task('usemin', ['clean', 'webpack'], function() {
         })).pipe(gulp.dest('dist/server/public'));
 });
 
-gulp.task('copy: fonts', ['clean'], function() {
+gulp.task('copy:fonts', ['clean'], function() {
     return gulp.src('webclient/**/*.ttf')
         .pipe(flatten())
         .pipe(gulp.dest('dist/server/public/fonts'));
