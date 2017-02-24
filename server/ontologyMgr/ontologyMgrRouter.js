@@ -114,7 +114,7 @@ router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
    }
  });
  router.get('/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1/predicates/:predicatename', function(req, res) {
-   // logger.debug("am I getting displayed?", req.params.predicatename)
+   // logger.debug('am I getting displayed?', req.params.predicatename)
     let subject = {
         domainname: req.params.domainname,
         nodetype: req.params.nodetype,
@@ -147,7 +147,7 @@ router.delete('/:domainName/subject/:nodeType/:nodeName', (req, res) => {
 });
 
 router.get('/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1/predicates', function(req, res) {
-    // logger.debug("am I getting displayed?", req.params.predicatename)
+    // logger.debug('am I getting displayed?', req.params.predicatename)
     let subject = {
         domainname: req.params.domainname,
         nodetype: req.params.nodetype,
@@ -177,30 +177,35 @@ router.get('/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
     }
 });
 
-router.get("/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1", function(req, res) {
-    //logger.debug("am I getting displayed?", req.params.predicatename)
+router.get('/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename1', function(req, res) {
+    // logger.debug('am I getting displayed?', req.params.predicatename)
     let subject = {
         domainname: req.params.domainname,
         nodetype: req.params.nodetype,
         nodename: req.params.nodename,
         nodetype1: req.params.nodetype1,
         nodename1: req.params.nodename1
-    }
+    };
 
     try {
         ontologyMgrCtrl.publishAllAttributes(subject).then(function(nodename) {
-            logger.info("Got requests from :" + req.params.domainname);
+            logger.info('Got requests from :' + req.params.domainname);
             res.send(nodename);
             return;
         }, function(err) {
-            logger.error("Encountered error in publishing the attributes: ", err);
+            logger.error('Encountered error in publishing the attributes: ', err);
             res.send(err);
             return;
         });
     } catch (err) {
+<<<<<<< HEAD
         logger.error("Caught a error in publishing a attributes: ", err);
+=======
+        logger.error('Caught a error in publishing a attributes: ', err);
+
+>>>>>>> 09ec25c12ab3b9f6f1886decbf7794232a99c13a
         res.status(500).send({
-            error: "Something went wrong, please try later..!"
+            error: 'Something went wrong, please try later..!'
         });
         return;
     }
@@ -370,26 +375,26 @@ router.post('/:domainname/resource', function(req, res) {
     let reqObj = {
         domainname: req.params.domainname,
         resourceDetails: req.body
-    }
+    };
     try {
         ontologyMgrCtrl.createResource(reqObj).then(function(Obj) {
                 logger.debug(
-                    "Successfully Posted all details to show length----->",
+                    'Successfully Posted all details to show length----->',
                     reqObj.length);
                 res.send(Obj);
                 return;
             },
             function(err) {
                 logger.error(
-                    "Encountered Error Creating Resource of domain: ",
+                    'Encountered Error Creating Resource of domain: ',
                     err);
                 res.send(err);
                 return;
             });
     } catch (err) {
-        logger.error("Caught a error in creating resource for a domain ", err);
+        logger.error('Caught a error in creating resource for a domain ', err);
         res.status(200).send({
-            err: "Something went wrong, please try later..!"
+            err: 'Something went wrong, please try later..!'
         });
         return;
     }
@@ -401,26 +406,26 @@ router.post('/:domainname/subject/:nodetype/:nodename/object', function(req, res
         subname: req.params.nodename,
         subtype: req.params.nodetype,
         resourceDetails: req.body
-    }
+    };
     try {
         ontologyMgrCtrl.formStatement(reqObj).then(function(Obj) {
                 logger.debug(
-                    "Successfully Posted all details to show length----->",
+                    'Successfully Posted all details to show length----->',
                     reqObj.length);
                 res.send(Obj);
                 return;
             },
             function(err) {
                 logger.error(
-                    "Encountered Error Creating Resource of domain: ",
+                    'Encountered Error Creating Resource of domain: ',
                     err);
-                res.send(err)
+                res.send(err);
                 return;
-            })
+            });
     } catch (err) {
-        logger.error("Caught a error in creating resource for a domain ", err);
+        logger.error('Caught a error in creating resource for a domain ', err);
         res.status(200).send({
-            err: "Something went wrong, please try later..!"
+            err: 'Something went wrong, please try later..!'
         });
         return;
     }
@@ -436,22 +441,21 @@ router.get('/domainview/:domainName/intents', function(req, res) {
         var collection = ontologyMgrCtrl.getIntentOfDomain(reqObj);
         // logger.debug('coll',collection);
         collection.then(function(jsonTree) {
-            logger.debug("getting data into API");
+            logger.debug('getting data into API');
                 // logger.info(jsonTree);
             res.send(jsonTree);
             return;
         }, function(err) {
             logger.error(
-                "Encountered error in retrieved details of domain: ",
+                'Encountered error in retrieved details of domain: ',
                 err);
             res.send(err);
             return;
         });
-
     } catch (err) {
-        logger.error("Caught a error in posting URLs manually ", err);
+        logger.error('Caught a error in posting URLs manually ', err);
         res.status(500).send({
-            error: "Error: Failed get the tree structure"
+            error: 'Error: Failed get the tree structure'
         });
     }
 });

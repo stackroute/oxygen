@@ -3,7 +3,7 @@ const async = require('async');
 const cheerio = require('cheerio');
 const request = require('request');
 const superAgentRequest = require('superagent');
-const keyword_extractor = require("keyword-extractor");
+const keyword_extractor = require('keyword-extractor');
 const crawlerNeo4jController = require('./crawlerNeo4jController');
 const crawlerMongoController = require('./crawlerMongoController');
 const logger = require('./../../applogger');
@@ -16,67 +16,65 @@ let termsFinder = function (data) {
 
         crawlerNeo4jController.getTerms(data)
             .then(function (dataWithTerms) {
-                    logger.debug("sucessfully got ALL TERMS OF THE domain");
+                    logger.debug('sucessfully got ALL TERMS OF THE domain');
                     resolve(dataWithTerms);
                 },
                 function (err) {
-                    logger.error("Encountered error in publishing a new ", err)
+                    logger.error('Encountered error in publishing a new ', err);
                     reject(err);
-                })
-    })
+                });
+    });
     return promise;
-}
+};
 
 let indexUrl = function (data) {
     let promise = new Promise(
         function (resolve, reject) {
             crawlerNeo4jController.getUrlIndexed(data)
                 .then(function (indexedData) {
-                        logger.debug("successfully indexed the url")
+                        logger.debug('successfully indexed the url');
                         resolve(indexedData);
                     },
                     function (err) {
-                        logger.error("Encountered error in publishing a new ", err)
+                        logger.error('Encountered error in publishing a new ', err);
                         reject(err);
-                    })
-        })
+                    });
+        });
     return promise;
-}
+};
 
 let saveWebDocument = function (data) {
     let promise = new Promise(function (resolve, reject) {
         crawlerMongoController.saveNewWebDocument(data)
             .then(function (mongoData) {
-                    logger.debug("successfully saved the document")
+                    logger.debug('successfully saved the document');
                     logger.debug(mongoData);
-                    //logger.debug("after mongo saving " + data.intents)
+                    // logger.debug('after mongo saving ' + data.intents)
                     resolve(mongoData);
                 },
                 function (err) {
-                    logger.error("Encountered error in saving ", err)
+                    logger.error('Encountered error in saving ', err);
                     reject(err);
-                })
-    })
+                });
+    });
     return promise;
-}
-
+};
 let getIntents = function (data) {
     let promise = new Promise(function (resolve, reject) {
         crawlerNeo4jController.fetchIntents(data)
             .then(function (neoData) {
-                    logger.debug("sucessfully saved the document")
+                    logger.debug('sucessfully saved the document');
                     logger.debug(neoData);
-                    logger.debug("after neo4J fetching of intents ", neoData.intents)
+                    logger.debug('after neo4J fetching of intents ', neoData.intents);
                     resolve(neoData);
                 },
                 function (err) {
-                    logger.error("Encountered error in saving ", err)
+                    logger.error('Encountered error in saving ', err);
                     reject(err);
-                })
-    })
+                });
+    });
     return promise;
-}
-
+};
 let parseText = function (dataObj) {
     let promise = new Promise(function (resolve, reject) {
         request.get(dataObj.url, function (error, response, body) {
@@ -84,11 +82,14 @@ let parseText = function (dataObj) {
                     // logger.debug('parseText: ', body);
                     let page = cheerio.load(body);
                     if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined') {
-                        let meta = page('meta'),
+                        let meta;
+                         meta = page('meta');
                             keys = Object.keys(meta);
-                        let ogType, ogTitle, desc;
+                        let ogType;
+                        let ogTitle;
+                        let desc;
 
-                        logger.debug("fetching the title/description for the url : " + dataObj.url)
+                        logger.debug('fetching the title/description for the url : ' + dataObj.url);
                         keys.forEach(function (key) {
                             if (meta[key].attribs && meta[key].attribs.property &&
                                 meta[key].attribs.property === 'og:type') {
@@ -128,17 +129,16 @@ let parseText = function (dataObj) {
                     logger.debug('created texts for ' + dataObj.url);
                     dataObj.text = text;
                 } else {
-                    logger.error("[ THIS IS NOT AN ERROR ] sry the url " + dataObj.url + " is not responding")
+                    logger.error('[ THIS IS NOT AN ERROR ] sry the url ' + dataObj.url + ' is not responding');
                 }
                 resolve(dataObj);
             },
             function (err) {
                 reject(err);
-            })
-    })
+            });
+    });
     return promise;
-}
-
+};
 const getResponseToLowerCase = function (dataObj) {
     logger.debug('Iam in getResponseToLowerCase', dataObj.url);
     let promise = new Promise(function (resolve, reject) {
@@ -154,33 +154,30 @@ const getResponseToLowerCase = function (dataObj) {
             dataObj.text = response.text;
             logger.debug('getResponseToLowerCase dataObj: ', dataObj.terms);
             // } else {
-            //     logger.error("[ THIS IS NOT AN ERROR ] sry the url "+dataObj.url+" is not responding")
+            //     logger.error('[ THIS IS NOT AN ERROR ] sry the url '+dataObj.url+' is not responding')
             // }
             resolve(dataObj);
 
             if (error) {
                 reject(error);
             }
-        })
+        });
     });
     return promise;
-}
-
-
+};
 const extractData = function (data) {
-
-    let promise = new Promise(function (resolve, reject) {
+  let promise = new Promise(function (resolve, reject) {
         async.waterfall([
             /* get the DOM MODEL to traverse the web document accordingly */
             async.apply(readFile, data),
             async.asyncify(function (modelObj) {
                 modelObj = JSON.parse(modelObj);
-                logger.debug("modelObj parsing", modelObj.title);
-                logger.debug("Extracting the content from the URL");
+                logger.debug('modelObj parsing', modelObj.title);
+                logger.debug('Extracting the content from the URL');
 
 
                 // let txt = keyword_extractor.extract(data.text, {
-                //     language: "english",
+                //     language: 'english',
                 //     remove_digits: true,
                 //     return_changed_case: true,
                 //     remove_duplicates: false
@@ -210,11 +207,14 @@ const extractData = function (data) {
                 let terms = [];
                 data.interestedTerms.forEach(function (item, index) {
                     let termWeight = createTreeOfWebDocLike(data.text, modelObj, item);
+
                     logger.debug("termWeight: ", termWeight);
                     logger.debug("Type:text");
                     logger.debug("Interested Terms ", data.interestedTerms[index])
+                    logger.debug('termWeight: ', termWeight);
+                    logger.debug('Interested Terms ', data.interestedTerms[index])
                     termOptimalWeight = parseInt(termWeight.maxWeight) + parseInt(termWeight.totalWeight);
-                    logger.debug("termOptimalWeight: ", termOptimalWeight);
+                    logger.debug('termOptimalWeight: ', termOptimalWeight);
                     terms.push({
                         word: data.interestedTerms[index],
                         intensity: termOptimalWeight,
@@ -267,15 +267,15 @@ const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
             addChild(currentTree, parent, currentNode);
         }
 
-        if (typeof modelObj.child != "undefined" && typeof modelObj.child == "object") {
+        if (typeof modelObj.child != 'undefined' && typeof modelObj.child == 'object') {
             parent = currentNode;
             Object.keys(modelObj.child).map(function (key, index) {
                 return traverseNode(parent, modelObj.child[key]);
             });
         }
 
-        if (typeof modelObj.child == "undefined" & pathWeight != 0) {
-            if (typeof data['pathWeights'][eltName] == "undefined") {
+        if (typeof modelObj.child == 'undefined' & pathWeight != 0) {
+            if (typeof data['pathWeights'][eltName] == 'undefined') {
                 data['pathWeights'][eltName] = pathWeight;
             }
         }
@@ -310,7 +310,7 @@ const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
         // logErr('\n********' + '\n' + JSON.stringify(currentNode) + '\n' + JSON.stringify(parent) + '\n' + JSON.stringify(childnode) + '\n' + '********');
         if (Object.keys(currentTree).length === 0) {
             currentTree = childnode;
-            // logErr("\n1\n Tree: " + JSON.stringify(currentTree));
+            // logErr('\n1\n Tree: ' + JSON.stringify(currentTree));
             return;
         }
 
@@ -318,14 +318,14 @@ const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
          (expected parent node found ? add children and return : go to next depth)
          */
         if (currentNode.title == parent.title) {
-            if (typeof currentNode.child == "undefined") {
+            if (typeof currentNode.child == 'undefined') {
                 currentNode['children'] = [];
             }
             currentNode['children'].push(childnode);
-            // logErr("\n1\n Tree: " + JSON.stringify(currentTree));
+            // logErr('\n1\n Tree: ' + JSON.stringify(currentTree));
             return;
         }
-        if (typeof currentNode.child != "undefined" && typeof currentNode.child == "object") {
+        if (typeof currentNode.child != 'undefined' && typeof currentNode.child == 'object') {
             Object.keys(currentNode.child).map(function (key, index) {
                 addChild(currentNode.child[key], parent, childnode);
             });
