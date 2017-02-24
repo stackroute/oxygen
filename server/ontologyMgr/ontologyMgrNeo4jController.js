@@ -763,7 +763,7 @@ let createResource = function(nodeObj) {
         let domainName = nodeObj.domainname;
         let subname = nodeObj.resourceDetails['subname'];
         let subtype = nodeObj.resourceDetails['subtype'];
-        let props = nodeObj.resourceDetails['props'];
+        let props = nodeObj.resourceDetails['attributes'];
         let defaultPredicate = null;
         if (nodeObj.resourceDetails['subtype'] == 'Intent') {
             defaultPredicate = 'intentOf';
@@ -775,7 +775,8 @@ let createResource = function(nodeObj) {
         logger.debug('obtained connection with neo4j');
         //  let query = 'match (n) where n.name =~ {search} return n';
         query = 'match (d:Domain {name:{domainName}})'
-        query += ' merge (s:' + subtype + ' {name:{subname}})-[r:' + defaultPredicate + ']->(d)'
+        query += ' merge (s:'+ subtype+' {name:{subname}})'
+        query += ' merge (s)-[r:'+ defaultPredicate +']->(d)'
         query += ' set s += {props}'
         query += ' return s';
         let params = {
@@ -820,7 +821,7 @@ let getPublishAllAttributes = function(subject) {
         var subjectNodeName = subject.nodename;
         var objectNodeType = subject.nodetype1;
         var objectNodeName = subject.nodename1;
-        //check *
+
         query = 'match (s:' + subjectNodeType + '{name:{subjectNodeName}})-[r]-(o:' + objectNodeType + '{name:{objectNodeName}})'
         query += 'return s,o,r';
         params = {
@@ -885,9 +886,9 @@ let formStatement = function(nodeObj) {
         let session = driver.session();
         let query = '';
         logger.debug('obtained connection with neo4j');
-
-        query = ' match (s:' + subtype + ' {name:{subname}})'
-        query += 'merge (o:' + objtype + ' {name:{objname}})-[r:' + predicate + ']->(s)'
+        query = ' match (s:'+ subtype+' {name:{subname}})'
+        query += 'merge (o:'+ objtype+' {name:{objname}})'
+        query += ' merge (o)-[r:'+ predicate +']->(s)'
         query += ' set r += {predicateProps}'
         query += ' set o += {objProps}'
         query += ' return o';

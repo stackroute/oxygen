@@ -195,12 +195,10 @@ router.get('/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
         }, function(err) {
             logger.error('Encountered error in publishing the attributes: ', err);
             res.send(err);
-
             return;
         });
     } catch (err) {
         logger.error('Caught a error in publishing a attributes: ', err);
-
         res.status(500).send({
             error: 'Something went wrong, please try later..!'
         });
