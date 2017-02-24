@@ -78,23 +78,25 @@ let getIntents = function (data) {
 }
 
 let parseText = function (dataObj) {
+  logger.debug("Working inside parseText");
     let promise = new Promise(function (resolve, reject) {
         request.get(dataObj.url, function (error, response, body) {
-            logger.debug('Kowsik in add doc parseText: ', body);
                 if (!error && response.statusCode === 200) {
-                     logger.debug('Kowsik in add doc parseText: ', body);
+                     //logger.debug('Kowsik in add doc parseText: ', body);
                     let page = cheerio.load(body);
                     if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined') {
                         let meta = page('meta'),
                             keys = Object.keys(meta);
                         let ogType, ogTitle, desc;
-
+                        logger.debug('Kowsik type',ogType);
                         logger.debug("fetching the title/description for the url : " + dataObj.url)
                         keys.forEach(function (key) {
                             if (meta[key].attribs && meta[key].attribs.property &&
                                 meta[key].attribs.property === 'og:type') {
                                 ogType = meta[key].attribs.content;
+                                logger.debug('Kowsik type',ogType);
                             }
+                            logger.debug('Kowsik type',ogType);
                         });
                         keys.forEach(function (key) {
                             if (meta[key].attribs && meta[key].attribs.property &&
@@ -166,7 +168,6 @@ const getResponseToLowerCase = function (dataObj) {
     });
     return promise;
 }
-
 
 const extractData = function (data) {
 
