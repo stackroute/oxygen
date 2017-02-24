@@ -7,7 +7,7 @@ const graphConsts = require('./../common/graphConstants');
 const async = require('async');
 
 let getAllDomainDetails = function(domain) {
-    logger.debug("Received request for retriving Objects",
+    logger.debug('Received request for retriving Objects',
         domain.name);
     // Save to Mongo DB
     // Save to Neo4j
@@ -31,7 +31,7 @@ let getAllDomainDetails = function(domain) {
 };
 
 let getSubjectObjects = function(nodeObj) {
-    logger.debug("Received request for retriving Objects",
+    logger.debug('Received request for retriving Objects',
         nodeObj.nodename);
     // Save to Mongo DB
     // Save to Neo4j
@@ -71,9 +71,11 @@ let publishAddNode = function(subject, object) {
                         reject(err);
                     }
                     resolve(nodename);
-                }); // End of waterfall
+                });
+                // End of waterfall
         }
-    }); // End of Promise
+    });
+    // End of Promise
     return promise;
 };
 
@@ -83,7 +85,7 @@ let deleteObject = function(deleteObj) {
 
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([function(callback) {
-                logger.debug("inside waterfall:neo4jdelete", deleteObj);
+                logger.debug('inside waterfall:neo4jdelete', deleteObj);
                 ontologyMgrNeo4jController.deleteObjectCallback(deleteObj, callback);
             }],
             function(err, result) {
@@ -91,14 +93,14 @@ let deleteObject = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
-
-            }); // end of async.waterfall
+                });
+             // end of async.waterfall
     });
     return promise;
 };
 
 let deleteOrphans = function(deleteObj) {
-    logger.debug("Received request for deleting the nodes who doesn't left with any relation " + deleteObj.nodeName);
+    logger.debug('Received request for deleting the nodes who do not left with any relation ' + deleteObj.nodeName);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([function(callback) {
                 domainMongoController.checkDomainCallback(deleteObj.domainName, callback);
@@ -110,18 +112,18 @@ let deleteOrphans = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
-
-            }); // end of async.waterfall
+                });
+            // end of async.waterfall
     });
     return promise;
 };
 
 let publishRelations = function(subject) {
-    logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
+    logger.debug('Received request for retreiving :', subject.nodetype, ' and :', subject.nodetype1);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
-                    ontologyMgrNeo4jController.getRelationsCallback(subject, callback)
+                    ontologyMgrNeo4jController.getRelationsCallback(subject, callback);
                 }
             ],
             function(err, retrievedObjects) {
@@ -135,7 +137,7 @@ let publishRelations = function(subject) {
 };
 
 let publishAllRelations = function(subject) {
-    logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
+    logger.debug('Received request for retreiving :', subject.nodetype, ' and :', subject.nodetype1);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
@@ -170,7 +172,7 @@ let getAllOrphans = function(nodeObj) {
 };
 
 let getSearch = function(nodeObj) {
-    logger.debug("Received request for retriving Objects",
+    logger.debug('Received request for retriving Objects',
         nodeObj.nodename);
     // Save to Mongo DB
     // Save to Neo4j
@@ -180,7 +182,7 @@ let getSearch = function(nodeObj) {
                 function(callback) {
                     ontologyMgrNeo4jController.getSearchCallback(
                         nodeObj,
-                        callback)
+                        callback);
                 }
             ],
             function(err, retrivedRelations) {
@@ -191,17 +193,17 @@ let getSearch = function(nodeObj) {
             });
     });
     return promise;
-}
+};
 
 let createResource = function(nodeObj) {
-    logger.debug("Received request for retriving Objects",
+    logger.debug('Received request for retriving Objects',
         nodeObj);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
                     ontologyMgrNeo4jController.createResourceCallback(
                         nodeObj,
-                        callback)
+                        callback);
                 }
             ],
             function(err, createdResource) {
@@ -212,17 +214,17 @@ let createResource = function(nodeObj) {
             });
     });
     return promise;
-}
+};
 
 let formStatement = function(nodeObj) {
-    logger.debug("Received request for retriving Objects",
+    logger.debug('Received request for retriving Objects',
         nodeObj.nodename);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
                     ontologyMgrNeo4jController.formStatementCallback(
                         nodeObj,
-                        callback)
+                        callback);
                 }
             ],
             function(err, statement) {
@@ -233,10 +235,10 @@ let formStatement = function(nodeObj) {
             });
     });
     return promise;
-}
+};
 
 let publishAllAttributes = function(subject) {
-    logger.debug("Received request for retreiving :", subject.nodetype, " and :", subject.nodetype1);
+    logger.debug('Received request for retreiving :', subject.nodetype, ' and :', subject.nodetype1);
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
@@ -272,26 +274,27 @@ let publishEditedSubjectObjectAttributes = function(nodeObj) {
 
 let getIntentOfDomain = function(domain) {
     logger.debug('ontologyMgrCtrl', domain);
-    logger.debug("Received request for retriving domain details ", domain.domainName);
+    logger.debug('Received request for retriving domain details ', domain.domainName);
 
     let promise = new Promise(function(resolve, reject) {
         async.waterfall([
                 function(callback) {
-                    logger.debug("inside the waterfall ", domain)
+                    logger.debug('inside the waterfall ', domain);
                     ontologyMgrNeo4jController.getIntentOfDomainCallback(domain,
                         callback);
                 }
             ],
             function(err, tree) {
-                logger.debug("got the domain collection", domain)
+                logger.debug('got the domain collection', domain);
                 if (!err) {
-                    resolve(tree)
+                    resolve(tree);
                 }
-                reject(err)
-            }); //end of async.waterfall
+                reject(err);
+            });
+             // end of async.waterfall
     });
     return promise;
-}
+};
 
 module.exports = {
     publishAddNode: publishAddNode,
@@ -308,4 +311,4 @@ module.exports = {
     publishAllAttributes: publishAllAttributes,
     publishEditedSubjectObjectAttributes: publishEditedSubjectObjectAttributes,
     getIntentOfDomain: getIntentOfDomain
-}
+};
