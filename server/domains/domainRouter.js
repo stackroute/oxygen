@@ -204,7 +204,7 @@ router.post('/documents/:domainName', function(req, res) {
 });
 
 router.get('/domainhomeview/:domainName', function(req, res) {
-    console.log('in DomainRouter')
+    console.log('in DomainRouter');
     try {
         let reqObj = {
             domainName: req.params.domainName,

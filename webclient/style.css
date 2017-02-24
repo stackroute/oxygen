@@ -24,16 +24,17 @@
 
 .node circle {
   fill: #fff;
-  stroke: steelblue;
+  stroke: #009688;
   stroke-width: 3px;
 }
 
 .node text {
+  color: darkBlack;
   font: 12px sans-serif;
 }
 
 .link {
   fill: none;
-  stroke: #ccc;
+  stroke: #009688;
   stroke-width: 2px;
 }
