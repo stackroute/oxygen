@@ -72,7 +72,7 @@ componentWillReceiveProps(nextProps){
 }
 
   removeProperty(key){
-    this.state.keyValue.splice(key,1);
+    this.state.keyValue[key] = null;
     this.setState(this.state);
   }
 

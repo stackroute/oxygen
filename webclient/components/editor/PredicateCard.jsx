@@ -52,7 +52,8 @@ export default class PredicateCard extends React.Component {
           this.setState({
             predicateCardJsx: 'old'
           });
-        }else{
+        }
+        if(nextProps.enable){
           this.setState({
             style: style
           });
