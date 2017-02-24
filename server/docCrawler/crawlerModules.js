@@ -187,20 +187,39 @@ const extractData = function (data) {
                 // })
                 // data.text = txt;
 
-
+                let type = '';
                 logger.debug('txt', data.text);
+                logger.debug('testing for url', data.url);
+                if((data.url).includes('pdf')){
+                  logger.debug('It is a pdf');
+                  type='pdf';
+                }
+                else if((data.url).includes('images')||(data.url).includes('img')||(data.url).includes(".png")||(data.url).includes(".jpg")||(data.url).includes(".jpeg")){
+                  logger.debug('It is an image');
+                  type='image';
+                }
+                else if((data.url).includes('video')||(data.url).includes('watch?')){
+                  logger.debug('It is a video');
+                  type='video';
+                }
+                else{
+                  logger.debug('It is not a pdf');
+                  type='text';
+                }
                 let termOptimalWeight = 0;
                 let terms = [];
                 data.interestedTerms.forEach(function (item, index) {
                     let termWeight = createTreeOfWebDocLike(data.text, modelObj, item);
                     logger.debug("termWeight: ", termWeight);
+                    logger.debug("Type:text");
                     logger.debug("Interested Terms ", data.interestedTerms[index])
                     termOptimalWeight = parseInt(termWeight.maxWeight) + parseInt(termWeight.totalWeight);
                     logger.debug("termOptimalWeight: ", termOptimalWeight);
                     terms.push({
                         word: data.interestedTerms[index],
                         intensity: termOptimalWeight,
-                        pathWeights: termWeight.pathWeights
+                        pathWeights: termWeight.pathWeights,
+                        typeOfDoc: type
                     });
                 })
                 data.terms = terms;
