@@ -198,12 +198,7 @@ router.get('/:domainname/subject/:nodetype/:nodename/object/:nodetype1/:nodename
             return;
         });
     } catch (err) {
-<<<<<<< HEAD
         logger.error("Caught a error in publishing a attributes: ", err);
-=======
-        logger.error('Caught a error in publishing a attributes: ', err);
-
->>>>>>> 09ec25c12ab3b9f6f1886decbf7794232a99c13a
         res.status(500).send({
             error: 'Something went wrong, please try later..!'
         });
