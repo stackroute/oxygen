@@ -279,7 +279,7 @@ export default class SubjectNode extends React.Component {
                         selectedSubjectDetails['subname'] = nodeName;
                         selectedSubjectDetails['subtype'] = nodeType;
                         selectedSubjectDetails['attributes'] = response.attributes;
-
+                        console.log(selectedSubjectDetails);
                         this.setState({selectedSubjectDetails: selectedSubjectDetails, subjectCardJsx: 'old'});
                     }
                 }
@@ -511,7 +511,8 @@ export default class SubjectNode extends React.Component {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: 'rgb(25,118, 210)'
+                    color: 'rgb(25,118, 210)',
+                    marginTop: '5%'
                 }}>
                     <h1 styles={style}>{this.state.selectedDomain}</h1>
                 </div>
