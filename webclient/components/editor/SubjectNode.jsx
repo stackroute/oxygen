@@ -122,13 +122,15 @@ export default class SubjectNode extends React.Component {
             openAddObject: false,
             openAddPredicate: false,
             nodePredicateDetails: null,
-            selectedSubjectDetails: {},
-            selectedObjectDetails: {},
-            selectedPredicateDetails: {},
-            subjectCardJsx: false,
-            objectCardJsx: false,
-            predicateCardJsx: false,
-            statementFormed: false
+            selectedSubjectDetails: null,
+            selectedObjectDetails: null,
+            selectedPredicateDetails: null,
+            subjectCardJsx: '',
+            objectCardJsx: '',
+            predicateCardJsx: '',
+            statementFormed: false,
+            addNewSubject: false,
+            addNewObject: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -270,14 +272,15 @@ export default class SubjectNode extends React.Component {
                     this.setState({errmsg: res.body, loading: 'hide'});
                 } else {
                     let response = JSON.parse(res.text);
+                    console.log(response);
                     if (response.length == 0) {
                         this.setState({floatingLabelTextObject: 'No Results'});
                     } else {
-                        selectedSubjectDetails['name'] = nodeName;
-                        selectedSubjectDetails['type'] = nodeType;
+                        selectedSubjectDetails['subname'] = nodeName;
+                        selectedSubjectDetails['subtype'] = nodeType;
                         selectedSubjectDetails['attributes'] = response.attributes;
 
-                        this.setState({selectedSubjectDetails: selectedSubjectDetails, subjectCardJsx: true});
+                        this.setState({selectedSubjectDetails: selectedSubjectDetails, subjectCardJsx: 'old'});
                     }
                 }
             });
@@ -295,7 +298,7 @@ export default class SubjectNode extends React.Component {
             let nodeName2 = searchText.substr(3, searchText.length - 1);
             let nodeType = '';
             let url = '';
-            switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
+            switch (this.state.selectedSubjectDetails['subtype'].charAt(0)) {
                 case 'C':
                     nodeType = 'Concept';
                     url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}`;
@@ -313,10 +316,10 @@ export default class SubjectNode extends React.Component {
                     if (response.length == 0) {
                         this.setState({floatingLabelTextObject: 'No Results'});
                     } else {
-                        selectedObjectDetails['name'] = nodeName2;
-                        selectedObjectDetails['type'] = nodeType;
+                        selectedObjectDetails['objname'] = nodeName2;
+                        selectedObjectDetails['objtype'] = nodeType;
                         selectedObjectDetails['attributes'] = response;
-                        this.setState({selectedObjectDetails: selectedObjectDetails, objectCardJsx: true});
+                        this.setState({selectedObjectDetails: selectedObjectDetails, objectCardJsx: 'old'});
                     }
                 }
             });
@@ -332,11 +335,11 @@ export default class SubjectNode extends React.Component {
 
             let selectedPredicateDetails = {};
 
-            let nodeName1 = this.state.selectedSubjectDetails['name'];
-            let nodeName2 = this.state.selectedObjectDetails['name'];
+            let nodeName1 = this.state.selectedSubjectDetails['subname'];
+            let nodeName2 = this.state.selectedObjectDetails['objname'];
 
             let url = '';
-            switch (this.state.selectedSubjectDetails['type'].charAt(0)) {
+            switch (this.state.selectedSubjectDetails['subtype'].charAt(0)) {
                 case 'C':
                     url = `/domain/${this.state.selectedDomain}/subject/Concept/${nodeName1}/object/Concept/${nodeName2}/predicates/${searchText}`;
                     break;
@@ -351,11 +354,11 @@ export default class SubjectNode extends React.Component {
                     let response = JSON.parse(res.text);
                     selectedPredicateDetails['name'] = searchText;
                     try{
-                      selectedPredicateDetails['properties'] = response.records[0]._fields[0]['properties'];
+                      selectedPredicateDetails['attributes'] = response.records[0]._fields[0]['properties'];
                     } catch(e){
-                      selectedPredicateDetails['properties'] = null;
+                      selectedPredicateDetails['attributes'] = [];
                     }
-                    this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: true});
+                    this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: 'old'});
                 }
             });
         }
@@ -463,13 +466,44 @@ export default class SubjectNode extends React.Component {
     };
 
     formStatement = () => {
-        if (this.state.selectedSubjectDetails !== null && this.state.selectedObjectDetails !== null && this.state.selectedPredicateDetails !== null) {
+        if (this.state.selectedSubjectDetails !== null) {
             this.setState({statementFormed: true})
         }
     }
 
-    render() {
+    addNewSubject = () => {
+      this.setState({
+        subjectCardJsx: 'new',
+        selectedSubjectDetails: null,
+      });
+    }
 
+    addNewObject = () => {
+      this.setState({
+        objectCardJsx: 'new',
+        selectedObjectDetails: null,
+      });
+    }
+
+    updateSubject = (details) => {
+      this.setState({
+        selectedSubjectDetails: details
+      });
+    }
+
+    updateObject = (details) => {
+      this.setState({
+        selectedObjectDetails: details
+      });
+    }
+
+    updatePredicate = (details) => {
+      this.setState({
+        selectedPredicateDetails: details
+      });
+    }
+
+    render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
         const {stepIndex} = this.state;
         return (
@@ -499,7 +533,7 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label='Add New' labelStyle={{
+                                <FlatButton label='Add New' onTouchTap={this.addNewSubject} labelStyle={{
                                     fontSize: 10
                                 }}/>
                             </Row>
@@ -508,7 +542,6 @@ export default class SubjectNode extends React.Component {
                         <Col lg={4} xl={4} md={4} sm={12} xs={12}>
                             <Row>
                                 <AutoComplete floatingLabelText={this.state.floatingLabelTextRel} searchText={this.state.searchRelText} onUpdateInput={this.handleUpdatePredicateInput} onNewRequest={this.handleNewRequest} dataSource={this.state.nodeRelations} filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} maxSearchResults={5}/>
-
                             </Row>
                         </Col>
 
@@ -519,7 +552,7 @@ export default class SubjectNode extends React.Component {
                             <Row style={{
                                 marginLeft: 170
                             }}>
-                                <FlatButton label='Add New' labelStyle={{
+                                <FlatButton label='Add New' onTouchTap={this.addNewObject} labelStyle={{
                                     fontSize: 10
                                 }}/>
                             </Row>
@@ -547,14 +580,14 @@ export default class SubjectNode extends React.Component {
                     </Row>
                     <br/>
                     <Row>
-                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx}/>
-                        <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx}/>
-                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx}/>
+                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx} updateSubjectCard={this.updateSubject}/>
+                        <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx} updatePredicateCard={this.updatePredicate}/>
+                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx} updateObjectCard={this.updateObject}/>
                     </Row>
                     <br/>
 
                 </Paper>
-                <FormStatement ready={this.state.statementFormed} subject={this.state.selectedSubjectDetails} object={this.state.selectedObjectDetails} predicate={this.state.selectedPredicateDetails}/>
+                <FormStatement domain={this.state.selectedDomain} ready={this.state.statementFormed} subject={this.state.selectedSubjectDetails} object={this.state.selectedObjectDetails} predicate={this.state.selectedPredicateDetails}/>
                 <AddSubject open={this.state.openAddSubject} domain={this.state.selectedDomain}/>
                 <AddObject open={this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
                 <AddPredicate open={this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
