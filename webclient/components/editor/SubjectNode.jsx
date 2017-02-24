@@ -130,7 +130,8 @@ export default class SubjectNode extends React.Component {
             predicateCardJsx: '',
             statementFormed: false,
             addNewSubject: false,
-            addNewObject: false
+            addNewObject: false,
+            enablePredicate: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -481,19 +482,22 @@ export default class SubjectNode extends React.Component {
     addNewObject = () => {
       this.setState({
         objectCardJsx: 'new',
+        enablePredicate: true,
         selectedObjectDetails: null,
       });
     }
 
     updateSubject = (details) => {
       this.setState({
-        selectedSubjectDetails: details
+        selectedSubjectDetails: details,
+        enablePredicate: true
       });
     }
 
     updateObject = (details) => {
       this.setState({
-        selectedObjectDetails: details
+        selectedObjectDetails: details,
+        enablePredicate: true
       });
     }
 
@@ -582,18 +586,12 @@ export default class SubjectNode extends React.Component {
                     <br/>
                     <Row>
                         <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx} updateSubjectCard={this.updateSubject}/>
-                        <PredicateCard predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx} updatePredicateCard={this.updatePredicate}/>
-                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx} updateObjectCard={this.updateObject}/>
+                        <PredicateCard enable = {this.state.enablePredicate} predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx} updatePredicateCard={this.updatePredicate}/>
+                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx} updateObjectCard={this.updateObject} selectedSubject = {this.state.selectedSubjectDetails}/>
                     </Row>
                     <br/>
-
                 </Paper>
                 <FormStatement domain={this.state.selectedDomain} ready={this.state.statementFormed} subject={this.state.selectedSubjectDetails} object={this.state.selectedObjectDetails} predicate={this.state.selectedPredicateDetails}/>
-                <AddSubject open={this.state.openAddSubject} domain={this.state.selectedDomain}/>
-                <AddObject open={this.state.openAddObject} domain={this.state.selectedDomain} subject={this.state.selectedSubject}/>
-                <AddPredicate open={this.state.openAddPredicate} domain={this.state.selectedDomain} subject={this.state.selectedSubject} object={this.state.selectedObject}/>
-                <DeleteNode open={this.state.deleteModalOpen} nodeDetails={this.state.nodeDetails}/>
-                <Edit open={this.state.editModalOpen} nodeDetails={this.state.nodeDetails}/>
                 <DeletePredicate predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
             </div>
         ); //End of Return

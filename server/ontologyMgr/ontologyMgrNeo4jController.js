@@ -525,7 +525,7 @@ let getAllOrphans = function(subject) {
         var subjectDomainname = subject.domainname;
         var subjectNodeType = subject.nodetype;
         var subjectNodeName = subject.nodename;
-        query = 'MATCH (c:' + subjectNodeType + ')-[r]-(allRelatedNodes) WHERE node.name = {subjectNodeName} AND size((allRelatedNodes)--()) >= 1'
+        query = 'MATCH (c:' + subjectNodeType + ')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) >= 1'
         query += ' return allRelatedNodes, size((allRelatedNodes)--()) as Count';
         params = {
             subjectNodeType: subjectNodeType,
