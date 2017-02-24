@@ -111,7 +111,7 @@ export default class DomainTable extends React.Component {
     }
     return (
       <div>
-        <center><h1 style={{marginTop:'5%'}}>List View Of {this.state.selectedDomain}</h1></center>
+        <center><h1 style={{marginTop:'5%',color: 'rgb(25,118, 210)'}}>List View Of {this.state.selectedDomain}</h1></center>
         <Table
           fixedHeader={this.state.fixedHeader}
           fixedFooter={this.state.fixedFooter}
