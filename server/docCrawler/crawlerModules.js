@@ -76,25 +76,27 @@ let getIntents = function (data) {
     return promise;
 };
 let parseText = function (dataObj) {
+  logger.debug("Working inside parseText");
     let promise = new Promise(function (resolve, reject) {
         request.get(dataObj.url, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
-                    // logger.debug('parseText: ', body);
+                     //logger.debug('Kowsik in add doc parseText: ', body);
                     let page = cheerio.load(body);
                     if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined') {
                         let meta;
                          meta = page('meta');
                             keys = Object.keys(meta);
-                        let ogType;
-                        let ogTitle;
-                        let desc;
 
-                        logger.debug('fetching the title/description for the url : ' + dataObj.url);
+                        let ogType, ogTitle, desc;
+                        logger.debug('Kowsik type',ogType);
+                        logger.debug("fetching the title/description for the url : " + dataObj.url)
                         keys.forEach(function (key) {
                             if (meta[key].attribs && meta[key].attribs.property &&
                                 meta[key].attribs.property === 'og:type') {
                                 ogType = meta[key].attribs.content;
+                                logger.debug('Kowsik type',ogType);
                             }
+                            logger.debug('Kowsik type',ogType);
                         });
                         keys.forEach(function (key) {
                             if (meta[key].attribs && meta[key].attribs.property &&
@@ -165,6 +167,7 @@ const getResponseToLowerCase = function (dataObj) {
     });
     return promise;
 };
+
 const extractData = function (data) {
   let promise = new Promise(function (resolve, reject) {
         async.waterfall([
@@ -183,11 +186,18 @@ const extractData = function (data) {
                 //     remove_duplicates: false
                 // })
                 // data.text = txt;
+
+                let type = '';
                 logger.debug('txt', data.text);
+                logger.debug('testing for url', data.url);
                 let termOptimalWeight = 0;
                 let terms = [];
                 data.interestedTerms.forEach(function (item, index) {
                     let termWeight = createTreeOfWebDocLike(data.text, modelObj, item);
+
+                    logger.debug("termWeight: ", termWeight);
+                    logger.debug("Type:text");
+                    logger.debug("Interested Terms ", data.interestedTerms[index])
                     logger.debug('termWeight: ', termWeight);
                     logger.debug('Interested Terms ', data.interestedTerms[index]);
                     termOptimalWeight = parseInt(termWeight.maxWeight) + parseInt(termWeight.totalWeight);
@@ -195,7 +205,8 @@ const extractData = function (data) {
                     terms.push({
                         word: data.interestedTerms[index],
                         intensity: termOptimalWeight,
-                        pathWeights: termWeight.pathWeights
+                        pathWeights: termWeight.pathWeights,
+                        typeOfDoc: type
                     });
                 });
                 data.terms = terms;

@@ -37,6 +37,27 @@ export default class DocResultCard extends React.Component {
   constructor(props) {
     super(props);
   }
+  typeFinder(){
+    let type='';
+    let url = this.props.webDoc.url;
+    if((url).includes('pdf')){
+      console.log('It is a pdf');
+      type='pdf';
+    }
+    else if((url).includes('images')||(url).includes('img')||(url).includes(".png")||(url).includes(".jpg")||(url).includes(".jpeg")){
+      console.log('It is an image');
+      type='image';
+    }
+    else if((url).includes('video')||(url).includes('watch?')){
+      console.log('It is a video');
+      type='video';
+    }
+    else{
+      console.log('It is a text');
+      type='text';
+    }
+    return type;
+  }
   render() {
     return (
       // <Paper zDepth={4} style={layout} rounded={false}>
@@ -63,6 +84,7 @@ export default class DocResultCard extends React.Component {
                     }
                     </a>
                   </ScreenClassRender>
+                  <p><b>Type:</b>{this.typeFinder()}</p>
                  <Col lg={2} xl={2} md={2} style={{float:'right',textAlign: "center"}}>
                 <p> Rating</p>
                 <CircularProgressbar percentage={this.props.webDoc.intensity} />

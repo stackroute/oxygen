@@ -64,10 +64,10 @@ export default class ObjectCard extends React.Component {
     render() {
         let newObject = '';
         if(this.state.objectCardJsx == 'new'){
-          newObject = <LoadObjectProps objectDetails = {this.props.objectCard} updateObjectCard = {this.props.updateObjectCard}/>;
+          newObject = <LoadObjectProps objectDetails = {this.props.objectCard} updateObjectCard = {this.props.updateObjectCard} selectedSubject = {this.props.selectedSubject}/>;
         }
         if(this.state.objectCardJsx == 'old'){
-          newObject = <LoadObjectProps objectDetails = {this.props.objectCard} updateObjectCard = {this.props.updateObjectCard}/>
+          newObject = <LoadObjectProps objectDetails = {this.props.objectCard} updateObjectCard = {this.props.updateObjectCard} selectedSubject = {this.props.selectedSubject}/>
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>

@@ -24,6 +24,7 @@ let getTerms = function(data) {
         record._fields.forEach(function(fields) {
           terms.push(fields.properties.name);
         });
+
       });
        // Completed!
 

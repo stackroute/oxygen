@@ -1,7 +1,7 @@
 const path = require('path');
 const gulp = require('gulp');
-//  const gutil = require('gulp-util');
-//  const logger = require('./applogger');
+// const gutil = require('gulp-util');
+//const logger = require('./applogger');
 const usemin = require('gulp-usemin');
 const minifyHtml = require('gulp-minify-html');
 const uglify = require('gulp-uglify');
@@ -34,7 +34,7 @@ gulp.task('usemin', ['clean', 'webpack'], function() {
         })).pipe(gulp.dest('dist/server/public'));
 });
 
-gulp.task('copy: fonts', ['clean'], function() {
+gulp.task('copy:fonts', ['clean'], function() {
     return gulp.src('webclient/**/*.ttf')
         .pipe(flatten())
         .pipe(gulp.dest('dist/server/public/fonts'));
