@@ -6,11 +6,10 @@ import Toggle from 'material-ui/Toggle';
 import Request from 'superagent';
 import FlatButton from 'material-ui/FlatButton';
 import Pagination from 'rc-pagination';
-
 export default class DomainTable extends React.Component {
   constructor(props) {
     super(props);
-    this.onRowSelection = this.onRowSelection.bind(this);
+    //this.onRowSelection = this.onRowSelection.bind(this);
     this.handleExport = this.handleExport.bind(this);
     this.onChange = this.onChange.bind(this);
     this.state = {
@@ -18,12 +17,12 @@ export default class DomainTable extends React.Component {
       fixedFooter: true,
       stripedRows: false,
       showRowHover: false,
-      selectable: true,
-      multiSelectable: true,
+      selectable: false,
+      multiSelectable: false,
       enableSelectAll: false,
-      deselectOnClickaway: true,
-      showCheckboxes: true,
-      tableData: null,
+      deselectOnClickaway: false,
+      showCheckboxes: false,
+      tableData: {},
       tableFilteredData: null,
       searchTable: '',
       selectedDomain: this.props.domainName,
@@ -32,7 +31,6 @@ export default class DomainTable extends React.Component {
     };
     this.getSubjects(this.props.domainName);
   }
-
   getSubjects(domainName){
     let url = `/domain/${domainName}/subjects`;
     Request
@@ -40,7 +38,6 @@ export default class DomainTable extends React.Component {
     .end((err, res) => {
       if(err) {
       // res.send(err);
-
       this.setState({errmsg: res.body, loading: 'hide'});
       }else {
         let response = res.body;
@@ -59,9 +56,11 @@ export default class DomainTable extends React.Component {
                  predicate: predicates.toString()
                 });
              }
+
+             //console.log('Kowsik',listSubjects.length);
              this.setState({
                tableData: listSubjects,
-               totalPages: listSubjects % 10,
+               totalPages: listSubjects.length / 10,
                pageNumber: 1,
                tableFilteredData: listSubjects.slice(0,10),
              })
@@ -69,19 +68,15 @@ export default class DomainTable extends React.Component {
       }
     });
   }
-
   handleExport(){
     download(JSON.stringify(this.state.tableFilteredData), "domain.json", "text/json");
   }
-
   handleChange = (event) => {
     this.setState({height: event.target.value});
   };
-
-  onRowSelection(index) {
-    console.log(this.state.tableFilteredData[index[0]]);
-  }
-
+  // onRowSelection(index) {
+  //   console.log(this.state.tableFilteredData[index[0]]);
+  // }
   onChange(page){
     let data = this.state.tableData.slice(page,page+10)
     this.setState({
@@ -89,7 +84,6 @@ export default class DomainTable extends React.Component {
       tableFilteredData: data
     });
   }
-
   handleTextFieldChange = (event) => {
     let rows = [];
     let search = event.target.value;
@@ -98,13 +92,11 @@ export default class DomainTable extends React.Component {
         rows.push(row);
       }
     });
-
     this.setState({
       searchTable: event.target.value,
       tableFilteredData: rows
     });
   };
-
   render() {
     let tableRowData = '';
     if(this.state.tableFilteredData !== null){
@@ -117,15 +109,12 @@ export default class DomainTable extends React.Component {
         </TableRow>
       ));
     }
-
     return (
       <div>
+        <center><h1 style={{marginTop:'5%',color: 'rgb(25,118, 210)'}}>List View Of {this.state.selectedDomain}</h1></center>
         <Table
           fixedHeader={this.state.fixedHeader}
           fixedFooter={this.state.fixedFooter}
-          selectable={this.state.selectable}
-          multiSelectable={this.state.multiSelectable}
-          onRowSelection={this.onRowSelection}
         >
           <TableHeader>
             <TableRow>
@@ -152,8 +141,10 @@ export default class DomainTable extends React.Component {
             {tableRowData}
           </TableBody>
         </Table>
-        <Pagination className="ant-pagination" onChange={this.onChange} defaultCurrent={this.state.pageNumber} total={this.state.totalPages} />
+        <center>
+        <Pagination style={{marginLeft:'43%'}} className="ant-pagination" onChange={this.onChange} defaultCurrent={this.state.pageNumber} total={this.state.tableData.length} />
         <FlatButton label="Export" secondary={true} onTouchTap={this.handleExport.bind(this)}/>
+        </center>
       </div>
     );
   }

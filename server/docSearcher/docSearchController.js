@@ -16,8 +16,8 @@ const getURL = function (searchQuery, i, callback) {
     logger.debug("Engine:", engine);
     logger.debug("Key:", key);
     // let eng = searchQuery.engineID.split(' ');
-    let url = "https://www.googleapis.com/customsearch/v1?q=" + 
-        searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start=" 
+    let url = "https://www.googleapis.com/customsearch/v1?q=" +
+        searchQuery.concept + "&cx=" + engine + "&key=" + key + "&start="
         + searchQuery.start + "&exactTerms=" + searchQuery.domain +
         "&num=" + searchQuery.nbrOfResults;
     // if (searchQuery.siteSearch !== 'NONE') {
@@ -100,10 +100,10 @@ const checkInRecentlySearched = function(searchEngineParams){
         }
 		client.on("error", function (err) {
 		    logger.error("Error in Redis:" + err);
-		}); 
+		});
 
         let key = generateKey(searchEngineParams);
-        
+
         client.get(key, function(err, reply) {
 
 			if(err) {
@@ -128,7 +128,7 @@ const checkInRecentlySearched = function(searchEngineParams){
 
 function generateKey (searchEngineParams) {
     let key = searchEngineParams.domain+'&'+searchEngineParams.concept+'&'+searchEngineParams.start+'&'+searchEngineParams.nbrOfResults;
-    return key.replace(/ +/g, "_"); 
+    return key.replace(/ +/g, "_");
 }
 
 module.exports = {

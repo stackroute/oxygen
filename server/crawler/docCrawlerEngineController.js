@@ -76,13 +76,13 @@ const urlIndexing = function(data) {
   request.get(dataObj.url, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       let page = cheerio.load(body);
-      if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined' ) {
+      if (typeof dataObj.title === 'undefined' || typeof dataObj.description === 'undefined') {
         let meta = page('meta');
         let keys = Object.keys(meta);
         let ogType;
         let ogTitle;
         let desc;
-        logger.debug("fetching the title/description for the url : "+dataObj.url)
+        logger.debug('fetching the title/description for the url : ' + dataObj.url);
         keys.forEach(function(key) {
           if (meta[key].attribs && meta[key].attribs.property &&
             meta[key].attribs.property === 'og:type') {
@@ -126,15 +126,13 @@ const urlIndexing = function(data) {
       highland(dataArr)
       .pipe(highland.pipeline.apply(null, processors))
       .each(function(res) {
-        let redisCrawl={       
-          domain: dataObj.domain,        
-          actor: 'crawler',        
-          message: dataObj.url,        
-          status: 'crawling completed for the url'        
-        }        
-        datapublisher.processFinished(redisCrawl);        
-
-
+        let redisCrawl = {
+          domain: dataObj.domain,
+          actor: 'crawler',
+          message: dataObj.url,
+          status: 'crawling completed for the url'
+        };
+        datapublisher.processFinished(redisCrawl);
         logger.debug('At consupmtion Intent : ');
         logger.debug(res);
         let intents = res.intents;
@@ -146,13 +144,12 @@ const urlIndexing = function(data) {
           obj.intent = intent;
           logger.debug('printing the msg to send to parser');
           logger.debug(obj);
-
-          let redisIntent={        
-            domain: obj.domain,        
-            actor: 'intent parser',        
-            message: obj.intent,        
-            status: 'intent parsing started for the particular intent'        
-          }        
+          let redisIntent = {
+            domain: obj.domain,
+            actor: 'intent parser',
+            message: obj.intent,
+            status: 'intent parsing started for the particular intent'
+          };
           datapublisher.processStart(redisIntent);
           startIntentParser(obj);
         });
@@ -160,7 +157,7 @@ const urlIndexing = function(data) {
     }
     else
     {
-      logger.error("[ THIS IS NOT AN ERROR ] sry the url "+dataObj.url+" is not responding")
+      logger.error('[ THIS IS NOT AN ERROR ] sry the url ' + dataObj.url + ' is not responding');
     }
   });
 };

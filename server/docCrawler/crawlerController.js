@@ -3,7 +3,7 @@ const fs = require('fs');
 const async = require('async');
 const request = require('request');
 const cheerio = require('cheerio');
-const keyword_extractor = require("keyword-extractor");
+const keyword_extractor = require('keyword-extractor');
 const logger = require('./../../applogger');
 const crawlerModules = require('./crawlerModules');
 
@@ -35,8 +35,8 @@ let crawlDocument = function (domain) {
             });
     });
     return promise;
-}
+};
 
 module.exports = {
     crawlDocument: crawlDocument
-}
+};

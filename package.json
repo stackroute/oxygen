@@ -44,7 +44,6 @@
     "express": "^4.14.0",
     "formsy-material-ui": "^0.5.2",
     "formsy-react": "^0.18.1",
-    "gulp": "^3.9.1",
     "highland": "^2.10.1",
     "jquery": "^3.1.1",
     "keyword-extractor": "0.0.13",

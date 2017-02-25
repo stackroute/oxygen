@@ -1,22 +1,15 @@
 var app = require('../../server/webapp.service')();
 var expect = require('chai').expect;
-var assert = require('chai').assert;
 var request = require("supertest");
 var logger = require('./../../applogger');
+
 request = request(app);
+
 const neo4jDriver = require('neo4j-driver').v1;
 const config = require('./../../config');
-describe('driver', function(done) {
+describe('driver', function() {
   var driver;
-  beforeEach(function() {
-    driver = null;
-  })
-  afterEach(function() {
-    if(driver) {
-      driver.close();
-    }
-  })
-  it('should expose sessions', function(done) {
+  it('should expose sessions', function() {
     // Given
     let driver = neo4jDriver.driver(config.NEO4J.neo4jURL,
             neo4jDriver.auth.basic(config.NEO4J.usr, config.NEO4J.pwd), {
@@ -28,9 +21,9 @@ describe('driver', function(done) {
     var session = driver.session();
 
     // Then
-    should.not.equal(session, null);
+    expect(session).to.exist;
+    // done();
     driver.close();
-    done();
   });
 
   it('should handle connection errors', function(done) {
@@ -50,13 +43,13 @@ describe('driver', function(done) {
 
   it('should handle wrong scheme', () => {
     expect(() => neo4jDriver.driver("tank://localhost", neo4jDriver.auth.basic("neo4j", "password")))
-      .toThrow(new Error("Unknown scheme: tank://"));
+      .to.throw(new Error('Unknown scheme: tank://'));
   });
 
   it('should handle URL parameter string', () => {
-    expect(() => neo4jDriver.driver({uri: 'bolt://localhost'})).toThrowError(TypeError);
+    expect(() => neo4jDriver.driver({uri: 'bolt://localhost'})).to.throw(Error(TypeError));
 
-    expect(() => neo4jDriver.driver(['bolt:localhost'])).toThrowError(TypeError);
+    expect(() => neo4jDriver.driver(['bolt:localhost'])).to.throw(Error(TypeError));
 
     expect(() => {
       const driver = neo4jDriver.driver(String('bolt://localhost', neo4jDriver.auth.basic("neo4j", "password")));
