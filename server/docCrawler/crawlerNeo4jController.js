@@ -25,7 +25,7 @@ let getTerms = function(data) {
           terms.push(fields.properties.name);
         });
       }); // Completed!
-        
+
       session.close();
       logger.debug("Result from neo4j: ", terms);
       data.interestedTerms = terms
@@ -86,7 +86,7 @@ let fetchIntents = function(data) {
       domainName: data.domain
     };
     session.run(query , params)
-    .then(function(result) {     
+    .then(function(result) {
       result.records.forEach(function(record) {
         record._fields.forEach(function(field){
           logger.debug("Result for getting intents from neo4j: ", field.properties.name);

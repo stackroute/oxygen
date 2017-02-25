@@ -1,7 +1,7 @@
 const path = require('path');
 const gulp = require('gulp');
-//  const gutil = require('gulp-util');
-//  const logger = require('./applogger');
+// const gutil = require('gulp-util');
+//const logger = require('./applogger');
 const usemin = require('gulp-usemin');
 const minifyHtml = require('gulp-minify-html');
 const uglify = require('gulp-uglify');

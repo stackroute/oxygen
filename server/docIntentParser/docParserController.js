@@ -10,7 +10,7 @@ let fetchIntentSpecificTerms = function(data) {
       parserNeo4jCtrl.fetchIndicatorTerms(data)
         .then(function(dataObj) {
             logger.debug("Successfully fetched indicator Terms ",
-              dataObj);
+              dataObj);              
             parserNeo4jCtrl.fetchCounterIndicatorTerms(dataObj).then(function(dataObj1) {
                 logger.debug("Successfully fetched counter indicator Terms ",
                   dataObj1);

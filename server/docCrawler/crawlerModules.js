@@ -187,12 +187,17 @@ const extractData = function (data) {
                 // })
                 // data.text = txt;
 
-
+                let type = '';
                 logger.debug('txt', data.text);
+                logger.debug('testing for url', data.url);
                 let termOptimalWeight = 0;
                 let terms = [];
                 data.interestedTerms.forEach(function (item, index) {
                     let termWeight = createTreeOfWebDocLike(data.text, modelObj, item);
+
+                    logger.debug("termWeight: ", termWeight);
+                    logger.debug("Type:text");
+                    logger.debug("Interested Terms ", data.interestedTerms[index])
                     logger.debug('termWeight: ', termWeight);
                     logger.debug('Interested Terms ', data.interestedTerms[index])
                     termOptimalWeight = parseInt(termWeight.maxWeight) + parseInt(termWeight.totalWeight);
@@ -200,7 +205,8 @@ const extractData = function (data) {
                     terms.push({
                         word: data.interestedTerms[index],
                         intensity: termOptimalWeight,
-                        pathWeights: termWeight.pathWeights
+                        pathWeights: termWeight.pathWeights,
+                        typeOfDoc: type
                     });
                 })
                 data.terms = terms;
