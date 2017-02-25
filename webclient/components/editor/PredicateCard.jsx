@@ -47,7 +47,7 @@ export default class PredicateCard extends React.Component {
           marginRight: 10,
           opacity: 1
         };
-        if(nextProps.predicateCardJsx == null){
+        if(nextProps.predicateCardJsx === null){
           console.log('Neds a sdsox');
           this.setState({
             predicateCardJsx: 'old'

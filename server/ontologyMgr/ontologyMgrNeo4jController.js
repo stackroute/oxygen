@@ -38,7 +38,7 @@ let getAllDomainDetails = function(nodeObj) {
                     });
                 }
                 result.records.forEach(function(record) {
-                    if (obj.attributes == null) {
+                    if (obj.attributes === null) {
                         obj.attributes = record._fields[0]['properties'];
                     }
                     if (obj['subjects'].length == 0) {
@@ -211,7 +211,7 @@ let getSubjectObjects = function(nodeObj) {
         session.run(query, params)
             .then(function(result) {
                 result.records.forEach(function(record) {
-                    if (obj.attributes == null) {
+                    if (obj.attributes ===null) {
                         obj.attributes = record._fields[0]['properties'];
                     }
                     if (obj['objects'].length == 0) {
@@ -721,7 +721,9 @@ let getSearch = function(nodeObj) {
 
         session.run(query, params)
             .then(function(result) {
-                if (result.records.length == 0) {} else {
+                if (result.records.length == 0) {
+                // console.log('inside if statement');
+                } else {
 
                     result.records.forEach(function(record) {
                         let obj = {

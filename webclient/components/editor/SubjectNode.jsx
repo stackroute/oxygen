@@ -208,7 +208,7 @@ export default class SubjectNode extends React.Component {
 
     enableButton() {
         this.setState({canSubmit: true});
-    };
+    }
 
     handleModalAddOpen = () => {
         this.setState({openAddSubject: true});
@@ -263,6 +263,7 @@ export default class SubjectNode extends React.Component {
                     nodeType = 'Intent';
                     url = `/domain/${this.state.selectedDomain}/subject/intent/${nodeName}/objects`;
                     break;
+                    default:
             }
 
             Request.get(url).end((err, res) => {
@@ -305,6 +306,7 @@ export default class SubjectNode extends React.Component {
                     nodeType = 'Term';
                     url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}`;
                     break;
+                    default:
             }
             Request.get(url).end((err, res) => {
                 if (err) {
