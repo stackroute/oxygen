@@ -11,27 +11,32 @@ import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
     FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
 import Request from 'superagent';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import Toggle from 'material-ui/Toggle';
 
-   const styles = {
-     div: {
-      width : 10,
-       margin: 10,
-       padding: 20,
-     },
-     switchStyle: {
-       marginBottom: 16,
-     },
-     submitStyle: {
-       marginTop: 32,
-     },
-     closeButton: {
-       align: 'right',
-       margin: 5
-     },
-     redBorder: {
-       fontColor: 'red'
-     }
-   }
+const styles = {
+  block: {
+   maxWidth: 250,
+  },
+  toggle: {
+   marginBottom: 16,
+  },
+  thumbOff: {
+   backgroundColor: '#ffcccc',
+  },
+  trackOff: {
+   backgroundColor: '#ff9d9d',
+  },
+  thumbSwitched: {
+   backgroundColor: 'red',
+  },
+  trackSwitched: {
+   backgroundColor: '#ff9d9d',
+  },
+  labelStyle: {
+   color: 'red',
+  },
+};
+
 export default class DeleteNode extends React.Component {
   constructor(props) {
     super(props);
@@ -62,6 +67,7 @@ export default class DeleteNode extends React.Component {
       deleteNodeType: null,
       selectedDomain: null,
       deleteOrphans: 0,
+      expanded: false,
     };
   }
 
@@ -153,6 +159,13 @@ export default class DeleteNode extends React.Component {
     });
   }
 
+  handleToggle = (event, toggle) => {
+    this.setState({
+      expanded: toggle,
+      deleteOrphans: 1
+    });
+  };
+
   render() {
     let {paperStyle, switchStyle, submitStyle } = styles;
     let orphans = [];
@@ -195,9 +208,21 @@ export default class DeleteNode extends React.Component {
             {orphans}
             </TableBody>
           </Table>
+          <Toggle
+            style = {{margin: '5px'}}
+            toggled={this.state.expanded}
+            onToggle={this.handleToggle}
+            labelPosition="right"
+            label="Toggle to delete its connected nodes too."
+            thumbStyle={styles.thumbOff}
+            trackStyle={styles.trackOff}
+            thumbSwitchedStyle={styles.thumbSwitched}
+            trackSwitchedStyle={styles.trackSwitched}
+            labelStyle={styles.labelStyle}
+          />
             <RaisedButton
                 label="Delete"
-                secondary={true}
+                primary={true}
                 onTouchTap={this.deleteSubject}
                 />
             <RaisedButton
