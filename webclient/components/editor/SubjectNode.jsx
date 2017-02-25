@@ -131,7 +131,8 @@ export default class SubjectNode extends React.Component {
             statementFormed: false,
             addNewSubject: false,
             addNewObject: false,
-            enablePredicate: false
+            enablePredicate: false,
+            dissolveModalOpen: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -427,35 +428,23 @@ export default class SubjectNode extends React.Component {
     };
 
     handleDeletePredicate = () => {
-        console.log(this.state.selectedObject);
-        console.log(this.state.selectedSubject);
-        console.log(this.state.selectedPredicate);
-        let subnodetype = '';
-        let objnodetype = '';
-        let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-        let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-        if (this.state.selectedObject.charAt(0) == 'T') {
-            objnodetype = 'Term';
-        } else {
-            objnodetype = 'Concept';
-        }
-        if (this.state.selectedSubject.charAt(0) == 'I') {
-            subnodetype = 'Intent';
-        } else {
-            subnodetype = 'Concept';
-        }
         let nodePredicateDetails = {
             domainName: this.state.selectedDomain,
             subnodetype: this.state.selectedSubjectDetails['subtype'],
             subnodename: this.state.selectedSubjectDetails['subname'],
-            objnodetype: this.state.selectedSubjectDetails['objtype'],
-            objnodename: this.state.selectedSubjectDetails['objname'],
-            predicate: this.state.selectedPredicate
+            objnodetype: this.state.selectedObjectDetails['objtype'],
+            objnodename: this.state.selectedObjectDetails['objname'],
+            predicate: this.state.selectedPredicateDetails['name']
         };
         this.setState({nodePredicateDetails: nodePredicateDetails});
+        console.log(nodePredicateDetails);
     }
     handleUpdateDeletePredicate = () => {
-        this.setState({selectedPredicate: null, stepNumber: 2});
+        this.setState({
+          selectedPredicate: null,
+          stepNumber: 2,
+          dissolveModalOpen: false
+        });
     };
 
     handleChange = (event, index, value) => this.setState({value});
@@ -504,6 +493,13 @@ export default class SubjectNode extends React.Component {
         selectedPredicateDetails: details
       });
     }
+
+    dissolveModal = () => {
+      let status = !this.state.dissolveModalOpen;
+      this.setState({
+        dissolveModalOpen: status
+      });
+    };
 
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
@@ -573,7 +569,7 @@ export default class SubjectNode extends React.Component {
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
-                        }} onTouchTap={this.handleDeletePredicate}/>
+                        }} onTouchTap={this.dissolveModal}/>
 
                         <RaisedButton label='Apply' style={{
                             float: 'left',
@@ -591,6 +587,27 @@ export default class SubjectNode extends React.Component {
                 </Paper>
                 <FormStatement domain={this.state.selectedDomain} ready={this.state.statementFormed} subject={this.state.selectedSubjectDetails} object={this.state.selectedObjectDetails} predicate={this.state.selectedPredicateDetails}/>
                 <DissolveRelation predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
+                <Dialog
+                  title="Confirm to delete"
+                  modal={true}
+                  open={this.state.dissolveModalOpen}
+                  autoScrollBodyContent={true}
+                  >
+                  <RaisedButton
+                    label='Confirm'
+                    primary={true}
+                     style={{
+                      float: 'left',
+                      margin: '10'
+                  }} onTouchTap={this.handleDeletePredicate}/>
+
+                <RaisedButton label='Cancel'
+                  default={true}
+                   style={{
+                      float: 'left',
+                      margin: '10'
+                  }} onTouchTap={this.dissolveModal}/>
+                </Dialog>
             </div>
         ); //End of Return
     } //End of Render
