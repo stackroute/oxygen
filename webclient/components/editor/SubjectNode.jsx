@@ -19,7 +19,7 @@ import Slider from 'material-ui/Slider';
 import Paper from 'material-ui/Paper';
 import AddSubject from './AddSubject.jsx';
 import AddPredicate from './AddPredicate.jsx';
-import DeletePredicate from './dissolveRelation.jsx';
+import DissolveRelation from './DissolveRelation.jsx';
 import AddObject from './AddObject.jsx';
 import Delete from './DeleteNode.jsx';
 import Edit from './edit.jsx';
@@ -425,36 +425,32 @@ handleEditNode = () => {
     };
 
     handleDeletePredicate = () => {
-        // console.log(this.state.selectedObject);
-        // console.log(this.state.selectedSubject);
-        // console.log(this.state.selectedPredicate);
-        if (this.state.selectedObject.length == 0 || this.state.selectedSubject.length == 0 || this.state.selectedPredicate.length == 0) {
-          // nothing
+        console.log(this.state.selectedObject);
+        console.log(this.state.selectedSubject);
+        console.log(this.state.selectedPredicate);
+        let subnodetype = '';
+        let objnodetype = '';
+        let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
+        let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
+        if (this.state.selectedObject.charAt(0) == 'T') {
+            objnodetype = 'Term';
         } else {
-            let subnodetype = '';
-            let objnodetype = '';
-            let subnodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-            let objnodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-            if (this.state.selectedObject.charAt(0) == 'T') {
-                objnodetype = 'Term';
-            } else {
-                objnodetype = 'Concept';
-            }
-            if (this.state.selectedSubject.charAt(0) == 'I') {
-                subnodetype = 'Intent';
-            } else {
-                subnodetype = 'Concept';
-            }
-            let nodePredicateDetails = {
-                domainName: this.state.selectedDomain,
-                subnodetype: subnodetype,
-                subnodename: subnodename,
-                objnodetype: objnodetype,
-                objnodename: objnodename,
-                predicate: this.state.selectedPredicate
-            };
-            this.setState({nodePredicateDetails: nodePredicateDetails});
+            objnodetype = 'Concept';
         }
+        if (this.state.selectedSubject.charAt(0) == 'I') {
+            subnodetype = 'Intent';
+        } else {
+            subnodetype = 'Concept';
+        }
+        let nodePredicateDetails = {
+            domainName: this.state.selectedDomain,
+            subnodetype: this.state.selectedSubjectDetails['subtype'],
+            subnodename: this.state.selectedSubjectDetails['subname'],
+            objnodetype: this.state.selectedSubjectDetails['objtype'],
+            objnodename: this.state.selectedSubjectDetails['objname'],
+            predicate: this.state.selectedPredicate
+        };
+        this.setState({nodePredicateDetails: nodePredicateDetails});
     }
     handleUpdateDeletePredicate = () => {
         this.setState({selectedPredicate: null, stepNumber: 2});
@@ -592,7 +588,7 @@ handleEditNode = () => {
                     <br/>
                 </Paper>
                 <FormStatement domain={this.state.selectedDomain} ready={this.state.statementFormed} subject={this.state.selectedSubjectDetails} object={this.state.selectedObjectDetails} predicate={this.state.selectedPredicateDetails}/>
-                <DeletePredicate predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
+                <DissolveRelation predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
             </div>
         );
         // End of Return
