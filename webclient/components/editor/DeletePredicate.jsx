@@ -79,6 +79,7 @@ export default class DeletePredicate extends React.Component {
   render(){
     let textFields = null;
     if(this.state.predicateDetails !== null){
+        // console.log('inside if block');
     }
     return (
       <Dialog

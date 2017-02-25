@@ -56,7 +56,7 @@ const style = {
     textAlign: 'center',
     fontFamily: 'sans-serif',
     overflowX: 'hidden'
-}
+};
 
 const styles = {
     headline: {
@@ -148,10 +148,9 @@ export default class SubjectNode extends React.Component {
                 // let domainList1=this.state.domainList;
                 let response = res.body;
                 if (response['subjects'].length == 0) {
-                    this.setState({floatingLabelTextObject: 'No Results'})
+                    this.setState({floatingLabelTextObject: 'No Results'});
                 } else {
                     var listSubjects = [];
-
                     for (let each in response['subjects']) {
                         let nodekey = response['subjects'][each].label;
                         listSubjects.push(nodekey.charAt(0) + ': ' + response['subjects'][each]['name']);
@@ -171,6 +170,7 @@ export default class SubjectNode extends React.Component {
             case 'I':
                 url = `/domain/${this.state.selectedDomain}/subject/intent/${searchText}/objects`;
                 break;
+                default:
         }
 
         Request.get(url).end((err, res) => {
@@ -198,7 +198,7 @@ export default class SubjectNode extends React.Component {
 
                         listObjects.push(label + ': ' + response['objects'][each]['name']);
 
-                        console.log(nodekey);
+                        // console.log(nodekey);
                         listPredicates[response['objects'][each]['name']] = response['objects'][each]['predicates'];
                     }
                     this.setState({predicateList: listPredicates, objectList: listObjects, searchRelText: '', loading: 'hide'});
@@ -209,7 +209,7 @@ export default class SubjectNode extends React.Component {
 
     enableButton() {
         this.setState({canSubmit: true});
-    };
+    }
 
     handleModalAddOpen = () => {
         this.setState({openAddSubject: true});
@@ -241,13 +241,10 @@ export default class SubjectNode extends React.Component {
         this.getSubjects(searchText);
         this.setState({
             addLabel: 'Add Intent', floatingLabelTextSubject: 'Subjects loaded',
-
-            //stepNumber:0
+            // stepNumber:0
         });
-
-    };
-
-    //Use this to send for object creation line 220
+  };
+    // Use this to send for object creation line 220
     handleUpdateSubjectInput = (searchText) => {
         let selectedSubjectDetails = {};
         if (this.state.subjectList.indexOf(searchText) < 0 || searchText.length == 0) {
@@ -260,13 +257,14 @@ export default class SubjectNode extends React.Component {
             let nodeType = '';
             switch (searchText.charAt(0)) {
                 case 'C':
-                    nodeType = 'Concept'
+                    nodeType = 'Concept';
                     url = `/domain/${this.state.selectedDomain}/subject/concept/${nodeName}/objects`;
                     break;
                 case 'I':
-                    nodeType = 'Intent'
+                    nodeType = 'Intent';
                     url = `/domain/${this.state.selectedDomain}/subject/intent/${nodeName}/objects`;
                     break;
+                    default:
             }
 
             Request.get(url).end((err, res) => {
@@ -274,7 +272,7 @@ export default class SubjectNode extends React.Component {
                     this.setState({errmsg: res.body, loading: 'hide'});
                 } else {
                     let response = JSON.parse(res.text);
-                    console.log(response);
+                    // console.log(response);
                     if (response.length == 0) {
                         this.setState({floatingLabelTextObject: 'No Results'});
                     } else {
@@ -309,6 +307,7 @@ export default class SubjectNode extends React.Component {
                     nodeType = 'Term';
                     url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}`;
                     break;
+                    default:
             }
             Request.get(url).end((err, res) => {
                 if (err) {
@@ -331,12 +330,9 @@ export default class SubjectNode extends React.Component {
     handleUpdatePredicateInput = (searchText) => {
         if (searchText.length == 0) {
             this.setState({stepNumber: 2});
-
-        } else {
+          } else {
             this.setState({selectedPredicate: searchText, stepNumber: 3});
-
             let selectedPredicateDetails = {};
-
             let nodeName1 = this.state.selectedSubjectDetails['subname'];
             let nodeName2 = this.state.selectedObjectDetails['objname'];
 
@@ -348,6 +344,7 @@ export default class SubjectNode extends React.Component {
                 case 'I':
                     url = `/domain/${this.state.selectedDomain}/subject/Intent/${nodeName1}/object/Term/${nodeName2}/predicates/${searchText}`;
                     break;
+                    default:
             }
             Request.get(url).end((err, res) => {
                 if (err) {
@@ -357,7 +354,7 @@ export default class SubjectNode extends React.Component {
                     selectedPredicateDetails['name'] = searchText;
                     try{
                       selectedPredicateDetails['attributes'] = response.records[0]._fields[0]['properties'];
-                    } catch(e){
+                    } catch(e) {
                       selectedPredicateDetails['attributes'] = [];
                     }
                     this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: 'old'});
@@ -365,16 +362,17 @@ export default class SubjectNode extends React.Component {
             });
         }
     };
-
     // handleUpdateRelInput = (searchText) => {
     //
     // };
 
     handleDeleteSubject = () => {
-        if (this.state.selectedSubject.length == 0) {} else {
+        if (this.state.selectedSubject.length == 0) {
+            // console.log(nodename);
+        } else {
             let nodetype = '';
             let nodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-            //console.log(nodename);
+            // console.log(nodename);
             if (this.state.selectedSubject.charAt(0) == 'I') {
                 nodetype = 'Intent';
             } else {
@@ -385,13 +383,13 @@ export default class SubjectNode extends React.Component {
                 nodetype: nodetype,
                 nodename: nodename
             };
-
             this.setState({nodeDetails: nodeDetails, deleteModalOpen: true});
         }
     };
-
-    handleEditNode = () => {
-        if (this.state.selectedSubject.length === 0) {} else {
+handleEditNode = () => {
+        if (this.state.selectedSubject.length === 0) {
+            // console.log(nodename);
+        } else {
             let nodeType = '',
                 nodeName = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
             if (this.state.selectedSubject.charAt(0) == 'I') {
@@ -409,10 +407,12 @@ export default class SubjectNode extends React.Component {
     }
 
     handleDeleteObject = () => {
-        if (this.state.selectedObject.length == 0) {} else {
+        if (this.state.selectedObject.length == 0) {
+          // console.log(nodename);
+        } else {
             let nodetype = '';
             let nodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-            //console.log(nodename);
+            // console.log(nodename);
             if (this.state.selectedObject.charAt(0) == 'T') {
                 nodetype = 'Term';
             } else {
@@ -455,7 +455,7 @@ export default class SubjectNode extends React.Component {
 
     formStatement = () => {
         if (this.state.selectedSubjectDetails !== null) {
-            this.setState({statementFormed: true})
+            this.setState({statementFormed: true});
         }
     }
 
@@ -609,6 +609,9 @@ export default class SubjectNode extends React.Component {
                   }} onTouchTap={this.dissolveModal}/>
                 </Dialog>
             </div>
-        ); //End of Return
-    } //End of Render
-} //End of Class
+        );
+        // End of Return
+    }
+    // End of Render
+}
+ // End of Class

@@ -48,7 +48,7 @@ export default class DomainMindMapGraph extends React.Component {
             return a.parent == b.parent
                 ? 1
                 : 3;
-        });;
+        });
 
         let diagonal = d3.svg.diagonal().projection(function(d) {
             return [d.y, d.x];
@@ -149,7 +149,7 @@ export default class DomainMindMapGraph extends React.Component {
                     x: source.x,
                     y: source.y
                 };
-                return diagonal({source: o, target: o});;
+                return diagonal({source: o, target: o});
             }).remove();
 
             // Stash the old positions for transition.

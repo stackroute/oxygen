@@ -47,7 +47,7 @@ export default class DeleteNode extends React.Component {
     this.onRowSelection = this.onRowSelection.bind(this);
     this.deleteSubject = this.deleteSubject.bind(this);
     this.rowForm = this.rowForm.bind(this);
-    this.state =  {
+    this.state = {
       errMsg:'',
       open: false,
       canSubmit: false,
@@ -88,11 +88,11 @@ export default class DeleteNode extends React.Component {
       let url = `domain/${nodeDetails.domainName}/subject/${nodeDetails.nodetype}/${nodeDetails.nodename}`;
       Request.get(url).end((err, res) => {
         if(err){
-
-        }else{
+        // console.log('inside if block');
+      }else{
           let response = res.body;
-          if(response.length == 0){
-
+          if(response.length == 0) {
+            // console.log('inside if block');
           }else{
             this.setState({
               orphans : response
@@ -146,12 +146,12 @@ export default class DeleteNode extends React.Component {
     console.log(url);
     Request.delete(url).end((err, res) => {
       if(err){
-
+          // console.log('inside if block');
       }else{
         let response = res.body;
         console.log(response['_stats']['nodesDeleted']);
         if(response.length == 0){
-
+          // console.log('inside if block');
         }else{
           this.handleClose();
         }

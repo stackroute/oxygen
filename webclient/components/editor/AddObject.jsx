@@ -35,10 +35,10 @@ const styles = {
 };
 
 const errorMessages = {
-    wordsError: "Please only use letters",
-    numericError: "Please provide a number",
-    urlError: "Please provide a valid URL",
-}
+    wordsError: 'Please only use letters',
+    numericError: 'Please provide a number',
+    urlError: 'Please provide a valid URL',
+};
 
 export default class AddSubject extends React.Component {
     constructor(props) {
@@ -47,10 +47,10 @@ export default class AddSubject extends React.Component {
         this.disableButton = this.disableButton.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.state = {
-            subjectType:"",
-            subject:"",
-            object:"",
-            errMsg:"",
+            subjectType: '',
+            subject: '',
+            object: '',
+            errMsg: '',
             open: false,
             canSubmit: false,
             openDialog: false,
@@ -58,10 +58,10 @@ export default class AddSubject extends React.Component {
             domain: this.props.domain,
             subject: this.props.subject,
             openAddDialog: false,
-            subjectType:"",
-            subjectNode:"",
-            objectNode:"",
-            objectType:""
+            subjectType:'',
+            subjectNode:'',
+            objectNode:'',
+            objectType:''
         };
     }
 
@@ -85,16 +85,16 @@ export default class AddSubject extends React.Component {
     }
 
     submitForm(data) {
-        console.log("Inside Add Subject Submit Form");
+        console.log('Inside Add Subject Submit Form');
 
         // if(this.state.subject == undefined){
         //   console.log(this.state.subject);
         // }
         let str = ''
         str = this.state.subject;
-        console.log("Str"+str);
+        console.log('Str'+str);
         str = str.substr(3,str.length-1);
-        console.log("Str"+str);
+        console.log('Str'+str);
         let i = 0;
         let requestObj = {
           attributes : {},
@@ -110,11 +110,11 @@ export default class AddSubject extends React.Component {
         }
 
         if(this.state.subject.charAt(0)=='C'){
-          this.subjectType = "Concept";
-          this.objectType = "Concept";
+          this.subjectType = 'Concept';
+          this.objectType = 'Concept';
         } else if(this.state.subject.charAt(0)=='I'){
-          this.subjectType = "Intent";
-          this.objectType = "Term";
+          this.subjectType = 'Intent';
+          this.objectType = 'Term';
         }
 
         this.subjectNode = str;
@@ -134,10 +134,10 @@ export default class AddSubject extends React.Component {
         .send(requestObj)
         .end((err, res) => {
           if (err) {
-            console.log("err");
+            console.log('err');
               this.setState({errmsg: res.body, loading: 'hide'});
           } else {
-            console.log("Passing");
+            console.log('Passing');
             this.setState({openAddDialog: true});
           }
         });
@@ -165,11 +165,11 @@ export default class AddSubject extends React.Component {
         return (
             <div>
               <Dialog
-              title="Add"
+              title='Add'
               titleStyle={{
-                color: "#858586",
+                color: '#858586',
                 fontSize: 30,
-                backgroundColor: "#c7c7c7"
+                backgroundColor: '#c7c7c7'
             }}
               modal={true}
               open={this.state.addmodalopen}
@@ -180,25 +180,25 @@ export default class AddSubject extends React.Component {
                   onValidSubmit={this.submitForm}
                   onInvalidSubmit={this.notifyFormError}
                   >
-                    <FormsyText name="object" validations="isWords" validationsError = {wordsError} hintText="object name" floatingLabelText="Object name"/>
+                    <FormsyText name='object' validations='isWords' validationsError = {wordsError} hintText='object name' floatingLabelText='Object name'/>
                     <br/>
-                     <FormsyText name="attributesName" validations="isWords" validationsError = {wordsError} hintText="attributes name" floatingLabelText="attributes name"/>
+                     <FormsyText name='attributesName' validations='isWords' validationsError = {wordsError} hintText='attributes name' floatingLabelText='attributes name'/>
                      <br/>
-                    <FormsyText name="attributesValue" validations="isWords" validationsError = {wordsError} hintText="attributes value" floatingLabelText="attributes value"/>
+                    <FormsyText name='attributesValue' validations='isWords' validationsError = {wordsError} hintText='attributes value' floatingLabelText='attributes value'/>
                      <br/>
-                    <FormsyText name="predicateName" validations="isWords" validationsError = {wordsError} hintText="Predicate Name" floatingLabelText="Predicate Name"/>
+                    <FormsyText name='predicateName' validations='isWords' validationsError = {wordsError} hintText='Predicate Name' floatingLabelText='Predicate Name'/>
                     <br/>
-                    <FormsyText name="direction" validations="isWords" validationsError = {wordsError} hintText="Direction" floatingLabelText="Direction"/>
+                    <FormsyText name='direction' validations='isWords' validationsError = {wordsError} hintText='Direction' floatingLabelText='Direction'/>
                     <br/>
-                    <FlatButton label = "Add"
+                    <FlatButton label = 'Add'
                        primary = {true}
                        style={submitStyle}
-                              type="submit"
+                              type='submit'
                        disabled = {
                               !this.state.canSubmit
                           }
                     />
-                   <FlatButton label = "Cancel"
+                   <FlatButton label = 'Cancel'
                       primary = {true}
                       style={submitStyle}
                       onTouchTap = {
@@ -209,17 +209,17 @@ export default class AddSubject extends React.Component {
                 </Dialog>
 
                 <Dialog
-                title="Object"
+                title='Object'
                 titleStyle={{
-                  color: "#858586",
+                  color: '#858586',
                   fontSize: 30,
-                  backgroundColor: "#c7c7c7"
+                  backgroundColor: '#c7c7c7'
               }}
                 modal={true}
                 open={this.state.openAddDialog}
                 autoScrollBodyContent={true}>
                 <h1>Subject Added Successfully</h1>
-                  <FlatButton label = "OK"
+                  <FlatButton label = 'OK'
                      primary = {true}
                      style={submitStyle}
                      onTouchTap = {
