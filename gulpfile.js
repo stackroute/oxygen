@@ -78,10 +78,10 @@ gulp.task('eslint', function() {
 
     //           if(info.severity===2)
     //           {
-    //             logger.info("\n\nLine Info       : "+info.line+":"+info.column+
-    //               "\nError Message   : "+info.message+
-    //               "\nSource Line     : "+info.source+
-    //               "\nRule            : "+info.ruleId+"\n\n");
+    //             logger.info('\n\nLine Info       : '+info.line+':'+info.column+
+    //               '\nError Message   : '+info.message+
+    //               '\nSource Line     : '+info.source+
+    //               '\nRule            : '+info.ruleId+'\n\n');
     //           }
 
     //         })

@@ -183,15 +183,13 @@ const extractData = function (data) {
                 //     remove_duplicates: false
                 // })
                 // data.text = txt;
-
-
                 logger.debug('txt', data.text);
                 let termOptimalWeight = 0;
                 let terms = [];
                 data.interestedTerms.forEach(function (item, index) {
                     let termWeight = createTreeOfWebDocLike(data.text, modelObj, item);
                     logger.debug('termWeight: ', termWeight);
-                    logger.debug('Interested Terms ', data.interestedTerms[index])
+                    logger.debug('Interested Terms ', data.interestedTerms[index]);
                     termOptimalWeight = parseInt(termWeight.maxWeight) + parseInt(termWeight.totalWeight);
                     logger.debug('termOptimalWeight: ', termOptimalWeight);
                     terms.push({
@@ -199,40 +197,39 @@ const extractData = function (data) {
                         intensity: termOptimalWeight,
                         pathWeights: termWeight.pathWeights
                     });
-                })
+                });
                 data.terms = terms;
 
                 resolve(data);
             })
         ]);
-    })
+    });
     return promise;
-}
+};
 
 const readFile = function (data, callback) {
     fs.readFile('cypher.json', function (err, data) {
         callback(null, data.toString());
-    })
-}
+    });
+};
 const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
     logger.debug('createTreeOfWebDocLike: ', modelObj, needle);
-    let currentTree = {},
-        parent = {},
-        foundHtml = '',
-        data = {tree: {}, pathWeights: {}},
-        pathWeight = 0,
-        eltNweight = {};
-    needle = needle.toLowerCase();
-    pageResponse = pageResponse.toLowerCase();
+    let currentTree = {};
+      let parent = {};
+      let foundHtml = '';
+      let data = {tree: {}, pathWeights: {}};
+      let pathWeight = 0;
+      let eltNweight = {};
+  needle = needle.toLowerCase();
+ pageResponse = pageResponse.toLowerCase();
     /*
      iterating the Dom Model and creating your own tree
      */
     function traverseNode(parent, modelObj) {
-
-        let eltName = modelObj.title;
+      let eltName = modelObj.title;
         let foundEltNweight = {};
         let currentNode = {title: modelObj.title, weight: modelObj['child.weight']};
-        console.log(currentNode);
+      //  console.log(currentNode);
         /*
          find the needle in the specified  html element
          */
@@ -260,7 +257,10 @@ const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
         pathWeight = 0;
 
         data['tree'] = currentTree;
-        let weightsArr = [], maxWeight = 0, totalWeight = 0, currentWeight;
+        let weightsArr = [];
+        let maxWeight = 0;
+        let totalWeight = 0;
+        let currentWeight;
         Object.keys(data['pathWeights']).map(function (k) {
             weight = data['pathWeights'][k];
             totalWeight = totalWeight + weight;
@@ -312,7 +312,7 @@ const createTreeOfWebDocLike = function (pageResponse, modelObj, needle) {
     }
 
     return traverseNode(parent, modelObj);
-}
+};
 
 
 module.exports = {
@@ -324,4 +324,4 @@ module.exports = {
     createTreeOfWebDocLike: createTreeOfWebDocLike,
     parseText: parseText,
     getResponseToLowerCase: getResponseToLowerCase
-}
+};
