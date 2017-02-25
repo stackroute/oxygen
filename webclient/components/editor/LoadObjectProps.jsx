@@ -8,6 +8,7 @@ import RemoveButton from 'material-ui/svg-icons/content/remove';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
+import DeleteNode from './DeleteNode';
 
 export default class LoadObjectProps extends React.Component{
   constructor(props){
@@ -16,13 +17,17 @@ export default class LoadObjectProps extends React.Component{
     this.removeProperty = this.removeProperty.bind(this);
     this.resetObjectProps = this.resetObjectProps.bind(this);
     this.submitForm = this.submitForm.bind(this);
-    this.saveObject = this.saveObject.bind(this)
+    this.saveObject = this.saveObject.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleModal = this.handleModal.bind(this);
     this.state = {
       propertyCount: 0,
       keyValue: [],
       objname: '',
       objtype: '',
-      attributes: {}
+      attributes: {},
+      nodeDetails: {},
+      probableObjects: [<MenuItem value={'Concept'} primaryText="Concept" />, <MenuItem value={'Term'} primaryText="Term" />]
     };
   }
 
@@ -49,7 +54,6 @@ export default class LoadObjectProps extends React.Component{
 componentWillReceiveProps(nextProps){
     if(nextProps.objectDetails !== null){
       this.resetObjectProps().then(result => {
-        console.log("From Promise " + result);
         let that = this;
         Object.keys(nextProps.objectDetails['attributes']).forEach(function(key,index){
           that.state.keyValue.push(that.tempFunc(key,nextProps.objectDetails['attributes'][key],index));
@@ -59,23 +63,33 @@ componentWillReceiveProps(nextProps){
         this.setState({
           objname: nextProps.objectDetails['objname'],
           objtype: nextProps.objectDetails['objtype'],
-          propertyCount: propertyCount + Object.keys(this.state.attributes).length,
+          propertyCount: propertyCount + Object.keys(nextProps.objectDetails['attributes']).length,
         });
       }, err => {
         console.log('here at promise fail');
       }
     );
+
   }else{
     this.resetObjectProps().then(result => {
       console.log('Done');
     });
+    console.log('SUB type' + nextProps.selectedSubject['subtype']);
+    if(nextProps.selectedSubject['subtype'] == 'Intent'){
+      this.setState({
+        probableObjects: <MenuItem value={'Term'} primaryText='Term' />
+      });
+    }
+    if(nextProps.selectedSubject['subtype'] == 'Concept'){
+      this.setState({
+        probableObjects: <MenuItem value={'Concept'} primaryText='Concept' />
+      });
+    }
   }
 }
 
   removeProperty(key){
-    console.log("Remove key" + key);
-    console.log("Remove key" + this.state.keyValue);
-    this.state.keyValue.splice(key,1);
+    this.state.keyValue[key] = null;
     this.setState(this.state);
   }
 
@@ -99,12 +113,13 @@ componentWillReceiveProps(nextProps){
         style={{
             width: '40%'
         }}
-      />
-    <IconButton onTouchTap = {this.removeProperty.bind(this,index)} style={{
+      />{key !== 'name' &&
+        <IconButton onTouchTap = {this.removeProperty.bind(this,index)} style={{
             width: '20%'
-        }}>
-        <RemoveButton/>
+          }}>
+          <RemoveButton/>
         </IconButton>
+      }
      </div>
   );
   }
@@ -147,6 +162,22 @@ componentWillReceiveProps(nextProps){
     });
   }
 
+  handleDelete(){
+    let nodeDetails = {};
+    nodeDetails['nodetype'] = this.state.objtype;
+    nodeDetails['nodename'] = this.state.objname;
+    this.setState({
+      nodeDetails : nodeDetails,
+      open: true
+    });
+  }
+
+  handleModal(){
+    this.setState({
+      open: false
+    });
+  }
+
   render(){
     return (
       <div>
@@ -163,8 +194,7 @@ componentWillReceiveProps(nextProps){
                 width: '100%'
             }}
           >
-            <MenuItem value={'Intent'} primaryText="Intent" />
-            <MenuItem value={'Concept'} primaryText="Concept" />
+            {this.state.probableObjects}
           </FormsySelect>
         }
         <FormsyText
@@ -188,10 +218,11 @@ componentWillReceiveProps(nextProps){
        <FlatButton type="submit" label="save" style={{
            float: 'right'
        }}/>
-     <FlatButton label='Delete' style={{
+     <FlatButton label='Delete' onTouchTap={this.handleDelete} style={{
            float: 'right'
        }}/>
       </Formsy.Form>
+      <DeleteNode open = {this.state.open} nodeDetails={this.state.nodeDetails} handleModal = {this.handleModal}/>
       </div>
     )
   }

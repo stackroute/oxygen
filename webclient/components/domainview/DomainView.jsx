@@ -33,10 +33,10 @@ export default class DomainView extends React.Component {
 
         return (
             <div>
-                <FlatButton label={this.state.buttonLabel} style={{
+                <FlatButton label={this.state.buttonLabel} primary={true} style={{
                     float: 'right'
                 }} onTouchTap={this.changeContentDisplay.bind(this)}/>
-              <FlatButton label='Edit' containerElement = {<Link to = {'/edit/'+this.state.selectedDomain}/>} style={{
+              <FlatButton label='Edit' primary={true} containerElement = {<Link to = {'/edit/'+this.state.selectedDomain}/>} style={{
                     float: 'right'
                 }}/> {displayView}
             </div>

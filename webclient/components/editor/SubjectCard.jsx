@@ -11,7 +11,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import {Container, Col, Row, Visible} from 'react-grid-system';
 import ContentAddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
-import LoadProps from './LoadSubjectProps';
+import LoadSubjectProps from './LoadSubjectProps';
 import { FormsyCheckbox, FormsyDate, FormsyRadio, FormsyRadioGroup,
 FormsySelect, FormsyText, FormsyTime, FormsyToggle, FormsyAutoComplete } from 'formsy-material-ui/lib';
 import IconButton from 'material-ui/IconButton';
@@ -64,10 +64,10 @@ export default class SubjectCard extends React.Component {
     render() {
         let newSubject = '';
         if(this.state.subjectCardJsx == 'new'){
-          newSubject = <LoadProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard}/>;
+          newSubject = <LoadSubjectProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard}/>;
         }
         if(this.state.subjectCardJsx == 'old'){
-          newSubject = <LoadProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard}/>
+          newSubject = <LoadSubjectProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard}/>
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
