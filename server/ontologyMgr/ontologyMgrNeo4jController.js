@@ -224,7 +224,9 @@ let getSubjectObjects = function(nodeObj) {
                         let found = false;
                         for (let each in obj.objects) {
                             if (obj.objects[each]['name'] == record._fields[2]['properties']['name']) {
-                                obj.objects[each]['predicates'].push(record._fields[1]);
+                                if(obj.objects[each]['predicates'].indexOf(record._fields[1]) < 0){
+                                  obj.objects[each]['predicates'].push(record._fields[1]);
+                                }
                                 found = true;
                                 break;
                             }
@@ -525,7 +527,7 @@ let getAllOrphans = function(subject) {
         var subjectDomainname = subject.domainname;
         var subjectNodeType = subject.nodetype;
         var subjectNodeName = subject.nodename;
-        query = 'MATCH (c:' + subjectNodeType + ')-[r]-(allRelatedNodes) WHERE node.name = {subjectNodeName} AND size((allRelatedNodes)--()) >= 1'
+        query = 'MATCH (c:' + subjectNodeType + ')-[r]-(allRelatedNodes) WHERE c.name = {subjectNodeName} AND size((allRelatedNodes)--()) >= 1'
         query += ' return allRelatedNodes, size((allRelatedNodes)--()) as Count';
         params = {
             subjectNodeType: subjectNodeType,
@@ -766,9 +768,9 @@ let createResource = function(nodeObj) {
         let props = nodeObj.resourceDetails['attributes'];
         let defaultPredicate = null;
         if (nodeObj.resourceDetails['subtype'] == 'Intent') {
-            defaultPredicate = 'intentOf';
+            defaultPredicate = 'IntentOf';
         } else {
-            defaultPredicate = 'conceptOf';
+            defaultPredicate = 'ConceptOf';
         }
         let session = driver.session();
         let query = '';
