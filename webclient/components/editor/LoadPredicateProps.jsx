@@ -8,6 +8,7 @@ import RemoveButton from 'material-ui/svg-icons/content/remove';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
+import Formsy from 'formsy-react';
 
 export default class LoadPredicateProps extends React.Component{
   constructor(props){

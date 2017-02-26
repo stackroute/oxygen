@@ -9,6 +9,7 @@ import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import DeleteNode from './DeleteNode';
+import Formsy from 'formsy-react';
 
 export default class LoadObjectProps extends React.Component{
   constructor(props){

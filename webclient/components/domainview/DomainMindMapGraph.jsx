@@ -13,9 +13,9 @@ let margin = {
     left: 80
 };
 let width = 1330 - margin.right - margin.left;
-let height = 500 - margin.top - margin.bottom;
+let height = 800 - margin.top - margin.bottom;
 let i = 0;
-let duration = 750;
+let duration = 650;
 let root;
 let PAGINATION = 2;
 export default class DomainMindMapGraph extends React.Component {
@@ -48,7 +48,7 @@ export default class DomainMindMapGraph extends React.Component {
             return a.parent == b.parent
                 ? 1
                 : 3;
-        });;
+        });
 
         let diagonal = d3.svg.diagonal().projection(function(d) {
             return [d.y, d.x];
@@ -70,7 +70,7 @@ export default class DomainMindMapGraph extends React.Component {
                 links = tree.links(nodes);
             // Normalize for fixed-depth.
             nodes.forEach(function(d) {
-                d.y = d.depth * 180;
+                d.y = d.depth * 300;
             });
             // Update the nodes…
             let node = svg.selectAll("g.node").data(nodes, function(d) {
@@ -90,9 +90,9 @@ export default class DomainMindMapGraph extends React.Component {
 
             nodeEnter.append("text").attr("x", function(d) {
                 return d.Children || d._children
-                    ? 20
+                    ? 25
                     : -20;
-            }).attr("dy", "2em").attr("text-anchor", function(d) {
+            }).attr("dy", "2.5em").attr("text-anchor", function(d) {
                 return d.Children || d._children
                     ? "end"
                     : "start";
@@ -105,14 +105,10 @@ export default class DomainMindMapGraph extends React.Component {
                 return "translate(" + d.y + "," + d.x + ")";
             });
 
-            nodeUpdate.select("circle").attr("r", 13).style("fill", function(d) {
-                var sam = d.parent
-                    ? color(d.parent.id)
-                    : color();
-                console.log(sam);
+            nodeUpdate.select("circle").attr("r", 15).style("fill", function(d) {
                 return d._children
-                    ? "white"
-                    : sam;
+                    ? '#76d7c4'
+                    : 'white';
             });
 
             nodeUpdate.select("text").style("fill-opacity", 1);
@@ -149,7 +145,7 @@ export default class DomainMindMapGraph extends React.Component {
                     x: source.x,
                     y: source.y
                 };
-                return diagonal({source: o, target: o});;
+                return diagonal({source: o, target: o});
             }).remove();
 
             // Stash the old positions for transition.
@@ -195,16 +191,13 @@ export default class DomainMindMapGraph extends React.Component {
                     return "translate(" + x + "," + y + ")";
                 }).on("click", paginate);
 
-                pageControl.append("circle").attr("r", 15).style("fill", function(d) {
-                    return d.parent
-                        ? '#009688'
-                        : '#009688';
-                })
                 pageControl.append("image").attr("xlink:href", function(d) {
                     if (d.type == "next") {
-                        return "https://dl.dropboxusercontent.com/s/p7qjclv1ulvoqw3/icon1.png"
+                        return '../../assets/images/arrow_forward1x.png';
+                        // return '../../assets/images/redo_black1x.png';
                     } else {
-                        return "https://dl.dropboxusercontent.com/s/mdzt36poc1z39s3/icon3.png"
+                        return '../../assets/images/arrow_back1x.png';
+                        // return '../../assets/images/undo_black1x.png';
                     }
                 }).attr("x", -12.5).attr("y", -12.5).attr("width", 25).attr("height", 25);
             });
