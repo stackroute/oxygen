@@ -69,8 +69,9 @@ export default class DomainTable extends React.Component {
     });
   }
   handleExport(){
-    download(JSON.stringify(this.state.tableFilteredData), "domain.json", "text/json");
+    download(JSON.stringify(this.state.tableData), "domain.json", "text/json");
   }
+  
   handleChange = (event) => {
     this.setState({height: event.target.value});
   };

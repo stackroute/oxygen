@@ -72,7 +72,7 @@ export default class LoadPredicateProps extends React.Component{
         console.log('Done');
       });
     }
-    if(nextProps.selectedSubject['subtype'] !== undefined){
+    if(nextProps.selectedSubject !== null && nextProps.selectedSubject['subtype'] !== undefined){
       this.setPredicates(nextProps.selectedSubject['subtype']);
     }
   }
@@ -102,7 +102,6 @@ export default class LoadPredicateProps extends React.Component{
               required
               floatingLabelText="Select Predicate"
               menuItems={this.selectFieldItems}
-              style={styles.customWidth}
               autoWidth={true}
             >
               <MenuItem value={'indicatorOf'} primaryText="Indicator" />
