@@ -1,7 +1,7 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
 const logger = require('./../../applogger');
-
+const datapublisher = require('../serviceLogger/redisLogger');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
@@ -25,7 +25,13 @@ let getAllDomainDetails = function(domain) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
-
+                let redisCrawl = {
+                  domain: dataObj.domain,
+                  actor: 'crawler',
+                  message: dataObj.url,
+                  status: 'crawling completed for the url'
+                };
+                datapublisher.processFinished(redisCrawl);
             });
     });
     return promise;
@@ -50,6 +56,14 @@ let getSubjectObjects = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
+                let redisCrawl = {
+                  // domain:'hello',
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: retrivedRelations,
+                };
+                datapublisher.processFinished(redisCrawl);
             });
     });
     return promise;
@@ -94,6 +108,15 @@ let deleteObject = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
+                let redis = {
+                  // domain:'hello',
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: 'deleted' + result,
+                };
+                datapublisher.processFinished(redis);
+
                 });
              // end of async.waterfall
     });
@@ -113,6 +136,14 @@ let deleteOrphans = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
+                let redis = {
+                  // domain:'hello',
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: 'deleted' + result,
+                };
+                datapublisher.processFinished(redis);
                 });
             // end of async.waterfall
     });
@@ -212,6 +243,15 @@ let createResource = function(nodeObj) {
                     reject(err);
                 }
                 resolve(createdResource);
+                console.log('hello');
+                let redis = {
+                  // domain:'hello',
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: 'created' + createdResource,
+                };
+                datapublisher.processFinished(redis);
             });
     });
     return promise;
@@ -233,6 +273,14 @@ let formStatement = function(nodeObj) {
                     reject(err);
                 }
                 resolve(statement);
+                let red = {
+                  // domain:'hello',
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: statement,
+                };
+                datapublisher.processFinished(red);
             });
     });
     return promise;

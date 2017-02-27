@@ -50,6 +50,8 @@ import ObjectCard from './ObjectCard.jsx';
 import PredicateCard from './PredicateCard.jsx';
 import {ScreenClassRender} from 'react-grid-system';
 import FormStatement from './FormStatement';
+import Notification from './Notification.jsx';
+
 
 const style = {
     margin: 30,
@@ -505,6 +507,10 @@ handleEditNode = () => {
       });
     };
 
+    updateData = () => {
+      console.log('data');
+    };
+
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
         const {stepIndex} = this.state;
@@ -612,6 +618,7 @@ handleEditNode = () => {
                       margin: '10'
                   }} onTouchTap={this.dissolveModal}/>
                 </Dialog>
+                <Notification updateData={this.updateData.bind(this)} />
             </div>
         );
         // End of Return
