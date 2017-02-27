@@ -280,7 +280,11 @@ export default class SubjectNode extends React.Component {
                         selectedSubjectDetails['subtype'] = nodeType;
                         selectedSubjectDetails['attributes'] = response.attributes;
                         console.log(selectedSubjectDetails);
-                        this.setState({selectedSubjectDetails: selectedSubjectDetails, subjectCardJsx: 'old'});
+                        this.setState({
+                          selectedSubjectDetails: selectedSubjectDetails,
+                          subjectCardJsx: 'old',
+                          enablePredicate: true
+                        });
                     }
                 }
             });
@@ -580,7 +584,7 @@ handleEditNode = () => {
                     <br/>
                     <Row>
                         <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx} updateSubjectCard={this.updateSubject}/>
-                        <PredicateCard enable = {this.state.enablePredicate} predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx} updatePredicateCard={this.updatePredicate}/>
+                        <PredicateCard enable = {this.state.enablePredicate} predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx} updatePredicateCard={this.updatePredicate} selectedSubject = {this.state.selectedSubjectDetails}/>
                         <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx} updateObjectCard={this.updateObject} selectedSubject = {this.state.selectedSubjectDetails}/>
                     </Row>
                     <br/>
