@@ -23,6 +23,8 @@ export default class Notification extends React.Component {
   });
 
   socket.on('oxygen::progressUpdate', this._getMessage.bind(this));
+  socket.on('oxygen::dataEdited', this._getMessage.bind(this));
+
 
     socket.on('oxygen::dataUpdate', this.props.updateData.bind(this));
 

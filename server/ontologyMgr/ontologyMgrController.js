@@ -1,7 +1,7 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
 const logger = require('./../../applogger');
-
+const domainMongoController = require('../domains/domainMongoController');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
 const async = require('async');
@@ -25,6 +25,7 @@ let getAllDomainDetails = function(domain) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
+
             });
     });
     return promise;

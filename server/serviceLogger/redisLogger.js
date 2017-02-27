@@ -25,8 +25,6 @@ const updateData = function(data) {
 }
 
 
-
-
 module.exports = {
     processStart: processStart,
     processFinished: processFinished,
