@@ -105,7 +105,7 @@ export default class DomainMindMapGraph extends React.Component {
                 return "translate(" + d.y + "," + d.x + ")";
             });
 
-            nodeUpdate.select("circle").attr("r", 15).style("fill", function(d) {
+            nodeUpdate.select("circle").attr("r", 13).style("fill", function(d) {
                 return d._children
                     ? '#76d7c4'
                     : 'white';
