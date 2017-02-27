@@ -157,6 +157,7 @@ componentWillReceiveProps(nextProps){
 
   handleDelete(){
     let nodeDetails = {};
+    nodeDetails['domainName'] = this.props.selectedDomain;
     nodeDetails['nodetype'] = this.state.subtype;
     nodeDetails['nodename'] = this.state.subname;
     this.setState({
