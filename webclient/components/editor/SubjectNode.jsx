@@ -282,8 +282,7 @@ export default class SubjectNode extends React.Component {
                         console.log(selectedSubjectDetails);
                         this.setState({
                           selectedSubjectDetails: selectedSubjectDetails,
-                          subjectCardJsx: 'old',
-                          enablePredicate: true
+                          subjectCardJsx: 'old'
                         });
                     }
                 }
@@ -361,7 +360,11 @@ export default class SubjectNode extends React.Component {
                     } catch(e) {
                       selectedPredicateDetails['attributes'] = [];
                     }
-                    this.setState({selectedPredicateDetails: selectedPredicateDetails, predicateCardJsx: 'old'});
+                    this.setState({
+                      selectedPredicateDetails: selectedPredicateDetails,
+                      predicateCardJsx: 'old',
+                      enablePredicate: true,
+                    });
                 }
             });
         }
@@ -473,22 +476,20 @@ handleEditNode = () => {
     addNewObject = () => {
       this.setState({
         objectCardJsx: 'new',
-        enablePredicate: true,
         selectedObjectDetails: null,
       });
     }
 
     updateSubject = (details) => {
       this.setState({
-        selectedSubjectDetails: details,
-        enablePredicate: true
+        selectedSubjectDetails: details
       });
     }
 
     updateObject = (details) => {
       this.setState({
         selectedObjectDetails: details,
-        enablePredicate: true
+        enablePredicate: true,
       });
     }
 
@@ -583,9 +584,9 @@ handleEditNode = () => {
                     </Row>
                     <br/>
                     <Row>
-                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx} updateSubjectCard={this.updateSubject}/>
+                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx} updateSubjectCard={this.updateSubject} selectedDomain={this.state.selectedDomain}/>
                         <PredicateCard enable = {this.state.enablePredicate} predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx} updatePredicateCard={this.updatePredicate} selectedSubject = {this.state.selectedSubjectDetails}/>
-                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx} updateObjectCard={this.updateObject} selectedSubject = {this.state.selectedSubjectDetails}/>
+                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx} updateObjectCard={this.updateObject} selectedSubject = {this.state.selectedSubjectDetails} selectedDomain={this.state.selectedDomain}/>
                     </Row>
                     <br/>
                 </Paper>

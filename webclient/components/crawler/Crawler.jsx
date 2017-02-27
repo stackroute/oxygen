@@ -53,9 +53,9 @@ export default class Crawler extends React.Component {
 	}
 	render(){
 		const style = {
-			  height: 500,
-			  width: 500,
-			  margin: 20,
+			  height: 450,
+			  width: 650,
+			  margin: 10,
 			  textAlign: 'center',
 			  display: 'inline-block',
 			};
@@ -64,8 +64,8 @@ export default class Crawler extends React.Component {
 		let weights = [];
 		tags.map(function(tag, i) {
 			weights.push(<TableRow key={i}>
-							<TableRowColumn style={{textAlign: 'center'}}>{tag}</TableRowColumn>
-							<TableRowColumn style={{textAlign: 'center'}}>{th.state.pathWeights[tags[i]]}</TableRowColumn>
+							<TableRowColumn style={{textAlign: 'center',fontSize: 20}}>{tag}</TableRowColumn>
+							<TableRowColumn style={{textAlign: 'center',fontSize: 20}}>{th.state.pathWeights[tags[i]]}</TableRowColumn>
 						</TableRow>);
 		})
 		return (
@@ -93,8 +93,8 @@ export default class Crawler extends React.Component {
 					<Table>
 					    <TableHeader displaySelectAll={false}>
 					      <TableRow>
-					        <TableHeaderColumn>Path</TableHeaderColumn>
-					        <TableHeaderColumn>Weight</TableHeaderColumn>
+					        <TableHeaderColumn style={{fontSize: 25,marginLeft: 70}}>Path</TableHeaderColumn>
+					        <TableHeaderColumn style={{textAlign: 'center',fontSize: 25}}>Weight</TableHeaderColumn>
 					      </TableRow>
 					    </TableHeader>
 					    <TableBody displayRowCheckbox={false}>
