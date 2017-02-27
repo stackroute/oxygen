@@ -58,18 +58,18 @@ export default class Home extends React.Component {
             </Col>
             <Col md={6} lg={4} sm={6}>
               <h3>Indexing</h3>
-              <p>Indexes content to its usage based on purpose and also based on ontology.</p>
+              <p>Indexes the content to its usage based on purpose and also based on ontology.</p>
             </Col>
             <Col md={6} lg={4} sm={6}>
               <h3>Build and train ontology</h3>
-              <p>Build and train the ontology of a particular domain using ontology Trainer or Editor.</p>
+              <p>Build and train the ontology of a particular domain using Ontology Trainer.</p>
             </Col>
           </Row>
           <br/>
           <Row md={12} lg={12} sm={12}>
             <Col md={6} lg={4} sm={6}>
               <h3>Visualize ontology</h3>
-              <p>View the ontology or thr structure of a particular domain an it's corresponding resources.</p>
+              <p>View the ontology or the structure of a particular domain an it's corresponding resources.</p>
             </Col>
             <Col md={6} lg={4} sm={6}>
               <h3>Auto Sourcing</h3>
@@ -88,7 +88,7 @@ export default class Home extends React.Component {
             </Col>
             <Col md={6} lg={4} sm={6}>
               <h3>Feed URLs manually</h3>
-              <p>Manual add URLs for the documents that you wish to add.</p>
+              <p>Manual add URLs of the documents that you wish to add.</p>
             </Col>
             <Col md={6} lg={4} sm={6}>
               <h3>Export data to RDF</h3>
