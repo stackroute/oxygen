@@ -25,6 +25,7 @@ let getAllDomainDetails = function(domain) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
+
             });
     });
     return promise;

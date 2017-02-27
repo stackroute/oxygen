@@ -24,7 +24,7 @@ export default class SunburstView extends React.Component {
         // promise.then(function() {
 
         // })
-    };
+    }
 
     // componentWillReceiveProps(nextProps) {
     //     let th = this;
