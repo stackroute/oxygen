@@ -64,10 +64,10 @@ export default class SubjectCard extends React.Component {
     render() {
         let newSubject = '';
         if(this.state.subjectCardJsx == 'new'){
-          newSubject = <LoadSubjectProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard}/>;
+          newSubject = <LoadSubjectProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard} selectedDomain={this.props.selectedDomain}/>;
         }
         if(this.state.subjectCardJsx == 'old'){
-          newSubject = <LoadSubjectProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard}/>
+          newSubject = <LoadSubjectProps subjectDetails = {this.props.subjectCard} updateSubjectCard = {this.props.updateSubjectCard} selectedDomain={this.props.selectedDomain}/>
         }
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>

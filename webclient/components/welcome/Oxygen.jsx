@@ -28,7 +28,7 @@ export default class Oxygen extends React.Component {
     return(
      <ScreenClassRender style={divStyle}>
      <div>
-     <Link to= '/welcome' style={{ outline: 0, border: 'none'}}>
+     <Link to= '/Welcome' style={{ outline: 0, border: 'none'}}>
      <ScreenClassRender style={imgStyle}>
      <img src='./../assets/images/search.gif' />
      </ScreenClassRender>
