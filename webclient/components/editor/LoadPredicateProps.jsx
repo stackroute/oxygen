@@ -10,6 +10,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import Formsy from 'formsy-react';
 
+
 export default class LoadPredicateProps extends React.Component{
   constructor(props){
     super(props);
@@ -18,11 +19,13 @@ export default class LoadPredicateProps extends React.Component{
     this.resetPredicateProps = this.resetPredicateProps.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.savePredicate = this.savePredicate.bind(this);
+    this.setPredicates = this.setPredicates.bind(this);
     this.state = {
       name:'',
       propertyCount: 0,
       keyValue: [],
-      attributes: {}
+      attributes: {},
+      predicates: ''
     };
   }
 
@@ -45,32 +48,69 @@ export default class LoadPredicateProps extends React.Component{
       });
   }
 
-componentWillReceiveProps(nextProps){
-    if(nextProps.predicateDetails !== null){
+  componentWillReceiveProps(nextProps){
+      if(nextProps.predicateDetails !== null){
+        this.resetPredicateProps().then(result => {
+          console.log(nextProps.predicateDetails);
+          let that = this;
+          console.log(nextProps.predicateDetails['attributes']);
+          Object.keys(nextProps.predicateDetails['attributes']).forEach(function(key,index){
+            that.state.keyValue.push(that.tempFunc(key,nextProps.predicateDetails['attributes'][key],index));
+            that.setState(that.state);
+          });
+          let propertyCount = this.state.propertyCount;
+          this.setState({
+            name: nextProps.predicateDetails['name'],
+            propertyCount: propertyCount + Object.keys(this.state.attributes).length
+          });
+        }, err => {
+          console.log('here at promise fail');
+        }
+      );
+    }else{
       this.resetPredicateProps().then(result => {
-        console.log(nextProps.predicateDetails);
-        let that = this;
-        console.log(nextProps.predicateDetails['attributes']);
-        Object.keys(nextProps.predicateDetails['attributes']).forEach(function(key,index){
-          that.state.keyValue.push(that.tempFunc(key,nextProps.predicateDetails['attributes'][key],index));
-          that.setState(that.state);
-        });
-        let propertyCount = this.state.propertyCount;
-        this.setState({
-          name: nextProps.predicateDetails['name'],
-          propertyCount: propertyCount + Object.keys(this.state.attributes).length
-        });
-      }, err => {
-        console.log('here at promise fail');
-      }
-    );
-  }else{
-    this.resetPredicateProps().then(result => {
-      console.log('Done');
-    });
+        console.log('Done');
+      });
+    }
+    if(nextProps.selectedSubject['subtype'] !== undefined){
+      this.setPredicates(nextProps.selectedSubject['subtype']);
+    }
   }
 
-}
+  setPredicates(subject){
+    if(subject.toLowerCase() == 'concept'){
+      this.setState({
+        predicates: <FormsySelect
+              name="name"
+              required
+              floatingLabelText="Select Predicate"
+              style={{
+                textAlign: 'center'
+              }}
+              menuItems={this.selectFieldItems}
+              autoWidth={true}
+            >
+              <MenuItem value={'subconcept of'} primaryText="SubConcept Of" />
+              <MenuItem value={'related'} primaryText="Related" />
+            </FormsySelect>
+      });
+    }
+    if(subject.toLowerCase() == 'intent'){
+      this.setState({
+        predicates: <FormsySelect
+              name="name"
+              required
+              floatingLabelText="Select Predicate"
+              menuItems={this.selectFieldItems}
+              style={styles.customWidth}
+              autoWidth={true}
+            >
+              <MenuItem value={'indicatorOf'} primaryText="Indicator" />
+              <MenuItem value={'counterIndicatorOf'} primaryText="Counter Indicator" />
+            </FormsySelect>
+      });
+    }
+  }
 
   removeProperty(key){
     this.state.keyValue[key] = null;
@@ -142,21 +182,27 @@ componentWillReceiveProps(nextProps){
   }
 
   render(){
+    console.log('pred name ' + this.state.name.length);
     return (
       <div>
         <Formsy.Form
           onValid={this.enableButton}
           onValidSubmit={this.submitForm}
         >
-        <FormsyText
-          name="name"
-          defaultValue={this.state.name}
-          required
-          floatingLabelText="Predicate Name"
-          style={{
+        {
+          this.state.name.length > 0 &&
+          <FormsyText
+            name="name"
+            defaultValue={this.state.name}
+            readOnly
+            required
+            floatingLabelText="Predicate Name"
+            style={{
               width: '100%'
-          }}
-        />
+            }}
+            />
+        }
+      {this.state.name.length == 0 && this.state.predicates}
       {this.state.keyValue}
       <FlatButton label='Add Property'
          primary={true}
