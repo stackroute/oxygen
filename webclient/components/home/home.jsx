@@ -52,17 +52,47 @@ export default class Home extends React.Component {
         <div md={12} lg={12} sm={12} style={styles.container}>
           <h1 style={{fontSize:36}}>Capabilities of Oxygen:</h1>
           <Row md={12} lg={12} sm={12}>
-            <Col md={6} lg={4} sm={2}>
+            <Col md={6} lg={4} sm={6}>
               <h3>Content Suggeston:</h3>
-              <p>Suggests content for specified purpose and knowledge level</p>
+              <p>Suggests content for specified purpose and knowledge level.</p>
             </Col>
-            <Col md={6} lg={4} sm={2}>
-              <h3>Indexing:</h3>
-              <p>Indexes content to its usage based on purpose</p>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Indexing</h3>
+              <p>Indexes content to its usage based on purpose and also based on ontology.</p>
             </Col>
-            <Col md={6} lg={4} sm={2}>
-              <h3>Content Suggeston:</h3>
-              <p>Suggests content for specified purpose and knowledge level</p>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Build and train ontology</h3>
+              <p>Build and train the ontology of a particular domain using ontology Trainer or Editor.</p>
+            </Col>
+          </Row>
+          <br/>
+          <Row md={12} lg={12} sm={12}>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Visualize ontology</h3>
+              <p>View the ontology or thr structure of a particular domain an it's corresponding resources.</p>
+            </Col>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Auto Sourcing</h3>
+              <p>Documents of a particular domain are sourced automatically when that domain is added.</p>
+            </Col>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Highly Scalable</h3>
+              <p>Oxygen is capable of handling high data rate and also huge number of web documents.</p>
+            </Col>
+          </Row>
+          <br/>
+          <Row>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Focussed Crawling</h3>
+              <p>Captures the meaning of web documents by extracting the semantic importance of the words in them.</p>
+            </Col>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Feed URLs manually</h3>
+              <p>Manual add URLs for the documents that you wish to add.</p>
+            </Col>
+            <Col md={6} lg={4} sm={6}>
+              <h3>Export data to RDF</h3>
+              <p>Easily export data to RDF, which is the widely used data schema.</p>
             </Col>
           </Row>
         </div>
