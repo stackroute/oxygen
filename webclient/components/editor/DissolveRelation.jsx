@@ -33,7 +33,7 @@ const styles = {
   }
 }
 
-export default class DeletePredicate extends React.Component {
+export default class DissolveRelation extends React.Component {
   constructor(props) {
     super(props);
     this.deletePredicate = this.deletePredicate.bind(this);
@@ -43,15 +43,12 @@ export default class DeletePredicate extends React.Component {
     }
   }
 
-
-
-
-
   handleClose = () => {
     this.props.handleModal();
   };
 
   componentWillReceiveProps(nextProps){
+    console.log(nextProps.predicateDetails);
     if(nextProps.predicateDetails !== null){
       this.setState({
         predicateDetails: nextProps.predicateDetails,
@@ -62,32 +59,23 @@ export default class DeletePredicate extends React.Component {
   }
 
   deletePredicate(predicateDetails){
-    if(predicateDetails !== null){
-      let url = `domain/${predicateDetails.domainName}/subject/${predicateDetails.subnodetype}/${predicateDetails.subnodename}/object/${predicateDetails.objnodetype}/${predicateDetails.objnodename}/predicate/${predicateDetails.predicate}`;
+    if(predicateDetails['predicate'].length > 0){
+      let url = `/domain/${predicateDetails.domainName}/subject/${predicateDetails.subnodetype}/${predicateDetails.subnodename}/object/${predicateDetails.objnodetype}/${predicateDetails.objnodename}/predicate/${predicateDetails.predicate}`;
       console.log(url);
       Request.delete(url)
-
       .end((err, res) => {
         if (err) {
-          console.log("err");
             this.setState({errmsg: res.body, loading: 'hide'});
+            this.props.nullPredicate();
         } else {
-          console.log("Passing");
-          this.setState({openAddDialog: true});
+          console.log('here at delete');
+          this.props.nullPredicate();
         }
       });
-
-
     }
   }
 
   render(){
-    let textFields = null;
-
-    return (
-      <Dialog>
-
-      </Dialog>
-    );
+    return null;
   }
 }
