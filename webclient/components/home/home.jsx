@@ -8,7 +8,7 @@ const styles = {
         height: 400,
         margin: 0,
         background: '#009688',
-        fontFamily: 'sans-serif'
+        fontFamily: 'Georgia'
     },
     center: {
         marginLeft: 70,
@@ -53,7 +53,7 @@ export default class Home extends React.Component {
           <h1 style={{fontSize:36}}>Capabilities of Oxygen:</h1>
           <Row md={12} lg={12} sm={12}>
             <Col md={6} lg={4} sm={6}>
-              <h3>Content Suggeston:</h3>
+              <h3>Content Suggestion</h3>
               <p>Suggests content for specified purpose and knowledge level.</p>
             </Col>
             <Col md={6} lg={4} sm={6}>
