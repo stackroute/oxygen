@@ -338,7 +338,7 @@ export default class DomainHomeView extends React.Component {
     }
     console.log(this.state.selectedConceptText);
     if(this.state.domainName.length >= 1) {
-      showSunburst =  <Row style={{padding:"0 20px"}}>
+      showSunburst = <Row style={{padding:"0 20px"}}>
                         <Col sm={12} md={12} lg={12} xl={12} style={{marginLeft:0}} >
                           <SunburstView domainName={this.state.domainName}
                               sunSelectedConcept={(conceptName) => this.sunSelectedConcept(conceptName)}/>

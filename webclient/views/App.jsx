@@ -27,6 +27,7 @@ import {
     grey400,darkBlack
 } from 'material-ui/styles/colors';
 import Welcome from '../components/welcome/';
+import Home from '../components/home';
 import JobResult, {Job} from '../components/job/';
 import Crawler from '../components/crawler/';
 import Dashboard from '../components/dashboard/';
@@ -40,33 +41,8 @@ injectTapEventPlugin();
 
 const muiTheme = getMuiTheme({
     palette: {
-        // primary1Color: teal500,
-        // primary2Color: lime800,
-        // accent1Color: amber500,
-        // textColor: lime900,
-        // alternateTextColor: white,
-        // canvasColor: white,
-        // borderColor: indigo700,
-        // //  disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
-        // pickerHeaderColor: grey500
 
-    //  primary1Color: teal500,
-    //  primary2Color: cyan700,
-    //  primary3Color: grey400,
-    //  accent1Color: pinkA200,
-    //  accent2Color: grey100,
-    //  accent3Color: grey100,
-    //  textColor: darkBlack,
-    //  alternateTextColor: white,
-    //  canvasColor: white,
-    //  borderColor: grey300,
-    //  disabledColor: darkBlack,
-    //  pickerHeaderColor: cyan500,
-    //  clockCircleColor: darkBlack,
-    //  shadowColor: fullBlack,
-
-
-     primary1Color: teal500,
+      primary1Color: teal500,
        primary2Color: indigo700,
        primary3Color: grey400,
        accent1Color: indigo700,
@@ -90,7 +66,8 @@ const muiTheme = getMuiTheme({
 ReactDOM.render(
     <MuiThemeProvider muiTheme={muiTheme}>
     <Router history={hashHistory}>
-        <Route path="/" component={Welcome}>
+        <Route path="/" component={Home}/>
+        <Route path = "/welcome" component = {Welcome}>
             <IndexRoute component={Dashboard}/>
             <Route path="/job" component={Job}/>
             <Route path="/crawl" component={Crawler}/>

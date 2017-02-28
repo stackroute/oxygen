@@ -211,7 +211,8 @@ let getSubjectObjects = function(nodeObj) {
         session.run(query, params)
             .then(function(result) {
                 result.records.forEach(function(record) {
-                    if (obj.attributes ===null) {
+                    if (obj.attributes === null) {
+
                         obj.attributes = record._fields[0]['properties'];
                     }
                     if (obj['objects'].length == 0) {
@@ -781,7 +782,7 @@ let createResource = function(nodeObj) {
         query = 'match (d:Domain {name:{domainName}})'
         query += ' merge (s:'+ subtype+' {name:{subname}})'
         query += ' merge (s)-[r:'+ defaultPredicate +']->(d)'
-        query += ' set s += {props}'
+        query += ' set s = {props}'
         query += ' return s';
         let params = {
             domainName: domainName,
@@ -893,8 +894,8 @@ let formStatement = function(nodeObj) {
         query = ' match (s:'+ subtype+' {name:{subname}})'
         query += 'merge (o:'+ objtype+' {name:{objname}})'
         query += ' merge (o)-[r:'+ predicate +']->(s)'
-        query += ' set r += {predicateProps}'
-        query += ' set o += {objProps}'
+        query += ' set r = {predicateProps}'
+        query += ' set o = {objProps}'
         query += ' return o';
         let params = {
             domainName: domainName,

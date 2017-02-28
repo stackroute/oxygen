@@ -105,7 +105,7 @@ export default class DomainMindMapGraph extends React.Component {
                 return "translate(" + d.y + "," + d.x + ")";
             });
 
-            nodeUpdate.select("circle").attr("r", 15).style("fill", function(d) {
+            nodeUpdate.select("circle").attr("r", 13).style("fill", function(d) {
                 return d._children
                     ? '#76d7c4'
                     : 'white';
@@ -250,7 +250,8 @@ export default class DomainMindMapGraph extends React.Component {
     render() {
         return (
             <div className="domainView">
-                <center><h1 style={{marginTop:'5%',color: 'rgb(25,118, 210)'}}>Ontology Visualizer Of {this.state.domainName}</h1></center>
+
+                <h1 style={{marginTop:'5%',color: 'rgb(25,118, 210)', textAlign:'center'}}>Ontology Visualizer Of {this.state.domainName}</h1>
                 {this.state.graph}
             </div>
         );

@@ -79,7 +79,7 @@ export default class DeleteNode extends React.Component {
   }
 
   getOrphans(nodeDetails){
-    if(nodeDetails !== null){
+  if(nodeDetails.nodename !== undefined && nodeDetails.domainName !== undefined ){
       this.setState({
         selectedDomain: nodeDetails.domainName,
         deleteNode: nodeDetails.nodename,
