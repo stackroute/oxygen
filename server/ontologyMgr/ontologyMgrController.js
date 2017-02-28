@@ -109,6 +109,7 @@ let deleteObject = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
+                console.log(result);
                 let redis = {
                   // domain:'hello',
                   // actor: 'crawler',
