@@ -75,13 +75,13 @@ componentWillReceiveProps(nextProps){
     this.resetObjectProps().then(result => {
       console.log('Done');
     });
-    console.log('SUB type' + nextProps.selectedSubject['subtype']);
-    if(nextProps.selectedSubject['subtype'] == 'Intent'){
+
+    if(nextProps.selectedSubject !== null && nextProps.selectedSubject['subtype'] == 'Intent'){
       this.setState({
         probableObjects: <MenuItem value={'Term'} primaryText='Term' />
       });
     }
-    if(nextProps.selectedSubject['subtype'] == 'Concept'){
+    if(nextProps.selectedSubject !== null && nextProps.selectedSubject['subtype'] == 'Concept'){
       this.setState({
         probableObjects: <MenuItem value={'Concept'} primaryText='Concept' />
       });

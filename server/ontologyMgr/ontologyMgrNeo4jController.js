@@ -211,7 +211,8 @@ let getSubjectObjects = function(nodeObj) {
         session.run(query, params)
             .then(function(result) {
                 result.records.forEach(function(record) {
-                    if (obj.attributes ===null) {
+                    if (obj.attributes === null) {
+                        
                         obj.attributes = record._fields[0]['properties'];
                     }
                     if (obj['objects'].length == 0) {

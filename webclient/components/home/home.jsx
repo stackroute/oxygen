@@ -36,7 +36,7 @@ export default class Home extends React.Component {
 
     displayTitle = () => {
         return (
-            <div md={12} lg={12} sm={12} style={styles.title}>
+            <div style={styles.title}>
                 <center style={styles.center}>
                     <Link to={'/welcome'} style={styles.link}>
                         <img style={{width:200, height:200}} src={'../../assets/images/oxy.png'}/>
@@ -49,7 +49,7 @@ export default class Home extends React.Component {
 
     displayCapabilities=()=>{
       return(
-        <div md={12} lg={12} sm={12} style={styles.container}>
+        <div style={styles.container}>
           <h1 style={{fontSize:36}}>Capabilities of Oxygen:</h1>
           <Row md={12} lg={12} sm={12}>
             <Col md={6} lg={4} sm={6}>
