@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [
+    <!ENTITY oxy "http://oxygen.blr.stackroute.in/#/edit/:domainName#" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+]>
+
+<rdf:RDF
+    xmlns="http://oxygen.blr.stackroute.in/#/edit/:domainName#"
+    xmlns:oxy="http://oxygen.blr.stackroute.in/#/edit/:domainName#"
+    xml:base="http://oxygen.blr.stackroute.in/edit/:domainName#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+    <owl:Ontology>
+        <rdfs:comment>A Collection of Knowledge domains based on the semantic search</rdfs:comment>
+        <rdfs:label>OXYGEN</rdfs:label>
+    </owl:Ontology>
+
+    <owl:Class rdf:ID="Intent" rdf:about="http://oxygen.blr.stackroute.in/#/edit/:domainName/#intent">
+        <rdfs:Datatype rdf:resource="http://oxygen.blr.stackroute.in/#/edit/:domainName/#domain"/>
+        <rdfs:subClassOf rdf:ID="intentOf"/>
+        <rdfs:label xml:lang="en">Intent</rdfs:label>
+        <rdfs:comment xml:lang="en">It is a purpose or indicates the type of knowledge or specific thing one want to learn about or know about</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:ID="Concept" rdf:about="http://oxygen.blr.stackroute.in/#/edit/:domainName/#concept">
+        <rdfs:Datatype rdf:resource="http://oxygen.blr.stackroute.in/#/edit/:domainName/#domain"/>
+        <rdfs:subClassOf rdf:ID="conceptOf"/>
+        <rdfs:label xml:lang="en">Concept</rdfs:label>
+        <rdfs:comment xml:lang="en">It is building blocks of Domain Knowledge</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:ID="Concept" rdf:about="http://oxygen.blr.stackroute.in/#/edit/:domainName/#concept">
+        <rdfs:Datatype rdf:resource="http://oxygen.blr.stackroute.in/#/edit/:domainName/#concept"/>
+        <rdfs:subClassOf rdf:ID="subConceptOf"/>
+        <rdfs:label xml:lang="en">Concept</rdfs:label>
+        <rdfs:comment xml:lang="en">It is building blocks of Domain Knowledge</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:ID="Term" rdf:about="http://oxygen.blr.stackroute.in/#/edit/:domainName/#term">
+        <rdfs:Datatype rdf:resource="http://oxygen.blr.stackroute.in/#/edit/:domainName/#intent"/>
+        <rdfs:label xml:lang="en">Term</rdfs:label>
+        <rdfs:comment xml:lang="en">The words which are used in the intents. It can be either indicator or counter-indicator</rdfs:comment>
+    </owl:Class>
+
+    <owl:Class rdf:ID="Domain" rdf:about="http://oxygen.blr.stackroute.in/#/edit/:domainName#">
+        <rdfs:label xml:lang="en">Domain</rdfs:label>
+        <rdfs:comment xml:lang="en">Domain is any topic about which one want to build knowledge base</rdfs:comment>
+    </owl:Class>
+
+</rdf:RDF>

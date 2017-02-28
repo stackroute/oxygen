@@ -28,23 +28,7 @@ const docFont = {
 	marginRight: '20px',
 	width: '90%'
 };
-// const info = {
-// 	paddingLeft: 0,
-// 	paddingTop: 3
-// };
-// const iconStyles = {
-// 	width: '28px',
-// 	height: '28px',
-// 	marginTop: 5,
-// 	marginLeft: 3
-// };
-// const iconStyles1 = {
-// 	width: '28px',
-// 	height: '28px',
-// 	marginTop: '5px',
-// 	paddingLeft: 0,
-// 	float: 'left'
-// };
+
 const roundImg = {
 	borderRadius: '50%',
 	minWidth: '0%',
@@ -158,9 +142,7 @@ export default class DomainShow extends React.Component {
 		let docArr=docs.split(',');
 		this.setState({docs:docArr});
 	}
-	componentWillMount()
-	{
-	}
+
 	handleSubmit() {
 
 		let docs=
@@ -204,7 +186,7 @@ export default class DomainShow extends React.Component {
 		onClick={this.handleSubmit.bind(this)}
 		/>
 		];
-	//let UrlError= 'please enter a URL';
+
 	const items = [];
 
 	for (let i = 0; i < this.props.item.concepts.length; i+=1) {
@@ -335,7 +317,7 @@ export default class DomainShow extends React.Component {
 			<MenuItem primaryText="ReIndex"
 			leftIcon={<NavigationRefresh/>}
 			onTouchTap={this.handleOpen}/>
-		<MenuItem primaryText="Browser"
+			<MenuItem primaryText="Browser"
 			 containerElement={<Link to={'/domainhome/'+ this.props.item.name}/>}
 			leftIcon={<ImageEdit/>}
 			onTouchTap={this.handleEdit}/>
