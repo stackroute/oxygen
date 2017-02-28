@@ -1,0 +1,138 @@
+{
+    "rdf:RDF": {
+        "$": {
+            "xmlns": "http://oxygen.blr.stackroute.in/#/edit/:domainName#",
+            "xmlns:oxy": "http://oxygen.blr.stackroute.in/#/edit/:domainName#",
+            "xml:base": "http://oxygen.blr.stackroute.in/edit/:domainName#",
+            "xmlns:owl": "http://www.w3.org/2002/07/owl#",
+            "xmlns:rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "xmlns:rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+            "xmlns:xsd": "http://www.w3.org/2001/XMLSchema#"
+        },
+        "owl:Ontology": {
+            "rdfs:comment": "A Collection of Knowledge domains based on the semantic search",
+            "rdfs:label": "OXYGEN"
+        },
+        "owl:Class": [{
+            "$": {
+                "rdf:ID": "Intent",
+                "rdf:about": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#intent"
+            },
+            "rdfs:Datatype": {
+                "$": {
+                    "rdf:resource": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#domain"
+                }
+            },
+            "rdfs:subClassOf": {
+                "$": {
+                    "rdf:ID": "intentOf"
+                }
+            },
+            "rdfs:label": {
+                "_": "Intent",
+                "$": {
+                    "xml:lang": "en"
+                }
+            },
+            "rdfs:comment": {
+                "_": "It is a purpose or indicates the type of knowledge or specific thing one want to learn about or know about",
+                "$": {
+                    "xml:lang": "en"
+                }
+            }
+        }, {
+            "$": {
+                "rdf:ID": "Concept",
+                "rdf:about": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#concept"
+            },
+            "rdfs:Datatype": {
+                "$": {
+                    "rdf:resource": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#domain"
+                }
+            },
+            "rdfs:subClassOf": {
+                "$": {
+                    "rdf:ID": "conceptOf"
+                }
+            },
+            "rdfs:label": {
+                "_": "Concept",
+                "$": {
+                    "xml:lang": "en"
+                }
+            },
+            "rdfs:comment": {
+                "_": "It is building blocks of Domain Knowledge",
+                "$": {
+                    "xml:lang": "en"
+                }
+            }
+        }, {
+            "$": {
+                "rdf:ID": "Concept",
+                "rdf:about": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#concept"
+            },
+            "rdfs:Datatype": {
+                "$": {
+                    "rdf:resource": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#concept"
+                }
+            },
+            "rdfs:subClassOf": {
+                "$": {
+                    "rdf:ID": "subConceptOf"
+                }
+            },
+            "rdfs:label": {
+                "_": "Concept",
+                "$": {
+                    "xml:lang": "en"
+                }
+            },
+            "rdfs:comment": {
+                "_": "It is building blocks of Domain Knowledge",
+                "$": {
+                    "xml:lang": "en"
+                }
+            }
+        }, {
+            "$": {
+                "rdf:ID": "Term",
+                "rdf:about": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#term"
+            },
+            "rdfs:Datatype": {
+                "$": {
+                    "rdf:resource": "http://oxygen.blr.stackroute.in/#/edit/:domainName/#intent"
+                }
+            },
+            "rdfs:label": {
+                "_": "Term",
+                "$": {
+                    "xml:lang": "en"
+                }
+            },
+            "rdfs:comment": {
+                "_": "The words which are used in the intents. It can be either indicator or counter-indicator",
+                "$": {
+                    "xml:lang": "en"
+                }
+            }
+        }, {
+            "$": {
+                "rdf:ID": "Domain",
+                "rdf:about": "http://oxygen.blr.stackroute.in/#/edit/:domainName#"
+            },
+            "rdfs:label": {
+                "_": "Domain",
+                "$": {
+                    "xml:lang": "en"
+                }
+            },
+            "rdfs:comment": {
+                "_": "Domain is any topic about which one want to build knowledge base",
+                "$": {
+                    "xml:lang": "en"
+                }
+            }
+        }]
+    }
+}
