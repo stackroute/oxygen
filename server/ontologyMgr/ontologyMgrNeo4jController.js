@@ -212,7 +212,7 @@ let getSubjectObjects = function(nodeObj) {
             .then(function(result) {
                 result.records.forEach(function(record) {
                     if (obj.attributes === null) {
-                        
+
                         obj.attributes = record._fields[0]['properties'];
                     }
                     if (obj['objects'].length == 0) {
@@ -893,7 +893,7 @@ let formStatement = function(nodeObj) {
         logger.debug('obtained connection with neo4j');
         query = ' match (s:'+ subtype+' {name:{subname}})'
         query += 'merge (o:'+ objtype+' {name:{objname}})'
-        query += ' merge (o)-[r:'+ predicate +']->(s)'
+        query += ' merge (o)-[r: '+ predicate +']->(s)'
         query += ' set r = {predicateProps}'
         query += ' set o = {objProps}'
         query += ' return o';

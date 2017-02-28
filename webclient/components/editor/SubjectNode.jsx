@@ -504,6 +504,8 @@ handleEditNode = () => {
     }
 
     updatePredicate = (details) => {
+      console.log('Logginf');
+      console.log(details);
       this.setState({
         selectedPredicateDetails: details
       });
