@@ -6,15 +6,17 @@ import {Row, Col, Visible} from 'react-grid-system';
 const styles = {
     title: {
         width:'100%',
-        height: 450,
+        height: 400,
         margin: 0,
         background: '#009688',
-        fontFamily: 'Georgia'
+        fontFamily: 'Georgia',
+        fontWeight: 'normal'
     },
     h1:{
       fontSize:200,
       margin:0,
-      textAlign:'center'
+      textAlign:'center',
+      fontWeight: 'normal'
     },
     p: {
         marginTop: 0,
