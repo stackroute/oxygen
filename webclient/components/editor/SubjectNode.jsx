@@ -607,7 +607,7 @@ handleEditNode = () => {
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
-                        }} onTouchTap={this.formStatement}/>
+                        }} primary={true} onTouchTap={this.formStatement}/>
                     </Row>
                     <br/>
                     <Row>
