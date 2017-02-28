@@ -30,7 +30,7 @@ WITH Line, Line.`parent relation` as rl
 WHERE Line.name IS NOT NULL
 MATCH (c:Concept {name:Line.name})
 MATCH (pc:Concept {conceptid:Line.`parent node id`})
-FOREACH(ignoreme in CASE WHEN rl = "subconcept of" THEN [1] ELSE [] END | MERGE (c)-[:`subconcept of`]->(pc))
+FOREACH(ignoreme in CASE WHEN rl = "subconcept of" THEN [1] ELSE [] END | MERGE (c)-[:`SubConceptOf`]->(pc))
 FOREACH(ignoreme in CASE WHEN rl = "related" THEN [1] ELSE [] END | MERGE (c)-[:`related`]->(pc))
 
 ##Creating a Domain and create relation between domain and concepts

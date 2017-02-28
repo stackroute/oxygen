@@ -24,10 +24,16 @@ const updateData = function(data) {
     publishLog(channelName, data);
 }
 
+const editData = function(data) {
+    let channelName = 'oxygen:onDataEdit';
+    publishLog(channelName, data);
+}
+
 
 module.exports = {
     processStart: processStart,
     processFinished: processFinished,
-    updateData: updateData
+    updateData: updateData,
+		editData: editData
 
 }

@@ -50,6 +50,9 @@ import ObjectCard from './ObjectCard.jsx';
 import PredicateCard from './PredicateCard.jsx';
 import {ScreenClassRender} from 'react-grid-system';
 import FormStatement from './FormStatement';
+import Notification from './Notification.jsx';
+import {Link} from 'react-router';
+
 
 const style = {
     margin: 30,
@@ -518,6 +521,10 @@ handleEditNode = () => {
       });
     };
 
+    updateData = () => {
+      console.log('data');
+    };
+
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
         const {stepIndex} = this.state;
@@ -529,9 +536,19 @@ handleEditNode = () => {
                     color: 'rgb(25,118, 210)',
                     marginTop: '5%'
                 }}>
-                    <h1 styles={style}>{this.state.selectedDomain}</h1>
-                </div>
+                    <h1>{this.state.selectedDomain}
+                      <FlatButton label='Browser' primary={true} containerElement = {<Link to = {'/domainhome/'+this.state.selectedDomain}/>} style={{
+                              float: 'right',
+                              marginRight: 50
+                          }}/>
+                      <FlatButton label='Graph View' primary={true} containerElement = {<Link to = {'/domainview/'+this.state.selectedDomain}/>} style={{
+                              float: 'right',
+                              marginRight: 50
+                          }}/>
+                    </h1>
 
+                </div>
+<br/>
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
 
@@ -625,6 +642,7 @@ handleEditNode = () => {
                       margin: '10'
                   }} onTouchTap={this.dissolveModal}/>
                 </Dialog>
+                <Notification updateData={this.updateData.bind(this)} />
             </div>
         );
         // End of Return

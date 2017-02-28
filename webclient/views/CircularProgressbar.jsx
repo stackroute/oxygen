@@ -88,7 +88,7 @@ CircularProgressbar.propTypes = {
 
 CircularProgressbar.defaultProps = {
   strokeWidth: 3,
-  textForPercentage: (percentage) => `${percentage}%`,
+  textForPercentage: (percentage) => `${Math.round(percentage)}%`,
   initialAnimation: false,
 };
 

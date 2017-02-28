@@ -1,6 +1,7 @@
 'use strict';
 const ontologyMgrNeo4jController = require('./ontologyMgrNeo4jController');
 const logger = require('./../../applogger');
+const datapublisher = require('../serviceLogger/redisLogger');
 const domainMongoController = require('../domains/domainMongoController');
 const config = require('./../../config');
 const graphConsts = require('./../common/graphConstants');
@@ -25,7 +26,13 @@ let getAllDomainDetails = function(domain) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
-
+                let redisCrawl = {
+                  domain: dataObj.domain,
+                  actor: 'crawler',
+                  message: dataObj.url,
+                  status: 'crawling completed for the url'
+                };
+                datapublisher.processFinished(redisCrawl);
             });
     });
     return promise;
@@ -50,6 +57,14 @@ let getSubjectObjects = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
+                let redisCrawl = {
+                 domain:nodeObj.domainName,
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: retrivedRelations,
+                };
+                datapublisher.processFinished(redisCrawl);
             });
     });
     return promise;
@@ -94,6 +109,16 @@ let deleteObject = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
+                console.log(result);
+                let redis = {
+                 domain:deleteObj.domainName,
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: deleteObj.predicateName,
+                };
+                datapublisher.processFinished(redis);
+
                 });
              // end of async.waterfall
     });
@@ -113,6 +138,16 @@ let deleteOrphans = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
+                logger.debug('hello');
+                logger.debug(result)
+                let redis = {
+                   domain:deleteObj.domainName,
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: deleteObj.nodeName,
+                };
+                datapublisher.processFinished(redis);
                 });
             // end of async.waterfall
     });
@@ -167,6 +202,8 @@ let getAllOrphans = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrievedObjects);
+                  logger.debug('hello');
+                logger.debug(retrievedObjects);
             });
     });
     return promise;
@@ -212,6 +249,16 @@ let createResource = function(nodeObj) {
                     reject(err);
                 }
                 resolve(createdResource);
+                logger.debug( 'hello');
+                logger.debug( createdResource);
+                let redis = {
+                //  nodename:nodeObj.nodename,
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: createdResource,
+                };
+                datapublisher.processFinished(redis);
             });
     });
     return promise;
@@ -233,6 +280,16 @@ let formStatement = function(nodeObj) {
                     reject(err);
                 }
                 resolve(statement);
+                logger.debug('helloWorld');
+                logger.debug(statement);
+                let red = {
+              //  domain:nodeObj.nodename,
+                  // actor: 'crawler',
+                  // message: 'world',
+                  // status: 'crawling completed for the url'
+                  message: statement,
+                };
+                datapublisher.processFinished(red);
             });
     });
     return promise;
