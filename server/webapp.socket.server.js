@@ -18,12 +18,14 @@ io.on('connection', function(socket) {
 
   // subscribe to common updates from all the services (actors) of Oxygen
   redisClient.subscribe('oxygen:onServiceUpdate');
+  redisClient.subscribe('oxygen:onDataEdit');
 
 
   redisClient.on('message', function(channel, chDataStr) {
 
     let socketEventName = 'oxygen::progressUpdate';
     let socketEventName1 = 'oxygen::dataUpdate';
+    let socketEventName2 = 'oxygen::data'
 
     let chData = JSON.parse(chDataStr);
     let socketEventData = {
@@ -40,7 +42,7 @@ io.on('connection', function(socket) {
     logger.debug('Emiting Socket event: ', socketEventName, ' data: ', socketEventData);
     socket.emit(socketEventName, socketEventData);
     socket.emit(socketEventName1, socketEventData);
-
+    socket.emit(socketEventName2, socketEventData);
 
 
   });
