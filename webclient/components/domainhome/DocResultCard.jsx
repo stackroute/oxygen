@@ -86,7 +86,7 @@ export default class DocResultCard extends React.Component {
                   </ScreenClassRender>
                   <p><b>Type:</b>{this.typeFinder()}</p>
                  <Col lg={2} xl={2} md={2} style={{float:'right',textAlign: "center"}}>
-                <p> Rating</p>
+                <p>Confidence</p>
                 <CircularProgressbar percentage={this.props.webDoc.intensity} />
                 </Col>
                 </p>
