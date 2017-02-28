@@ -212,7 +212,7 @@ let getSubjectObjects = function(nodeObj) {
             .then(function(result) {
                 result.records.forEach(function(record) {
                     if (obj.attributes === null) {
-                        
+
                         obj.attributes = record._fields[0]['properties'];
                     }
                     if (obj['objects'].length == 0) {
