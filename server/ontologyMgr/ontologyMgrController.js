@@ -58,7 +58,7 @@ let getSubjectObjects = function(nodeObj) {
                 }
                 resolve(retrivedRelations);
                 let redisCrawl = {
-                  // domain:'hello',
+                 domain:nodeObj.domainName,
                   // actor: 'crawler',
                   // message: 'world',
                   // status: 'crawling completed for the url'
@@ -111,11 +111,11 @@ let deleteObject = function(deleteObj) {
                 resolve(result);
                 console.log(result);
                 let redis = {
-                  // domain:'hello',
+                 domain:deleteObj.domainName,
                   // actor: 'crawler',
                   // message: 'world',
                   // status: 'crawling completed for the url'
-                  message: 'deleted' + result,
+                  message: deleteObj.predicateName,
                 };
                 datapublisher.processFinished(redis);
 
@@ -138,12 +138,14 @@ let deleteOrphans = function(deleteObj) {
                     reject(err);
                 }
                 resolve(result);
+                logger.debug('hello');
+                logger.debug(result)
                 let redis = {
-                  // domain:'hello',
+                   domain:deleteObj.domainName,
                   // actor: 'crawler',
                   // message: 'world',
                   // status: 'crawling completed for the url'
-                  message: 'deleted' + result,
+                  message: deleteObj.nodeName,
                 };
                 datapublisher.processFinished(redis);
                 });
@@ -200,6 +202,8 @@ let getAllOrphans = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrievedObjects);
+                  logger.debug('hello');
+                logger.debug(retrievedObjects);
             });
     });
     return promise;
@@ -245,13 +249,14 @@ let createResource = function(nodeObj) {
                     reject(err);
                 }
                 resolve(createdResource);
-                console.log('hello');
+                logger.debug( 'hello');
+                logger.debug( createdResource);
                 let redis = {
-                  // domain:'hello',
+                //  nodename:nodeObj.nodename,
                   // actor: 'crawler',
                   // message: 'world',
                   // status: 'crawling completed for the url'
-                  message: 'created' + createdResource,
+                  message: createdResource,
                 };
                 datapublisher.processFinished(redis);
             });
@@ -275,8 +280,10 @@ let formStatement = function(nodeObj) {
                     reject(err);
                 }
                 resolve(statement);
+                logger.debug('helloWorld');
+                logger.debug(statement);
                 let red = {
-                  // domain:'hello',
+              //  domain:nodeObj.nodename,
                   // actor: 'crawler',
                   // message: 'world',
                   // status: 'crawling completed for the url'
