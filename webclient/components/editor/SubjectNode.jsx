@@ -531,7 +531,7 @@ handleEditNode = () => {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: 'rgb(25,118, 210)',
+                    color: 'rgb(0,128, 128)',
                     marginTop: '5%'
                 }}>
                     <h1>{this.state.selectedDomain}

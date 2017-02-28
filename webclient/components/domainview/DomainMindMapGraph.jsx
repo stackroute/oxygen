@@ -251,7 +251,7 @@ export default class DomainMindMapGraph extends React.Component {
         return (
             <div className="domainView">
 
-                <h1 style={{marginTop:'5%',color: 'rgb(25,118, 210)', textAlign:'center'}}>Ontology Visualizer Of {this.state.domainName}</h1>
+                <h1 style={{marginTop:'5%',color: 'rgb(0,128, 128)', textAlign:'center',fontFamily: 'sans-serif'}}>Ontology Visualizer Of {this.state.domainName}</h1>
                 {this.state.graph}
             </div>
         );

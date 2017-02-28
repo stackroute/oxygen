@@ -63,7 +63,7 @@ const fonts={
 
 	textAlign: "center",
 	fontFamily: "sans-serif",
-	color: "#1976d2 "
+	color: "rgb(0,128, 128)"
 
 }
 const style = {
