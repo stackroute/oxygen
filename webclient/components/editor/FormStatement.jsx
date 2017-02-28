@@ -82,6 +82,11 @@ export default class FormStatement extends React.Component{
       if(this.state.subject !== null){
         this.createResource().then(result => {
           if(result.name == this.state.subject['subname']){
+            this.setState({
+              open: true,
+              ready: false,
+              message: 'Resource Created'
+            });
             if(this.state.object !== null && this.state.predicate !== null){
               this.formStatement();
             }
