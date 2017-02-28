@@ -57,14 +57,14 @@ let getSubjectObjects = function(nodeObj) {
                     reject(err);
                 }
                 resolve(retrivedRelations);
-                let redisCrawl = {
-                 domain:nodeObj.domainName,
-                  // actor: 'crawler',
-                  // message: 'world',
-                  // status: 'crawling completed for the url'
-                  message: retrivedRelations,
-                };
-                datapublisher.processFinished(redisCrawl);
+                // let redisCrawl = {
+                //  domain:nodeObj.domainName,
+                //   // actor: 'crawler',
+                //   // message: 'world',
+                //   // status: 'crawling completed for the url'
+                //   message: retrivedRelations,
+                // };
+                // datapublisher.processFinished(redisCrawl);
             });
     });
     return promise;
@@ -287,7 +287,7 @@ let formStatement = function(nodeObj) {
                   // actor: 'crawler',
                   // message: 'world',
                   // status: 'crawling completed for the url'
-                  message: statement,
+                  message: nodeObj.nodename,
                 };
                 datapublisher.processFinished(red);
             });
