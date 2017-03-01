@@ -34,6 +34,6 @@ module.exports = {
     processStart: processStart,
     processFinished: processFinished,
     updateData: updateData,
-		editData: editData
+    editData:  editData 
 
 }

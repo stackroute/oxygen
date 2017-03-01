@@ -25,7 +25,7 @@ io.on('connection', function(socket) {
 
     let socketEventName = 'oxygen::progressUpdate';
     let socketEventName1 = 'oxygen::dataUpdate';
-    let socketEventName2 = 'oxygen::data'
+    let socketEventName2 = 'oxygen::d'
 
     let chData = JSON.parse(chDataStr);
     let socketEventData = {
@@ -42,7 +42,6 @@ io.on('connection', function(socket) {
     logger.debug('Emiting Socket event: ', socketEventName, ' data: ', socketEventData);
     socket.emit(socketEventName, socketEventData);
     socket.emit(socketEventName1, socketEventData);
-    socket.emit(socketEventName2, socketEventData);
 
 
   });
