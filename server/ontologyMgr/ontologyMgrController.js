@@ -287,7 +287,7 @@ let formStatement = function(nodeObj) {
                   // actor: 'crawler',
                   // message: 'world',
                   // status: 'crawling completed for the url'
-                  message: nodeObj.nodename,
+                  message: statement,
                 };
                 datapublisher.processFinished(red);
             });

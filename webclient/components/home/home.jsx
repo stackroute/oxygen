@@ -19,11 +19,13 @@ const styles = {
       fontWeight: 'normal'
     },
     h3:{
-      textAlign:'center'
+      textAlign:'center',
+      color:'#7f8c8d'
     },
     p: {
         marginTop: 0,
-        textAlign:'center'
+        textAlign:'justify',
+        color:'#7f8c8d'
     },
     link:{
       color: 'white',
@@ -63,7 +65,7 @@ export default class Home extends React.Component {
               <p style={styles.p}>Suggests content for specified purpose and knowledge level.</p>
             </Col>
             <Col md={4} lg={4} sm={12} xs={12}>
-              <center><img src='../../assets/images/landingpage/indexing.png'></img></center>
+              <center><img style={styles.img} src='../../assets/images/landingpage/indexing.png'></img></center>
               <h3 style={styles.h3}>Indexing</h3>
               <p style={styles.p}>Indexes the content to its usage based on purpose and also based on ontology.</p>
             </Col>
