@@ -48,31 +48,30 @@ export default class DissolveRelation extends React.Component {
   };
 
   componentWillReceiveProps(nextProps){
-    console.log(nextProps.predicateDetails);
-    if(nextProps.predicateDetails !== null){
+    if(nextProps.dissolvePredicate && nextProps.predicateDetails !== null){
       this.setState({
         predicateDetails: nextProps.predicateDetails,
         open: nextProps.open
       });
-      this.deletePredicate(nextProps.predicateDetails);
-    }
-  }
-
-  deletePredicate(predicateDetails){
-    if(predicateDetails['predicate'].length > 0){
-      let url = `/domain/${predicateDetails.domainName}/subject/${predicateDetails.subnodetype}/${predicateDetails.subnodename}/object/${predicateDetails.objnodetype}/${predicateDetails.objnodename}/predicate/${predicateDetails.predicate}`;
+    
+      let url = `/domain/${nextProps.predicateDetails.domainName}/subject/${nextProps.predicateDetails.subtype}/${nextProps.predicateDetails.subname}/object/${nextProps.predicateDetails.objtype}/${nextProps.predicateDetails.objname}/predicate/${nextProps.predicateDetails.name}`;
       console.log(url);
       Request.delete(url)
       .end((err, res) => {
         if (err) {
             this.setState({errmsg: res.body, loading: 'hide'});
-            this.props.nullPredicate();
+            nextProps.nullPredicate();
         } else {
           console.log('here at delete');
-          this.props.nullPredicate();
+          nextProps.nullPredicate();
         }
       });
     }
+  }
+
+  deletePredicate(predicateDetails){
+    console.log(predicateDetails);
+
   }
 
   render(){
