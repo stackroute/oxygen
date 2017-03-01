@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import FlatButton from 'material-ui/FlatButton';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {Row, Col, Visible} from 'react-grid-system';
 
@@ -16,6 +17,7 @@ const styles = {
       fontSize:200,
       margin:0,
       textAlign:'center',
+      color:'white',
       fontWeight: 'normal'
     },
     h3:{
@@ -27,17 +29,14 @@ const styles = {
         textAlign:'justify',
         color:'#7f8c8d'
     },
-    link:{
-      color: 'white',
-      textDecoration: 'none'
-    },
     container:{
       marginTop:0,
       marginLeft: 50,
       marginRight: 50,
       fontFamily: 'sans-serif'
     },
-    img:{margin:32}
+    img:{margin:32},
+    button:{color:'white', fontFamily: 'Georgia'}
 };
 
 export default class Home extends React.Component {
@@ -46,10 +45,10 @@ export default class Home extends React.Component {
         return (
             <div style={styles.title}>
               <Col lg={12} md={12} sm={12} xs={12}>
-                    <Link to={'/welcome'} style={styles.link}>
-                        <h1 style={styles.h1}>O</h1>
-                        <h1 style={{fontSize:80, margin:0, textAlign:'center'}}>Oxygen 2.0</h1>
-                    </Link>
+                <h1 style={styles.h1}>O</h1>
+                <h1 style={{color:'white', fontSize:80, margin:0, textAlign:'center'}}>Oxygen 2.0</h1>
+                <br/>
+                  <center><FlatButton label='Start Breathing...' primary={false} containerElement= {<Link to = {'/Welcome'}/>} style={styles.button}/></center>
               </Col>
             </div>
         );
