@@ -117,7 +117,7 @@ let deleteObject = function(deleteObj) {
                   // status: 'crawling completed for the url'
                   message: deleteObj.predicateName,
                 };
-                datapublisher.processFinished(redis);
+                datapublisher.editData(redis);
 
                 });
              // end of async.waterfall
@@ -147,7 +147,7 @@ let deleteOrphans = function(deleteObj) {
                   // status: 'crawling completed for the url'
                   message: deleteObj.nodeName,
                 };
-                datapublisher.processFinished(redis);
+                datapublisher.editData(redis);
                 });
             // end of async.waterfall
     });
@@ -258,7 +258,7 @@ let createResource = function(nodeObj) {
                   // status: 'crawling completed for the url'
                   message: createdResource,
                 };
-                datapublisher.processFinished(redis);
+                datapublisher.editData(redis);
             });
     });
     return promise;
@@ -289,7 +289,7 @@ let formStatement = function(nodeObj) {
                   // status: 'crawling completed for the url'
                   message: statement,
                 };
-                datapublisher.processFinished(red);
+                datapublisher.editData(red);
             });
     });
     return promise;
