@@ -44,6 +44,7 @@ let getAllDomainDetails = function(nodeObj) {
                     if (obj['subjects'].length == 0) {
                         let tempObj = {
                             name: record._fields[2]['properties']['name'],
+                            attributes: record._fields[2]['properties'],
                             label: record._fields[2]['labels'][0],
                             predicates: [record._fields[1]]
                         };
@@ -60,6 +61,7 @@ let getAllDomainDetails = function(nodeObj) {
                         if (!found) {
                             let tempObj = {
                                 name: record._fields[2]['properties']['name'],
+                                attributes: record._fields[2]['properties'],
                                 label: record._fields[2]['labels'][0],
                                 predicates: [record._fields[1]]
                             }
@@ -893,7 +895,7 @@ let formStatement = function(nodeObj) {
         logger.debug('obtained connection with neo4j');
         query = ' match (s:'+ subtype+' {name:{subname}})'
         query += 'merge (o:'+ objtype+' {name:{objname}})'
-        query += ' merge (o)-[r:'+ predicate +']->(s)'
+        query += ' merge (o)-[r: '+ predicate +']->(s)'
         query += ' set r = {predicateProps}'
         query += ' set o = {objProps}'
         query += ' return o';

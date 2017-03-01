@@ -29,7 +29,7 @@ import FlatButton from 'material-ui/FlatButton';
     margin: 0,
     textAlign: 'center',
     fontFamily: 'sans-serif',
-    color: '#1976d2'
+    color: 'rgb(0,128, 128)'
   };
   const iconStyle = {
       iconSize: {
@@ -86,11 +86,11 @@ import FlatButton from 'material-ui/FlatButton';
     }
   };
   const styleFunction = (screenClass) => {
-    if (screenClass === 'xl') {return { fontSize: '37px', textAlign: 'left', color: '#8aa6bd' };}
-    if (screenClass === 'lg') {return { fontSize: '35px', textAlign: 'left', color: '#8aa6bd' };}
-    if (screenClass === 'md') {return { fontSize: '30px', textAlign: 'left', color: '#8aa6bd' };}
-    if (screenClass === 'sm') {return { fontSize: '28px', textAlign: 'left', color: '#8aa6bd' };}
-    return { fontSize: '25px', textAlign: 'left', color: '#8aa6bd' };
+    if (screenClass === 'xl') {return { fontSize: '37px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    if (screenClass === 'lg') {return { fontSize: '35px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    if (screenClass === 'md') {return { fontSize: '30px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    if (screenClass === 'sm') {return { fontSize: '28px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    return { fontSize: '25px', textAlign: 'left', color: 'rgb(0,128, 128)' };
   };
 
 export default class DomainHomeView extends React.Component {

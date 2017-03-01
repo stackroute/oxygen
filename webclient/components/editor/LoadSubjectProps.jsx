@@ -21,6 +21,7 @@ export default class LoadSubjectProps extends React.Component{
     this.saveSubject = this.saveSubject.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleModal = this.handleModal.bind(this);
+    this.selectNode = this.selectNode.bind(this);
     this.state = {
       propertyCount: 0,
       keyValue: [],
@@ -29,7 +30,8 @@ export default class LoadSubjectProps extends React.Component{
       attributes: {},
       formData: {},
       open: false,
-      nodeDetails: {}
+      nodeDetails: {},
+      edited: false
     };
   }
 
@@ -83,6 +85,9 @@ componentWillReceiveProps(nextProps){
   removeProperty(key){
     this.state.keyValue[key] = null;
     this.setState(this.state);
+    this.setState({
+      edited: true
+    });
   }
 
   tempFunc(key,value,index){
@@ -92,6 +97,7 @@ componentWillReceiveProps(nextProps){
         name= {'k' + index}
         defaultValue = {key}
         required
+        onChange={this.selectNode}
         floatingLabelText="property name"
         style={{
             width: '40%'
@@ -101,6 +107,7 @@ componentWillReceiveProps(nextProps){
         name={'v' + index}
         defaultValue = {value}
         required
+        onChange={this.selectNode}
         floatingLabelText="property value"
         style={{
             width: '40%'
@@ -124,7 +131,7 @@ componentWillReceiveProps(nextProps){
     };
     Object.keys(data).forEach(function(key,index){
       if(index < 1){
-        formData[key] = data[key];
+
       }else{
         let k = key.substr(1,key.length);
         let v = data['v'+k];
@@ -135,6 +142,7 @@ componentWillReceiveProps(nextProps){
     });
     formData['subtype'] = this.state.subtype;
     formData['subname'] = data['subname'];
+    formData['attributes']['name'] = data['subname'];
     if(this.state.subtype.length == 0){
       formData['subtype'] = data['subtype'];
     }
@@ -142,7 +150,6 @@ componentWillReceiveProps(nextProps){
   }
 
   saveSubject(formData){
-    console.log(formData);
     this.props.updateSubjectCard(formData);
   }
 
@@ -152,6 +159,7 @@ componentWillReceiveProps(nextProps){
     this.setState(this.state);
     this.setState({
       propertyCount: propertyCount + 1,
+      edited: true
     });
   }
 
@@ -172,6 +180,12 @@ componentWillReceiveProps(nextProps){
     });
   }
 
+  selectNode(node){
+    this.setState({
+      edited: true
+    });
+  }
+
   render(){
     return (
       <div>
@@ -183,6 +197,7 @@ componentWillReceiveProps(nextProps){
             name="subtype"
             required
             floatingLabelText="Select Type"
+            onChange={this.selectNode}
             menuItems={this.selectFieldItems}
             style={{
                 width: '100%'
@@ -196,6 +211,7 @@ componentWillReceiveProps(nextProps){
           name="subname"
           defaultValue={this.state.subname}
           required
+          onChange={this.selectNode}
           hintText="A Subject Name"
           floatingLabelText="Subject Name"
           style={{
@@ -211,12 +227,17 @@ componentWillReceiveProps(nextProps){
          }}
          />
        <Divider/>
-       <FlatButton type="submit" label="save" style={{
-           float: 'right'
-       }}/>
-     <FlatButton label='Delete' onTouchTap={this.handleDelete} style={{
-           float: 'right'
-       }}/>
+       {this.state.edited &&
+           <FlatButton primary={true} type="submit" label="Apply"
+             style={{
+               float: 'right'
+             }}/>
+         }
+         {this.state.propertyCount > 0 &&
+           <FlatButton label='Delete' onTouchTap={this.handleDelete} style={{
+               float: 'right'
+             }}/>
+         }
       </Formsy.Form>
       <DeleteNode open = {this.state.open} nodeDetails={this.state.nodeDetails} handleModal = {this.handleModal}/>
       </div>

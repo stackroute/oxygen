@@ -121,9 +121,6 @@ export default class SubjectNode extends React.Component {
             stepNumber: 0,
             objectPredicates: [],
             nodeDetails: null,
-            openAddSubject: false,
-            openAddObject: false,
-            openAddPredicate: false,
             nodePredicateDetails: null,
             selectedSubjectDetails: null,
             selectedObjectDetails: null,
@@ -135,7 +132,9 @@ export default class SubjectNode extends React.Component {
             addNewSubject: false,
             addNewObject: false,
             enablePredicate: false,
-            dissolveModalOpen: false
+            dissolveModalOpen: false,
+            subjectDetailList: [],
+            applyChangesDisabled: true
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -158,7 +157,13 @@ export default class SubjectNode extends React.Component {
                         let nodekey = response['subjects'][each].label;
                         listSubjects.push(nodekey.charAt(0) + ': ' + response['subjects'][each]['name']);
                     }
-                    this.setState({selectedSubjectDetails: response.attributes, subjectList: listSubjects, searchObjectText: '', loading: 'hide'});
+                    this.setState({
+                      selectedSubjectDetails: response.attributes,
+                      subjectList: listSubjects,
+                      searchObjectText: '',
+                      loading: 'hide',
+                      subjectDetailList: response['subjects']
+                    });
                 }
             }
         });
@@ -246,7 +251,8 @@ export default class SubjectNode extends React.Component {
             addLabel: 'Add Intent', floatingLabelTextSubject: 'Subjects loaded',
             // stepNumber:0
         });
-  };
+      };
+
     // Use this to send for object creation line 220
     handleUpdateSubjectInput = (searchText) => {
         let selectedSubjectDetails = {};
@@ -270,32 +276,16 @@ export default class SubjectNode extends React.Component {
                 default:
             }
 
-            Request.get(url).end((err, res) => {
-                if (err) {
-                    this.setState({errmsg: res.body, loading: 'hide'});
-                } else {
-                    let response = JSON.parse(res.text);
-                    // console.log(response);
-                    if (response.length == 0) {
-                      selectedSubjectDetails['subname'] = nodeName;
-                      selectedSubjectDetails['subtype'] = nodeType;
-                      selectedSubjectDetails['attributes'] = response.attributes;
-                      this.setState({
-                        selectedSubjectDetails: selectedSubjectDetails,
-                        subjectCardJsx: 'old',
-                        floatingLabelTextObject: 'No Results'
-                      });
-                    } else {
-                        selectedSubjectDetails['subname'] = nodeName;
-                        selectedSubjectDetails['subtype'] = nodeType;
-                        selectedSubjectDetails['attributes'] = response.attributes;
-                        console.log(selectedSubjectDetails);
-                        this.setState({
-                          selectedSubjectDetails: selectedSubjectDetails,
-                          subjectCardJsx: 'old'
-                        });
-                    }
-                }
+            let details = this.state.subjectDetailList.find((node) => {
+              return node.name === nodeName;
+            });
+
+            selectedSubjectDetails['subname'] = nodeName;
+            selectedSubjectDetails['subtype'] = nodeType;
+            selectedSubjectDetails['attributes'] = details.attributes;
+            this.setState({
+              selectedSubjectDetails: selectedSubjectDetails,
+              subjectCardJsx: 'old'
             });
         }
     };
@@ -383,79 +373,6 @@ export default class SubjectNode extends React.Component {
     //
     // };
 
-    handleDeleteSubject = () => {
-        if (this.state.selectedSubject.length == 0) {
-            // console.log(nodename);
-        } else {
-            let nodetype = '';
-            let nodename = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-            // console.log(nodename);
-            if (this.state.selectedSubject.charAt(0) == 'I') {
-                nodetype = 'Intent';
-            } else {
-                nodetype = 'Concept';
-            }
-            let nodeDetails = {
-                domainName: this.state.selectedDomain,
-                nodetype: nodetype,
-                nodename: nodename
-            };
-            this.setState({nodeDetails: nodeDetails, deleteModalOpen: true});
-        }
-    };
-handleEditNode = () => {
-        if (this.state.selectedSubject.length === 0) {
-            // console.log(nodename);
-        } else {
-            let nodeType = '',
-                nodeName = this.state.selectedSubject.substr(3, this.state.selectedSubject.length);
-            if (this.state.selectedSubject.charAt(0) == 'I') {
-                nodeType = 'Intent';
-            } else if (this.state.selectedSubject.charAt(0) == 'C') {
-                nodeType = 'concept';
-            }
-            let nodeDetails = {
-                domainName: this.state.selectedDomain,
-                nodeType: nodeType,
-                nodeName: nodeName
-            };
-            this.setState({nodeDetails: nodeDetails, editModalOpen: true});
-        }
-    }
-
-    handleDeleteObject = () => {
-        if (this.state.selectedObject.length == 0) {
-          // console.log(nodename);
-        } else {
-            let nodetype = '';
-            let nodename = this.state.selectedObject.substr(3, this.state.selectedObject.length);
-            // console.log(nodename);
-            if (this.state.selectedObject.charAt(0) == 'T') {
-                nodetype = 'Term';
-            } else {
-                nodetype = 'Concept';
-            }
-            let nodeDetails = {
-                domainName: this.state.selectedDomain,
-                nodetype: nodetype,
-                nodename: nodename
-            };
-            this.setState({nodeDetails: nodeDetails, deleteModalOpen: true});
-        }
-    };
-
-    handleDeletePredicate = () => {
-        let nodePredicateDetails = {
-            domainName: this.state.selectedDomain,
-            subnodetype: this.state.selectedSubjectDetails['subtype'],
-            subnodename: this.state.selectedSubjectDetails['subname'],
-            objnodetype: this.state.selectedObjectDetails['objtype'],
-            objnodename: this.state.selectedObjectDetails['objname'],
-            predicate: this.state.selectedPredicateDetails['name']
-        };
-        this.setState({nodePredicateDetails: nodePredicateDetails});
-        console.log(nodePredicateDetails);
-    }
     handleUpdateDeletePredicate = () => {
         this.setState({
           selectedPredicate: null,
@@ -495,7 +412,9 @@ handleEditNode = () => {
 
     updateSubject = (details) => {
       this.setState({
-        selectedSubjectDetails: details
+        selectedSubjectDetails: details,
+        subjectCardJsx: 'old',
+        applyChangesDisabled: false
       });
     }
 
@@ -503,12 +422,15 @@ handleEditNode = () => {
       this.setState({
         selectedObjectDetails: details,
         enablePredicate: true,
+        objectCardJsx: 'old',
+        applyChangesDisabled: false
       });
     }
 
     updatePredicate = (details) => {
       this.setState({
-        selectedPredicateDetails: details
+        selectedPredicateDetails: details,
+        applyChangesDisabled: false
       });
     }
 
@@ -531,7 +453,7 @@ handleEditNode = () => {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: 'rgb(25,118, 210)',
+                    color: 'rgb(0,128, 128)',
                     marginTop: '5%'
                 }}>
                     <h1>{this.state.selectedDomain}
@@ -546,7 +468,7 @@ handleEditNode = () => {
                     </h1>
 
                 </div>
-<br/>
+                <br/>
                 <Paper style={style}>
                     <HorizontalLinearStepper stepNumber={this.state.stepNumber}/>
 
@@ -596,24 +518,42 @@ handleEditNode = () => {
                     <Row style={{
                         marginLeft: '80%'
                     }}>
-
+                      {
+                        this.state.selectedPredicateDetails !== null &&
                         <RaisedButton label='Dissolve' style={{
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
                         }} onTouchTap={this.dissolveModal}/>
-
-                        <RaisedButton label='Apply' style={{
+                      }
+                        <RaisedButton label='Save' primary={true} disabled={this.state.applyChangesDisabled} style={{
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
-                        }} onTouchTap={this.formStatement}/>
+                        }} primary={true} onTouchTap={this.formStatement}/>
                     </Row>
                     <br/>
                     <Row>
-                        <SubjectCard subjectCard={this.state.selectedSubjectDetails} subjectCardJsx={this.state.subjectCardJsx} updateSubjectCard={this.updateSubject} selectedDomain={this.state.selectedDomain}/>
-                        <PredicateCard enable = {this.state.enablePredicate} predicateCard={this.state.selectedPredicateDetails} predicateCardJsx={this.state.predicateCardJsx} updatePredicateCard={this.updatePredicate} selectedSubject = {this.state.selectedSubjectDetails}/>
-                        <ObjectCard objectCard={this.state.selectedObjectDetails} objectCardJsx={this.state.objectCardJsx} updateObjectCard={this.updateObject} selectedSubject = {this.state.selectedSubjectDetails} selectedDomain={this.state.selectedDomain}/>
+                        <SubjectCard
+                          subjectCard={this.state.selectedSubjectDetails}
+                          subjectCardJsx={this.state.subjectCardJsx}
+                          updateSubjectCard={this.updateSubject}
+                          selectedDomain={this.state.selectedDomain}
+                        />
+                        <PredicateCard
+                          enable = {this.state.enablePredicate}
+                          predicateCard={this.state.selectedPredicateDetails}
+                          predicateCardJsx={this.state.predicateCardJsx}
+                          updatePredicateCard={this.updatePredicate}
+                          selectedSubject = {this.state.selectedSubjectDetails}
+                        />
+                        <ObjectCard
+                          objectCard={this.state.selectedObjectDetails}
+                          objectCardJsx={this.state.objectCardJsx}
+                          updateObjectCard={this.updateObject}
+                          selectedSubject = {this.state.selectedSubjectDetails}
+                          selectedDomain={this.state.selectedDomain}
+                        />
                     </Row>
                     <br/>
                 </Paper>

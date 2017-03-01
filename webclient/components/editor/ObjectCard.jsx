@@ -35,6 +35,7 @@ export default class ObjectCard extends React.Component {
               opacity: 0.2
             },
             propertyCount: 0,
+            title: 'Object'
         };
     }
     handleChange = (event, index, value) => this.setState({value: 3});
@@ -56,7 +57,8 @@ export default class ObjectCard extends React.Component {
         if(nextProps.objectCardJsx == 'old'){
             this.setState({
               style: style,
-              objectCardJsx: 'old'
+              objectCardJsx: 'old',
+              title: nextProps.objectCard['objtype'] + ': '+ nextProps.objectCard['objname']
             });
         }
     }
@@ -72,9 +74,8 @@ export default class ObjectCard extends React.Component {
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
               <Card style={this.state.style}>
-                  <CardHeader title='Object' titleStyle={{
-                      fontSize: 20,
-                      marginLeft: '50%'
+                  <CardHeader title={this.state.title} titleStyle={{
+                      fontSize: 18,
                   }}/>
                   <CardText>
                     {newObject}

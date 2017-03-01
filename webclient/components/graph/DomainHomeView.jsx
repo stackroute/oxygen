@@ -7,14 +7,14 @@ export default class DomainHomeView extends React.Component {
         super(props);
         this.state = {
 
-            
+
         }
-       
+
     }
-    
-    
+
+
     render(){
-      
+
         return (
         	<TextField
 					hintText="Enter name of node"
@@ -23,7 +23,7 @@ export default class DomainHomeView extends React.Component {
 					onChange = {this.handleChange}
 				/>
 
-            
+
         )
     }
 }

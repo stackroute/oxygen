@@ -51,9 +51,7 @@ export default class LoadPredicateProps extends React.Component{
   componentWillReceiveProps(nextProps){
       if(nextProps.predicateDetails !== null){
         this.resetPredicateProps().then(result => {
-          console.log(nextProps.predicateDetails);
           let that = this;
-          console.log(nextProps.predicateDetails['attributes']);
           Object.keys(nextProps.predicateDetails['attributes']).forEach(function(key,index){
             that.state.keyValue.push(that.tempFunc(key,nextProps.predicateDetails['attributes'][key],index));
             that.setState(that.state);
@@ -153,21 +151,18 @@ export default class LoadPredicateProps extends React.Component{
       }
     };
     Object.keys(data).forEach(function(key,index){
-      if(index < 1){
-        formData[key] = data[key];
-      }else{
-        let k = key.substr(1,key.length);
-        let v = data['v'+k];
-        if(Object.keys(formData['attributes']).indexOf(data[key]) == -1 && key.substr(0,1) == 'k'){
-          formData['attributes'][data[key]] = v;
-        }
+      let k = key.substr(1,key.length);
+      let v = data['v'+k];
+      if(Object.keys(formData['attributes']).indexOf(data[key]) == -1 && key.substr(0,1) == 'k'){
+        formData['attributes'][data[key]] = v;
       }
     });
-
+    formData['name'] = data['name'];
     this.savePredicate(formData);
   }
 
   savePredicate(formData){
+    console.log(formData);
     this.props.updatePredicateCard(formData);
   }
 
@@ -181,13 +176,13 @@ export default class LoadPredicateProps extends React.Component{
   }
 
   render(){
-    console.log('pred name ' + this.state.name.length);
     return (
       <div>
         <Formsy.Form
           onValid={this.enableButton}
           onValidSubmit={this.submitForm}
         >
+        {this.state.name.length == 0 && this.state.predicates}
         {
           this.state.name.length > 0 &&
           <FormsyText
@@ -201,7 +196,6 @@ export default class LoadPredicateProps extends React.Component{
             }}
             />
         }
-      {this.state.name.length == 0 && this.state.predicates}
       {this.state.keyValue}
       <FlatButton label='Add Property'
          primary={true}
@@ -211,7 +205,7 @@ export default class LoadPredicateProps extends React.Component{
          }}
          />
        <Divider/>
-       <FlatButton type="submit" label="save" style={{
+       <FlatButton type="submit" label="Apply" style={{
            float: 'right'
        }}/>
       </Formsy.Form>
