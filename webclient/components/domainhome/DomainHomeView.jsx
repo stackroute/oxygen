@@ -16,6 +16,7 @@ import Drawer from 'material-ui/Drawer';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import ImageEdit from 'material-ui/svg-icons/image/edit';
 import {Link} from 'react-router';
+import FlatButton from 'material-ui/FlatButton';
 // import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
   const iPanel = {
@@ -28,7 +29,7 @@ import {Link} from 'react-router';
     margin: 0,
     textAlign: 'center',
     fontFamily: 'sans-serif',
-    color: '#1976d2'
+    color: 'rgb(0,128, 128)'
   };
   const iconStyle = {
       iconSize: {
@@ -85,11 +86,11 @@ import {Link} from 'react-router';
     }
   };
   const styleFunction = (screenClass) => {
-    if (screenClass === 'xl') {return { fontSize: '37px', textAlign: 'left', color: '#8aa6bd' };}
-    if (screenClass === 'lg') {return { fontSize: '35px', textAlign: 'left', color: '#8aa6bd' };}
-    if (screenClass === 'md') {return { fontSize: '30px', textAlign: 'left', color: '#8aa6bd' };}
-    if (screenClass === 'sm') {return { fontSize: '28px', textAlign: 'left', color: '#8aa6bd' };}
-    return { fontSize: '25px', textAlign: 'left', color: '#8aa6bd' };
+    if (screenClass === 'xl') {return { fontSize: '37px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    if (screenClass === 'lg') {return { fontSize: '35px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    if (screenClass === 'md') {return { fontSize: '30px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    if (screenClass === 'sm') {return { fontSize: '28px', textAlign: 'left', color: 'rgb(0,128, 128)' };}
+    return { fontSize: '25px', textAlign: 'left', color: 'rgb(0,128, 128)' };
   };
 
 export default class DomainHomeView extends React.Component {
@@ -280,10 +281,6 @@ export default class DomainHomeView extends React.Component {
    this.getIntentsAndConcepts();
   }
 
-  handleEdit = () => {
-
-  };
-
   componentWillMount() {
     selectedConceptName.onNewSelect = (clickedConceptName) => {
       console.log('On outside variable change ', clickedConceptName);
@@ -355,13 +352,13 @@ export default class DomainHomeView extends React.Component {
                   <ScreenClassRender style={styleFunction}>
                     <h1>
                       {this.state.domainName}
-                      <MenuItem
-                      primaryText='[edit]'
-                 			 containerElement={<Link to={'/edit/'+ this.state.domainName}/>}
-                 			leftIcon={<ImageEdit/>}
-                 			onTouchTap={this.handleEdit}
-                      style={{width:'13%'}}
-                      />
+
+                    <FlatButton label='Edit' primary={true} containerElement = {<Link to={'/edit/'+ this.state.domainName}/>} style={{
+                            float: 'right'
+                        }}/>
+                    <FlatButton label='Graph View' primary={true} containerElement = {<Link to = {'/domainview/'+this.state.domainName}/>} style={{
+                            float: 'right'
+                        }}/>
                     </h1>
 
                   </ScreenClassRender>

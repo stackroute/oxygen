@@ -19,21 +19,6 @@ const errStyle = (screenClass) => {
 	return { width:300,margin: "20% auto 5%",textAlign:"left" };
 };
 
-// const imgStyle = (screenClass) => {
-// 	if (screenClass === 'xl') {return { width: '700px',height:"auto" };}
-// 	if (screenClass === 'lg') {return { width: '600px',height:"auto"};}
-// 	if (screenClass === 'md') {return { width: '600px',height:"auto" };}
-// 	if (screenClass === 'sm') {return { width: '600px',height:"auto" };}
-// 	return { width: '300px',height:"auto"};
-// };
-// const divStyle = (screenClass) => {
-// 	if (screenClass === 'xl') {return { width: '700px',margin:"5% auto auto" };}
-// 	if (screenClass === 'lg') {return { width: '600px',margin:"5% auto auto"};}
-// 	if (screenClass === 'md') {return { width: '600px',margin:"5% auto auto" };}
-// 	if (screenClass === 'sm') {return { width: '600px',margin:"5% auto auto" };}
-// 	return { width: '300px',margin:"6% auto auto"};
-// };
-
 const iconStyle={
 	iconSize: {
 		width: 30,
@@ -78,7 +63,7 @@ const fonts={
 
 	textAlign: "center",
 	fontFamily: "sans-serif",
-	color: "#1976d2 "
+	color: "rgb(0,128, 128)"
 
 }
 const style = {
@@ -89,20 +74,6 @@ const style = {
 	}
 };
 
-// const NoContent=()=>{
-// 	return(
-// 		<ScreenClassRender style={divStyle}>
-// 		<div>
-// 		<ScreenClassRender style={imgStyle}>
-// 		<img src='./../assets/images/sry.png' />
-// 		</ScreenClassRender>
-// 		</div>
-// 		</ScreenClassRender>
-// 		);
-// }  <NoContent />
-
-
-
 export default class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
@@ -111,8 +82,6 @@ export default class Dashboard extends React.Component {
 		}
 		addDomain(domain)
 		{
-			// console.log('in adding module '+domain.name);
-			// console.log('length before call '+this.state.domainList.length);
 			let url = `/domain/` + domain.name;
 			Request
 			.post(url)
@@ -121,8 +90,6 @@ export default class Dashboard extends React.Component {
 				if(err) {
 				 console.log('*** error',err);
 				}
-				// console.log('got response '+JSON.parse(res.text).name);
-				// console.log('length after call '+this.state.domainList.length);
 			 	console.log('***^^^^^^^^^^^^^^^^',res);
 				let domainList1 = this.state.domainList;
 				let response = JSON.parse(res.text);
@@ -134,7 +101,6 @@ export default class Dashboard extends React.Component {
 				response.intentColor = colourObj[1];
 				response.docsColor = colourObj[2];
 				domainList1.push(response);
-				// console.log('Response for posting new job : ', response);
 				this.setState({domainList: domainList1});
 			});
 		}
@@ -144,13 +110,11 @@ export default class Dashboard extends React.Component {
 			.get(url)
 			.end((err, res) => {
 				if(err) {
-					// res.send(err);
 					console.log('Response on show fail: ');
 					this.setState({errmsg: res.body, loading: 'hide'});
 				}
 				else {
 					console.log('Response on show success: ', JSON.parse(res.text));
-					// let domainList1=this.state.domainList;
 					let response = JSON.parse(res.text);
 					if(response.length === 0) {
 						this.setState({domainList: [], loading: 'hide'});
@@ -208,7 +172,6 @@ export default class Dashboard extends React.Component {
 
 
 		freshlyIndex(domain) {
-			// console.log('inside Index refresh '+domain);
 			let url = `/domain/` + domain + `/index`;
 			Request
 			.post(url)
@@ -222,8 +185,6 @@ export default class Dashboard extends React.Component {
 
 		updateData(obj) {
 			console.log('add the update function',obj);
-			//let domain=obj.data.domain;
-		//	let noOfDocs=obj.data.docs;
 			let dList=this.state.domainList;
 			dList.map((item,i) =>{
 			  	console.log('item.name ',item.name);
