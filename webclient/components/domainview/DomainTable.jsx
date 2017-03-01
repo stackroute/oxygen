@@ -11,7 +11,6 @@ export default class DomainTable extends React.Component {
     super(props);
     //this.onRowSelection = this.onRowSelection.bind(this);
     this.handleExport = this.handleExport.bind(this);
-    this.handleRDFExport = this.handleRDFExport.bind(this);
     this.onChange = this.onChange.bind(this);
     this.state = {
 

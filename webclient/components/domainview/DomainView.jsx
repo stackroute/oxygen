@@ -1,6 +1,6 @@
 import React from 'react';
 import DomainMindMapGraph from './DomainMindMapGraph';
-import DomainTable from './DomainTable.jsx';
+import DomainTable from './DomainTable';
 import FlatButton from 'material-ui/FlatButton';
 import {Link} from 'react-router';
 
