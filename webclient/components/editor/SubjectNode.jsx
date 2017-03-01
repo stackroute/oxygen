@@ -453,7 +453,7 @@ export default class SubjectNode extends React.Component {
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'sans-serif',
-                    color: 'rgb(25,118, 210)',
+                    color: 'rgb(0,128, 128)',
                     marginTop: '5%'
                 }}>
                     <h1>{this.state.selectedDomain}
@@ -530,7 +530,7 @@ export default class SubjectNode extends React.Component {
                             float: 'left',
                             marginRight: 10,
                             marginBottom: 10
-                        }} onTouchTap={this.formStatement}/>
+                        }} primary={true} onTouchTap={this.formStatement}/>
                     </Row>
                     <br/>
                     <Row>

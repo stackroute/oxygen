@@ -74,9 +74,6 @@ export default class DomainTable extends React.Component {
     download(JSON.stringify(this.state.tableData), "domain.json", "text/json");
   }
 
-handleRDFExport(){
-  download(JSON.stringify(this.state.tableData), "data.owl", "text/RDF");
-}
   handleChange = (event) => {
     this.setState({height: event.target.value});
   };
@@ -117,7 +114,7 @@ handleRDFExport(){
     }
     return (
       <div>
-        <center><h1 style={{marginTop:'5%',color: 'rgb(25,118, 210)'}}>List View Of {this.state.selectedDomain}</h1></center>
+        <center><h1 style={{marginTop:'5%',color: 'rgb(0,128, 128)',fontFamily: 'sans-serif'}}>List View Of {this.state.selectedDomain}</h1></center>
         <Table
           fixedHeader={this.state.fixedHeader}
           fixedFooter={this.state.fixedFooter}
@@ -150,7 +147,6 @@ handleRDFExport(){
         <center>
         <Pagination style={{marginLeft:'43%'}} className="ant-pagination" onChange={this.onChange} defaultCurrent={this.state.pageNumber} total={this.state.tableData.length} />
         <FlatButton label="Export" secondary={true} onTouchTap={this.handleExport.bind(this)}/>
-        <FlatButton label="Export to RDF Json" secondary={true} onTouchTap={this.handleRDFExport.bind(this)}/>
         </center>
       </div>
     );
