@@ -302,7 +302,7 @@ let deleteObject = function(deleteObj) {
 
         let query = 'match(d:Domain{name:{domainName}})'
         query += 'match(d)<-[r1]-( sub:' + deleteObj.subNodeType + '{name:{subNodeName}})'
-        query += 'match(sub)-[r2:' + deleteObj.predicateName + ']-(obj:' + deleteObj.objNodeType + '{name:{objNodeName}})'
+        query += 'match(sub)<-[r2:' + deleteObj.predicateName + ']-(obj:' + deleteObj.objNodeType + '{name:{objNodeName}})'
         query += 'detach delete(r2)';
 
 

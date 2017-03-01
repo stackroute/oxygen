@@ -134,7 +134,8 @@ export default class SubjectNode extends React.Component {
             enablePredicate: false,
             dissolveModalOpen: false,
             subjectDetailList: [],
-            applyChangesDisabled: true
+            applyChangesDisabled: true,
+            dissolvePredicate: false
         };
         this.getSubjects(this.state.selectedDomain);
     }
@@ -336,7 +337,12 @@ export default class SubjectNode extends React.Component {
           } else {
             this.setState({selectedPredicate: searchText, stepNumber: 3});
             let selectedPredicateDetails = {};
-            let nodeName1 = this.state.selectedSubjectDetails['subname'];
+            selectedPredicateDetails['domainName'] = this.state.selectedDomain;
+            selectedPredicateDetails['subname'] = this.state.selectedSubjectDetails['subname'];
+            selectedPredicateDetails['subtype'] = this.state.selectedSubjectDetails['subtype'];
+            selectedPredicateDetails['objname'] = this.state.selectedObjectDetails['objname'];
+            selectedPredicateDetails['objtype'] = this.state.selectedObjectDetails['objtype'];
+            let nodeName1 = this.state.selectedObjectDetails['subname'];
             let nodeName2 = this.state.selectedObjectDetails['objname'];
 
             let url = '';
@@ -375,10 +381,11 @@ export default class SubjectNode extends React.Component {
 
     handleUpdateDeletePredicate = () => {
         this.setState({
-          selectedPredicate: null,
-          stepNumber: 2,
-          dissolveModalOpen: false
+          selectedPredicateDetails: null,
+          stepNumber: 2
         });
+        this.dissolveModal();
+        console.log('Here after dissolve');
     };
 
     handleChange = (event, index, value) => this.setState({value});
@@ -444,6 +451,12 @@ export default class SubjectNode extends React.Component {
     updateData = () => {
       console.log('data');
     };
+
+    handleDeletePredicate = () => {
+      this.setState({
+        dissolvePredicate: true
+      });
+    }
 
     render() {
         let {paperStyle, switchStyle, submitStyle} = styles;
@@ -558,7 +571,7 @@ export default class SubjectNode extends React.Component {
                     <br/>
                 </Paper>
                 <FormStatement domain={this.state.selectedDomain} ready={this.state.statementFormed} subject={this.state.selectedSubjectDetails} object={this.state.selectedObjectDetails} predicate={this.state.selectedPredicateDetails}/>
-                <DissolveRelation predicateDetails={this.state.nodePredicateDetails} nullPredicate={this.state.handleUpdateDeletePredicate}/>
+                <DissolveRelation dissolvePredicate = {this.state.dissolvePredicate} predicateDetails={this.state.selectedPredicateDetails} nullPredicate={this.handleUpdateDeletePredicate}/>
                 <Dialog
                   title="Confirm to delete"
                   modal={true}
