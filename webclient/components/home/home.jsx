@@ -36,7 +36,7 @@ const styles = {
       fontFamily: 'sans-serif'
     },
     img:{margin:32},
-    button:{color:'white', fontFamily: 'Georgia'}
+    button:{color:'white', backgroundColor:'#F39C12', fontWeight:'bold', fontFamily: 'Georgia'}
 };
 
 export default class Home extends React.Component {
