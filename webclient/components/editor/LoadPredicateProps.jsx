@@ -205,7 +205,7 @@ export default class LoadPredicateProps extends React.Component{
          }}
          />
        <Divider/>
-       <FlatButton type="submit" label="save" style={{
+       <FlatButton type="submit" label="Apply" style={{
            float: 'right'
        }}/>
       </Formsy.Form>

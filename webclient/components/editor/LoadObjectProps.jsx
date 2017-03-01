@@ -21,6 +21,7 @@ export default class LoadObjectProps extends React.Component{
     this.saveObject = this.saveObject.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleModal = this.handleModal.bind(this);
+    this.selectNode = this.selectNode.bind(this);
     this.state = {
       propertyCount: 0,
       keyValue: [],
@@ -28,7 +29,8 @@ export default class LoadObjectProps extends React.Component{
       objtype: '',
       attributes: {},
       nodeDetails: {},
-      probableObjects: [<MenuItem value={'Concept'} primaryText="Concept" />, <MenuItem value={'Term'} primaryText="Term" />]
+      probableObjects: [<MenuItem value={'Concept'} primaryText="Concept" />, <MenuItem value={'Term'} primaryText="Term" />],
+      edited: false
     };
   }
 
@@ -92,6 +94,9 @@ componentWillReceiveProps(nextProps){
   removeProperty(key){
     this.state.keyValue[key] = null;
     this.setState(this.state);
+    this.setState({
+      edited: true
+    });
   }
 
   tempFunc(key,value,index){
@@ -101,6 +106,7 @@ componentWillReceiveProps(nextProps){
         name= {'k' + index}
         defaultValue = {key}
         required
+        onChange={this.selectNode}
         floatingLabelText="property name"
         style={{
             width: '40%'
@@ -110,6 +116,7 @@ componentWillReceiveProps(nextProps){
         name={'v' + index}
         defaultValue = {value}
         required
+        onChange={this.selectNode}
         floatingLabelText="property value"
         style={{
             width: '40%'
@@ -144,6 +151,7 @@ componentWillReceiveProps(nextProps){
     });
     formData['objtype'] = this.state.objtype;
     formData['objname'] = data['objname'];
+    formData['attributes']['name'] = data['objname'];
     if(this.state.objtype.length == 0){
       formData['objtype'] = data['objtype'];
     }
@@ -160,6 +168,7 @@ componentWillReceiveProps(nextProps){
     this.setState(this.state);
     this.setState({
       propertyCount: propertyCount + 1,
+      edited: true
     });
   }
 
@@ -180,6 +189,12 @@ componentWillReceiveProps(nextProps){
     });
   }
 
+  selectNode(node){
+    this.setState({
+      edited: true
+    });
+  }
+
   render(){
     return (
       <div>
@@ -191,6 +206,7 @@ componentWillReceiveProps(nextProps){
             name="objtype"
             required
             floatingLabelText="Select Type"
+            onChange={this.selectNode}
             menuItems={this.selectFieldItems}
             style={{
                 width: '100%'
@@ -203,6 +219,7 @@ componentWillReceiveProps(nextProps){
           name="objname"
           defaultValue={this.state.objname}
           required
+          onChange={this.selectNode}
           floatingLabelText="Object Name"
           style={{
               width: '100%'
@@ -217,12 +234,15 @@ componentWillReceiveProps(nextProps){
          }}
          />
        <Divider/>
-       <FlatButton type="submit" label="save" style={{
-           float: 'right'
-       }}/>
-     <FlatButton label='Delete' onTouchTap={this.handleDelete} style={{
-           float: 'right'
-       }}/>
+         {this.state.edited &&
+             <FlatButton primary={true} type="submit" label="Apply"
+               style={{
+                 float: 'right'
+               }}/>
+           }
+         <FlatButton label='Delete' onTouchTap={this.handleDelete} style={{
+             float: 'right'
+         }}/>
       </Formsy.Form>
       <DeleteNode open = {this.state.open} nodeDetails={this.state.nodeDetails} handleModal = {this.handleModal}/>
       </div>

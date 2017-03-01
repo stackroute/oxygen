@@ -26,15 +26,13 @@ export default class SubjectCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            subjectDetails: {},
             subjectCardJsx: '',
-            attrObj: null,
             style: {
               marginLeft: 10,
               marginRight: 10,
               opacity: 0.2
             },
-            propertyCount: 0,
+            title: 'Subject'
         };
     }
     handleChange = (event, index, value) => this.setState({value: 3});
@@ -56,7 +54,8 @@ export default class SubjectCard extends React.Component {
         if(nextProps.subjectCardJsx == 'old'){
             this.setState({
               style: style,
-              subjectCardJsx: 'old'
+              subjectCardJsx: 'old',
+              title: nextProps.subjectCard['subtype'] + ': '+ nextProps.subjectCard['subname']
             });
         }
     }
@@ -72,9 +71,8 @@ export default class SubjectCard extends React.Component {
         return (
             <Col lg={4} xl={4} md={4} sm={12} xs={12}>
               <Card style={this.state.style}>
-                  <CardHeader title='Subject' titleStyle={{
-                      fontSize: 20,
-                      marginLeft: '50%'
+                  <CardHeader title={this.state.title} primary={true} titleStyle={{
+                      fontSize: 18
                   }}/>
                   <CardText>
                     {newSubject}
