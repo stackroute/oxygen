@@ -88,8 +88,7 @@ export default class LoadPredicateProps extends React.Component{
               menuItems={this.selectFieldItems}
               autoWidth={true}
             >
-              <MenuItem value={'subconcept of'} primaryText="SubConcept Of" />
-              <MenuItem value={'related'} primaryText="Related" />
+              <MenuItem value={'SubConceptOf'} primaryText="SubConcept Of" />
             </FormsySelect>
       });
     }
@@ -102,8 +101,8 @@ export default class LoadPredicateProps extends React.Component{
               menuItems={this.selectFieldItems}
               autoWidth={true}
             >
-              <MenuItem value={'indicatorOf'} primaryText="Indicator" />
-              <MenuItem value={'counterIndicatorOf'} primaryText="Counter Indicator" />
+              <MenuItem value={'IndicatorOf'} primaryText="Indicator" />
+              <MenuItem value={'CounterIndicatorOf'} primaryText="Counter Indicator" />
             </FormsySelect>
       });
     }
