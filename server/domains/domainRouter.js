@@ -173,7 +173,7 @@ router.post('/:domainName/index', function (req, res) {
 
 //get web Documents
 router.post('/documents/:domainName', function (req, res) {
-    logger.debug("got request for retrieving web documents ", req.body);
+    logger.debug("got request for retrieving web documents ", JSON.stringify(req.body));
     logger.debug("Domain name ", req.body.domainName);
     //res.send('success');
     try {

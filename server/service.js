@@ -7,13 +7,28 @@ const mongoose = require('mongoose');
 const config = require('../config/');
 const logger = require('../applogger');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger/swagger');
+
 function createApp() {
   const app = express();
+  const options = {
+    explorer: true,
+    swaggerUrl: 'http://localhost:8080/api-docs'
+   }
+   
+   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
   return app;
 }
 
 function setupStaticRoutes(app) {
   app.use(express.static(path.resolve(__dirname, '../', 'webclient')));
+  const options = {
+    explorer: true,
+    swaggerUrl: 'http://localhost:8080/api-docs'
+   }
+   
+   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
   return app;
 }
 
@@ -35,6 +50,12 @@ function setupRestRoutes(app) {
       error: err.message
     });
   });
+  const options = {
+    explorer: true,
+    swaggerUrl: 'http://localhost:8080/api-docs'
+   }
+   
+   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
   return app;
 }
@@ -51,6 +72,13 @@ function setupMiddlewares(app) {
 
   const compression = require('compression');
   app.use(compression());
+
+  const options = {
+    explorer: true,
+    swaggerUrl: 'http://localhost:8080/api-docs'
+   }
+   
+   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
   return app;
 }
@@ -70,6 +98,12 @@ function setupWebpack(app) {
       publicPath: webpackConfig.output.publicPath
     }));
   }
+  const options = {
+    explorer: true,
+    swaggerUrl: 'http://localhost:8080/api-docs'
+   }
+   
+   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
   return app;
 }

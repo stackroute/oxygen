@@ -1,5 +1,5 @@
 let oxygen = {
-    WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8080,
+    WWW_PORT: process.env.OXYGEN_WWW_PORT || process.env.PORT || 8000,
     SEARCHER_MQ_NAME:'searcher',
     CRAWLER_MQ_NAME:'crawler',
     PARSER_MQ_NAME:'parser'

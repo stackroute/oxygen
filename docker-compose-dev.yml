@@ -8,7 +8,7 @@ services:
     network_mode: host
     restart: always
     ports:
-      - "8080:8080"
+      - "8000:8000"
     depends_on:
       - mongodb
       - rabbitmq
@@ -83,6 +83,7 @@ services:
       - 27017
     ports:
       - "27017:27017"
+  
   rabbitmq:
     image: smebberson/alpine-rabbitmq
     network_mode: host
@@ -91,8 +92,13 @@ services:
       - /data:/data/db
     expose:
       - 5672
+      - 15672
     ports:
       - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_ENABLE_MANAGEMENT_PLUGIN=true
+
   neo4j:
     image: neo4j:3.0.7
     network_mode: host

@@ -11,7 +11,7 @@ const async = require('async');
 const DOMAIN_NAME_MIN_LENGTH = 3;
 
 let insertUrls = function(dataToInsert) {
-    console.log(dataToInsert)
+    console.log(`data to insert#### ${dataToInsert}`);
     try {
         dataToInsert.data.concepts.forEach(function(concept) {
             concept.urls.forEach(function(url) {
@@ -22,13 +22,15 @@ let insertUrls = function(dataToInsert) {
                     url: url
 
                 };
-                console.log(msgObj)
+                console.log(`message object is ${msgObj}`);
                 startCrawlerMQ(msgObj);
+
 
 
             })
         })
         return {
+            domain:dataToInsert.domainName,
             msg: "manually added urls successfully "
         }
     } catch (err) {

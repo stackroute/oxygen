@@ -22,7 +22,7 @@ let saveNewDomain = function(newDomainObj) {
     });
   })
 
-  return promise;
+  return promise; 
 }
 
 let checkDomain = function(domainName) {

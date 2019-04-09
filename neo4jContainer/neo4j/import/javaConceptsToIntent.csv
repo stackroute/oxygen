@@ -3,12 +3,12 @@ JAVA:INT:1,Java Web Application Development,,domain,intent,,0
 JAVA:INT:2,basics,JAVA:INT:1,intent,intent,IntentOf,0
 JAVA:INT:3,tutorials,JAVA:INT:1,intent,intent,IntentOf,0
 JAVA:INT:4,example,JAVA:INT:1,intent,intent,IntentOf,0
-JAVA:INT:5,complete reference,JAVA:INT:1,intent,intent,IntentOf,0
-JAVA:INT:6,trouble shooting,JAVA:INT:1,intent,intent,IntentOf,0
+JAVA:INT:5,complete_reference,JAVA:INT:1,intent,intent,IntentOf,0
+JAVA:INT:6,trouble_shooting,JAVA:INT:1,intent,intent,IntentOf,0
 JAVA:INT:7,fundamental,JAVA:INT:1,intent,intent,IntentOf,0
 JAVA:INT:8,beginner,JAVA:INT:1,intent,intent,IntentOf,9
 JAVA:INT:9,advance,JAVA:INT:1,intent,intent,IntentOf,8
-JAVA:INT:10,getting started,JAVA:INT:1,intent,intent,IntentOf,7
+JAVA:INT:10,getting_started,JAVA:INT:1,intent,intent,IntentOf,7
 JAVA:INT:11,main,JAVA:INT:2,term,intent,IndicatorOf,3
 JAVA:INT:12,fundamental,JAVA:INT:2,term,intent,IndicatorOf,0
 JAVA:INT:13,essential,JAVA:INT:2,term,intent,IndicatorOf,0

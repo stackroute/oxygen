@@ -6,6 +6,7 @@ function setupWebAppRESTRoutes(app) {
   app.use('/docsearchjob', require(path.join(__dirname, 'docSearchJob')));
   app.use('/domain', require(path.join(__dirname, 'domains')));
   app.use('/crawl', require(path.join(__dirname, 'docCrawler')));
+  app.use('/parse', require(path.join(__dirname, 'docIntentParser')));
   return app;
 }
 

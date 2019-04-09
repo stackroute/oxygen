@@ -22,31 +22,49 @@ let initialiseDomainOntology = function(domainName) {
 
     logger.debug('[*] [domainManager] obtained neo4j connection ');
 
-    let query = '';
-    query += 'MATCH (d:' + graphConsts.NODE_DOMAIN + ' {name:{domainName}}) ';
-    query += 'WITH d ';
-    query += 'MERGE (c:' + graphConsts.NODE_CONCEPT + ' {name:{conceptName}}) ';
-    query += 'MERGE (i:' + graphConsts.NODE_INTENT + ' {name:{intentName}}) ';
-    query += 'MERGE (ti:' + graphConsts.NODE_TERM + ' {name:{indicatorTerm}}) ';
-    query += 'MERGE (cti:' + graphConsts.NODE_TERM + '{name:{counterIndicatorTerm}}) ';
-    query += 'MERGE (c)-[cr:' + graphConsts.REL_CONCEPT_OF + ']->(d) ';
-    query += 'MERGE (i)-[ir:' + graphConsts.REL_INTENT_OF + ']->(d) ';
-    query += 'MERGE (ti)-[tir:' + graphConsts.REL_INDICATOR_OF + ' {weight:5}]->(i) ';
-    query += 'MERGE (cti)-[ctir:' + graphConsts.REL_COUNTER_INDICATOR_OF + ' {weight:5}]->(i) ';
-    query += 'return c,i,d,ti,cti,cr,ir,tir,ctir';
+    // let query = '';
+    // query += 'MATCH (d:' + graphConsts.NODE_DOMAIN + ' {name:{domainName}}) ';
+    // query += 'WITH d ';
+    // query += 'MERGE (c:' + graphConsts.NODE_CONCEPT + ' {name:{conceptName}}) ';
+    // query += 'MERGE (i:' + graphConsts.NODE_INTENT + ' {name:{intentName}}) ';
+    // query += 'MERGE (ti:' + graphConsts.NODE_TERM + ' {name:{indicatorTerm}}) ';
+    // query += 'MERGE (cti:' + graphConsts.NODE_TERM + '{name:{counterIndicatorTerm}}) ';
+    // query += 'MERGE (c)-[cr:' + graphConsts.REL_CONCEPT_OF + ']->(d) ';
+    // query += 'MERGE (i)-[ir:' + graphConsts.REL_INTENT_OF + ']->(d) ';
+    // query += 'MERGE (ti)-[tir:' + graphConsts.REL_INDICATOR_OF + ' {weight:5}]->(i) ';
+    // query += 'MERGE (cti)-[ctir:' + graphConsts.REL_COUNTER_INDICATOR_OF + ' {weight:5}]->(i) ';
+    // query += 'return c,i,d,ti,cti,cr,ir,tir,ctir';
 
-    const defaultConceptName = domainName;
-    const defaultIntentName = 'introduction';
-    const defaultIndicatorTerm = defaultIntentName;
-    const defaultCounterIndicatorTerm = 'advanced';
+    // const defaultConceptName = domainName;
+    // const defaultIntentName = 'introduction';
+    // const defaultIndicatorTerm = defaultIntentName;
+    // const defaultCounterIndicatorTerm = 'advanced';
+
+    // let params = {
+    //   domainName: domainName,
+    //   conceptName: defaultConceptName,
+    //   intentName: defaultIntentName,
+    //   indicatorTerm: defaultIndicatorTerm,
+    //   counterIndicatorTerm: defaultCounterIndicatorTerm
+    // };
+
+    // match(d:Domain{name:"RabbitMQ"}), (i:Intent) 
+    // merge (c:Concept{name:"RabbitMQ"}) 
+    //  merge(d)<-[r:IntentOf]-(i) 
+    //  merge(d)<-[re:conceptOf]-(c) return c, d,i
+
+    let query = '';
+    query += 'MATCH (d:'+ graphConsts.NODE_DOMAIN +'{name:{domainName}}),(i:'+ graphConsts.NODE_INTENT +')';
+    query += 'MERGE (c:'+ graphConsts.NODE_CONCEPT +'{name:{conceptName}})';
+    query += 'MERGE (d)<-[r:'+ graphConsts.REL_INTENT_OF +']-(i)';
+    query += 'MERGE (d)<-[re:'+ graphConsts.REL_CONCEPT_OF + ']-(c)';
+    query += 'return c, d, i';
 
     let params = {
-      domainName: domainName,
-      conceptName: defaultConceptName,
-      intentName: defaultIntentName,
-      indicatorTerm: defaultIndicatorTerm,
-      counterIndicatorTerm: defaultCounterIndicatorTerm
+      domainName:domainName,
+      conceptName:domainName
     };
+
 
     session.run(query, params)
       .then(function(result) {

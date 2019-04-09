@@ -1,4 +1,4 @@
-import React from 'react';
+  import React from 'react';
 import AutoCompleteConceptSearch from './AutoCompleteConceptSearch';
 import AutoCompleteIntentSearch from './AutoCompleteIntentSearch';
 import DocResultCard from './DocResultCard';

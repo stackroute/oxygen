@@ -68,7 +68,8 @@
     "request": "^2.79.0",
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.2",
-    "superagent": "^2.3.0"
+    "superagent": "^2.3.0",
+    "swagger-ui-express": "^4.0.2"
   },
   "devDependencies": {
     "babel": "^6.5.2",
